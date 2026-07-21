@@ -1,0 +1,36 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/lab/movement_lab.tscn" id="1_lab"]
+
+[sub_resource type="StyleBoxFlat" id="Style_panel"]
+bg_color = Color(0.03, 0.045, 0.075, 0.78)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="GameRoot" type="Node"]
+
+[node name="World" type="Node3D" parent="."]
+
+[node name="MovementLab" parent="World" instance=ExtResource("1_lab")]
+
+[node name="Interface" type="CanvasLayer" parent="."]
+
+[node name="Instructions" type="PanelContainer" parent="Interface"]
+offset_left = 18.0
+offset_top = 18.0
+offset_right = 410.0
+offset_bottom = 102.0
+theme_override_styles/panel = SubResource("Style_panel")
+
+[node name="Margin" type="MarginContainer" parent="Interface/Instructions"]
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 10
+
+[node name="Label" type="Label" parent="Interface/Instructions/Margin"]
+theme_override_colors/font_color = Color(0.94, 0.97, 1, 1)
+theme_override_font_sizes/font_size = 18
+text = "MOVEMENT LAB\nA / D, arrows, or left stick: move    SPACE / gamepad A: jump    R: reset"

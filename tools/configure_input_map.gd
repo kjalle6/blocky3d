@@ -1,0 +1,48 @@
+extends SceneTree
+## One-shot project setup kept in source control so default bindings are
+## reproducible. Runtime rebinding will be a separate player-facing system.
+
+
+func _init() -> void:
+	_configure_action("move_left", 0.2, [
+		_key(KEY_A), _key(KEY_LEFT), _joy_axis(JOY_AXIS_LEFT_X, -1.0),
+	])
+	_configure_action("move_right", 0.2, [
+		_key(KEY_D), _key(KEY_RIGHT), _joy_axis(JOY_AXIS_LEFT_X, 1.0),
+	])
+	_configure_action("jump", 0.2, [
+		_key(KEY_SPACE), _key(KEY_W), _key(KEY_UP), _joy_button(JOY_BUTTON_A),
+	])
+	_configure_action("restart", 0.2, [
+		_key(KEY_R), _joy_button(JOY_BUTTON_Y),
+	])
+	var error := ProjectSettings.save()
+	assert(error == OK, "Could not save default input actions.")
+	print("Default input actions configured.")
+	quit(0)
+
+
+func _configure_action(action: StringName, deadzone: float, events: Array[InputEvent]) -> void:
+	ProjectSettings.set_setting("input/%s" % action, {
+		"deadzone": deadzone,
+		"events": events,
+	})
+
+
+func _key(keycode: Key) -> InputEventKey:
+	var event := InputEventKey.new()
+	event.physical_keycode = keycode
+	return event
+
+
+func _joy_axis(axis: JoyAxis, value: float) -> InputEventJoypadMotion:
+	var event := InputEventJoypadMotion.new()
+	event.axis = axis
+	event.axis_value = value
+	return event
+
+
+func _joy_button(button: JoyButton) -> InputEventJoypadButton:
+	var event := InputEventJoypadButton.new()
+	event.button_index = button
+	return event

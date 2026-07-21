@@ -1,0 +1,22 @@
+# Godot-generated state
+.godot/
+.mono/
+
+# Local exports and builds
+build/
+exports/
+
+# Unreviewed asset-pack scouting shelf
+incoming/
+
+# Imported DCC/editor state
+*.blend1
+*.blend2
+*.tmp
+*.bak
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

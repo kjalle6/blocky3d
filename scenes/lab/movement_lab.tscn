@@ -1,0 +1,180 @@
+[gd_scene load_steps=25 format=3]
+
+[ext_resource type="Script" path="res://scripts/lab/movement_lab.gd" id="1_lab"]
+[ext_resource type="Script" path="res://scripts/traversal/traversal_rail_3d.gd" id="2_rail"]
+[ext_resource type="PackedScene" path="res://scenes/player/player_character.tscn" id="3_player"]
+[ext_resource type="Script" path="res://scripts/camera/rail_camera_3d.gd" id="4_camera"]
+[ext_resource type="Script" path="res://scripts/hazards/hazard_3d.gd" id="5_hazard"]
+
+[sub_resource type="StandardMaterial3D" id="Material_floor"]
+albedo_color = Color(0.23, 0.55, 0.29, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Material_floor_side"]
+albedo_color = Color(0.25, 0.19, 0.13, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="Material_hazard"]
+albedo_color = Color(0.92, 0.08, 0.05, 1)
+emission_enabled = true
+emission = Color(0.35, 0.01, 0, 1)
+emission_energy_multiplier = 0.8
+
+[sub_resource type="BoxShape3D" id="Shape_start"]
+size = Vector3(11, 1, 4)
+[sub_resource type="BoxMesh" id="Mesh_start"]
+material = SubResource("Material_floor_side")
+size = Vector3(11, 1, 4)
+
+[sub_resource type="BoxShape3D" id="Shape_straight_two"]
+size = Vector3(7, 1, 4)
+[sub_resource type="BoxMesh" id="Mesh_straight_two"]
+material = SubResource("Material_floor_side")
+size = Vector3(7, 1, 4)
+
+[sub_resource type="BoxShape3D" id="Shape_diagonal"]
+size = Vector3(8.5, 1, 4)
+[sub_resource type="BoxMesh" id="Mesh_diagonal"]
+material = SubResource("Material_floor_side")
+size = Vector3(8.5, 1, 4)
+
+[sub_resource type="BoxShape3D" id="Shape_short"]
+size = Vector3(5, 1, 4)
+[sub_resource type="BoxMesh" id="Mesh_short"]
+material = SubResource("Material_floor_side")
+size = Vector3(5, 1, 4)
+
+[sub_resource type="BoxShape3D" id="Shape_final"]
+size = Vector3(16, 1, 4)
+[sub_resource type="BoxMesh" id="Mesh_final"]
+material = SubResource("Material_floor_side")
+size = Vector3(16, 1, 4)
+
+[sub_resource type="BoxShape3D" id="Shape_cap"]
+size = Vector3(0.5, 3, 4)
+[sub_resource type="BoxMesh" id="Mesh_cap"]
+material = SubResource("Material_floor_side")
+size = Vector3(0.5, 3, 4)
+
+[sub_resource type="BoxShape3D" id="Shape_hazard"]
+size = Vector3(1.4, 0.35, 3.4)
+[sub_resource type="BoxMesh" id="Mesh_hazard"]
+material = SubResource("Material_hazard")
+size = Vector3(1.4, 0.35, 3.4)
+
+[sub_resource type="BoxShape3D" id="Shape_kill_plane"]
+size = Vector3(100, 1, 100)
+
+[sub_resource type="Environment" id="Environment_lab"]
+background_mode = 1
+background_color = Color(0.45, 0.68, 0.92, 1)
+ambient_light_source = 3
+ambient_light_color = Color(0.72, 0.8, 0.95, 1)
+ambient_light_energy = 0.75
+tonemap_mode = 2
+
+[node name="MovementLab" type="Node3D"]
+script = ExtResource("1_lab")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_lab")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-52, -28, 0)
+light_energy = 1.15
+shadow_enabled = true
+directional_shadow_max_distance = 55.0
+
+[node name="TraversalRail" type="Node3D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_rail")
+control_points = PackedVector3Array(0, 0, 0, 13.5, 0, 0, 18, 0, 0, 24, 0, 6, 24, 0, 18, 18, 0, 24, 2, 0, 24)
+handle_strength = 0.18
+
+[node name="SpawnPoint" type="Marker3D" parent="."]
+unique_name_in_owner = true
+position = Vector3(0, 0.72, 0)
+
+[node name="Player" parent="." instance=ExtResource("3_player")]
+unique_name_in_owner = true
+position = Vector3(0, 0.72, 0)
+
+[node name="RailCamera" type="Camera3D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("4_camera")
+current = true
+fov = 58.0
+
+[node name="StartFloor" type="StaticBody3D" parent="."]
+position = Vector3(3.5, -0.5, 0)
+[node name="Collision" type="CollisionShape3D" parent="StartFloor"]
+shape = SubResource("Shape_start")
+[node name="Mesh" type="MeshInstance3D" parent="StartFloor"]
+mesh = SubResource("Mesh_start")
+
+[node name="StraightFloor" type="StaticBody3D" parent="."]
+position = Vector3(14.5, -0.5, 0)
+[node name="Collision" type="CollisionShape3D" parent="StraightFloor"]
+shape = SubResource("Shape_straight_two")
+[node name="Mesh" type="MeshInstance3D" parent="StraightFloor"]
+mesh = SubResource("Mesh_straight_two")
+
+[node name="FirstTurnFloor" type="StaticBody3D" parent="."]
+position = Vector3(21, -0.5, 3)
+rotation_degrees = Vector3(0, -45, 0)
+[node name="Collision" type="CollisionShape3D" parent="FirstTurnFloor"]
+shape = SubResource("Shape_diagonal")
+[node name="Mesh" type="MeshInstance3D" parent="FirstTurnFloor"]
+mesh = SubResource("Mesh_diagonal")
+
+[node name="DepthFloorA" type="StaticBody3D" parent="."]
+position = Vector3(24, -0.5, 8.5)
+rotation_degrees = Vector3(0, -90, 0)
+[node name="Collision" type="CollisionShape3D" parent="DepthFloorA"]
+shape = SubResource("Shape_short")
+[node name="Mesh" type="MeshInstance3D" parent="DepthFloorA"]
+mesh = SubResource("Mesh_short")
+
+[node name="DepthFloorB" type="StaticBody3D" parent="."]
+position = Vector3(24, -0.5, 15.5)
+rotation_degrees = Vector3(0, -90, 0)
+[node name="Collision" type="CollisionShape3D" parent="DepthFloorB"]
+shape = SubResource("Shape_short")
+[node name="Mesh" type="MeshInstance3D" parent="DepthFloorB"]
+mesh = SubResource("Mesh_short")
+
+[node name="SecondTurnFloor" type="StaticBody3D" parent="."]
+position = Vector3(21, -0.5, 21)
+rotation_degrees = Vector3(0, -135, 0)
+[node name="Collision" type="CollisionShape3D" parent="SecondTurnFloor"]
+shape = SubResource("Shape_diagonal")
+[node name="Mesh" type="MeshInstance3D" parent="SecondTurnFloor"]
+mesh = SubResource("Mesh_diagonal")
+
+[node name="FinalFloor" type="StaticBody3D" parent="."]
+position = Vector3(10, -0.5, 24)
+[node name="Collision" type="CollisionShape3D" parent="FinalFloor"]
+shape = SubResource("Shape_final")
+[node name="Mesh" type="MeshInstance3D" parent="FinalFloor"]
+mesh = SubResource("Mesh_final")
+
+[node name="EndCap" type="StaticBody3D" parent="."]
+position = Vector3(1.75, 1.5, 24)
+[node name="Collision" type="CollisionShape3D" parent="EndCap"]
+shape = SubResource("Shape_cap")
+[node name="Mesh" type="MeshInstance3D" parent="EndCap"]
+mesh = SubResource("Mesh_cap")
+
+[node name="ContactHazard" type="Area3D" parent="."]
+position = Vector3(11.5, 0.175, 24)
+script = ExtResource("5_hazard")
+[node name="Collision" type="CollisionShape3D" parent="ContactHazard"]
+shape = SubResource("Shape_hazard")
+[node name="Mesh" type="MeshInstance3D" parent="ContactHazard"]
+mesh = SubResource("Mesh_hazard")
+
+[node name="KillPlane" type="Area3D" parent="."]
+position = Vector3(12, -5, 12)
+script = ExtResource("5_hazard")
+[node name="Collision" type="CollisionShape3D" parent="KillPlane"]
+shape = SubResource("Shape_kill_plane")
