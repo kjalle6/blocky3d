@@ -13,6 +13,7 @@ var path_speed := 0.0
 var _coyote_remaining := 0.0
 var _jump_buffer_remaining := 0.0
 var _dead := false
+var _descending_before_slide := false
 
 
 func _ready() -> void:
@@ -50,6 +51,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_released("jump") and velocity.y > 0.0:
 		velocity.y *= movement.released_jump_multiplier
 
+	_descending_before_slide = velocity.y < -0.5
 	move_and_slide()
 	global_position = traversal_rail.constrain_world_position(global_position)
 
@@ -79,6 +81,24 @@ func kill() -> void:
 	died.emit()
 
 
+func bounce(vertical_speed: float) -> void:
+	if _dead:
+		return
+	velocity.y = vertical_speed
+	_descending_before_slide = false
+	floor_snap_length = 0.0
+
+
+func was_descending_before_slide() -> bool:
+	return _descending_before_slide
+
+
+func stop_for_completion() -> void:
+	velocity = Vector3.ZERO
+	path_speed = 0.0
+	set_physics_process(false)
+
+
 func reset_at(spawn_transform: Transform3D) -> void:
 	global_transform = spawn_transform
 	velocity = Vector3.ZERO
@@ -86,6 +106,7 @@ func reset_at(spawn_transform: Transform3D) -> void:
 	_coyote_remaining = 0.0
 	_jump_buffer_remaining = 0.0
 	_dead = false
+	_descending_before_slide = false
 	visible = true
 	set_physics_process(true)
 	if traversal_rail != null:

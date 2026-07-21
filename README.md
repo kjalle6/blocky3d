@@ -11,13 +11,18 @@ Start with:
 - [`docs/GAME_VISION.md`](docs/GAME_VISION.md)
 - [`docs/ENGINEERING_PRINCIPLES.md`](docs/ENGINEERING_PRINCIPLES.md)
 
-The current main scene contains the first disposable movement lab. It tests
-path-relative 2.5D movement, a route that turns through 3D space, an authored
-side-view camera, jumping, gaps, hazards, and fast reset. It is not Level 1 and
-its blockout geometry is not part of the final asset pipeline.
+The current main scene contains the classic Level 1 blockout: running, jumping,
+progressively wider gaps, visible spike strips, stompable patrol enemies,
+optional raised platforms, a finish flag, and fast full-run reset. Its generated
+blockout geometry is deliberately disposable and is not part of the final asset
+pipeline. The original turning movement lab remains available as a regression
+scene under `scenes/lab/`.
 
 ## Validate
 
 ```powershell
 godot --headless --path . --script res://tools/validate_project.gd
+godot --headless --path . --script res://tools/validate_movement_runtime.gd
+godot --headless --path . --script res://tools/validate_level1_runtime.gd
+godot --headless --path . --script res://tools/validate_level1_playthrough.gd
 ```

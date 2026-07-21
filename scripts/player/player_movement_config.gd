@@ -1,6 +1,6 @@
 class_name PlayerMovementConfig
 extends Resource
-## All feel-critical values for the core movement lab. Keeping these in a
+## All feel-critical values for the core controller. Keeping these in a
 ## Resource lets us tune movement without coupling level scenes to code values.
 
 @export_category("Horizontal movement")

@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/hazards/hazard_3d.gd" id="1_hazard"]
+
+[sub_resource type="BoxShape3D" id="Shape_hazard"]
+size = Vector3(2.3, 0.5, 2.6)
+
+[sub_resource type="StandardMaterial3D" id="Material_spike"]
+albedo_color = Color(0.22, 0.24, 0.28, 1)
+metallic = 0.35
+roughness = 0.55
+
+[sub_resource type="CylinderMesh" id="Mesh_spike"]
+material = SubResource("Material_spike")
+top_radius = 0.0
+bottom_radius = 0.34
+height = 0.75
+
+[node name="BlockoutSpikeStrip" type="Area3D"]
+script = ExtResource("1_hazard")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.3, 0)
+shape = SubResource("Shape_hazard")
+
+[node name="SpikeLeft" type="MeshInstance3D" parent="."]
+position = Vector3(-0.75, 0.375, 0)
+mesh = SubResource("Mesh_spike")
+
+[node name="SpikeMiddle" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.375, 0)
+mesh = SubResource("Mesh_spike")
+
+[node name="SpikeRight" type="MeshInstance3D" parent="."]
+position = Vector3(0.75, 0.375, 0)
+mesh = SubResource("Mesh_spike")

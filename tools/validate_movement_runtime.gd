@@ -8,11 +8,10 @@ func _init() -> void:
 
 
 func _run() -> void:
-	var packed_scene := load("res://scenes/app/game_root.tscn") as PackedScene
-	var game_root := packed_scene.instantiate()
-	root.add_child(game_root)
+	var packed_scene := load("res://scenes/lab/movement_lab.tscn") as PackedScene
+	var lab := packed_scene.instantiate() as MovementLab
+	root.add_child(lab)
 	await process_frame
-	var lab := game_root.get_node("World/MovementLab") as MovementLab
 	var player := lab.player
 
 	# Let the player settle before applying movement.

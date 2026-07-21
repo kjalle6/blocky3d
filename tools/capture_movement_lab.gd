@@ -8,11 +8,10 @@ func _init() -> void:
 
 func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://build/previews"))
-	var packed_scene := load("res://scenes/app/game_root.tscn") as PackedScene
-	var game_root := packed_scene.instantiate()
-	root.add_child(game_root)
+	var packed_scene := load("res://scenes/lab/movement_lab.tscn") as PackedScene
+	var lab := packed_scene.instantiate() as MovementLab
+	root.add_child(lab)
 	await process_frame
-	var lab := game_root.get_node("World/MovementLab") as MovementLab
 	for frame in 8:
 		await process_frame
 	_capture("movement_lab_start")
