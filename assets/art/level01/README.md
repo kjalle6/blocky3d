@@ -1,7 +1,8 @@
-# Level 1 runtime art
+# Opening-world runtime art
 
-This folder contains only the curated runtime files used by Level 1. The
-complete downloaded packs remain outside the repository in
+This folder contains the curated runtime set established for Level 1 and
+currently shared by Levels 1 and 2. The complete downloaded packs remain
+outside the repository in
 `D:\GodotProjects\blocky3dassets`.
 
 Run `tools/prepare_level1_assets.ps1` to refresh these files. The generated

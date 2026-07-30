@@ -1,26 +1,46 @@
 # Blocky 3D
 
-A Godot 4.6 precision platformer built as 2.5D: side-scroller controls and
-pixel-art readability inside a 3D world that can support authored route turns
-later.
+Blocky 3D is a Godot 4.6 pixel-art 2.5D precision platformer. It combines fast
+side-scroller movement with a 3D world that can support authored turns,
+vertical routes, and controlled depth changes without becoming a free-roaming
+3D game.
 
-The Pygame project at `C:\Users\kappe\Code\platformertwo` remains a design
-reference for level intent, encounter order, power-ups, music, and tone. Its
-code and physics are not dependencies.
+Godot is the canonical implementation. The Python game and Unreal prototype
+remain read-only design references.
 
-The current build contains the production-quality Level 1 vertical slice and
-Level 2's longer gaps-and-spikes course. A temporary level selector opens at
-launch. Both levels share the approved orthographic camera, layered green-zone
-art, biker and weapon animation, solid/telegraphed patrol enemy, stomp and
-melee rules, chest goal, and fast retry loop. Level 2 adds fair foot-contact
-spikes and earned, grounded checkpoints without placing safety floors beneath
-its raised routes.
+## Current state
 
-Start with:
+- Level 1: Fundamentals — complete production vertical slice
+- Level 2: Gaps & Spikes — complete fundamentals regression course
+- Level 3: Double Jump — next milestone
+- Temporary mouse and `W`/`S` + `Enter` level selector
+- 1920x1080 presentation baseline
 
-- [`docs/GAME_VISION.md`](docs/GAME_VISION.md)
-- [`docs/ENGINEERING_PRINCIPLES.md`](docs/ENGINEERING_PRINCIPLES.md)
-- [`docs/LEVEL_02.md`](docs/LEVEL_02.md)
+The three living design documents are:
+
+- [`docs/GAME_DIRECTION.md`](docs/GAME_DIRECTION.md) — what the game is
+- [`docs/LEVEL_ROADMAP.md`](docs/LEVEL_ROADMAP.md) — the eleven legacy ideas,
+  revised campaign spine, and next level
+- [`docs/TECHNICAL_FOUNDATION.md`](docs/TECHNICAL_FOUNDATION.md) — architecture,
+  gameplay contracts, asset pipeline, and validation
+
+## Controls
+
+- Move: `A` / `D`, arrow keys, left stick
+- Jump: `Space`, `W`, up arrow, gamepad south button
+- Attack: left mouse, `J`, gamepad west button
+- Restart current run: `R`
+- Return to level selector: `Escape`
+- Menu: click, `W` / `S` + `Enter`, or number shortcut
+
+## Legacy references
+
+- Python level blueprint:
+  `C:\Users\kappe\Code\platformertwo\platformersecond`
+- Archived Unreal prototype: `D:\UnrealProjects\Blocky3D`
+
+These paths are not runtime dependencies. Legacy coordinates, physics values,
+and architecture are not copied blindly.
 
 ## Assets
 
@@ -43,7 +63,7 @@ godot --headless --path . --script res://tools/validate_level2_runtime.gd
 godot --headless --path . --script res://tools/validate_level2_playthrough.gd
 ```
 
-Graphical review captures are generated with:
+Generate graphical review captures with:
 
 ```powershell
 godot --path . --script res://tools/capture_level1.gd

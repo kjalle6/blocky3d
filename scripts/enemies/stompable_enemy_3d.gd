@@ -1,7 +1,8 @@
 class_name StompableEnemy3D
 extends CharacterBody3D
-## Small rail-bound patrol enemy for Level 1. It reverses at walls
-## and ledges, damages on contact, and can be defeated from above.
+## Small rail-bound patrol enemy. It reverses at walls and ledges, has a solid
+## nonlethal passive body, damages through a telegraphed attack, and can be
+## defeated by a stomp or melee hit.
 
 signal defeated(impact_position: Vector3)
 
