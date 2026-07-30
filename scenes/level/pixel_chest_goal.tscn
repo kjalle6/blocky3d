@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/level/pixel_goal_3d.gd" id="1_goal"]
+
+[sub_resource type="BoxShape3D" id="Shape_goal"]
+size = Vector3(1.5, 1.2, 1.2)
+
+[node name="PixelChestGoal" type="Area3D"]
+script = ExtResource("1_goal")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.6, 0)
+shape = SubResource("Shape_goal")
+
+[node name="Sprite" type="Sprite3D" parent="."]
+unique_name_in_owner = true
+position = Vector3(0, 0.66, 1.2)
+scale = Vector3(1.15625, 1, 1)
+pixel_size = 0.06
+render_priority = 10

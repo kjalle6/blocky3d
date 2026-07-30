@@ -26,14 +26,16 @@ earn their lifetime and scope rather than becoming a collection of globals.
 ## Player and level work
 
 The first gameplay milestone is a vertical slice, not eleven blockouts. It must
-prove the final movement model, camera, reset loop, one ability unlock, one
-enemy or hazard family, art pipeline, audio response, and an authored 3D level.
-Only after that slice feels production-worthy should its systems become the
-template for additional levels.
+prove the movement model, orthographic camera, reset loop, player attack, one
+enemy family, art pipeline, and an authored 2.5D level. Only after that slice
+feels production-worthy should its systems become the template for additional
+levels.
 
 ## Asset pipeline
 
 - Keep editable source assets separate from imported runtime assets.
+- Keep the complete downloaded packs outside the repository. Import only a
+  named, reproducible runtime subset and record its source path and hash.
 - Use consistent real-world scale, pivots, collision conventions, and naming.
 - Build collision intentionally; do not default to render-mesh collision for
   precision gameplay.

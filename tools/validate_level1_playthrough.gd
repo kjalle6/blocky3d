@@ -1,6 +1,5 @@
 extends SceneTree
-## Drives the real controller through Level 1's intended route. This is not an
-## AI player; it is a coarse reachability guard for changes to tuning/layout.
+## Drives the real controller through the approved six-platform Level 1 route.
 
 
 func _init() -> void:
@@ -13,27 +12,29 @@ func _run() -> void:
 	root.add_child(game_root)
 	await process_frame
 
-	var level := game_root.get_node("World/Level1Blockout") as LevelSession3D
+	var level := game_root.get_node("World/Level01") as LevelSession3D
 	var player := level.player
+	var enemy := level.get_node("GreenZonePatrol") as StompableEnemy3D
 	var completion_label := game_root.get_node("Interface/CompletionLabel") as Label
 	for frame in 12:
 		await physics_frame
 
-	var jump_markers := [9.5, 16.0, 22.5, 32.0, 39.0, 48.0, 56.8, 62.9, 74.3, 82.0, 92.3, 99.5, 107.0]
+	var jump_markers := [8.8, 21.0, 26.2, 32.6, 40.2]
 	var next_jump := 0
 	var jump_frames_remaining := 0
-	var jump_trace: Array[String] = []
+	var attacked := false
 	Input.action_press("move_right")
-	for frame in 1200:
-		if not player.visible:
+	for frame in 900:
+		if player.is_dead():
 			break
+		if not attacked and absf(enemy.global_position.x - player.global_position.x) <= 1.2:
+			Input.action_press("attack")
+			attacked = true
+		elif attacked:
+			Input.action_release("attack")
 		if next_jump < jump_markers.size() and player.global_position.x >= jump_markers[next_jump]:
-			jump_trace.append(
-				"%.1f@x%.2f/y%.2f/floor=%s"
-				% [jump_markers[next_jump], player.global_position.x, player.global_position.y, player.is_on_floor()]
-			)
 			Input.action_press("jump")
-			jump_frames_remaining = 24
+			jump_frames_remaining = 18
 			next_jump += 1
 		if jump_frames_remaining > 0:
 			jump_frames_remaining -= 1
@@ -44,12 +45,10 @@ func _run() -> void:
 		await physics_frame
 	Input.action_release("move_right")
 	Input.action_release("jump")
+	Input.action_release("attack")
 
-	if not player.visible:
-		push_error(
-			"The scripted Level 1 route hit a hazard near x=%.2f after jump marker %d."
-			% [player.global_position.x, next_jump] + " Jumps: " + ", ".join(jump_trace)
-		)
+	if player.is_dead():
+		push_error("The scripted Level 1 route died near x=%.2f." % player.global_position.x)
 		quit(1)
 		return
 	if not completion_label.visible:

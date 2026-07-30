@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/app/game_root.gd" id="1_app"]
-[ext_resource type="PackedScene" path="res://scenes/levels/level_01_blockout.tscn" id="2_level"]
+[ext_resource type="PackedScene" path="res://scenes/levels/level_01_pixel.tscn" id="2_level"]
 
 [sub_resource type="StyleBoxFlat" id="Style_panel"]
 bg_color = Color(0.03, 0.045, 0.075, 0.78)
@@ -15,14 +15,14 @@ script = ExtResource("1_app")
 
 [node name="World" type="Node3D" parent="."]
 
-[node name="Level1Blockout" parent="World" instance=ExtResource("2_level")]
+[node name="Level01" parent="World" instance=ExtResource("2_level")]
 
 [node name="Interface" type="CanvasLayer" parent="."]
 
 [node name="Instructions" type="PanelContainer" parent="Interface"]
 offset_left = 18.0
 offset_top = 18.0
-offset_right = 690.0
+offset_right = 780.0
 offset_bottom = 102.0
 theme_override_styles/panel = SubResource("Style_panel")
 
@@ -35,7 +35,7 @@ theme_override_constants/margin_bottom = 10
 [node name="Label" type="Label" parent="Interface/Instructions/Margin"]
 theme_override_colors/font_color = Color(0.94, 0.97, 1, 1)
 theme_override_font_sizes/font_size = 18
-text = "LEVEL 1 BLOCKOUT — CLASSIC START\nMove: A / D, arrows, or left stick    Jump: SPACE / gamepad A    Reset: R / gamepad Y"
+text = "LEVEL 1 - FUNDAMENTALS\nMove: A / D or left stick    Jump: SPACE / gamepad A    Attack: LEFT CLICK / J / gamepad X    Reset: R"
 
 [node name="CompletionLabel" type="Label" parent="Interface"]
 unique_name_in_owner = true

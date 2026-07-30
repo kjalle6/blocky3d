@@ -1,6 +1,6 @@
 extends Node
 
-@onready var level: LevelSession3D = $World/Level1Blockout
+@onready var level: LevelSession3D = $World/Level01
 @onready var completion_label: Label = %CompletionLabel
 
 

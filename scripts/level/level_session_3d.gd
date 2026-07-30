@@ -10,8 +10,9 @@ signal run_reset
 
 @onready var traversal_rail: TraversalRail3D = %TraversalRail
 @onready var player: PlayerCharacter = %Player
-@onready var camera: RailCamera3D = %RailCamera
+@onready var camera = %RailCamera
 @onready var spawn_point: Marker3D = %SpawnPoint
+@onready var combat_feedback := get_node_or_null("%CombatFeedback")
 
 var _resetting := false
 var _completed := false
@@ -22,10 +23,15 @@ func _ready() -> void:
 	camera.target = player
 	camera.traversal_rail = traversal_rail
 	player.died.connect(_on_player_died)
+	if combat_feedback != null:
+		combat_feedback.bind_player(player)
 
 	for node in get_tree().get_nodes_in_group("rail_bound"):
 		if is_ancestor_of(node) and node.has_method("bind_to_traversal_rail"):
 			node.call("bind_to_traversal_rail", traversal_rail)
+	for node in get_tree().get_nodes_in_group("melee_target"):
+		if combat_feedback != null and is_ancestor_of(node) and node is StompableEnemy3D:
+			combat_feedback.bind_enemy(node as StompableEnemy3D)
 	for node in get_tree().get_nodes_in_group("level_goal"):
 		if is_ancestor_of(node) and node.has_signal("reached"):
 			node.reached.connect(_on_goal_reached)
@@ -61,6 +67,8 @@ func _on_goal_reached(body: PlayerCharacter) -> void:
 
 func _reset_run() -> void:
 	_completed = false
+	if combat_feedback != null:
+		combat_feedback.reset_feedback()
 	for node in get_tree().get_nodes_in_group("run_resettable"):
 		if is_ancestor_of(node) and node.has_method("reset_run"):
 			node.call("reset_run")

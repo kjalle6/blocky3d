@@ -1,5 +1,5 @@
 extends SceneTree
-## Graphical captures for reviewing the Level 1 blockout composition.
+## Deterministic graphical captures for the pixel Level 1 composition.
 
 
 func _init() -> void:
@@ -13,18 +13,62 @@ func _run() -> void:
 	root.add_child(game_root)
 	await process_frame
 
-	var level := game_root.get_node("World/Level1Blockout") as LevelSession3D
+	var level := game_root.get_node("World/Level01") as LevelSession3D
+	game_root.get_node("Interface").visible = false
 	for frame in 12:
 		await process_frame
 	_capture("level_01_start")
 
-	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(48.5, 0.72, 0.0)))
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(3.0, 0.7, 0.0)))
 	level.camera.snap_to_target()
 	for frame in 12:
 		await process_frame
-	_capture("level_01_middle")
+	_capture("level_01_tree_overlap")
 
-	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(108.0, 2.72, 0.0)))
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(17.0, 0.7, 0.0)))
+	level.camera.snap_to_target()
+	for frame in 12:
+		await process_frame
+	_capture("level_01_enemy")
+
+	level._reset_run()
+	await physics_frame
+	var enemy := level.get_node("GreenZonePatrol") as StompableEnemy3D
+	level.player.reset_at(Transform3D(
+		Basis.IDENTITY,
+		enemy.global_position + Vector3(-0.95, 0.18, 0.0)
+	))
+	level.camera.snap_to_target()
+	Input.action_press("move_right")
+	Input.action_press("attack")
+	await physics_frame
+	Input.action_release("attack")
+	for frame in 18:
+		await physics_frame
+		if enemy.is_defeated():
+			break
+	Input.action_release("move_right")
+	assert(enemy.is_defeated(), "Attack preview setup must land the authored melee hit.")
+	await process_frame
+	_capture("level_01_attack")
+
+	level._reset_run()
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(17.0, 0.7, 0.0)))
+	level.camera.snap_to_target()
+	level.player.receive_enemy_hit(enemy.global_position)
+	await process_frame
+	_capture("level_01_player_hit")
+
+	level._reset_run()
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(17.0, 0.7, 0.0)))
+	level.camera.snap_to_target()
+	level.player.kill()
+	for frame in 20:
+		await physics_frame
+	_capture("level_01_player_death")
+
+	level._reset_run()
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(46.5, 0.7, 0.0)))
 	level.camera.snap_to_target()
 	for frame in 12:
 		await process_frame

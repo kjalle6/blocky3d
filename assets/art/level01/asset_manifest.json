@@ -1,0 +1,131 @@
+﻿{
+    "characters/player_idle.png":  {
+                                       "source":  "weapons/beginner weapons/1 Characters/1 Biker/Idle.png",
+                                       "sha256":  "d649ed013895400fdff82673e98e2c2668d8570e86431a0085623777f4ce04e4"
+                                   },
+    "characters/player_run.png":  {
+                                      "source":  "weapons/beginner weapons/1 Characters/1 Biker/Run.png",
+                                      "sha256":  "fa09ab2537edbe868a7632df0524eca42794ca5c28fe2db31172f5e2f4791147"
+                                  },
+    "characters/player_attack.png":  {
+                                         "source":  "weapons/beginner weapons/1 Characters/1 Biker/Attack.png",
+                                         "sha256":  "a22843e4b0c31ede7757d73d32d2edd2a160d093e40fc6f26a79952664267f20"
+                                     },
+    "characters/player_run_attack.png":  {
+                                             "source":  "weapons/beginner weapons/1 Characters/1 Biker/Run_attack.png",
+                                             "sha256":  "9c1306d21627f3cd37948d083a4e584e40278622b03c78aa72801948ef88ab93"
+                                         },
+    "characters/player_jump.png":  {
+                                       "source":  "characters/1 Biker/Biker_jump.png",
+                                       "sha256":  "c1f7899cfef8946008d2002edcf635f08f0800c7897be6086bdef20f47feaa5d"
+                                   },
+    "characters/player_hurt.png":  {
+                                       "source":  "characters/1 Biker/Biker_hurt.png",
+                                       "sha256":  "e9eb068c4924e46d7c5a045f0196e33c60275b5c2f731933ea6821dbd5de2123"
+                                   },
+    "characters/player_death.png":  {
+                                        "source":  "characters/1 Biker/Biker_death.png",
+                                        "sha256":  "12ab0265f3a166cdce0789ffb9a73ecaf1662c6074c1182df5c1d1f518f712b3"
+                                    },
+    "characters/weapon_idle.png":  {
+                                       "source":  "weapons/beginner weapons/2 Weapons/1 Idle/8.png",
+                                       "sha256":  "925a745422bc093ffffb559b4ab36925a69029febb531a036fc3fd6a15f2abd8"
+                                   },
+    "characters/weapon_run.png":  {
+                                      "source":  "weapons/beginner weapons/2 Weapons/2 Run/8.png",
+                                      "sha256":  "5bb9a12d6251331ffe09924b97cc3ca3f7fa23ec1e0e44af55aca0cf7b9713ab"
+                                  },
+    "characters/weapon_attack.png":  {
+                                         "source":  "weapons/beginner weapons/2 Weapons/3 Attack/8.png",
+                                         "sha256":  "b3fa0018d31d5cbd47f34e21999fdd2906ee8bd163a0913df1f95b7a60db390d"
+                                     },
+    "characters/weapon_run_attack.png":  {
+                                             "source":  "weapons/beginner weapons/2 Weapons/4 Run_attack/8.png",
+                                             "sha256":  "737f554e1fd92e948204a725844e90b4e808e0f5d5f9f386767884248cbba986"
+                                         },
+    "enemies/green_idle.png":  {
+                                   "source":  "enemies/green_zone_enemies/1/Idle.png",
+                                   "sha256":  "0c80c3b9145fb1d00e5c580859f51795328cefc2d874a85b8dbe6e1d0d2a6ad7"
+                               },
+    "enemies/green_walk.png":  {
+                                   "source":  "enemies/green_zone_enemies/1/Walk.png",
+                                   "sha256":  "94255187cd179b20f4fea7709f6ba9bcb4f900280afddb4ecd5495c375fc3aaa"
+                               },
+    "enemies/green_attack.png":  {
+                                     "source":  "enemies/green_zone_enemies/1/Attack.png",
+                                     "sha256":  "1bdc24312c935025af5528d90e017d7ac67761e0742dcbe194ec17490863fad5"
+                                 },
+    "enemies/green_death.png":  {
+                                    "source":  "enemies/green_zone_enemies/1/Death.png",
+                                    "sha256":  "bc27a23c4903acdec0854f8c9f117e76bd10ec66fc1d61ad4a6c9275b3b4a564"
+                                },
+    "goal/chest_open.png":  {
+                                "source":  "tilesets/green_zone/4 Animated objects/Chest_open.png",
+                                "sha256":  "8d1834aa41d70e29805b1d3f5a4d1b9f24721b650e2e0239b46010bbe73531e6"
+                            },
+    "props/tree.png":  {
+                           "source":  "tilesets/green_zone/3 Objects/Other/Tree2.png",
+                           "sha256":  "c1fbbaeb1a857bad10b7b7a8b20b4a660d970215c10c249278dd5a0cc29ff22d"
+                       },
+    "props/bench.png":  {
+                            "source":  "tilesets/green_zone/3 Objects/Benches/2.png",
+                            "sha256":  "53afcf793ccc9fbdd27b29713dc534f5f6212b78efacf8d5d5028d9a768da60e"
+                        },
+    "props/bush.png":  {
+                           "source":  "tilesets/green_zone/3 Objects/Bushes/3.png",
+                           "sha256":  "8646f725b158386a9f989bd67858dbe3474a3325b2c4070621a0b0db9b54cb69"
+                       },
+    "props/fence.png":  {
+                            "source":  "tilesets/green_zone/3 Objects/Fence/3.png",
+                            "sha256":  "28e2f2df106c3bc7073bb3ba502172d8adac2baa787e9925b76cb52238a451a2"
+                        },
+    "tiles/top_left.png":  {
+                               "source":  "tilesets/green_zone/1 Tiles/Tile_01.png",
+                               "sha256":  "61bd5eb1f251ca7416495754daf9a60806b13ba5df9ca57a2bf327006aa7fc20"
+                           },
+    "tiles/top.png":  {
+                          "source":  "tilesets/green_zone/1 Tiles/Tile_02.png",
+                          "sha256":  "3172029beb462d1abcfa003c9c9f2f59942ff493513654db26e7e6fcaac3e293"
+                      },
+    "tiles/top_right.png":  {
+                                "source":  "tilesets/green_zone/1 Tiles/Tile_03.png",
+                                "sha256":  "1a5b2799b0e367fe5469921024ad63fb73808067c4c293c8b210ceb6e3a11d9c"
+                            },
+    "tiles/body_left.png":  {
+                                "source":  "tilesets/green_zone/1 Tiles/Tile_13.png",
+                                "sha256":  "308060dbbc0da97ce994cfc38deb1d93d1e506db2343410078a4ada5499cead6"
+                            },
+    "tiles/body.png":  {
+                           "source":  "tilesets/green_zone/1 Tiles/Tile_14.png",
+                           "sha256":  "d841ceb7f8cfb3c072e3835e1577b794a17487af69b2c32c17ddc606b4ffe4e0"
+                       },
+    "tiles/body_right.png":  {
+                                 "source":  "tilesets/green_zone/1 Tiles/Tile_15.png",
+                                 "sha256":  "91dde23fb77327a48c82aa3c93587c8a7eb474c1a38e2874edde7e9ae9e2c9cb"
+                             },
+    "background/layer_1.png":  {
+                                   "source":  "tilesets/green_zone/2 Background/Day/1.png",
+                                   "sha256":  "1fff6725a6917ac649e5698d01f7ded3ae1f9695f6a15d84a7cf59d8e321e781"
+                               },
+    "background/layer_2.png":  {
+                                   "source":  "tilesets/green_zone/2 Background/Day/2.png",
+                                   "sha256":  "8f85752f8cd2394999c6a002b1df13a25d845231507890c470f461a632bbf2f0"
+                               },
+    "background/layer_3.png":  {
+                                   "source":  "tilesets/green_zone/2 Background/Day/3.png",
+                                   "sha256":  "97ec6c6069af91ab640835f7306d00e37dcb6dc2cd8932140c858ca10213e826"
+                               },
+    "background/layer_4.png":  {
+                                   "source":  "tilesets/green_zone/2 Background/Day/4.png",
+                                   "sha256":  "f072381f9317e2aa08a4d64ff99818d4d8471f801a7cdd3f7c72c4960c448622"
+                               },
+    "background/layer_5.png":  {
+                                   "source":  "tilesets/green_zone/2 Background/Day/5.png",
+                                   "sha256":  "36c48f6c8c1af8add7edcae2925dc421672c182c3ae7923e1f38006ec9cafa67"
+                               },
+    "props/tree_grounded.png":  {
+                                    "source":  "tilesets/green_zone/3 Objects/Other/Tree2.png",
+                                    "transform":  "Removed the final all-black pixel row for grounded rendering.",
+                                    "sha256":  "8590a1f29bfe2dab5ec4c9c91b8b8b99b1ffe97479d8a528fc1b3375e8b40c0c"
+                                }
+}

@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/player_character.gd" id="1_player"]
+[ext_resource type="Resource" path="res://resources/player/default_movement.tres" id="2_movement"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_player_visual_3d.gd" id="3_visual"]
+
+[sub_resource type="BoxShape3D" id="Shape_player"]
+size = Vector3(0.72, 1.1, 0.72)
+
+[node name="Player" type="CharacterBody3D"]
+unique_name_in_owner = true
+script = ExtResource("1_player")
+movement = ExtResource("2_movement")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("Shape_player")
+
+[node name="PixelVisual" type="Node3D" parent="."]
+position = Vector3(0, 0.5, 1.2)
+script = ExtResource("3_visual")
+
+[node name="Body" type="Sprite3D" parent="PixelVisual"]
+unique_name_in_owner = true
+pixel_size = 0.04375
+render_priority = 10
+
+[node name="Weapon" type="Sprite3D" parent="PixelVisual"]
+unique_name_in_owner = true
+position = Vector3(0, 0, 0.01)
+pixel_size = 0.04375
+render_priority = 11

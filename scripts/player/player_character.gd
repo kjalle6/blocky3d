@@ -4,30 +4,48 @@ extends CharacterBody3D
 ## will be composed later; this script owns only universally available motion.
 
 signal died
+signal attack_connected(target: Node3D)
+signal damage_received(source_position: Vector3)
 
 @export var movement: PlayerMovementConfig
 @export var traversal_rail: TraversalRail3D
 @export var fall_limit_y := -8.0
+@export_range(0.05, 1.0, 0.01) var attack_duration := 0.34
+@export_range(0.0, 1.0, 0.01) var attack_impact_time := 0.13
+@export_range(0.1, 3.0, 0.05) var attack_reach := 1.25
+@export_range(0.1, 2.0, 0.05) var attack_vertical_tolerance := 0.9
 
 var path_speed := 0.0
 var _coyote_remaining := 0.0
 var _jump_buffer_remaining := 0.0
 var _dead := false
 var _descending_before_slide := false
+var _facing_sign := 1.0
+var _attack_remaining := 0.0
+var _attack_hit_applied := false
+
+@onready var pixel_visual: PixelPlayerVisual3D = get_node_or_null("PixelVisual") as PixelPlayerVisual3D
 
 
 func _ready() -> void:
 	assert(movement != null, "PlayerCharacter requires a PlayerMovementConfig.")
+	add_to_group("player_character")
 	floor_snap_length = movement.floor_snap_length
 	floor_max_angle = deg_to_rad(movement.maximum_floor_angle_degrees)
 
 
 func _physics_process(delta: float) -> void:
-	if _dead or traversal_rail == null:
+	if traversal_rail == null:
+		return
+	if _dead:
+		_update_pixel_visual(delta)
 		return
 
 	_update_jump_timers(delta)
+	_update_attack(delta)
 	var input_axis := Input.get_axis("move_left", "move_right")
+	if not is_zero_approx(input_axis):
+		_facing_sign = signf(input_axis)
 	var grounded := is_on_floor()
 	var acceleration := movement.air_acceleration
 	if grounded:
@@ -57,6 +75,7 @@ func _physics_process(delta: float) -> void:
 
 	if global_position.y < fall_limit_y:
 		kill()
+	_update_pixel_visual(delta)
 
 
 func _update_jump_timers(delta: float) -> void:
@@ -76,8 +95,8 @@ func kill() -> void:
 	_dead = true
 	velocity = Vector3.ZERO
 	path_speed = 0.0
-	visible = false
-	set_physics_process(false)
+	if pixel_visual != null:
+		pixel_visual.tick(0.0, is_on_floor(), 0.0, 0.0, false, true, _facing_sign > 0.0)
 	died.emit()
 
 
@@ -105,9 +124,74 @@ func reset_at(spawn_transform: Transform3D) -> void:
 	path_speed = 0.0
 	_coyote_remaining = 0.0
 	_jump_buffer_remaining = 0.0
+	_attack_remaining = 0.0
+	_attack_hit_applied = false
 	_dead = false
 	_descending_before_slide = false
 	visible = true
 	set_physics_process(true)
+	if pixel_visual != null:
+		pixel_visual.reset_feedback()
+		pixel_visual.set_state("idle", true)
 	if traversal_rail != null:
 		global_position = traversal_rail.constrain_world_position(global_position)
+
+
+func is_dead() -> bool:
+	return _dead
+
+
+func receive_enemy_hit(source_position: Vector3) -> void:
+	if _dead:
+		return
+	damage_received.emit(source_position)
+	kill()
+
+
+func play_damage_flash() -> void:
+	if pixel_visual != null:
+		pixel_visual.flash_damage()
+
+
+func _update_attack(delta: float) -> void:
+	if Input.is_action_just_pressed("attack") and _attack_remaining <= 0.0:
+		_attack_remaining = attack_duration
+		_attack_hit_applied = false
+	if _attack_remaining <= 0.0:
+		return
+	_attack_remaining = maxf(0.0, _attack_remaining - delta)
+	var elapsed := attack_duration - _attack_remaining
+	if not _attack_hit_applied and elapsed >= attack_impact_time:
+		_attack_hit_applied = true
+		_perform_melee_hit()
+
+
+func _perform_melee_hit() -> void:
+	var tangent := traversal_rail.tangent_at_world_position(global_position)
+	for candidate in get_tree().get_nodes_in_group("melee_target"):
+		if not candidate is Node3D or not candidate.has_method("receive_melee_hit"):
+			continue
+		var target := candidate as Node3D
+		var offset := target.global_position - global_position
+		var forward_distance := offset.dot(tangent) * _facing_sign
+		if (
+			forward_distance >= 0.0
+			and forward_distance <= attack_reach
+			and absf(offset.y) <= attack_vertical_tolerance
+		):
+			candidate.call("receive_melee_hit", global_position)
+			attack_connected.emit(target)
+
+
+func _update_pixel_visual(delta: float) -> void:
+	if pixel_visual == null:
+		return
+	pixel_visual.tick(
+		delta,
+		is_on_floor(),
+		path_speed,
+		velocity.y,
+		_attack_remaining > 0.0,
+		_dead,
+		_facing_sign > 0.0
+	)
