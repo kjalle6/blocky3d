@@ -10,4 +10,4 @@ display_number = 1
 title = "Animation Lab"
 lesson = "A disposable room for inspecting player movement and animation transitions."
 scene = ExtResource("2_scene")
-available_abilities = Array[StringName]([&"double_jump", &"wall_jump"])
+available_abilities = Array[StringName]([&"double_jump", &"wall_jump", &"dash"])

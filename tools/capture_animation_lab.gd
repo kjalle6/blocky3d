@@ -42,6 +42,17 @@ func _run() -> void:
 	for frame in 4:
 		await process_frame
 	_capture("animation_lab_wall_slide")
+
+	room.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(8.0, 0.7, 0)))
+	for frame in 3:
+		await physics_frame
+	assert(room.player._try_start_dash(1.0))
+	await physics_frame
+	room.camera.snap_to_target()
+	for frame in 2:
+		await process_frame
+	assert(room.player.pixel_visual.current_state() == "dash")
+	_capture("animation_lab_dash")
 	quit(0)
 
 

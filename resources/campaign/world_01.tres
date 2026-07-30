@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="WorldDefinition" load_steps=7 format=3]
+[gd_resource type="Resource" script_class="WorldDefinition" load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/campaign/world_definition.gd" id="1_world"]
 [ext_resource type="Resource" path="res://resources/campaign/level_01.tres" id="2_level_01"]
@@ -6,6 +6,7 @@
 [ext_resource type="Resource" path="res://resources/campaign/level_03.tres" id="4_level_03"]
 [ext_resource type="Script" path="res://scripts/campaign/level_definition.gd" id="5_definition"]
 [ext_resource type="Resource" path="res://resources/campaign/level_04.tres" id="6_level_04"]
+[ext_resource type="Resource" path="res://resources/campaign/level_05.tres" id="7_level_05"]
 
 [resource]
 script = ExtResource("1_world")
@@ -14,4 +15,4 @@ display_number = 1
 title = "Green Zone"
 description = "The opening world teaches the complete base movement kit through real levels."
 theme_id = &"green_zone"
-levels = Array[ExtResource("5_definition")]([ExtResource("2_level_01"), ExtResource("3_level_02"), ExtResource("4_level_03"), ExtResource("6_level_04")])
+levels = Array[ExtResource("5_definition")]([ExtResource("2_level_01"), ExtResource("3_level_02"), ExtResource("4_level_03"), ExtResource("6_level_04"), ExtResource("7_level_05")])

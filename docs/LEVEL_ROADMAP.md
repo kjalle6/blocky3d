@@ -21,7 +21,7 @@ kit:
 | 2: Gaps & Spikes | Longer precision rhythm, fair spikes, and protected checkpoints | None | Complete |
 | 3: Double Jump | Safe introduction followed by required aerial crossings | Double jump | Complete |
 | 4: Wall Jump | Turn the route upward and teach wall sensing, slide, and kick-off | Wall jump | Complete |
-| 5: Dash | Teach ground and air use in distinct readable zones | Dash | Planned |
+| 5: Dash | Integrate ground and air bursts into a complete mixed-movement route | Dash | Playable first pass |
 
 World 1 is internally the learning world, but it must not present itself as a
 disposable tutorial island. These are the first real levels of the game.
@@ -170,9 +170,47 @@ The route and mechanics pass focused exploit coverage, automated full-route
 completion through ordinary input, visual review, and hands-on feel approval.
 Level 4 is now a protected regression baseline.
 
+### Level 5: Dash — playable first pass
+
+Level 5 now strips the route back until Dash is unmistakably the point. The
+193.28-metre course uses eight isolated playable surfaces and six deliberate
+post-pickup crossings:
+
+- Double Jump and Wall Jump are supplied as assumed prior unlocks;
+- the opening contains one familiar jump before the permanent Dash pickup,
+  whose tall collection lane prevents the ability from being skipped;
+- every post-pickup edge-to-edge gap is 14.08 metres: beyond the measured
+  no-Dash envelope, but inside the comfortable Double Jump plus Dash envelope;
+- broad landing pads make the challenge reading and executing the new movement
+  combination, not catching a tiny collision margin;
+- the route rises and falls modestly so the player practises Dash at several
+  heights without turning the lesson into a wall-climb or hazard course;
+- no floating platform overlaps another playable surface horizontally. If a
+  platform is in the air, there is open void directly beneath it;
+- three familiar patrol enemies punctuate broad recovery platforms, giving the
+  player optional stomp, jump-over, or melee beats without guarding a landing
+  edge or checkpoint respawn. No spikes interrupt the movement lesson;
+- four centered checkpoints keep iteration fast without skipping an uncompleted
+  crossing, while restrained opening and finish scenery preserve readability.
+
+The initial Dash contract is horizontal and route-relative. Held direction
+wins over facing, gravity pauses during the short burst, grounded contact
+restores the charge, and a wall ends the burst cleanly. Dash does not replenish
+Double Jump, and Wall Jump does not replenish Dash. Jumping may cancel a
+grounded Dash into a faster ordinary jump, preserving an optional mastery
+technique without making it part of the opening lesson. Attacks do not occur
+during Dash.
+
+Focused runtime coverage validates the route measurements, silhouette rule,
+pickup policy, and reset behavior. An input-driven playthrough completes the
+single authored route through the production controller without death.
+Hands-on movement tuning is still required before Level 5 becomes a protected
+regression baseline.
+
 ## Later system milestones
 
-1. Build Dash and distinct ground/air teaching zones for World 1 Level 5.
+1. Hands-on tune Dash and the playable Level 5 route, then lock both as
+   regression baselines.
 2. Review all five levels as one world: pacing, repeated material, difficulty,
    visual continuity, unlock flow, and world completion.
 3. Generic moving hazards developed from the saw levels.

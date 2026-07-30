@@ -36,6 +36,9 @@ var _wall_coyote_remaining := 0.0
 var _wall_jump_control_lock_remaining := 0.0
 var _wall_sliding := false
 var _blocked_wall_jump_direction := 0.0
+var _dash_remaining := 0.0
+var _dash_available := false
+var _dash_direction := 1.0
 
 @onready var pixel_visual: PixelPlayerVisual3D = get_node_or_null("PixelVisual") as PixelPlayerVisual3D
 
@@ -55,19 +58,25 @@ func _physics_process(delta: float) -> void:
 		return
 
 	_update_jump_timers(delta)
-	_update_attack(delta)
 	_double_jump_visual_remaining = maxf(0.0, _double_jump_visual_remaining - delta)
 	_wall_jump_control_lock_remaining = maxf(
 		0.0,
 		_wall_jump_control_lock_remaining - delta
 	)
+	_update_dash_timer(delta)
 	var input_axis := Input.get_axis("move_left", "move_right")
+	var grounded := is_on_floor()
+	if grounded and not is_dashing():
+		_refresh_dash()
+	if Input.is_action_just_pressed("dash"):
+		_try_start_dash(input_axis)
+	_update_attack(delta)
 	if (
-		_wall_jump_control_lock_remaining <= 0.0
+		not is_dashing()
+		and _wall_jump_control_lock_remaining <= 0.0
 		and not is_zero_approx(input_axis)
 	):
 		_facing_sign = signf(input_axis)
-	var grounded := is_on_floor()
 	if grounded:
 		_refresh_aerial_jumps()
 		_wall_coyote_remaining = 0.0
@@ -78,7 +87,9 @@ func _physics_process(delta: float) -> void:
 	else:
 		_wall_coyote_remaining = maxf(0.0, _wall_coyote_remaining - delta)
 
-	if _wall_jump_control_lock_remaining <= 0.0:
+	if is_dashing():
+		path_speed = _dash_direction * movement.dash_speed
+	elif _wall_jump_control_lock_remaining <= 0.0:
 		var acceleration := movement.air_acceleration
 		if grounded:
 			acceleration = (
@@ -92,6 +103,7 @@ func _physics_process(delta: float) -> void:
 	var tangent := traversal_rail.tangent_at_world_position(global_position)
 	_wall_sliding = (
 		has_ability(PlayerAbility.WALL_JUMP)
+		and not is_dashing()
 		and not grounded
 		and _wall_contact_direction != 0.0
 		and velocity.y < 0.0
@@ -102,7 +114,10 @@ func _physics_process(delta: float) -> void:
 		active_gravity *= movement.wall_slide_gravity_multiplier
 		active_fall_speed = movement.wall_slide_max_fall_speed
 		_facing_sign = _wall_contact_direction
-	velocity.y = maxf(velocity.y - active_gravity * delta, -active_fall_speed)
+	if is_dashing():
+		velocity.y = 0.0
+	else:
+		velocity.y = maxf(velocity.y - active_gravity * delta, -active_fall_speed)
 
 	if _jump_buffer_remaining > 0.0:
 		if _coyote_remaining > 0.0:
@@ -123,8 +138,11 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	global_position = traversal_rail.constrain_world_position(global_position)
 	_update_wall_contact(tangent)
+	if is_dashing() and is_on_wall():
+		_finish_dash(true)
 	_wall_sliding = (
 		has_ability(PlayerAbility.WALL_JUMP)
+		and not is_dashing()
 		and not is_on_floor()
 		and _wall_contact_direction != 0.0
 		and velocity.y < 0.0
@@ -152,6 +170,8 @@ func kill() -> void:
 	if _dead:
 		return
 	_dead = true
+	_dash_remaining = 0.0
+	_dash_available = false
 	velocity = Vector3.ZERO
 	path_speed = 0.0
 	if pixel_visual != null:
@@ -162,6 +182,8 @@ func kill() -> void:
 func bounce(vertical_speed: float) -> void:
 	if _dead:
 		return
+	if is_dashing():
+		_finish_dash()
 	velocity.y = vertical_speed
 	_descending_before_slide = false
 	floor_snap_length = 0.0
@@ -172,6 +194,7 @@ func was_descending_before_slide() -> bool:
 
 
 func stop_for_completion() -> void:
+	_dash_remaining = 0.0
 	velocity = Vector3.ZERO
 	path_speed = 0.0
 	set_physics_process(false)
@@ -192,6 +215,9 @@ func reset_at(spawn_transform: Transform3D) -> void:
 	_wall_jump_control_lock_remaining = 0.0
 	_wall_sliding = false
 	_blocked_wall_jump_direction = 0.0
+	_dash_remaining = 0.0
+	_dash_available = has_ability(PlayerAbility.DASH)
+	_dash_direction = _facing_sign
 	_aerial_jumps_remaining = 1 if has_ability(PlayerAbility.DOUBLE_JUMP) else 0
 	_dead = false
 	_descending_before_slide = false
@@ -218,6 +244,8 @@ func configure_abilities(
 		if ability_id in _available_abilities and ability_id not in _active_abilities:
 			_active_abilities.append(ability_id)
 	_aerial_jumps_remaining = 1 if has_ability(PlayerAbility.DOUBLE_JUMP) else 0
+	_dash_remaining = 0.0
+	_dash_available = has_ability(PlayerAbility.DASH)
 
 
 func enable_ability(ability_id: StringName) -> bool:
@@ -226,6 +254,8 @@ func enable_ability(ability_id: StringName) -> bool:
 	_active_abilities.append(ability_id)
 	if ability_id == PlayerAbility.DOUBLE_JUMP:
 		_aerial_jumps_remaining = maxi(_aerial_jumps_remaining, 1)
+	elif ability_id == PlayerAbility.DASH:
+		_dash_available = true
 	return true
 
 
@@ -249,6 +279,18 @@ func blocked_wall_jump_direction() -> float:
 	return _blocked_wall_jump_direction
 
 
+func is_dashing() -> bool:
+	return _dash_remaining > 0.0
+
+
+func dash_available() -> bool:
+	return _dash_available
+
+
+func dash_direction() -> float:
+	return _dash_direction
+
+
 func feet_world_y() -> float:
 	return global_position.y - 0.55
 
@@ -266,6 +308,10 @@ func play_damage_flash() -> void:
 
 
 func _update_attack(delta: float) -> void:
+	if is_dashing():
+		_attack_remaining = 0.0
+		_attack_hit_applied = false
+		return
 	if Input.is_action_just_pressed("attack") and _attack_remaining <= 0.0:
 		_attack_remaining = attack_duration
 		_attack_hit_applied = false
@@ -296,6 +342,8 @@ func _perform_melee_hit() -> void:
 
 
 func _perform_ground_jump() -> void:
+	if is_dashing():
+		_finish_dash()
 	velocity.y = movement.jump_velocity
 	_coyote_remaining = 0.0
 	_jump_buffer_remaining = 0.0
@@ -319,6 +367,8 @@ func _can_wall_jump() -> bool:
 
 
 func _perform_wall_jump() -> void:
+	if is_dashing():
+		_finish_dash()
 	var source_wall_direction := _last_wall_contact_direction
 	var jump_direction := -source_wall_direction
 	velocity.y = movement.wall_jump_vertical_speed
@@ -335,6 +385,8 @@ func _perform_wall_jump() -> void:
 
 
 func _perform_double_jump() -> void:
+	if is_dashing():
+		_finish_dash()
 	velocity.y = movement.jump_velocity
 	_aerial_jumps_remaining -= 1
 	_jump_buffer_remaining = 0.0
@@ -345,6 +397,49 @@ func _perform_double_jump() -> void:
 
 func _refresh_aerial_jumps() -> void:
 	_aerial_jumps_remaining = 1 if has_ability(PlayerAbility.DOUBLE_JUMP) else 0
+
+
+func _refresh_dash() -> void:
+	_dash_available = has_ability(PlayerAbility.DASH)
+
+
+func _update_dash_timer(delta: float) -> void:
+	if not is_dashing():
+		return
+	_dash_remaining -= delta
+	if _dash_remaining <= 0.0:
+		_finish_dash()
+
+
+func _try_start_dash(input_axis: float) -> bool:
+	if (
+		not has_ability(PlayerAbility.DASH)
+		or not _dash_available
+		or is_dashing()
+	):
+		return false
+	_dash_direction = signf(input_axis) if not is_zero_approx(input_axis) else _facing_sign
+	_facing_sign = _dash_direction
+	_dash_remaining = movement.dash_duration
+	_dash_available = false
+	_attack_remaining = 0.0
+	_attack_hit_applied = false
+	_wall_jump_control_lock_remaining = 0.0
+	_wall_contact_direction = 0.0
+	_wall_sliding = false
+	velocity.y = 0.0
+	path_speed = _dash_direction * movement.dash_speed
+	floor_snap_length = 0.0
+	ability_performed.emit(PlayerAbility.DASH)
+	return true
+
+
+func _finish_dash(stopped_by_wall := false) -> void:
+	_dash_remaining = 0.0
+	if stopped_by_wall:
+		path_speed = 0.0
+	elif absf(path_speed) > movement.dash_exit_speed:
+		path_speed = signf(path_speed) * movement.dash_exit_speed
 
 
 func _update_wall_contact(tangent: Vector3) -> void:
@@ -375,5 +470,6 @@ func _update_pixel_visual(delta: float) -> void:
 		_dead,
 		_facing_sign > 0.0,
 		_double_jump_visual_remaining > 0.0,
-		_wall_sliding
+		_wall_sliding,
+		is_dashing()
 	)

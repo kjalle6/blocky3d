@@ -14,7 +14,8 @@ remain read-only design references.
 - Level 2: Gaps & Spikes — complete fundamentals regression course
 - Level 3: Double Jump — complete ability-introduction level
 - Level 4: Wall Jump — complete vertical-movement introduction
-- World 1 is the five-level opening green-zone world; Dash remains planned
+- Level 5: Dash — playable first pass awaiting hands-on tuning
+- All five World 1 levels are now playable
 - Typed world catalog and world-grouped mouse or `W`/`S` + `Enter` level
   selector
 - Development-only Animation Lab with a full-speed runway, test geometry,
@@ -35,6 +36,7 @@ The three living design documents are:
 
 - Move: `A` / `D`, arrow keys, left stick
 - Jump: `Space`, `W`, up arrow, gamepad south button
+- Dash: `Shift`, gamepad east button
 - Attack: left mouse, `J`, gamepad west button
 - Restart current run: `R`
 - Return to level selector: `Escape`
@@ -70,6 +72,7 @@ godot --headless --path . --script res://tools/validate_movement_runtime.gd
 godot --headless --path . --script res://tools/validate_camera_pixel_stability.gd
 godot --headless --path . --script res://tools/validate_double_jump_runtime.gd
 godot --headless --path . --script res://tools/validate_wall_jump_runtime.gd
+godot --headless --path . --script res://tools/validate_dash_runtime.gd
 godot --headless --path . --script res://tools/validate_level1_runtime.gd
 godot --headless --path . --script res://tools/validate_level1_playthrough.gd
 godot --headless --path . --script res://tools/validate_level2_runtime.gd
@@ -78,6 +81,8 @@ godot --headless --path . --script res://tools/validate_level3_runtime.gd
 godot --headless --path . --script res://tools/validate_level3_playthrough.gd
 godot --headless --path . --script res://tools/validate_level4_runtime.gd
 godot --headless --path . --script res://tools/validate_level4_playthrough.gd
+godot --headless --path . --script res://tools/validate_level5_runtime.gd
+godot --headless --path . --script res://tools/validate_level5_playthrough.gd
 ```
 
 Generate graphical review captures with:
@@ -87,5 +92,6 @@ godot --path . --script res://tools/capture_level1.gd
 godot --path . --script res://tools/capture_level2.gd
 godot --path . --script res://tools/capture_level3.gd
 godot --path . --script res://tools/capture_level4.gd
+godot --path . --script res://tools/capture_level5.gd
 godot --path . --script res://tools/capture_animation_lab.gd
 ```

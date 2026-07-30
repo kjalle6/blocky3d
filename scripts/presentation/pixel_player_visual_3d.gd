@@ -9,6 +9,7 @@ const BODY_TEXTURES := {
 	"jump": preload("res://assets/art/green_zone/characters/player_jump.png"),
 	"double_jump": preload("res://assets/art/green_zone/characters/player_double_jump.png"),
 	"wall_slide": preload("res://assets/art/green_zone/characters/player_jump.png"),
+	"dash": preload("res://assets/art/green_zone/characters/player_dash.png"),
 	"attack": preload("res://assets/art/green_zone/characters/player_attack.png"),
 	"run_attack": preload("res://assets/art/green_zone/characters/player_run_attack.png"),
 	"hurt": preload("res://assets/art/green_zone/characters/player_hurt.png"),
@@ -26,6 +27,7 @@ const FRAME_COUNTS := {
 	"jump": 4,
 	"double_jump": 6,
 	"wall_slide": 4,
+	"dash": 6,
 	"attack": 6,
 	"run_attack": 6,
 	"hurt": 2,
@@ -37,6 +39,7 @@ const FRAME_RATES := {
 	"jump": 8.0,
 	"double_jump": 14.0,
 	"wall_slide": 0.0,
+	"dash": 24.0,
 	"attack": 18.0,
 	"run_attack": 18.0,
 	"hurt": 8.0,
@@ -68,11 +71,14 @@ func tick(
 	dead: bool,
 	facing_right: bool,
 	double_jumping := false,
-	wall_sliding := false
+	wall_sliding := false,
+	dashing := false
 ) -> void:
 	var desired_state := "idle"
 	if dead:
 		desired_state = "death"
+	elif dashing:
+		desired_state = "dash"
 	elif attacking:
 		desired_state = "run_attack" if grounded and absf(horizontal_speed) > 0.5 else "attack"
 	elif double_jumping:
@@ -106,6 +112,10 @@ func set_state(next_state: String, force: bool) -> void:
 		weapon.frame = 0
 
 
+func current_state() -> String:
+	return _state
+
+
 func flash_damage() -> void:
 	if _flash_tween != null and _flash_tween.is_valid():
 		_flash_tween.kill()
@@ -137,7 +147,7 @@ func _apply_frame(vertical_speed: float) -> void:
 			frame = 3
 	elif _state == "wall_slide":
 		frame = 2
-	elif _state in ["double_jump", "attack", "run_attack", "hurt", "death"]:
+	elif _state in ["double_jump", "dash", "attack", "run_attack", "hurt", "death"]:
 		frame = mini(count - 1, floori(_elapsed * FRAME_RATES[_state]))
 	else:
 		frame = floori(_elapsed * FRAME_RATES[_state]) % count

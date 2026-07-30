@@ -30,6 +30,9 @@ func _validate() -> void:
 	var level_04_button := game_root.get_node(
 		"Interface/LevelSelect/Center/Panel/Margin/Options/WorldList/World01Level04Button"
 	) as Button
+	var level_05_button := game_root.get_node(
+		"Interface/LevelSelect/Center/Panel/Margin/Options/WorldList/World01Level05Button"
+	) as Button
 	var developer_heading := game_root.get_node(
 		"Interface/LevelSelect/Center/Panel/Margin/Options/WorldList/DeveloperToolsHeading"
 	) as Label
@@ -46,6 +49,9 @@ func _validate() -> void:
 	assert(game_root.campaign.find_by_id(&"double_jump").display_number == 3)
 	assert(game_root.campaign.find_by_id(&"wall_jump").display_number == 4)
 	assert(level_04_button.text == "4  -  WALL JUMP")
+	assert(game_root.campaign.find_by_id(&"dash").display_number == 5)
+	assert(level_05_button.text == "5  -  DASH")
+	assert(InputMap.has_action("dash"))
 	assert(developer_heading.text == "DEVELOPER TOOLS")
 	assert(animation_lab_button.text == "ANIMATION LAB")
 	assert(level_01_button.has_focus(), "The selector should initially focus Level 1.")

@@ -124,6 +124,20 @@ opposite wall or lands. A previously unspent Double Jump remains available as
 one recovery option. This preserves useful combinations without allowing
 infinite single-wall spam.
 
+## Dash movement contract
+
+Dash is a short horizontal burst along the current traversal route. Held
+direction takes priority; otherwise it uses player facing. The burst suspends
+gravity, consumes one charge, ignores steering, cancels an active attack, and
+ends immediately on solid wall contact. Natural exit retains a smaller amount
+of forward speed rather than dropping the player to a dead stop.
+
+Grounded contact restores Dash. Dash does not refill Double Jump, and Wall
+Jump does not refill Dash, preventing renewable airborne loops. A valid jump
+input can cancel Dash into the existing ground, wall, or Double Jump contract.
+This leaves dash-jumping available as optional speed mastery while keeping
+each ability's resource ownership independent.
+
 ## Checkpoint contract
 
 A checkpoint:
@@ -179,11 +193,11 @@ expects the player to own on entry. Fresh development sessions seed only that
 set without writing save data. This lets Level 4 begin with Double Jump while
 still presenting Wall Jump as its own pickup.
 
-The first `WorldDefinition`, Green Zone, contains the existing four levels and
-will later receive Level 5. Missing levels are not represented by fake scenes
-or disabled placeholder buttons. Development mode keeps all authored levels
-selectable. Production prerequisite/locking presentation is added only when
-campaign flow is ready to be tested.
+The first `WorldDefinition`, Green Zone, contains all five opening levels.
+Missing future levels are not represented by fake scenes or disabled
+placeholder buttons. Development mode keeps all authored levels selectable.
+Production prerequisite/locking presentation is added only when campaign flow
+is ready to be tested.
 
 Completed level IDs and permanent ability IDs remain globally stable, so
 introducing world grouping does not require changing the version-1 save
@@ -237,7 +251,12 @@ Every lasting system receives focused validation. The current suite covers:
 - Wall Jump contact, slide, kick, same-wall lockout, opposite-wall refresh,
   Double Jump interaction, and Animation Lab contracts;
 - Level 4 route measurements, pickup policy, vertical camera, checkpoints,
-  reset, and full input-driven completion.
+  reset, and full input-driven completion;
+- Dash direction, burst speed, gravity suspension, charge, jump cancellation,
+  wall impact, attack priority, and Animation Lab contracts;
+- Level 5 route measurements, six Dash-required crossings, the rule prohibiting
+  vertically stacked playable surfaces, safely spaced flow encounters, pickup
+  policy, checkpoints, reset, and full production-input completion.
 
 Graphical capture scripts render deterministic 1920x1080 review positions for
 all current levels. Visual changes are inspected in the running game;
@@ -261,5 +280,5 @@ behavior.
 The typed world catalog and grouped selector, versioned progression payload,
 permanent ability ownership, per-level ability policy, Double Jump, reusable
 pickup actors, non-pausing ability tutorials, Wall Jump, opt-in vertical camera
-framing, and fresh-per-level development mode are established. The next major
-system is Dash and its World 1 introduction level.
+framing, Dash, and fresh-per-level development mode are established. The next
+milestone is hands-on Level 5 tuning followed by a full World 1 review.

@@ -125,6 +125,7 @@ func _start_session(
 	level_label.text = (
 		session_heading
 		+ "\nMove: A / D or left stick    Jump: SPACE / gamepad A"
+		+ "    Dash: SHIFT / gamepad B"
 		+ "    Attack: LEFT CLICK / J / gamepad X    Reset: R"
 	)
 	level_select.visible = false

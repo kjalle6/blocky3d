@@ -47,10 +47,16 @@ func _run() -> void:
 		"Interface/DeveloperAbilityPanel/Margin/Options"
 		+ "/DeveloperAbilityToggles/WallJumpToggle"
 	) as CheckButton
+	var dash_toggle := game_root.get_node(
+		"Interface/DeveloperAbilityPanel/Margin/Options"
+		+ "/DeveloperAbilityToggles/DashToggle"
+	) as CheckButton
 	assert(double_jump_toggle != null)
 	assert(wall_jump_toggle != null)
+	assert(dash_toggle != null)
 	assert(double_jump_toggle.button_pressed)
 	assert(wall_jump_toggle.button_pressed)
+	assert(dash_toggle.button_pressed)
 	double_jump_toggle.button_pressed = false
 	double_jump_toggle.toggled.emit(false)
 	assert(not room.player.has_ability(PlayerAbility.DOUBLE_JUMP))
@@ -59,6 +65,14 @@ func _run() -> void:
 	double_jump_toggle.toggled.emit(true)
 	assert(room.player.has_ability(PlayerAbility.DOUBLE_JUMP))
 	assert(room.is_session_ability_enabled(PlayerAbility.DOUBLE_JUMP))
+	dash_toggle.button_pressed = false
+	dash_toggle.toggled.emit(false)
+	assert(not room.player.has_ability(PlayerAbility.DASH))
+	assert(not room.is_session_ability_enabled(PlayerAbility.DASH))
+	dash_toggle.button_pressed = true
+	dash_toggle.toggled.emit(true)
+	assert(room.player.has_ability(PlayerAbility.DASH))
+	assert(room.is_session_ability_enabled(PlayerAbility.DASH))
 
 	room._reset_run()
 	await process_frame
@@ -66,6 +80,7 @@ func _run() -> void:
 		room.player.has_ability(PlayerAbility.DOUBLE_JUMP),
 		"Room reset must retain session-local test abilities."
 	)
+	assert(room.player.has_ability(PlayerAbility.DASH))
 
 	print("Animation Lab structure and ability validation passed.")
 	quit(0)

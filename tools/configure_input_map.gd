@@ -13,6 +13,12 @@ func _init() -> void:
 	_configure_action("jump", 0.2, [
 		_key(KEY_SPACE), _key(KEY_W), _key(KEY_UP), _joy_button(JOY_BUTTON_A),
 	])
+	_configure_action("attack", 0.2, [
+		_mouse_button(MOUSE_BUTTON_LEFT), _key(KEY_J), _joy_button(JOY_BUTTON_X),
+	])
+	_configure_action("dash", 0.2, [
+		_key(KEY_SHIFT), _joy_button(JOY_BUTTON_B),
+	])
 	_configure_action("restart", 0.2, [
 		_key(KEY_R), _joy_button(JOY_BUTTON_Y),
 	])
@@ -44,5 +50,11 @@ func _joy_axis(axis: JoyAxis, value: float) -> InputEventJoypadMotion:
 
 func _joy_button(button: JoyButton) -> InputEventJoypadButton:
 	var event := InputEventJoypadButton.new()
+	event.button_index = button
+	return event
+
+
+func _mouse_button(button: MouseButton) -> InputEventMouseButton:
+	var event := InputEventMouseButton.new()
 	event.button_index = button
 	return event

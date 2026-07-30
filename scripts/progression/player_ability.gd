@@ -20,6 +20,7 @@ const ALL := [
 const IMPLEMENTED := [
 	DOUBLE_JUMP,
 	WALL_JUMP,
+	DASH,
 ]
 
 
@@ -46,6 +47,6 @@ static func instruction(ability_id: StringName) -> String:
 		WALL_JUMP:
 			return "JUMP AWAY FROM A WALL"
 		DASH:
-			return "DASH THROUGH THE AIR"
+			return "SHIFT / GAMEPAD B — DASH FORWARD"
 		_:
 			return ""
