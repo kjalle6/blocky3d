@@ -10,9 +10,10 @@ func _run() -> void:
 	var packed_scene := load("res://scenes/app/game_root.tscn") as PackedScene
 	var game_root := packed_scene.instantiate()
 	root.add_child(game_root)
+	game_root.load_level(1)
 	await process_frame
 
-	var level := game_root.get_node("World/Level01") as LevelSession3D
+	var level := game_root.current_level as LevelSession3D
 	var player := level.player
 	var enemy := level.get_node("GreenZonePatrol") as StompableEnemy3D
 	var completion_label := game_root.get_node("Interface/CompletionLabel") as Label

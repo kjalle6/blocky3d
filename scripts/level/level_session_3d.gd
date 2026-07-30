@@ -5,6 +5,7 @@ extends Node3D
 
 signal run_completed
 signal run_reset
+signal checkpoint_changed(route_index: int)
 
 @export_range(0.0, 1.0, 0.01) var reset_delay := 0.18
 
@@ -16,9 +17,15 @@ signal run_reset
 
 var _resetting := false
 var _completed := false
+var _initial_spawn_transform := Transform3D.IDENTITY
+var _active_respawn_transform := Transform3D.IDENTITY
+var _active_checkpoint_index := -1
+var _reset_request_serial := 0
 
 
 func _ready() -> void:
+	_initial_spawn_transform = spawn_point.global_transform
+	_active_respawn_transform = _initial_spawn_transform
 	player.traversal_rail = traversal_rail
 	camera.target = player
 	camera.traversal_rail = traversal_rail
@@ -35,6 +42,9 @@ func _ready() -> void:
 	for node in get_tree().get_nodes_in_group("level_goal"):
 		if is_ancestor_of(node) and node.has_signal("reached"):
 			node.reached.connect(_on_goal_reached)
+	for node in get_tree().get_nodes_in_group("level_checkpoint"):
+		if is_ancestor_of(node) and node.has_signal("activated"):
+			node.activated.connect(_on_checkpoint_activated)
 
 	_reset_run()
 	camera.snap_to_target()
@@ -51,8 +61,12 @@ func _on_player_died() -> void:
 	if _resetting:
 		return
 	_resetting = true
+	_reset_request_serial += 1
+	var request_serial := _reset_request_serial
 	await get_tree().create_timer(reset_delay).timeout
-	_reset_run()
+	if request_serial != _reset_request_serial:
+		return
+	_reset_world()
 	camera.snap_to_target()
 	_resetting = false
 
@@ -65,12 +79,36 @@ func _on_goal_reached(body: PlayerCharacter) -> void:
 	run_completed.emit()
 
 
-func _reset_run() -> void:
+func _on_checkpoint_activated(checkpoint: LevelCheckpoint3D) -> void:
+	if checkpoint.route_index <= _active_checkpoint_index:
+		return
+	_active_checkpoint_index = checkpoint.route_index
+	_active_respawn_transform = checkpoint.respawn_transform()
+	checkpoint_changed.emit(_active_checkpoint_index)
+
+
+func _reset_run(clear_checkpoint := true) -> void:
+	_reset_request_serial += 1
+	_resetting = false
+	if clear_checkpoint:
+		_active_checkpoint_index = -1
+		_active_respawn_transform = _initial_spawn_transform
+		for node in get_tree().get_nodes_in_group("level_checkpoint"):
+			if is_ancestor_of(node) and node.has_method("reset_checkpoint"):
+				node.call("reset_checkpoint")
+	_reset_world()
+
+
+func _reset_world() -> void:
 	_completed = false
 	if combat_feedback != null:
 		combat_feedback.reset_feedback()
 	for node in get_tree().get_nodes_in_group("run_resettable"):
 		if is_ancestor_of(node) and node.has_method("reset_run"):
 			node.call("reset_run")
-	player.reset_at(spawn_point.global_transform)
+	player.reset_at(_active_respawn_transform)
 	run_reset.emit()
+
+
+func active_checkpoint_index() -> int:
+	return _active_checkpoint_index

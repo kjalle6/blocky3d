@@ -1,28 +1,47 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/app/game_root.gd" id="1_app"]
-[ext_resource type="PackedScene" path="res://scenes/levels/level_01_pixel.tscn" id="2_level"]
 
 [sub_resource type="StyleBoxFlat" id="Style_panel"]
-bg_color = Color(0.03, 0.045, 0.075, 0.78)
+bg_color = Color(0.03, 0.045, 0.075, 0.9)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
+[sub_resource type="StyleBoxFlat" id="Style_menu_panel"]
+bg_color = Color(0.035, 0.055, 0.095, 0.98)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.31, 0.78, 0.6, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="Style_button"]
+bg_color = Color(0.09, 0.2, 0.24, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
 [node name="GameRoot" type="Node"]
 script = ExtResource("1_app")
 
 [node name="World" type="Node3D" parent="."]
-
-[node name="Level01" parent="World" instance=ExtResource("2_level")]
+unique_name_in_owner = true
 
 [node name="Interface" type="CanvasLayer" parent="."]
 
 [node name="Instructions" type="PanelContainer" parent="Interface"]
+unique_name_in_owner = true
+visible = false
 offset_left = 18.0
 offset_top = 18.0
-offset_right = 780.0
+offset_right = 810.0
 offset_bottom = 102.0
 theme_override_styles/panel = SubResource("Style_panel")
 
@@ -32,10 +51,26 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 14
 theme_override_constants/margin_bottom = 10
 
-[node name="Label" type="Label" parent="Interface/Instructions/Margin"]
+[node name="LevelLabel" type="Label" parent="Interface/Instructions/Margin"]
+unique_name_in_owner = true
 theme_override_colors/font_color = Color(0.94, 0.97, 1, 1)
 theme_override_font_sizes/font_size = 18
-text = "LEVEL 1 - FUNDAMENTALS\nMove: A / D or left stick    Jump: SPACE / gamepad A    Attack: LEFT CLICK / J / gamepad X    Reset: R"
+
+[node name="MenuHint" type="Label" parent="Interface"]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -245.0
+offset_top = 24.0
+offset_right = -20.0
+offset_bottom = 58.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(0.84, 0.9, 0.94, 0.85)
+theme_override_font_sizes/font_size = 16
+text = "ESC: LEVEL SELECT"
+horizontal_alignment = 2
 
 [node name="CompletionLabel" type="Label" parent="Interface"]
 unique_name_in_owner = true
@@ -50,6 +85,86 @@ theme_override_colors/font_shadow_color = Color(0.02, 0.02, 0.03, 0.9)
 theme_override_constants/shadow_offset_x = 3
 theme_override_constants/shadow_offset_y = 3
 theme_override_font_sizes/font_size = 42
-text = "LEVEL COMPLETE\nPress R to run it again"
+text = "LEVEL COMPLETE\nR: run again    ESC: level select"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="LevelSelect" type="Control" parent="Interface"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Backdrop" type="ColorRect" parent="Interface/LevelSelect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.045, 0.075, 0.14, 1)
+
+[node name="Center" type="CenterContainer" parent="Interface/LevelSelect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Interface/LevelSelect/Center"]
+custom_minimum_size = Vector2(540, 390)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Style_menu_panel")
+
+[node name="Margin" type="MarginContainer" parent="Interface/LevelSelect/Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 42
+theme_override_constants/margin_top = 38
+theme_override_constants/margin_right = 42
+theme_override_constants/margin_bottom = 38
+
+[node name="Options" type="VBoxContainer" parent="Interface/LevelSelect/Center/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="Title" type="Label" parent="Interface/LevelSelect/Center/Panel/Margin/Options"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.43, 1, 0.72, 1)
+theme_override_font_sizes/font_size = 38
+text = "BLOCKY 3D"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Interface/LevelSelect/Center/Panel/Margin/Options"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.84, 0.92, 1)
+theme_override_font_sizes/font_size = 18
+text = "TEMPORARY LEVEL SELECT"
+horizontal_alignment = 1
+
+[node name="Level01Button" type="Button" parent="Interface/LevelSelect/Center/Panel/Margin/Options"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("Style_button")
+text = "1  —  FUNDAMENTALS"
+
+[node name="Level02Button" type="Button" parent="Interface/LevelSelect/Center/Panel/Margin/Options"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("Style_button")
+text = "2  —  GAPS & SPIKES"
+
+[node name="Controls" type="Label" parent="Interface/LevelSelect/Center/Panel/Margin/Options"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.72, 0.82, 1)
+theme_override_font_sizes/font_size = 15
+text = "Click or use W / S + ENTER    •    1 / 2 shortcuts"
+horizontal_alignment = 1

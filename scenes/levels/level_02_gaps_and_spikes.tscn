@@ -1,0 +1,301 @@
+[gd_scene load_steps=22 format=3]
+
+[ext_resource type="Script" path="res://scripts/level/level_session_3d.gd" id="1_session"]
+[ext_resource type="Script" path="res://scripts/traversal/traversal_rail_3d.gd" id="2_rail"]
+[ext_resource type="PackedScene" path="res://scenes/player/pixel_player_character.tscn" id="3_player"]
+[ext_resource type="Script" path="res://scripts/camera/pixel_side_camera_3d.gd" id="4_camera"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="5_platform"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/pixel_patrol_enemy.tscn" id="6_enemy"]
+[ext_resource type="PackedScene" path="res://scenes/level/pixel_chest_goal.tscn" id="7_goal"]
+[ext_resource type="Script" path="res://scripts/hazards/hazard_3d.gd" id="8_hazard"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_parallax_layer_3d.gd" id="9_parallax"]
+[ext_resource type="Texture2D" path="res://assets/art/level01/background/layer_1.png" id="10_bg1"]
+[ext_resource type="Texture2D" path="res://assets/art/level01/background/layer_2.png" id="11_bg2"]
+[ext_resource type="Texture2D" path="res://assets/art/level01/background/layer_3.png" id="12_bg3"]
+[ext_resource type="Texture2D" path="res://assets/art/level01/background/layer_4.png" id="13_bg4"]
+[ext_resource type="Texture2D" path="res://assets/art/level01/background/layer_5.png" id="14_bg5"]
+[ext_resource type="Texture2D" path="res://assets/art/level01/props/tree_grounded.png" id="15_tree"]
+[ext_resource type="PackedScene" path="res://scenes/hazards/pixel_spike_row.tscn" id="16_spikes"]
+[ext_resource type="PackedScene" path="res://scenes/level/level_checkpoint.tscn" id="17_checkpoint"]
+[ext_resource type="Script" path="res://scripts/presentation/combat_feedback_3d.gd" id="18_feedback"]
+
+[sub_resource type="Environment" id="Environment_level"]
+background_mode = 1
+background_color = Color(0.286, 0.388, 0.635, 1)
+ambient_light_source = 3
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.0
+
+[sub_resource type="BoxShape3D" id="Shape_kill_plane"]
+size = Vector3(142, 1, 8)
+
+[node name="Level02GapsAndSpikes" type="Node3D"]
+script = ExtResource("1_session")
+reset_delay = 0.5
+
+[node name="CombatFeedback" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("18_feedback")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_level")
+
+[node name="TraversalRail" type="Node3D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_rail")
+control_points = PackedVector3Array(0, 0, 0, 131.34, 0, 0)
+
+[node name="Background" type="Node3D" parent="."]
+
+[node name="Layer1" type="Sprite3D" parent="Background"]
+position = Vector3(25.6, 12.5, -5)
+pixel_size = 0.14
+texture = ExtResource("10_bg1")
+script = ExtResource("9_parallax")
+parallax_factor = 0.04
+
+[node name="Layer2" type="Sprite3D" parent="Background"]
+position = Vector3(25.6, 12.5, -4.8)
+pixel_size = 0.14
+texture = ExtResource("11_bg2")
+script = ExtResource("9_parallax")
+parallax_factor = 0.1
+
+[node name="Layer3" type="Sprite3D" parent="Background"]
+position = Vector3(25.6, 12.5, -4.6)
+pixel_size = 0.14
+texture = ExtResource("12_bg3")
+script = ExtResource("9_parallax")
+parallax_factor = 0.17
+
+[node name="Layer4" type="Sprite3D" parent="Background"]
+position = Vector3(25.6, 12.5, -4.4)
+pixel_size = 0.14
+texture = ExtResource("13_bg4")
+script = ExtResource("9_parallax")
+parallax_factor = 0.25
+
+[node name="Layer5" type="Sprite3D" parent="Background"]
+position = Vector3(25.6, 12.5, -4.2)
+pixel_size = 0.14
+texture = ExtResource("14_bg5")
+script = ExtResource("9_parallax")
+parallax_factor = 0.34
+
+[node name="Platforms" type="Node3D" parent="."]
+
+[node name="GroundStart" type="StaticBody3D" parent="Platforms"]
+position = Vector3(5.12, -1.28, 0)
+script = ExtResource("5_platform")
+size = Vector3(10.24, 2.56, 2)
+
+[node name="OpeningStep01" type="StaticBody3D" parent="Platforms"]
+position = Vector3(13.28, 0.86, 0)
+script = ExtResource("5_platform")
+size = Vector3(2.56, 1.28, 2)
+
+[node name="OpeningStep02" type="StaticBody3D" parent="Platforms"]
+position = Vector3(17.28, 2.36, 0)
+script = ExtResource("5_platform")
+size = Vector3(2.56, 1.28, 2)
+
+[node name="OpeningStep03" type="StaticBody3D" parent="Platforms"]
+position = Vector3(21.28, 3.86, 0)
+script = ExtResource("5_platform")
+size = Vector3(2.56, 1.28, 2)
+
+[node name="GroundEarly" type="StaticBody3D" parent="Platforms"]
+position = Vector3(28.34, -1.28, 0)
+script = ExtResource("5_platform")
+size = Vector3(7.68, 2.56, 2)
+
+[node name="GroundGap" type="StaticBody3D" parent="Platforms"]
+position = Vector3(37.56, -1.28, 0)
+script = ExtResource("5_platform")
+size = Vector3(5.12, 2.56, 2)
+
+[node name="MidStep01" type="StaticBody3D" parent="Platforms"]
+position = Vector3(43.78, 0.86, 0)
+script = ExtResource("5_platform")
+size = Vector3(2.56, 1.28, 2)
+
+[node name="MidStep02" type="StaticBody3D" parent="Platforms"]
+position = Vector3(47.78, 2.36, 0)
+script = ExtResource("5_platform")
+size = Vector3(2.56, 1.28, 2)
+
+[node name="MidStep03" type="StaticBody3D" parent="Platforms"]
+position = Vector3(51.78, 0.86, 0)
+script = ExtResource("5_platform")
+size = Vector3(2.56, 1.28, 2)
+
+[node name="GroundMid" type="StaticBody3D" parent="Platforms"]
+position = Vector3(61.4, -1.28, 0)
+script = ExtResource("5_platform")
+size = Vector3(12.8, 2.56, 2)
+
+[node name="PrecisionStep01" type="StaticBody3D" parent="Platforms"]
+position = Vector3(71.28, 0.36, 0)
+script = ExtResource("5_platform")
+size = Vector3(2.56, 1.28, 2)
+
+[node name="PrecisionStep02" type="StaticBody3D" parent="Platforms"]
+position = Vector3(74.78, 1.86, 0)
+script = ExtResource("5_platform")
+size = Vector3(2.56, 1.28, 2)
+
+[node name="PrecisionStep03" type="StaticBody3D" parent="Platforms"]
+position = Vector3(78.28, 3.36, 0)
+script = ExtResource("5_platform")
+size = Vector3(2.56, 1.28, 2)
+
+[node name="PrecisionStep04" type="StaticBody3D" parent="Platforms"]
+position = Vector3(81.78, 4.86, 0)
+script = ExtResource("5_platform")
+size = Vector3(2.56, 1.28, 2)
+
+[node name="GroundSpikeRun" type="StaticBody3D" parent="Platforms"]
+position = Vector3(91.04, -1.28, 0)
+script = ExtResource("5_platform")
+size = Vector3(14.08, 2.56, 2)
+
+[node name="HazardStep01" type="StaticBody3D" parent="Platforms"]
+position = Vector3(99.64, 1.36, 0)
+script = ExtResource("5_platform")
+size = Vector3(1.28, 1.28, 2)
+
+[node name="HazardStep02" type="StaticBody3D" parent="Platforms"]
+position = Vector3(102.64, 2.86, 0)
+script = ExtResource("5_platform")
+size = Vector3(1.28, 1.28, 2)
+
+[node name="HazardStep03" type="StaticBody3D" parent="Platforms"]
+position = Vector3(105.64, 4.36, 0)
+script = ExtResource("5_platform")
+size = Vector3(1.28, 1.28, 2)
+
+[node name="GroundCheckpointIsland" type="StaticBody3D" parent="Platforms"]
+position = Vector3(110.56, -1.28, 0)
+script = ExtResource("5_platform")
+size = Vector3(5.12, 2.56, 2)
+
+[node name="FinalClimb01" type="StaticBody3D" parent="Platforms"]
+position = Vector3(116.92, 1.86, 0)
+script = ExtResource("5_platform")
+size = Vector3(3.84, 1.28, 2)
+
+[node name="FinalClimb02" type="StaticBody3D" parent="Platforms"]
+position = Vector3(123.17, 3.86, 0)
+script = ExtResource("5_platform")
+size = Vector3(3.84, 1.28, 2)
+
+[node name="FinalClimb03" type="StaticBody3D" parent="Platforms"]
+position = Vector3(129.42, 5.86, 0)
+script = ExtResource("5_platform")
+size = Vector3(3.84, 1.28, 2)
+
+[node name="Props" type="Node3D" parent="."]
+
+[node name="TreeBack01" type="Sprite3D" parent="Props"]
+position = Vector3(3.4, 2.56, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("15_tree")
+shaded = false
+
+[node name="TreeBack02" type="Sprite3D" parent="Props"]
+position = Vector3(58, 2.24, 1)
+texture_filter = 0
+pixel_size = 0.035
+texture = ExtResource("15_tree")
+shaded = false
+
+[node name="Hazards" type="Node3D" parent="."]
+
+[node name="SpikesGap01" parent="Hazards" instance=ExtResource("16_spikes")]
+position = Vector3(33.59, 0, 0)
+row_width = 2.5
+
+[node name="SpikesGap02" parent="Hazards" instance=ExtResource("16_spikes")]
+position = Vector3(41.31, 0, 0)
+row_width = 2.0
+
+[node name="SpikesGap03" parent="Hazards" instance=ExtResource("16_spikes")]
+position = Vector3(68.9, 0, 0)
+row_width = 2.0
+
+[node name="SpikesRun01" parent="Hazards" instance=ExtResource("16_spikes")]
+position = Vector3(91.25, 0, 0)
+row_width = 2.5
+
+[node name="SpikesRun02" parent="Hazards" instance=ExtResource("16_spikes")]
+position = Vector3(96.25, 0, 0)
+row_width = 2.5
+
+[node name="Checkpoints" type="Node3D" parent="."]
+
+[node name="Checkpoint02" parent="Checkpoints" instance=ExtResource("17_checkpoint")]
+position = Vector3(28, 0, 0)
+route_index = 2
+
+[node name="Checkpoint03" parent="Checkpoints" instance=ExtResource("17_checkpoint")]
+position = Vector3(57.5, 0, 0)
+route_index = 3
+
+[node name="Checkpoint04" parent="Checkpoints" instance=ExtResource("17_checkpoint")]
+position = Vector3(86, 0, 0)
+route_index = 4
+
+[node name="Checkpoint05" parent="Checkpoints" instance=ExtResource("17_checkpoint")]
+position = Vector3(110.56, 0, 0)
+route_index = 5
+
+[node name="SpawnPoint" type="Marker3D" parent="."]
+unique_name_in_owner = true
+position = Vector3(1.6, 0.7, 0)
+
+[node name="Player" parent="." instance=ExtResource("3_player")]
+unique_name_in_owner = true
+position = Vector3(1.6, 0.7, 0)
+
+[node name="Patrol01" parent="." instance=ExtResource("6_enemy")]
+position = Vector3(5, 0.42, 0)
+patrol_speed = 1.7
+
+[node name="Patrol02" parent="." instance=ExtResource("6_enemy")]
+position = Vector3(20.5, 4.92, 0)
+patrol_speed = 1.7
+starts_moving_right = false
+
+[node name="Patrol03" parent="." instance=ExtResource("6_enemy")]
+position = Vector3(37, 0.42, 0)
+patrol_speed = 1.7
+
+[node name="Patrol04" parent="." instance=ExtResource("6_enemy")]
+position = Vector3(47, 3.42, 0)
+patrol_speed = 1.7
+
+[node name="Patrol05" parent="." instance=ExtResource("6_enemy")]
+position = Vector3(63.5, 0.42, 0)
+patrol_speed = 1.7
+
+[node name="Patrol09" parent="." instance=ExtResource("6_enemy")]
+position = Vector3(117.5, 2.92, 0)
+patrol_speed = 1.7
+starts_moving_right = false
+
+[node name="Goal" parent="." instance=ExtResource("7_goal")]
+position = Vector3(130, 6.5, 0)
+
+[node name="RailCamera" type="Camera3D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("4_camera")
+current = true
+maximum_center_x = 124.87
+
+[node name="KillPlane" type="Area3D" parent="."]
+position = Vector3(65.67, -6, 0)
+script = ExtResource("8_hazard")
+
+[node name="Collision" type="CollisionShape3D" parent="KillPlane"]
+shape = SubResource("Shape_kill_plane")

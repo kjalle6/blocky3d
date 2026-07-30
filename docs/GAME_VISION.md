@@ -53,7 +53,9 @@ platforming adventure.
 
 - Exact ability roster and upgrade rules
 - Level structure, scoring, collectibles, and progression map
-- Checkpoint frequency and whether individual challenges are room-based
+- Long-term checkpoint frequency and whether later challenges are room-based.
+  Level 2 establishes the current baseline: checkpoints are earned only by
+  stable grounded contact and never by falling through a nearby trigger.
 
 These decisions should be settled with one production-quality vertical slice,
 not by inheriting assumptions from the migration prototype.

@@ -141,6 +141,10 @@ func is_dead() -> bool:
 	return _dead
 
 
+func feet_world_y() -> float:
+	return global_position.y - 0.55
+
+
 func receive_enemy_hit(source_position: Vector3) -> void:
 	if _dead:
 		return

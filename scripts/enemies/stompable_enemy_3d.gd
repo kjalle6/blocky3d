@@ -6,6 +6,7 @@ extends CharacterBody3D
 signal defeated(impact_position: Vector3)
 
 @export_range(0.1, 10.0, 0.1) var patrol_speed := 2.0
+@export var starts_moving_right := true
 @export_range(1.0, 100.0, 0.5) var gravity := 38.0
 @export_range(1.0, 30.0, 0.1) var stomp_bounce_speed := 10.0
 @export_range(0.1, 3.0, 0.05) var attack_trigger_distance := 1.65
@@ -32,6 +33,7 @@ var _attack_damage_applied := false
 
 func _ready() -> void:
 	_initial_transform = global_transform
+	_direction = 1.0 if starts_moving_right else -1.0
 	add_to_group("rail_bound")
 	add_to_group("run_resettable")
 	add_to_group("melee_target")
@@ -198,7 +200,7 @@ func _apply_attack_damage() -> void:
 func reset_run() -> void:
 	global_transform = _initial_transform
 	velocity = Vector3.ZERO
-	_direction = 1.0
+	_direction = 1.0 if starts_moving_right else -1.0
 	_defeated = false
 	_dying = false
 	_attack_remaining = 0.0

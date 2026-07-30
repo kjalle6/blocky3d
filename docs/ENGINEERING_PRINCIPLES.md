@@ -25,11 +25,12 @@ earn their lifetime and scope rather than becoming a collection of globals.
 
 ## Player and level work
 
-The first gameplay milestone is a vertical slice, not eleven blockouts. It must
-prove the movement model, orthographic camera, reset loop, player attack, one
-enemy family, art pipeline, and an authored 2.5D level. Only after that slice
-feels production-worthy should its systems become the template for additional
-levels.
+Level 1 is the production-quality vertical slice that proves the movement
+model, orthographic camera, reset loop, player attack, first enemy family, art
+pipeline, and authored 2.5D presentation. Additional levels reuse those focused
+systems while introducing one tested concern at a time. Level 2 adds authored
+spike rows and grounded checkpoints; neither feature is implemented as
+level-specific behavior in the application root.
 
 ## Asset pipeline
 
