@@ -29,11 +29,25 @@ var _session_unlocked_abilities: Array[StringName] = []
 
 func configure(
 	definition: LevelDefinition,
-	progression_store: ProgressionStore = null
+	progression_store: ProgressionStore = null,
+	initial_session_abilities: Array[StringName] = []
 ) -> void:
 	assert(not is_node_ready(), "Configure LevelSession3D before adding it to the scene tree.")
 	_definition = definition
 	_progression_store = progression_store
+	_session_unlocked_abilities.clear()
+	for ability_id in initial_session_abilities:
+		assert(
+			PlayerAbility.is_known(ability_id),
+			"Test session requested unknown ability '%s'." % ability_id
+		)
+		assert(
+			definition != null and definition.offers_ability(ability_id),
+			"%s cannot start with unavailable ability '%s'."
+			% [definition.level_id if definition != null else &"unconfigured", ability_id]
+		)
+		if ability_id not in _session_unlocked_abilities:
+			_session_unlocked_abilities.append(ability_id)
 
 
 func _ready() -> void:
@@ -155,6 +169,24 @@ func unlock_ability(ability_id: StringName) -> bool:
 
 func level_definition() -> LevelDefinition:
 	return _definition
+
+
+func set_session_ability_enabled(ability_id: StringName, enabled: bool) -> void:
+	assert(_definition != null, "A configured session must own ability policy.")
+	assert(
+		_definition.offers_ability(ability_id),
+		"%s does not offer ability '%s'." % [_definition.level_id, ability_id]
+	)
+	if enabled:
+		if ability_id not in _session_unlocked_abilities:
+			_session_unlocked_abilities.append(ability_id)
+	else:
+		_session_unlocked_abilities.erase(ability_id)
+	_apply_ability_policy()
+
+
+func is_session_ability_enabled(ability_id: StringName) -> bool:
+	return ability_id in _session_unlocked_abilities
 
 
 func _apply_ability_policy() -> void:

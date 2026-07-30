@@ -164,3 +164,15 @@ A level is complete when:
 - reusable behavior is not hidden in a level-specific patch;
 - automated runtime and full-route validation cover its lasting contracts;
 - visual captures and hands-on playtesting agree.
+
+## Definition of done for a player ability
+
+A new player ability is not complete when it merely works in its introduction
+level. It must also:
+
+- be registered as implemented and exposed automatically in the Animation Lab;
+- have an immediate on/off toggle that never changes campaign save data;
+- retain its selected lab state through `R`;
+- have enough lab geometry to test its movement and animation transitions;
+- preserve earlier level behavior when unavailable;
+- receive focused runtime validation and hands-on feel testing.

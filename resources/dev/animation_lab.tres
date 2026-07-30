@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="LevelDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/campaign/level_definition.gd" id="1_definition"]
+[ext_resource type="PackedScene" path="res://scenes/dev/animation_lab.tscn" id="2_scene"]
+
+[resource]
+script = ExtResource("1_definition")
+level_id = &"dev_animation_lab"
+display_number = 1
+title = "Animation Lab"
+lesson = "A disposable room for inspecting player movement and animation transitions."
+scene = ExtResource("2_scene")
+available_abilities = Array[StringName]([&"double_jump"])

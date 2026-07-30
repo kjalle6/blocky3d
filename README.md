@@ -17,6 +17,8 @@ remain read-only design references.
   its remaining planned levels
 - Typed world catalog and world-grouped mouse or `W`/`S` + `Enter` level
   selector
+- Development-only Animation Lab with a full-speed runway, test geometry,
+  immediate ability toggles, and no campaign/save effects
 - Development mode starts progression fresh on every level load while
   retaining unlocks through death and `R` inside that session
 - 1920x1080 presentation baseline
@@ -61,6 +63,7 @@ powershell -ExecutionPolicy Bypass -File .\tools\prepare_green_zone_assets.ps1
 
 ```powershell
 godot --headless --path . --script res://tools/validate_project.gd
+godot --headless --path . --script res://tools/validate_animation_lab.gd
 godot --headless --path . --script res://tools/validate_progression.gd
 godot --headless --path . --script res://tools/validate_developer_mode.gd
 godot --headless --path . --script res://tools/validate_movement_runtime.gd
@@ -80,4 +83,5 @@ Generate graphical review captures with:
 godot --path . --script res://tools/capture_level1.gd
 godot --path . --script res://tools/capture_level2.gd
 godot --path . --script res://tools/capture_level3.gd
+godot --path . --script res://tools/capture_animation_lab.gd
 ```

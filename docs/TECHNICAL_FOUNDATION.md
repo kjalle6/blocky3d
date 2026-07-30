@@ -35,6 +35,21 @@ and manual restart inside that loaded session, then clear when another level
 session is created. Disabling the mode restores the versioned persistent
 campaign behavior without changing level code.
 
+`GameRoot.developer_tools_enabled` adds a separate Animation Lab to the
+selector. It is a disposable `LevelSession3D` test course, not a campaign
+world or level. Current test abilities are granted as session-local unlocks:
+they survive `R`, never enter the save payload, and never mark campaign
+completion. An in-room panel toggles each implemented ability immediately.
+The room provides a long enclosed runway, camera travel, side walls, and low
+and high landing blocks for inspecting idle, run, jump, Double Jump, attack,
+landing, and transition timing without level hazards or scenery.
+
+`PlayerAbility.IMPLEMENTED` is the tooling contract. The Animation Lab
+definition and toggle panel must expose that exact set. A new ability is not
+finished until it can be enabled and disabled in the lab, survives a lab
+restart while enabled, and has geometry there that exercises its important
+movement and animation states.
+
 `PixelSideCamera3D` keeps a continuous internal follow position but quantizes
 its rendered transform to the current viewport's output-pixel grid. Static
 nearest-filtered world art therefore retains a stable sampling phase during
@@ -178,7 +193,10 @@ beneath `assets/art/green_zone`.
 
 Every lasting system receives focused validation. The current suite covers:
 
-- application and level-selector structure, including keyboard navigation;
+- application and world-grouped level-selector structure, including keyboard
+  navigation and the development-only Animation Lab;
+- Animation Lab isolation, expanded geometry, immediate ability toggles,
+  reset, and session-local ability policy;
 - campaign catalog integrity, versioned progress serialization, and
   per-level ability filtering;
 - fresh-per-level development progression versus same-session restart

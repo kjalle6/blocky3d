@@ -15,6 +15,12 @@ const ALL := [
 	DASH,
 ]
 
+## Abilities with a complete runtime implementation. The Animation Lab
+## definition must expose this exact set so new mechanics cannot omit tooling.
+const IMPLEMENTED := [
+	DOUBLE_JUMP,
+]
+
 
 static func is_known(ability_id: StringName) -> bool:
 	return ability_id in ALL

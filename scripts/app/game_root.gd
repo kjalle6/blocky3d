@@ -3,9 +3,11 @@ extends Node
 ## this node owns presentation and transitions, not level-specific behavior.
 
 @export var campaign: CampaignCatalog
+@export var developer_room_definition: LevelDefinition
 @export var level_button_style: StyleBox
 @export var persist_progression := true
 @export var developer_fresh_level_runs := true
+@export var developer_tools_enabled := true
 
 var current_level: LevelSession3D
 var current_level_definition: LevelDefinition
@@ -23,6 +25,8 @@ var _level_buttons: Array[Button] = []
 @onready var level_select: Control = %LevelSelect
 @onready var world_list: VBoxContainer = %WorldList
 @onready var developer_mode_label: Label = %DeveloperModeLabel
+@onready var developer_ability_panel: PanelContainer = %DeveloperAbilityPanel
+@onready var developer_ability_toggles: VBoxContainer = %DeveloperAbilityToggles
 
 
 func _ready() -> void:
@@ -66,6 +70,29 @@ func load_level(level_id: StringName) -> void:
 	var world_definition := campaign.find_world_for_level(level_id)
 	assert(definition != null, "Unknown campaign level: %s" % level_id)
 	assert(world_definition != null, "Campaign level has no owning world: %s" % level_id)
+	_start_session(definition, world_definition)
+
+
+func load_developer_room() -> void:
+	assert(developer_tools_enabled, "Developer tools are disabled.")
+	assert(developer_room_definition != null, "GameRoot requires a developer room definition.")
+	var room_errors := developer_room_definition.validation_errors()
+	assert(
+		room_errors.is_empty(),
+		"Developer room definition is invalid:\n%s" % "\n".join(room_errors)
+	)
+	_start_session(
+		developer_room_definition,
+		null,
+		developer_room_definition.available_abilities
+	)
+
+
+func _start_session(
+	definition: LevelDefinition,
+	world_definition: WorldDefinition,
+	initial_session_abilities: Array[StringName] = []
+) -> void:
 	_free_current_level()
 	current_level = definition.scene.instantiate() as LevelSession3D
 	assert(
@@ -74,19 +101,26 @@ func load_level(level_id: StringName) -> void:
 	)
 	current_level_definition = definition
 	current_world_definition = world_definition
-	current_level.name = (
-		"World%02dLevel%02d"
-		% [world_definition.display_number, definition.display_number]
-	)
-	current_level.configure(definition, _progression_store())
+	if world_definition == null:
+		current_level.name = "DeveloperAnimationLab"
+	else:
+		current_level.name = (
+			"World%02dLevel%02d"
+			% [world_definition.display_number, definition.display_number]
+		)
+	var session_store := _progression_store() if world_definition != null else null
+	current_level.configure(definition, session_store, initial_session_abilities)
 	world.add_child(current_level)
 	current_level.run_completed.connect(_on_run_completed)
 	current_level.run_reset.connect(_on_run_reset)
 	current_level.ability_unlocked.connect(_on_ability_unlocked)
+	var session_heading := definition.heading()
+	if world_definition == null:
+		session_heading = "DEVELOPER TOOLS / %s" % definition.title.to_upper()
+	else:
+		session_heading = world_definition.menu_heading() + " / " + definition.heading()
 	level_label.text = (
-		world_definition.menu_heading()
-		+ " / "
-		+ definition.heading()
+		session_heading
 		+ "\nMove: A / D or left stick    Jump: SPACE / gamepad A"
 		+ "    Attack: LEFT CLICK / J / gamepad X    Reset: R"
 	)
@@ -95,6 +129,7 @@ func load_level(level_id: StringName) -> void:
 	menu_hint.visible = true
 	completion_label.visible = false
 	_hide_ability_tutorial()
+	_configure_developer_ability_panel(world_definition == null)
 
 
 func show_level_select() -> void:
@@ -106,6 +141,7 @@ func show_level_select() -> void:
 	menu_hint.visible = false
 	completion_label.visible = false
 	_hide_ability_tutorial()
+	_configure_developer_ability_panel(false)
 	if not _level_buttons.is_empty():
 		_level_buttons.front().grab_focus()
 
@@ -139,6 +175,27 @@ func _build_world_list() -> void:
 			world_list.add_child(button)
 			_level_buttons.append(button)
 
+	if developer_tools_enabled and developer_room_definition != null:
+		var heading := Label.new()
+		heading.name = "DeveloperToolsHeading"
+		heading.add_theme_color_override("font_color", Color(1.0, 0.78, 0.32, 1.0))
+		heading.add_theme_font_size_override("font_size", 17)
+		heading.text = "DEVELOPER TOOLS"
+		heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		world_list.add_child(heading)
+
+		var button := Button.new()
+		button.name = "AnimationLabButton"
+		button.custom_minimum_size = Vector2(0.0, 58.0)
+		button.add_theme_font_size_override("font_size", 20)
+		if level_button_style != null:
+			button.add_theme_stylebox_override("normal", level_button_style)
+		button.text = "ANIMATION LAB"
+		button.set_meta(&"developer_room", true)
+		button.pressed.connect(_load_button_level.bind(button))
+		world_list.add_child(button)
+		_level_buttons.append(button)
+
 
 func _move_level_focus(direction: int) -> void:
 	if _level_buttons.is_empty():
@@ -159,7 +216,38 @@ func _load_focused_level() -> void:
 
 
 func _load_button_level(button: Button) -> void:
-	load_level(button.get_meta(&"level_id") as StringName)
+	if button.get_meta(&"developer_room", false):
+		load_developer_room()
+	else:
+		load_level(button.get_meta(&"level_id") as StringName)
+
+
+func _configure_developer_ability_panel(enabled: bool) -> void:
+	for child in developer_ability_toggles.get_children():
+		child.queue_free()
+	developer_ability_panel.visible = (
+		enabled
+		and developer_tools_enabled
+		and current_level != null
+		and current_level_definition == developer_room_definition
+	)
+	if not developer_ability_panel.visible:
+		return
+	for ability_id in developer_room_definition.available_abilities:
+		var toggle := CheckButton.new()
+		toggle.name = "%sToggle" % String(ability_id).to_pascal_case()
+		toggle.add_theme_font_size_override("font_size", 17)
+		toggle.text = PlayerAbility.display_name(ability_id)
+		toggle.focus_mode = Control.FOCUS_NONE
+		toggle.button_pressed = current_level.player.has_ability(ability_id)
+		toggle.toggled.connect(_on_developer_ability_toggled.bind(ability_id))
+		developer_ability_toggles.add_child(toggle)
+
+
+func _on_developer_ability_toggled(enabled: bool, ability_id: StringName) -> void:
+	if current_level == null or current_world_definition != null:
+		return
+	current_level.set_session_ability_enabled(ability_id, enabled)
 
 
 func _progression_store() -> ProgressionStore:
@@ -179,7 +267,11 @@ func _free_current_level() -> void:
 func _on_run_completed() -> void:
 	completion_label.visible = true
 	var store := _progression_store()
-	if store != null and current_level_definition != null:
+	if (
+		store != null
+		and current_level_definition != null
+		and current_world_definition != null
+	):
 		store.mark_level_completed(current_level_definition.level_id)
 
 

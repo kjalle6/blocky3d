@@ -27,6 +27,12 @@ func _validate() -> void:
 	var level_03_button := game_root.get_node(
 		"Interface/LevelSelect/Center/Panel/Margin/Options/WorldList/World01Level03Button"
 	) as Button
+	var developer_heading := game_root.get_node(
+		"Interface/LevelSelect/Center/Panel/Margin/Options/WorldList/DeveloperToolsHeading"
+	) as Label
+	var animation_lab_button := game_root.get_node(
+		"Interface/LevelSelect/Center/Panel/Margin/Options/WorldList/AnimationLabButton"
+	) as Button
 	assert(game_root.campaign is CampaignCatalog, "GameRoot requires typed campaign data.")
 	assert(game_root.campaign.validation_errors().is_empty(), "Campaign data must validate.")
 	assert(world_heading.text == "WORLD 1 - GREEN ZONE")
@@ -35,17 +41,25 @@ func _validate() -> void:
 	assert(game_root.campaign.find_by_id(&"fundamentals").display_number == 1)
 	assert(game_root.campaign.find_by_id(&"gaps_and_spikes").display_number == 2)
 	assert(game_root.campaign.find_by_id(&"double_jump").display_number == 3)
+	assert(developer_heading.text == "DEVELOPER TOOLS")
+	assert(animation_lab_button.text == "ANIMATION LAB")
 	assert(level_01_button.has_focus(), "The selector should initially focus Level 1.")
 	var menu_up := InputEventKey.new()
 	menu_up.physical_keycode = KEY_W
 	menu_up.pressed = true
 	game_root._unhandled_input(menu_up)
-	assert(level_03_button.has_focus(), "W should wrap selection from Level 1 to Level 3.")
+	assert(
+		animation_lab_button.has_focus(),
+		"W should wrap selection from Level 1 to the final developer option."
+	)
 	var menu_down := InputEventKey.new()
 	menu_down.physical_keycode = KEY_S
 	menu_down.pressed = true
 	game_root._unhandled_input(menu_down)
-	assert(level_01_button.has_focus(), "S should wrap selection from Level 3 to Level 1.")
+	assert(
+		level_01_button.has_focus(),
+		"S should wrap selection from the developer option to Level 1."
+	)
 	game_root._unhandled_input(menu_down)
 	assert(level_02_button.has_focus(), "S should move selection from Level 1 to Level 2.")
 	var menu_enter := InputEventKey.new()
