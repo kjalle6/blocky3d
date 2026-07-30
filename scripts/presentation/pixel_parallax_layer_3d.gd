@@ -29,4 +29,7 @@ func _process(_delta: float) -> void:
 		(camera.global_position.x - _initial_camera_x)
 		* (1.0 - parallax_factor)
 	)
+	var pixel_camera := camera as PixelSideCamera3D
+	if pixel_camera != null:
+		next_position.x = pixel_camera.snap_world_x(next_position.x)
 	global_position = next_position

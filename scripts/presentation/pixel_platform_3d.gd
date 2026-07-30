@@ -6,12 +6,12 @@ extends StaticBody3D
 const TILE_WORLD_SIZE := 1.28
 const TILE_PIXEL_SIZE := TILE_WORLD_SIZE / 32.0
 
-const TOP_LEFT := preload("res://assets/art/level01/tiles/top_left.png")
-const TOP := preload("res://assets/art/level01/tiles/top.png")
-const TOP_RIGHT := preload("res://assets/art/level01/tiles/top_right.png")
-const BODY_LEFT := preload("res://assets/art/level01/tiles/body_left.png")
-const BODY := preload("res://assets/art/level01/tiles/body.png")
-const BODY_RIGHT := preload("res://assets/art/level01/tiles/body_right.png")
+const TOP_LEFT := preload("res://assets/art/green_zone/tiles/top_left.png")
+const TOP := preload("res://assets/art/green_zone/tiles/top.png")
+const TOP_RIGHT := preload("res://assets/art/green_zone/tiles/top_right.png")
+const BODY_LEFT := preload("res://assets/art/green_zone/tiles/body_left.png")
+const BODY := preload("res://assets/art/green_zone/tiles/body.png")
+const BODY_RIGHT := preload("res://assets/art/green_zone/tiles/body_right.png")
 
 @export var size := Vector3(5.12, 2.56, 2.0)
 @export var face_depth := 1.04

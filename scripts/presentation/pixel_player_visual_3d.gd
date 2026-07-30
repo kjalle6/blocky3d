@@ -4,19 +4,19 @@ extends Node3D
 ## owns strip selection and frame timing for the body and equipped weapon.
 
 const BODY_TEXTURES := {
-	"idle": preload("res://assets/art/level01/characters/player_idle.png"),
-	"run": preload("res://assets/art/level01/characters/player_run.png"),
-	"jump": preload("res://assets/art/level01/characters/player_jump.png"),
-	"attack": preload("res://assets/art/level01/characters/player_attack.png"),
-	"run_attack": preload("res://assets/art/level01/characters/player_run_attack.png"),
-	"hurt": preload("res://assets/art/level01/characters/player_hurt.png"),
-	"death": preload("res://assets/art/level01/characters/player_death.png"),
+	"idle": preload("res://assets/art/green_zone/characters/player_idle.png"),
+	"run": preload("res://assets/art/green_zone/characters/player_run.png"),
+	"jump": preload("res://assets/art/green_zone/characters/player_jump.png"),
+	"attack": preload("res://assets/art/green_zone/characters/player_attack.png"),
+	"run_attack": preload("res://assets/art/green_zone/characters/player_run_attack.png"),
+	"hurt": preload("res://assets/art/green_zone/characters/player_hurt.png"),
+	"death": preload("res://assets/art/green_zone/characters/player_death.png"),
 }
 const WEAPON_TEXTURES := {
-	"idle": preload("res://assets/art/level01/characters/weapon_idle.png"),
-	"run": preload("res://assets/art/level01/characters/weapon_run.png"),
-	"attack": preload("res://assets/art/level01/characters/weapon_attack.png"),
-	"run_attack": preload("res://assets/art/level01/characters/weapon_run_attack.png"),
+	"idle": preload("res://assets/art/green_zone/characters/weapon_idle.png"),
+	"run": preload("res://assets/art/green_zone/characters/weapon_run.png"),
+	"attack": preload("res://assets/art/green_zone/characters/weapon_attack.png"),
+	"run_attack": preload("res://assets/art/green_zone/characters/weapon_run_attack.png"),
 }
 const FRAME_COUNTS := {
 	"idle": 4,

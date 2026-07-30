@@ -1,5 +1,5 @@
 extends SceneTree
-## Deterministic visual review of the Level 2 route and temporary selector.
+## Deterministic visual review of the Level 2 route and catalog-driven selector.
 
 
 func _init() -> void:
@@ -10,6 +10,7 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://build/previews"))
 	var packed_scene := load("res://scenes/app/game_root.tscn") as PackedScene
 	var game_root := packed_scene.instantiate()
+	game_root.persist_progression = false
 	root.add_child(game_root)
 	for frame in 12:
 		await process_frame

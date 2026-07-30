@@ -9,6 +9,7 @@ func _init() -> void:
 func _run() -> void:
 	var packed_scene := load("res://scenes/app/game_root.tscn") as PackedScene
 	var game_root := packed_scene.instantiate()
+	game_root.persist_progression = false
 	root.add_child(game_root)
 	game_root.load_level(1)
 	await process_frame

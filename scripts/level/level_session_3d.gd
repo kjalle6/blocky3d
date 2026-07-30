@@ -21,12 +21,25 @@ var _initial_spawn_transform := Transform3D.IDENTITY
 var _active_respawn_transform := Transform3D.IDENTITY
 var _active_checkpoint_index := -1
 var _reset_request_serial := 0
+var _definition: LevelDefinition
+var _progression_store: ProgressionStore
+var _session_unlocked_abilities: Array[StringName] = []
+
+
+func configure(
+	definition: LevelDefinition,
+	progression_store: ProgressionStore = null
+) -> void:
+	assert(not is_node_ready(), "Configure LevelSession3D before adding it to the scene tree.")
+	_definition = definition
+	_progression_store = progression_store
 
 
 func _ready() -> void:
 	_initial_spawn_transform = spawn_point.global_transform
 	_active_respawn_transform = _initial_spawn_transform
 	player.traversal_rail = traversal_rail
+	_apply_ability_policy()
 	camera.target = player
 	camera.traversal_rail = traversal_rail
 	player.died.connect(_on_player_died)
@@ -112,3 +125,39 @@ func _reset_world() -> void:
 
 func active_checkpoint_index() -> int:
 	return _active_checkpoint_index
+
+
+func unlock_ability(ability_id: StringName) -> bool:
+	assert(_definition != null, "A configured level definition must own ability policy.")
+	if not PlayerAbility.is_known(ability_id):
+		push_error("Level requested unknown ability '%s'." % ability_id)
+		return false
+	if not _definition.offers_ability(ability_id):
+		push_error(
+			"%s cannot unlock unavailable ability '%s'."
+			% [_definition.level_id, ability_id]
+		)
+		return false
+	if ability_id not in _session_unlocked_abilities:
+		_session_unlocked_abilities.append(ability_id)
+	if _progression_store != null:
+		_progression_store.unlock_ability(ability_id)
+	player.enable_ability(ability_id)
+	return player.has_ability(ability_id)
+
+
+func level_definition() -> LevelDefinition:
+	return _definition
+
+
+func _apply_ability_policy() -> void:
+	var owned_abilities: Array[StringName] = []
+	if _progression_store != null:
+		owned_abilities = _progression_store.unlocked_abilities()
+	for ability_id in _session_unlocked_abilities:
+		if ability_id not in owned_abilities:
+			owned_abilities.append(ability_id)
+	if _definition == null:
+		player.configure_abilities([], [])
+		return
+	player.configure_abilities(owned_abilities, _definition.available_abilities)

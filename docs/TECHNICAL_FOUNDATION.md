@@ -8,7 +8,8 @@ hierarchy.
 
 | Responsibility | Current or intended owner |
 | --- | --- |
-| Application flow | `GameRoot`: active world container, interface container, and temporary level selector |
+| Application flow | `GameRoot`: active world container, interface container, and catalog-driven level selector |
+| Campaign content | `CampaignCatalog` and typed `LevelDefinition` resources; no level-number behavior branches |
 | Level run state | `LevelSession3D`: player wiring, death, checkpoint respawn, full restart, and completion |
 | Locomotion | `PlayerCharacter` plus typed `PlayerMovementConfig` tuning |
 | Route plane | `TraversalRail3D`: world position and tangent for path-relative movement |
@@ -17,7 +18,7 @@ hierarchy.
 | Enemy behavior | Focused enemy scenes/scripts with separate body, stomp, attack, hurt, and presentation contracts |
 | Hazards | Reusable hazard areas; spike art and damage geometry remain independently authored |
 | Feedback | Replaceable presentation owner for flashes, hit pause, and future named audio cues |
-| Progression | Not implemented; future versioned data and typed level metadata |
+| Progression | `ProgressionStore` owns versioned `GameProgress` save data and permanent ability ownership |
 
 `GameRoot` has two stable top-level containers:
 
@@ -25,6 +26,17 @@ hierarchy.
 - `Interface` for menus, HUD, transitions, and accessibility UI
 
 Gameplay behavior does not accumulate directly on `GameRoot`.
+
+`PixelSideCamera3D` keeps a continuous internal follow position but quantizes
+its rendered transform to the current viewport's output-pixel grid. Static
+nearest-filtered world art therefore retains a stable sampling phase during
+long camera travel. Parallax layers snap to the same grid after applying their
+individual movement factors.
+
+The reusable `pixel_level_base.tscn` scene owns the common green-zone runtime
+frame: session, feedback, environment, traversal rail, parallax background,
+route containers, player, camera, and kill plane. Individual level scenes
+inherit it and contain only authored route content and intentional overrides.
 
 ## Engineering rules
 
@@ -38,6 +50,8 @@ Gameplay behavior does not accumulate directly on `GameRoot`.
   separate.
 - Use signals for meaningful domain events, not instead of clear ownership.
 - A reusable mechanic is never implemented privately inside one level.
+- Level numbers are presentation and ordering only; behavior keys off stable
+  level and ability identifiers.
 - Death and restart reset every mutable actor deterministically.
 - Movement and collision contracts do not silently change when art changes.
 - Readable geometry enforces routes; invisible barriers are reserved for clear
@@ -82,9 +96,10 @@ A checkpoint:
 ## Level authoring
 
 Levels are composed scenes. Spatial layout stays in level scenes; shared
-behavior stays in reusable scripts and scenes. Future level metadata should
-identify title, scene, music, granted/required abilities, records, collectible
-targets, and theme without hard-coded level-number checks.
+behavior stays in reusable scripts and scenes. `LevelDefinition` identifies
+the stable ID, display order, title, scene, prerequisite levels, and the
+abilities available and required in that level. Music, records, collectible
+targets, and theme metadata can be added there when their systems exist.
 
 When adapting a Python level:
 
@@ -112,15 +127,18 @@ the game repository.
 - Gameplay collision is authored separately from imported art.
 - Do not mix visual packs without a deliberate palette and style decision.
 
-The current Level 1 asset subset is refreshed through
-`tools/prepare_level1_assets.ps1`; its manifest and license notes live beneath
-`assets/art/level01`.
+The shared green-zone runtime set is refreshed through
+`tools/prepare_green_zone_assets.ps1`; its manifest and license notes live
+beneath `assets/art/green_zone`.
 
 ## Validation and visual review
 
 Every lasting system receives focused validation. The current suite covers:
 
 - application and level-selector structure, including keyboard navigation;
+- campaign catalog integrity, versioned progress serialization, and
+  per-level ability filtering;
+- output-pixel camera stability during long horizontal travel;
 - movement, jump envelope, coyote time, buffering, and reset;
 - Level 1 combat, goal flow, reset, and full completion;
 - Level 2 route measurements, spike collision and centering, checkpoints,
@@ -145,6 +163,8 @@ Level 1 and Level 2 are protected regression baselines. New abilities and
 systems must not silently change their movement, collision, enemy, checkpoint,
 or restart behavior.
 
-The next technical milestone is the smallest reusable ability and versioned
-progression model needed for Double Jump and Level 3. It must be able to grow
-into Wall Jump and Dash without encoding unlocks as level-number conditions.
+The campaign catalog, versioned progression payload, permanent ability
+ownership, and per-level ability policy are now established. The next
+technical milestone is Double Jump itself plus its pickup/presentation
+contract in Level 3; it must use this foundation rather than adding
+level-number conditions.

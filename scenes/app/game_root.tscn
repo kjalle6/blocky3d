@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/app/game_root.gd" id="1_app"]
+[ext_resource type="Resource" path="res://resources/campaign/main_campaign.tres" id="2_campaign"]
 
 [sub_resource type="StyleBoxFlat" id="Style_panel"]
 bg_color = Color(0.03, 0.045, 0.075, 0.9)
@@ -30,6 +31,8 @@ corner_radius_bottom_left = 6
 
 [node name="GameRoot" type="Node"]
 script = ExtResource("1_app")
+campaign = ExtResource("2_campaign")
+level_button_style = SubResource("Style_button")
 
 [node name="World" type="Node3D" parent="."]
 unique_name_in_owner = true
@@ -143,28 +146,17 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.78, 0.84, 0.92, 1)
 theme_override_font_sizes/font_size = 18
-text = "TEMPORARY LEVEL SELECT"
+text = "SELECT LEVEL"
 horizontal_alignment = 1
 
-[node name="Level01Button" type="Button" parent="Interface/LevelSelect/Center/Panel/Margin/Options"]
+[node name="LevelButtons" type="VBoxContainer" parent="Interface/LevelSelect/Center/Panel/Margin/Options"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("Style_button")
-text = "1  —  FUNDAMENTALS"
-
-[node name="Level02Button" type="Button" parent="Interface/LevelSelect/Center/Panel/Margin/Options"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 64)
-layout_mode = 2
-theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("Style_button")
-text = "2  —  GAPS & SPIKES"
+theme_override_constants/separation = 12
 
 [node name="Controls" type="Label" parent="Interface/LevelSelect/Center/Panel/Margin/Options"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.72, 0.82, 1)
 theme_override_font_sizes/font_size = 15
-text = "Click or use W / S + ENTER    •    1 / 2 shortcuts"
+text = "Click or use W / S + ENTER    •    1-9 shortcuts"
 horizontal_alignment = 1

@@ -14,6 +14,10 @@ config/name="Blocky 3D"
 run/main_scene="res://scenes/app/game_root.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 
+[autoload]
+
+GameProgression="*res://scripts/progression/progression_store.gd"
+
 [display]
 
 window/size/viewport_width=1920

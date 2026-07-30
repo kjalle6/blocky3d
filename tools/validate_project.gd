@@ -11,15 +11,20 @@ func _validate() -> void:
 	assert(packed_scene != null, "The application root scene must load.")
 
 	var game_root := packed_scene.instantiate()
+	game_root.persist_progression = false
 	root.add_child(game_root)
 	assert(game_root.get_node_or_null("Interface/LevelSelect") is Control, "GameRoot requires level selection.")
 	await process_frame
 	var level_01_button := game_root.get_node(
-		"Interface/LevelSelect/Center/Panel/Margin/Options/Level01Button"
+		"Interface/LevelSelect/Center/Panel/Margin/Options/LevelButtons/Level01Button"
 	) as Button
 	var level_02_button := game_root.get_node(
-		"Interface/LevelSelect/Center/Panel/Margin/Options/Level02Button"
+		"Interface/LevelSelect/Center/Panel/Margin/Options/LevelButtons/Level02Button"
 	) as Button
+	assert(game_root.campaign is CampaignCatalog, "GameRoot requires typed campaign data.")
+	assert(game_root.campaign.validation_errors().is_empty(), "Campaign data must validate.")
+	assert(game_root.campaign.find_by_id(&"fundamentals").display_number == 1)
+	assert(game_root.campaign.find_by_id(&"gaps_and_spikes").display_number == 2)
 	assert(level_01_button.has_focus(), "The selector should initially focus Level 1.")
 	var menu_up := InputEventKey.new()
 	menu_up.physical_keycode = KEY_W
@@ -37,7 +42,10 @@ func _validate() -> void:
 	menu_enter.physical_keycode = KEY_ENTER
 	menu_enter.pressed = true
 	game_root._unhandled_input(menu_enter)
-	assert(game_root.current_level_number == 2, "Enter should launch the focused level.")
+	assert(
+		game_root.current_level_definition.level_id == &"gaps_and_spikes",
+		"Enter should launch the focused level."
+	)
 	game_root.show_level_select()
 	game_root.load_level(1)
 	await process_frame
@@ -55,9 +63,9 @@ func _validate() -> void:
 	assert(InputMap.has_action("jump"), "Default jump input must exist.")
 	assert(InputMap.has_action("attack"), "Default attack input must exist.")
 	assert(
-		FileAccess.file_exists("res://assets/art/level01/asset_manifest.json"),
-		"The curated Level 1 asset manifest must exist."
+		FileAccess.file_exists("res://assets/art/green_zone/asset_manifest.json"),
+		"The curated green-zone asset manifest must exist."
 	)
 
-	print("Project and pixel Level 1 validation passed.")
+	print("Project, campaign catalog, and pixel Level 1 validation passed.")
 	quit(0)

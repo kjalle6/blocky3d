@@ -1,7 +1,7 @@
 class_name PixelGoal3D
 extends LevelGoal3D
 
-const CHEST_TEXTURE := preload("res://assets/art/level01/goal/chest_open.png")
+const CHEST_TEXTURE := preload("res://assets/art/green_zone/goal/chest_open.png")
 const FRAME_COUNT := 7
 const FRAME_WIDTH := 32
 

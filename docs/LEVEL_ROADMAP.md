@@ -90,14 +90,18 @@ The new level should contain:
 6. A final section that proves the ability while still using the established
    enemy, spike, and melee rules.
 
+The foundation now defines permanent ability ownership in versioned campaign
+progress. Checkpoint death, manual restart, level transitions, and application
+relaunch retain an earned unlock. Each `LevelDefinition` separately declares
+which owned abilities are active there, so Levels 1 and 2 remain single-jump
+courses.
+
 Before geometry is finalized, define:
 
-- where ability ownership lives;
-- whether a checkpoint respawn retains the unlock;
-- whether manual restart retains it;
-- how level transitions and application relaunch persist it;
 - how falling from a ledge, coyote time, buffering, and variable jump height
   interact with the available aerial jump;
+- how the first pickup behaves on later replays when Double Jump is already
+  owned;
 - how future wall jump and dash refresh rules will compose with it.
 
 Level 1 and Level 2 must remain single-jump regression levels unless their

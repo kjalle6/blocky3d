@@ -23,6 +23,8 @@ var _descending_before_slide := false
 var _facing_sign := 1.0
 var _attack_remaining := 0.0
 var _attack_hit_applied := false
+var _available_abilities: Array[StringName] = []
+var _active_abilities: Array[StringName] = []
 
 @onready var pixel_visual: PixelPlayerVisual3D = get_node_or_null("PixelVisual") as PixelPlayerVisual3D
 
@@ -139,6 +141,28 @@ func reset_at(spawn_transform: Transform3D) -> void:
 
 func is_dead() -> bool:
 	return _dead
+
+
+func configure_abilities(
+	owned_abilities: Array[StringName],
+	available_abilities: Array[StringName]
+) -> void:
+	_available_abilities = available_abilities.duplicate()
+	_active_abilities.clear()
+	for ability_id in owned_abilities:
+		if ability_id in _available_abilities and ability_id not in _active_abilities:
+			_active_abilities.append(ability_id)
+
+
+func enable_ability(ability_id: StringName) -> bool:
+	if ability_id not in _available_abilities or ability_id in _active_abilities:
+		return false
+	_active_abilities.append(ability_id)
+	return true
+
+
+func has_ability(ability_id: StringName) -> bool:
+	return ability_id in _active_abilities
 
 
 func feet_world_y() -> float:

@@ -6,9 +6,10 @@ outside the repository at:
 
 `D:\GodotProjects\blocky3dassets`
 
-The opening-world pixel set is curated beneath `assets/art/level01` and is
-currently shared by Levels 1 and 2. Its manifest records source-relative paths
-and hashes; supplied license notes are stored beside it.
+The opening-world pixel set is curated beneath `assets/art/green_zone`. It is a
+shared theme and character kit rather than a level-owned folder. Its manifest
+records source-relative paths and hashes; supplied license notes are stored
+beside it.
 
 Before adding an asset:
 

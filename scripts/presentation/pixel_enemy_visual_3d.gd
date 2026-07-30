@@ -2,10 +2,10 @@ class_name PixelEnemyVisual3D
 extends Sprite3D
 
 const TEXTURES := {
-	"idle": preload("res://assets/art/level01/enemies/green_idle.png"),
-	"walk": preload("res://assets/art/level01/enemies/green_walk.png"),
-	"attack": preload("res://assets/art/level01/enemies/green_attack.png"),
-	"death": preload("res://assets/art/level01/enemies/green_death.png"),
+	"idle": preload("res://assets/art/green_zone/enemies/green_idle.png"),
+	"walk": preload("res://assets/art/green_zone/enemies/green_walk.png"),
+	"attack": preload("res://assets/art/green_zone/enemies/green_attack.png"),
+	"death": preload("res://assets/art/green_zone/enemies/green_death.png"),
 }
 const FRAME_COUNTS := {"idle": 4, "walk": 6, "attack": 6, "death": 6}
 const FRAME_RATES := {"idle": 6.0, "walk": 10.0, "attack": 10.0, "death": 10.0}

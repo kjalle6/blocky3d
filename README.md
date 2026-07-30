@@ -13,7 +13,7 @@ remain read-only design references.
 - Level 1: Fundamentals — complete production vertical slice
 - Level 2: Gaps & Spikes — complete fundamentals regression course
 - Level 3: Double Jump — next milestone
-- Temporary mouse and `W`/`S` + `Enter` level selector
+- Catalog-driven mouse and `W`/`S` + `Enter` level selector
 - 1920x1080 presentation baseline
 
 The three living design documents are:
@@ -45,18 +45,20 @@ and architecture are not copied blindly.
 ## Assets
 
 The complete downloaded packs stay outside this repository at
-`D:\GodotProjects\blocky3dassets`. Refresh the curated Level 1 runtime subset
+`D:\GodotProjects\blocky3dassets`. Refresh the curated green-zone runtime set
 with:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\tools\prepare_level1_assets.ps1
+powershell -ExecutionPolicy Bypass -File .\tools\prepare_green_zone_assets.ps1
 ```
 
 ## Validate
 
 ```powershell
 godot --headless --path . --script res://tools/validate_project.gd
+godot --headless --path . --script res://tools/validate_progression.gd
 godot --headless --path . --script res://tools/validate_movement_runtime.gd
+godot --headless --path . --script res://tools/validate_camera_pixel_stability.gd
 godot --headless --path . --script res://tools/validate_level1_runtime.gd
 godot --headless --path . --script res://tools/validate_level1_playthrough.gd
 godot --headless --path . --script res://tools/validate_level2_runtime.gd
