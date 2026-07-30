@@ -79,11 +79,12 @@ func _run() -> void:
 	assert(green_zone.display_number == 1)
 	assert(green_zone.title == "Green Zone")
 	assert(green_zone.theme_id == &"green_zone")
-	assert(green_zone.ordered_levels().size() == 3)
-	assert(catalog.ordered_levels().size() == 3)
+	assert(green_zone.ordered_levels().size() == 4)
+	assert(catalog.ordered_levels().size() == 4)
 	assert(catalog.ordered_levels()[0].level_id == &"fundamentals")
 	assert(catalog.ordered_levels()[1].level_id == &"gaps_and_spikes")
 	assert(catalog.ordered_levels()[2].level_id == &"double_jump")
+	assert(catalog.ordered_levels()[3].level_id == &"wall_jump")
 	assert(catalog.find_level(&"green_zone", 1).available_abilities.is_empty())
 	assert(catalog.find_level(&"green_zone", 2).available_abilities.is_empty())
 	assert(
@@ -94,7 +95,16 @@ func _run() -> void:
 		catalog.find_level(&"green_zone", 3).required_abilities
 		== [PlayerAbility.DOUBLE_JUMP]
 	)
+	assert(
+		catalog.find_level(&"green_zone", 4).assumed_owned_abilities
+		== [PlayerAbility.DOUBLE_JUMP]
+	)
+	assert(
+		catalog.find_level(&"green_zone", 4).required_abilities
+		== [PlayerAbility.DOUBLE_JUMP, PlayerAbility.WALL_JUMP]
+	)
 	assert(catalog.find_world_for_level(&"double_jump") == green_zone)
+	assert(catalog.find_world_for_level(&"wall_jump") == green_zone)
 
 	print("Campaign progression and ability-policy validation passed.")
 	quit(0)

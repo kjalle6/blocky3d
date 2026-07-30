@@ -1,7 +1,7 @@
 class_name PixelSideCamera3D
 extends Camera3D
-## Orthographic side camera. It follows only the route axis, preserving a
-## stable 2D composition while remaining replaceable for later 2.5D sections.
+## Orthographic side camera. Horizontal route following is always available;
+## authored levels can opt into vertical framing without changing locomotion.
 
 @export var target: Node3D
 @export var traversal_rail: TraversalRail3D
@@ -12,10 +12,17 @@ extends Camera3D
 @export var follow_response := 8.0
 @export var minimum_center_x := 6.47
 @export var maximum_center_x := 44.73
+@export_category("Vertical framing")
+@export var vertical_follow_enabled := false
+@export var vertical_anchor_y := 0.7
+@export var minimum_vertical_offset := 0.0
+@export var maximum_vertical_offset := 0.0
+@export var vertical_follow_response := 7.0
 @export var pixel_snap_enabled := true
 
 var _initialized := false
 var _smoothed_x := 0.0
+var _smoothed_vertical_offset := 0.0
 
 
 func _ready() -> void:
@@ -33,18 +40,40 @@ func _process(delta: float) -> void:
 		minimum_center_x,
 		maximum_center_x
 	)
+	var desired_vertical_offset := 0.0
+	if vertical_follow_enabled:
+		desired_vertical_offset = clampf(
+			target.global_position.y - vertical_anchor_y,
+			minimum_vertical_offset,
+			maximum_vertical_offset
+		)
 	if not _initialized:
 		_smoothed_x = desired_x
+		_smoothed_vertical_offset = desired_vertical_offset
 		_initialized = true
 	else:
-		var weight := 1.0 - exp(-follow_response * delta)
-		_smoothed_x = lerpf(_smoothed_x, desired_x, weight)
+		var horizontal_weight := 1.0 - exp(-follow_response * delta)
+		var vertical_weight := 1.0 - exp(-vertical_follow_response * delta)
+		_smoothed_x = lerpf(_smoothed_x, desired_x, horizontal_weight)
+		_smoothed_vertical_offset = lerpf(
+			_smoothed_vertical_offset,
+			desired_vertical_offset,
+			vertical_weight
+		)
+	var rendered_vertical_offset := snap_world_y(_smoothed_vertical_offset)
 	global_position = Vector3(
 		snap_world_x(_smoothed_x),
-		camera_height,
+		camera_height + rendered_vertical_offset,
 		side_distance
 	)
-	look_at(Vector3(global_position.x, target_height, 0.0), Vector3.UP)
+	look_at(
+		Vector3(
+			global_position.x,
+			target_height + rendered_vertical_offset,
+			0.0
+		),
+		Vector3.UP
+	)
 
 
 func snap_to_target() -> void:
@@ -66,3 +95,12 @@ func snap_world_x(world_x: float) -> float:
 	if pixel_world_size <= 0.0:
 		return world_x
 	return snappedf(world_x, pixel_world_size)
+
+
+func snap_world_y(world_y: float) -> float:
+	if not pixel_snap_enabled:
+		return world_y
+	var pixel_world_size := world_units_per_screen_pixel()
+	if pixel_world_size <= 0.0:
+		return world_y
+	return snappedf(world_y, pixel_world_size)

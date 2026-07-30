@@ -20,7 +20,7 @@ kit:
 | 1: Fundamentals | Classic run, jump, gaps, enemies, stomp, knife, and finish | Base kit | Complete |
 | 2: Gaps & Spikes | Longer precision rhythm, fair spikes, and protected checkpoints | None | Complete |
 | 3: Double Jump | Safe introduction followed by required aerial crossings | Double jump | Complete |
-| 4: Wall Jump | Turn the route upward and teach wall sensing, cling, and kick-off | Wall jump | Planned |
+| 4: Wall Jump | Turn the route upward and teach wall sensing, slide, and kick-off | Wall jump | Complete |
 | 5: Dash | Teach ground and air use in distinct readable zones | Dash | Planned |
 
 World 1 is internally the learning world, but it must not present itself as a
@@ -135,19 +135,52 @@ The initial movement contract is explicit:
 The route and mechanics pass automated full-speed completion, visual review,
 and hands-on feel approval. Level 3 is now a protected regression baseline.
 
+### Level 4: Wall Jump — complete
+
+Level 4 is an 84-metre route focused entirely on learning the new movement:
+
+- Double Jump is supplied as an assumed prior unlock in fresh development
+  sessions;
+- the Wall Jump pickup sits on protected opening ground;
+- a contained opening shaft teaches contact, slide, and alternating kicks;
+- a descending platform sequence provides recovery and familiar movement;
+- a taller offset shaft requires entering beneath one wall and exiting over
+  the other;
+- three grounded checkpoints protect completed teaching beats;
+- vertical camera and parallax follow are enabled only for this level;
+- the final descent leads to an ordinary chest finish.
+
+There are deliberately no enemies or spikes. The vertical route is the
+execution challenge, allowing wall contact, kick timing, camera framing, and
+recovery options to remain readable without unrelated pressure.
+
+The approved combination rules prevent infinite single-wall climbing:
+
+- Wall Jump never refills a spent Double Jump;
+- kicking from a wall blocks another Wall Jump from that same wall until the
+  player touches the opposite wall or lands;
+- an unspent Double Jump may still be used once as a same-wall recovery;
+- landing refreshes both the ordinary Double Jump and same-wall lockout.
+
+Wall Jump has its own stronger vertical impulse while the established normal
+and Double Jump values remain unchanged. The result reduces repetitive kicks
+without making horizontal control automatic.
+
+The route and mechanics pass focused exploit coverage, automated full-route
+completion through ordinary input, visual review, and hands-on feel approval.
+Level 4 is now a protected regression baseline.
+
 ## Later system milestones
 
-1. Build Wall Jump, directional wall rules, and vertical camera framing for
-   World 1 Level 4.
-2. Build Dash and distinct ground/air teaching zones for World 1 Level 5.
-3. Review all five levels as one world: pacing, repeated material, difficulty,
+1. Build Dash and distinct ground/air teaching zones for World 1 Level 5.
+2. Review all five levels as one world: pacing, repeated material, difficulty,
    visual continuity, unlock flow, and world completion.
-4. Generic moving hazards developed from the saw levels.
-5. Camera rails, route turns, large-level state, and multi-direction traversal
+3. Generic moving hazards developed from the saw levels.
+4. Camera rails, route turns, large-level state, and multi-direction traversal
    developed from Long Way Around and Stepping Stones.
-6. Telegraph/trigger/active/cooldown/reset state machines developed from
+5. Telegraph/trigger/active/cooldown/reset state machines developed from
    Corridor Test and the shaking-block spike idea.
-7. Campaign progression, records, settings, accessibility, audio, packaging,
+6. Campaign progression, records, settings, accessibility, audio, packaging,
    and content expansion.
 
 ## Definition of done for a level
@@ -173,6 +206,7 @@ level. It must also:
 - be registered as implemented and exposed automatically in the Animation Lab;
 - have an immediate on/off toggle that never changes campaign save data;
 - retain its selected lab state through `R`;
-- have enough lab geometry to test its movement and animation transitions;
+- expose its important animation states clearly in the lab;
+- be taught and tested as a game mechanic in an authored level;
 - preserve earlier level behavior when unavailable;
 - receive focused runtime validation and hands-on feel testing.

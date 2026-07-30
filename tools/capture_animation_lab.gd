@@ -28,6 +28,20 @@ func _run() -> void:
 	for frame in 8:
 		await process_frame
 	_capture("animation_lab_far_side")
+
+	room.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(28.35, 4.2, 0)))
+	room.player.velocity.y = -7.0
+	Input.action_press("move_right")
+	for frame in 60:
+		await physics_frame
+		if room.player.is_wall_sliding():
+			break
+	Input.action_release("move_right")
+	assert(room.player.is_wall_sliding(), "Wall-slide capture requires wall contact.")
+	room.camera.snap_to_target()
+	for frame in 4:
+		await process_frame
+	_capture("animation_lab_wall_slide")
 	quit(0)
 
 

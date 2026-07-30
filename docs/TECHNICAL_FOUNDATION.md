@@ -40,21 +40,25 @@ selector. It is a disposable `LevelSession3D` test course, not a campaign
 world or level. Current test abilities are granted as session-local unlocks:
 they survive `R`, never enter the save payload, and never mark campaign
 completion. An in-room panel toggles each implemented ability immediately.
-The room provides a long enclosed runway, camera travel, side walls, and low
-and high landing blocks for inspecting idle, run, jump, Double Jump, attack,
-landing, and transition timing without level hazards or scenery.
+The room provides clear surfaces for triggering and inspecting idle, run,
+jump, Double Jump, wall contact, attack, landing, and transition timing
+without level hazards or scenery. It is an animation lab, not a mechanic
+course; gameplay feel and teaching are approved in authored levels.
 
 `PlayerAbility.IMPLEMENTED` is the tooling contract. The Animation Lab
 definition and toggle panel must expose that exact set. A new ability is not
 finished until it can be enabled and disabled in the lab, survives a lab
-restart while enabled, and has geometry there that exercises its important
-movement and animation states.
+restart while enabled, and its important animation states can be triggered
+there. Focused runtime checks and its authored introduction level own mechanic
+validation.
 
 `PixelSideCamera3D` keeps a continuous internal follow position but quantizes
 its rendered transform to the current viewport's output-pixel grid. Static
 nearest-filtered world art therefore retains a stable sampling phase during
 long camera travel. Parallax layers snap to the same grid after applying their
-individual movement factors.
+individual movement factors. Levels opt into vertical follow explicitly;
+camera and parallax layers then share pixel-quantized vertical motion while
+earlier horizontal levels retain their approved framing.
 
 The reusable `pixel_level_base.tscn` scene owns the common green-zone runtime
 frame: session, feedback, environment, traversal rail, parallax background,
@@ -104,6 +108,21 @@ The established interaction priority is:
 
 Defeated enemies and dead players are ignored. New enemy families change
 declared behavior rather than introducing collision-order exceptions.
+
+## Wall movement contract
+
+Wall Jump is route-relative and available only when the level exposes the
+ability. Airborne wall contact is immediately jumpable; downward contact also
+caps fall speed for a readable slide. A kick applies a short forced movement
+away from the contacted wall before ordinary air control resumes. Its vertical
+impulse is tuned independently from normal and Double Jump so wall routes can
+climb decisively without altering the approved horizontal levels.
+
+Wall Jump does not replenish Double Jump. After kicking from one wall, that
+same wall cannot provide another Wall Jump until the player contacts the
+opposite wall or lands. A previously unspent Double Jump remains available as
+one recovery option. This preserves useful combinations without allowing
+infinite single-wall spam.
 
 ## Checkpoint contract
 
@@ -155,11 +174,16 @@ does not maintain a separate UI table. The active run retains both its level
 definition and owning world definition for presentation and future
 world-aware flow.
 
-The first `WorldDefinition`, Green Zone, contains the existing three levels
-and will later receive Levels 4 and 5. Missing levels are not represented by
-fake scenes or disabled placeholder buttons. Development mode keeps all
-authored levels selectable. Production prerequisite/locking presentation is
-added only when campaign flow is ready to be tested.
+`LevelDefinition.assumed_owned_abilities` records abilities the campaign
+expects the player to own on entry. Fresh development sessions seed only that
+set without writing save data. This lets Level 4 begin with Double Jump while
+still presenting Wall Jump as its own pickup.
+
+The first `WorldDefinition`, Green Zone, contains the existing four levels and
+will later receive Level 5. Missing levels are not represented by fake scenes
+or disabled placeholder buttons. Development mode keeps all authored levels
+selectable. Production prerequisite/locking presentation is added only when
+campaign flow is ready to be tested.
 
 Completed level IDs and permanent ability IDs remain globally stable, so
 introducing world grouping does not require changing the version-1 save
@@ -209,7 +233,11 @@ Every lasting system receives focused validation. The current suite covers:
 - Double Jump coyote, momentum, release, consumption, landing-refresh, and
   animation contracts;
 - Level 3 route measurements, permanent pickup and replay behavior,
-  checkpoints, reset, and full completion.
+  checkpoints, reset, and full completion;
+- Wall Jump contact, slide, kick, same-wall lockout, opposite-wall refresh,
+  Double Jump interaction, and Animation Lab contracts;
+- Level 4 route measurements, pickup policy, vertical camera, checkpoints,
+  reset, and full input-driven completion.
 
 Graphical capture scripts render deterministic 1920x1080 review positions for
 all current levels. Visual changes are inspected in the running game;
@@ -226,12 +254,12 @@ Before committing a gameplay milestone:
 
 ## Current baseline — 30 July 2026
 
-Levels 1–3 are protected regression baselines. New abilities and systems must
+Levels 1–4 are protected regression baselines. New abilities and systems must
 not silently change earlier movement, collision, enemy, checkpoint, or restart
 behavior.
 
 The typed world catalog and grouped selector, versioned progression payload,
 permanent ability ownership, per-level ability policy, Double Jump, reusable
-pickup actor, non-pausing ability tutorial, and fresh-per-level development
-mode are established. The next major system is Wall Jump with vertical camera
-framing.
+pickup actors, non-pausing ability tutorials, Wall Jump, opt-in vertical camera
+framing, and fresh-per-level development mode are established. The next major
+system is Dash and its World 1 introduction level.

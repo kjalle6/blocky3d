@@ -9,6 +9,7 @@ extends Resource
 @export_multiline var lesson := ""
 @export var scene: PackedScene
 @export var available_abilities: Array[StringName] = []
+@export var assumed_owned_abilities: Array[StringName] = []
 @export var required_abilities: Array[StringName] = []
 @export var prerequisite_level_ids: Array[StringName] = []
 
@@ -38,6 +39,14 @@ func validation_errors() -> PackedStringArray:
 	for ability_id in available_abilities:
 		if not PlayerAbility.is_known(ability_id):
 			errors.append("%s offers unknown ability '%s'." % [level_id, ability_id])
+	for ability_id in assumed_owned_abilities:
+		if not PlayerAbility.is_known(ability_id):
+			errors.append("%s assumes unknown ability '%s'." % [level_id, ability_id])
+		elif ability_id not in available_abilities:
+			errors.append(
+				"%s assumes ability '%s' without making it available."
+				% [level_id, ability_id]
+			)
 	for ability_id in required_abilities:
 		if not PlayerAbility.is_known(ability_id):
 			errors.append("%s requires unknown ability '%s'." % [level_id, ability_id])

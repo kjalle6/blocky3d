@@ -1,7 +1,7 @@
 class_name PlayerCharacter
 extends CharacterBody3D
-## Core path-relative 2.5D controller. Abilities such as wall movement and dash
-## will be composed later; this script owns only universally available motion.
+## Core path-relative 2.5D controller. Optional movement abilities are gated
+## by the active level's declared ability policy and share typed tuning.
 
 const DOUBLE_JUMP_VISUAL_DURATION := 0.43
 
@@ -30,6 +30,12 @@ var _available_abilities: Array[StringName] = []
 var _active_abilities: Array[StringName] = []
 var _aerial_jumps_remaining := 0
 var _double_jump_visual_remaining := 0.0
+var _wall_contact_direction := 0.0
+var _last_wall_contact_direction := 0.0
+var _wall_coyote_remaining := 0.0
+var _wall_jump_control_lock_remaining := 0.0
+var _wall_sliding := false
+var _blocked_wall_jump_direction := 0.0
 
 @onready var pixel_visual: PixelPlayerVisual3D = get_node_or_null("PixelVisual") as PixelPlayerVisual3D
 
@@ -51,26 +57,58 @@ func _physics_process(delta: float) -> void:
 	_update_jump_timers(delta)
 	_update_attack(delta)
 	_double_jump_visual_remaining = maxf(0.0, _double_jump_visual_remaining - delta)
+	_wall_jump_control_lock_remaining = maxf(
+		0.0,
+		_wall_jump_control_lock_remaining - delta
+	)
 	var input_axis := Input.get_axis("move_left", "move_right")
-	if not is_zero_approx(input_axis):
+	if (
+		_wall_jump_control_lock_remaining <= 0.0
+		and not is_zero_approx(input_axis)
+	):
 		_facing_sign = signf(input_axis)
 	var grounded := is_on_floor()
 	if grounded:
 		_refresh_aerial_jumps()
-	var acceleration := movement.air_acceleration
-	if grounded:
-		acceleration = movement.ground_acceleration if not is_zero_approx(input_axis) else movement.ground_deceleration
-	var target_speed := input_axis * movement.maximum_speed
-	path_speed = move_toward(path_speed, target_speed, acceleration * delta)
+		_wall_coyote_remaining = 0.0
+		_blocked_wall_jump_direction = 0.0
+	elif _wall_contact_direction != 0.0 and has_ability(PlayerAbility.WALL_JUMP):
+		_wall_coyote_remaining = movement.wall_coyote_time
+		_last_wall_contact_direction = _wall_contact_direction
+	else:
+		_wall_coyote_remaining = maxf(0.0, _wall_coyote_remaining - delta)
+
+	if _wall_jump_control_lock_remaining <= 0.0:
+		var acceleration := movement.air_acceleration
+		if grounded:
+			acceleration = (
+				movement.ground_acceleration
+				if not is_zero_approx(input_axis)
+				else movement.ground_deceleration
+			)
+		var target_speed := input_axis * movement.maximum_speed
+		path_speed = move_toward(path_speed, target_speed, acceleration * delta)
 
 	var tangent := traversal_rail.tangent_at_world_position(global_position)
-	velocity.x = tangent.x * path_speed
-	velocity.z = tangent.z * path_speed
-	velocity.y = maxf(velocity.y - movement.gravity * delta, -movement.maximum_fall_speed)
+	_wall_sliding = (
+		has_ability(PlayerAbility.WALL_JUMP)
+		and not grounded
+		and _wall_contact_direction != 0.0
+		and velocity.y < 0.0
+	)
+	var active_gravity := movement.gravity
+	var active_fall_speed := movement.maximum_fall_speed
+	if _wall_sliding:
+		active_gravity *= movement.wall_slide_gravity_multiplier
+		active_fall_speed = movement.wall_slide_max_fall_speed
+		_facing_sign = _wall_contact_direction
+	velocity.y = maxf(velocity.y - active_gravity * delta, -active_fall_speed)
 
 	if _jump_buffer_remaining > 0.0:
 		if _coyote_remaining > 0.0:
 			_perform_ground_jump()
+		elif _can_wall_jump():
+			_perform_wall_jump()
 		elif _can_double_jump():
 			_perform_double_jump()
 	elif grounded:
@@ -79,9 +117,20 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_released("jump") and velocity.y > 0.0:
 		velocity.y *= movement.released_jump_multiplier
 
+	velocity.x = tangent.x * path_speed
+	velocity.z = tangent.z * path_speed
 	_descending_before_slide = velocity.y < -0.5
 	move_and_slide()
 	global_position = traversal_rail.constrain_world_position(global_position)
+	_update_wall_contact(tangent)
+	_wall_sliding = (
+		has_ability(PlayerAbility.WALL_JUMP)
+		and not is_on_floor()
+		and _wall_contact_direction != 0.0
+		and velocity.y < 0.0
+	)
+	if _wall_sliding:
+		velocity.y = maxf(velocity.y, -movement.wall_slide_max_fall_speed)
 
 	if global_position.y < fall_limit_y:
 		kill()
@@ -137,6 +186,12 @@ func reset_at(spawn_transform: Transform3D) -> void:
 	_attack_remaining = 0.0
 	_attack_hit_applied = false
 	_double_jump_visual_remaining = 0.0
+	_wall_contact_direction = 0.0
+	_last_wall_contact_direction = 0.0
+	_wall_coyote_remaining = 0.0
+	_wall_jump_control_lock_remaining = 0.0
+	_wall_sliding = false
+	_blocked_wall_jump_direction = 0.0
 	_aerial_jumps_remaining = 1 if has_ability(PlayerAbility.DOUBLE_JUMP) else 0
 	_dead = false
 	_descending_before_slide = false
@@ -180,6 +235,18 @@ func has_ability(ability_id: StringName) -> bool:
 
 func aerial_jumps_remaining() -> int:
 	return _aerial_jumps_remaining
+
+
+func is_wall_sliding() -> bool:
+	return _wall_sliding
+
+
+func wall_contact_direction() -> float:
+	return _wall_contact_direction
+
+
+func blocked_wall_jump_direction() -> float:
+	return _blocked_wall_jump_direction
 
 
 func feet_world_y() -> float:
@@ -242,6 +309,31 @@ func _can_double_jump() -> bool:
 	)
 
 
+func _can_wall_jump() -> bool:
+	return (
+		has_ability(PlayerAbility.WALL_JUMP)
+		and _wall_coyote_remaining > 0.0
+		and _last_wall_contact_direction != 0.0
+		and _last_wall_contact_direction != _blocked_wall_jump_direction
+	)
+
+
+func _perform_wall_jump() -> void:
+	var source_wall_direction := _last_wall_contact_direction
+	var jump_direction := -source_wall_direction
+	velocity.y = movement.wall_jump_vertical_speed
+	path_speed = jump_direction * movement.wall_jump_horizontal_speed
+	_facing_sign = jump_direction
+	_blocked_wall_jump_direction = source_wall_direction
+	_wall_jump_control_lock_remaining = movement.wall_jump_control_lock_time
+	_wall_coyote_remaining = 0.0
+	_wall_contact_direction = 0.0
+	_wall_sliding = false
+	_jump_buffer_remaining = 0.0
+	floor_snap_length = 0.0
+	ability_performed.emit(PlayerAbility.WALL_JUMP)
+
+
 func _perform_double_jump() -> void:
 	velocity.y = movement.jump_velocity
 	_aerial_jumps_remaining -= 1
@@ -255,6 +347,22 @@ func _refresh_aerial_jumps() -> void:
 	_aerial_jumps_remaining = 1 if has_ability(PlayerAbility.DOUBLE_JUMP) else 0
 
 
+func _update_wall_contact(tangent: Vector3) -> void:
+	_wall_contact_direction = 0.0
+	if not has_ability(PlayerAbility.WALL_JUMP) or not is_on_wall():
+		return
+	var along_route := get_wall_normal().dot(tangent)
+	if absf(along_route) < 0.5:
+		return
+	_wall_contact_direction = -signf(along_route)
+	if (
+		_blocked_wall_jump_direction != 0.0
+		and _wall_contact_direction != _blocked_wall_jump_direction
+	):
+		_blocked_wall_jump_direction = 0.0
+	_last_wall_contact_direction = _wall_contact_direction
+
+
 func _update_pixel_visual(delta: float) -> void:
 	if pixel_visual == null:
 		return
@@ -266,5 +374,6 @@ func _update_pixel_visual(delta: float) -> void:
 		_attack_remaining > 0.0,
 		_dead,
 		_facing_sign > 0.0,
-		_double_jump_visual_remaining > 0.0
+		_double_jump_visual_remaining > 0.0,
+		_wall_sliding
 	)

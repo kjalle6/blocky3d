@@ -17,6 +17,14 @@ extends Resource
 @export_range(0.0, 0.3, 0.01) var coyote_time := 0.10
 @export_range(0.0, 0.3, 0.01) var jump_buffer_time := 0.12
 
+@export_category("Wall movement")
+@export_range(0.0, 1.0, 0.01) var wall_slide_gravity_multiplier := 0.28
+@export_range(1.0, 20.0, 0.1, "or_greater") var wall_slide_max_fall_speed := 4.5
+@export_range(1.0, 40.0, 0.1, "or_greater") var wall_jump_vertical_speed := 16.5
+@export_range(1.0, 20.0, 0.1, "or_greater") var wall_jump_horizontal_speed := 10.5
+@export_range(0.0, 0.5, 0.01) var wall_jump_control_lock_time := 0.14
+@export_range(0.0, 0.3, 0.01) var wall_coyote_time := 0.10
+
 @export_category("Grounding")
 @export_range(0.0, 1.0, 0.01) var floor_snap_length := 0.25
 @export_range(0.0, 60.0, 0.5) var maximum_floor_angle_degrees := 46.0

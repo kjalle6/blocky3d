@@ -7,6 +7,7 @@ extends Sprite3D
 
 var _base_position := Vector3.ZERO
 var _initial_camera_x := 0.0
+var _initial_camera_y := 0.0
 var _initialized := false
 
 
@@ -23,13 +24,19 @@ func _process(_delta: float) -> void:
 		return
 	if not _initialized:
 		_initial_camera_x = camera.global_position.x
+		_initial_camera_y = camera.global_position.y
 		_initialized = true
 	var next_position := _base_position
 	next_position.x += (
 		(camera.global_position.x - _initial_camera_x)
 		* (1.0 - parallax_factor)
 	)
+	next_position.y += (
+		(camera.global_position.y - _initial_camera_y)
+		* (1.0 - parallax_factor)
+	)
 	var pixel_camera := camera as PixelSideCamera3D
 	if pixel_camera != null:
 		next_position.x = pixel_camera.snap_world_x(next_position.x)
+		next_position.y = pixel_camera.snap_world_y(next_position.y)
 	global_position = next_position

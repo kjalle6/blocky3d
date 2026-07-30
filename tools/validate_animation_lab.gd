@@ -43,8 +43,14 @@ func _run() -> void:
 		"Interface/DeveloperAbilityPanel/Margin/Options"
 		+ "/DeveloperAbilityToggles/DoubleJumpToggle"
 	) as CheckButton
+	var wall_jump_toggle := game_root.get_node(
+		"Interface/DeveloperAbilityPanel/Margin/Options"
+		+ "/DeveloperAbilityToggles/WallJumpToggle"
+	) as CheckButton
 	assert(double_jump_toggle != null)
+	assert(wall_jump_toggle != null)
 	assert(double_jump_toggle.button_pressed)
+	assert(wall_jump_toggle.button_pressed)
 	double_jump_toggle.button_pressed = false
 	double_jump_toggle.toggled.emit(false)
 	assert(not room.player.has_ability(PlayerAbility.DOUBLE_JUMP))

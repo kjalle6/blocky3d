@@ -13,8 +13,8 @@ remain read-only design references.
 - Level 1: Fundamentals — complete production vertical slice
 - Level 2: Gaps & Spikes — complete fundamentals regression course
 - Level 3: Double Jump — complete ability-introduction level
-- World 1 is the five-level opening green-zone world; Wall Jump and Dash are
-  its remaining planned levels
+- Level 4: Wall Jump — complete vertical-movement introduction
+- World 1 is the five-level opening green-zone world; Dash remains planned
 - Typed world catalog and world-grouped mouse or `W`/`S` + `Enter` level
   selector
 - Development-only Animation Lab with a full-speed runway, test geometry,
@@ -69,12 +69,15 @@ godot --headless --path . --script res://tools/validate_developer_mode.gd
 godot --headless --path . --script res://tools/validate_movement_runtime.gd
 godot --headless --path . --script res://tools/validate_camera_pixel_stability.gd
 godot --headless --path . --script res://tools/validate_double_jump_runtime.gd
+godot --headless --path . --script res://tools/validate_wall_jump_runtime.gd
 godot --headless --path . --script res://tools/validate_level1_runtime.gd
 godot --headless --path . --script res://tools/validate_level1_playthrough.gd
 godot --headless --path . --script res://tools/validate_level2_runtime.gd
 godot --headless --path . --script res://tools/validate_level2_playthrough.gd
 godot --headless --path . --script res://tools/validate_level3_runtime.gd
 godot --headless --path . --script res://tools/validate_level3_playthrough.gd
+godot --headless --path . --script res://tools/validate_level4_runtime.gd
+godot --headless --path . --script res://tools/validate_level4_playthrough.gd
 ```
 
 Generate graphical review captures with:
@@ -83,5 +86,6 @@ Generate graphical review captures with:
 godot --path . --script res://tools/capture_level1.gd
 godot --path . --script res://tools/capture_level2.gd
 godot --path . --script res://tools/capture_level3.gd
+godot --path . --script res://tools/capture_level4.gd
 godot --path . --script res://tools/capture_animation_lab.gd
 ```

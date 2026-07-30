@@ -70,7 +70,10 @@ func load_level(level_id: StringName) -> void:
 	var world_definition := campaign.find_world_for_level(level_id)
 	assert(definition != null, "Unknown campaign level: %s" % level_id)
 	assert(world_definition != null, "Campaign level has no owning world: %s" % level_id)
-	_start_session(definition, world_definition)
+	var initial_session_abilities: Array[StringName] = []
+	if developer_fresh_level_runs or not persist_progression:
+		initial_session_abilities = definition.assumed_owned_abilities.duplicate()
+	_start_session(definition, world_definition, initial_session_abilities)
 
 
 func load_developer_room() -> void:

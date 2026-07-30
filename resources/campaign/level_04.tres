@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="LevelDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/campaign/level_definition.gd" id="1_definition"]
+[ext_resource type="PackedScene" path="res://scenes/levels/level_04_wall_jump.tscn" id="2_scene"]
+
+[resource]
+script = ExtResource("1_definition")
+level_id = &"wall_jump"
+display_number = 4
+title = "Wall Jump"
+lesson = "Claim Wall Jump, climb a protected shaft, recover across descending platforms, then complete a taller offset climb."
+scene = ExtResource("2_scene")
+available_abilities = Array[StringName]([&"double_jump", &"wall_jump"])
+assumed_owned_abilities = Array[StringName]([&"double_jump"])
+required_abilities = Array[StringName]([&"double_jump", &"wall_jump"])
+prerequisite_level_ids = Array[StringName]([&"double_jump"])

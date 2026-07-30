@@ -19,6 +19,7 @@ const ALL := [
 ## definition must expose this exact set so new mechanics cannot omit tooling.
 const IMPLEMENTED := [
 	DOUBLE_JUMP,
+	WALL_JUMP,
 ]
 
 
