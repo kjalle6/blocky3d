@@ -6,6 +6,8 @@ extends CharacterBody3D
 
 signal defeated(impact_position: Vector3)
 
+const MINIMUM_PATROL_PROGRESS_RATIO := 0.25
+
 @export_range(0.1, 10.0, 0.1) var patrol_speed := 2.0
 @export var starts_moving_right := true
 @export_range(1.0, 100.0, 0.5) var gravity := 38.0
@@ -60,12 +62,27 @@ func _physics_process(delta: float) -> void:
 	velocity.x = tangent.x * patrol_speed * _direction
 	velocity.z = tangent.z * patrol_speed * _direction
 	velocity.y = maxf(velocity.y - gravity * delta, -25.0)
+	var started_grounded := is_on_floor()
+	var starting_position := global_position
 	move_and_slide()
 	global_position = traversal_rail.constrain_world_position(global_position)
 	var contact := _classify_horizontal_contact()
 	var blocked_by_player: bool = contact.player
 	var blocked_by_level: bool = contact.level
-	if blocked_by_level or (is_on_floor() and not _has_floor_ahead(tangent)):
+	var patrol_progress := (
+		(global_position - starting_position).dot(tangent) * _direction
+	)
+	var stalled_by_level := (
+		started_grounded
+		and is_on_floor()
+		and not blocked_by_player
+		and patrol_progress < patrol_speed * delta * MINIMUM_PATROL_PROGRESS_RATIO
+	)
+	if (
+		blocked_by_level
+		or (is_on_floor() and not _has_floor_ahead(tangent))
+		or stalled_by_level
+	):
 		_direction *= -1.0
 	if pixel_visual != null:
 		var movement_state := "idle" if blocked_by_player or patrol_speed <= 0.0 else "walk"

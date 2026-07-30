@@ -12,8 +12,8 @@ for the approved Level 1 and Level 2 reinterpretations. Godot is now canonical.
 ## Campaign structure
 
 The campaign is organized into themed worlds containing separate short levels.
-World 1 is the opening green-zone world and teaches the complete base movement
-kit:
+World 1 is the opening green-zone world: five levels teach the complete base
+movement kit, then a sixth combines it:
 
 | World 1 level | Purpose | New capability | Status |
 | --- | --- | --- | --- |
@@ -21,12 +21,15 @@ kit:
 | 2: Gaps & Spikes | Longer precision rhythm, fair spikes, and protected checkpoints | None | Complete |
 | 3: Double Jump | Safe introduction followed by required aerial crossings | Double jump | Complete |
 | 4: Wall Jump | Turn the route upward and teach wall sensing, slide, and kick-off | Wall jump | Complete |
-| 5: Dash | Integrate ground and air bursts into a complete mixed-movement route | Dash | Playable first pass |
+| 5: Dash | Integrate ground and air bursts into a complete mixed-movement route | Dash | Complete |
+| 6: Green Zone Finale | Revisit the full kit and finish with one uninterrupted airborne combination | None | Playable first pass |
 
 World 1 is internally the learning world, but it must not present itself as a
 disposable tutorial island. These are the first real levels of the game.
 Shortness supports fast retry and replay; the world supplies the larger arc.
-By the end of Level 5, later worlds may assume the complete base movement kit.
+By the end of Level 5, the complete base movement kit is available. Level 6
+proves that kit in combination and closes the world's movement arc before later
+worlds assume it.
 
 Later world count, names, themes, and level counts are deliberately open until
 World 1 establishes production cost and pacing. Legacy mastery levels may be
@@ -139,8 +142,8 @@ and hands-on feel approval. Level 3 is now a protected regression baseline.
 
 Level 4 is an 84-metre route focused entirely on learning the new movement:
 
-- Double Jump is supplied as an assumed prior unlock in fresh development
-  sessions;
+- Double Jump is supplied by the level's fresh level-defined entry state as an
+  assumed prior unlock;
 - the Wall Jump pickup sits on protected opening ground;
 - a contained opening shaft teaches contact, slide, and alternating kicks;
 - a descending platform sequence provides recovery and familiar movement;
@@ -170,7 +173,7 @@ The route and mechanics pass focused exploit coverage, automated full-route
 completion through ordinary input, visual review, and hands-on feel approval.
 Level 4 is now a protected regression baseline.
 
-### Level 5: Dash — playable first pass
+### Level 5: Dash — complete
 
 Level 5 now strips the route back until Dash is unmistakably the point. The
 193.28-metre course uses eight isolated playable surfaces and six deliberate
@@ -204,14 +207,39 @@ during Dash.
 Focused runtime coverage validates the route measurements, silhouette rule,
 pickup policy, and reset behavior. An input-driven playthrough completes the
 single authored route through the production controller without death.
-Hands-on movement tuning is still required before Level 5 becomes a protected
-regression baseline.
+Hands-on movement tuning and visual review are approved. Level 5 and Dash are
+now protected regression baselines.
+
+### Level 6: Green Zone Finale — playable first pass
+
+Level 6 is the no-new-ability capstone for Green Zone. Its fresh level-defined
+entry state supplies Double Jump, Wall Jump, and Dash without adding another
+pickup. The route develops the full kit through:
+
+- an opening fundamentals and Double Jump recap with a familiar patrol, rising
+  target, and recovery landing;
+- a focused spike runway leading into a protected Wall Jump recap shaft;
+- one strict 14.08-metre Dash gap from the high shaft exit to a broad landing;
+- a reset breather before the final offset shaft;
+- one uninterrupted Wall Jump → Double Jump → Dash airborne proof to the final
+  high landing;
+- five grounded checkpoints protecting completed sections without skipping the
+  required combinations;
+- a calm final drop onto a broad lawn, with the chest raised on a small plinth
+  and framed by restrained Green Zone scenery.
+
+Three slow patrols add optional flow encounters, with the third creating a
+combat beat between the first Wall Jump recap and the strict Dash crossing. A
+small, clearly telegraphed spike pair adds an extra opening beat while leaving
+room for a separate gap jump. The first-pass route has focused runtime,
+input-driven playthrough, and graphical capture coverage; hands-on tuning and
+world-scale pacing review remain before it becomes a protected baseline.
 
 ## Later system milestones
 
-1. Hands-on tune Dash and the playable Level 5 route, then lock both as
-   regression baselines.
-2. Review all five levels as one world: pacing, repeated material, difficulty,
+1. Hands-on tune the playable Level 6 route, then lock it as a regression
+   baseline.
+2. Review all six levels as one world: pacing, repeated material, difficulty,
    visual continuity, unlock flow, and world completion.
 3. Generic moving hazards developed from the saw levels.
 4. Camera rails, route turns, large-level state, and multi-direction traversal

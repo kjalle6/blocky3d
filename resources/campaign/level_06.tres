@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="LevelDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/campaign/level_definition.gd" id="1_definition"]
+[ext_resource type="PackedScene" path="res://scenes/levels/level_06_green_zone_finale.tscn" id="2_scene"]
+
+[resource]
+script = ExtResource("1_definition")
+level_id = &"green_zone_finale"
+display_number = 6
+title = "Green Zone Finale"
+lesson = "Combine Double Jump, Wall Jump, and Dash in a final Green Zone run."
+scene = ExtResource("2_scene")
+available_abilities = Array[StringName]([&"double_jump", &"wall_jump", &"dash"])
+assumed_owned_abilities = Array[StringName]([&"double_jump", &"wall_jump", &"dash"])
+required_abilities = Array[StringName]([&"double_jump", &"wall_jump", &"dash"])
+prerequisite_level_ids = Array[StringName]([&"dash"])

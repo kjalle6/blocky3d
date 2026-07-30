@@ -29,11 +29,13 @@ hierarchy.
 Gameplay behavior does not accumulate directly on `GameRoot`.
 
 During active development, `GameRoot.developer_fresh_level_runs` is enabled.
-Each level selection therefore receives an empty progression view without
-reading or modifying the campaign save. Unlocks remain active through death
-and manual restart inside that loaded session, then clear when another level
-session is created. Disabling the mode restores the versioned persistent
-campaign behavior without changing level code.
+Each level selection therefore receives a fresh level-defined entry state
+without reading or modifying the campaign save. That state seeds the level's
+declared `assumed_owned_abilities`; it is not necessarily an empty progression
+view. Session abilities remain active through death and manual restart inside
+that loaded session, then reset when another level session is created.
+Disabling the mode restores the versioned persistent campaign behavior without
+changing level code.
 
 `GameRoot.developer_tools_enabled` adds a separate Animation Lab to the
 selector. It is a disposable `LevelSession3D` test course, not a campaign
@@ -189,11 +191,14 @@ definition and owning world definition for presentation and future
 world-aware flow.
 
 `LevelDefinition.assumed_owned_abilities` records abilities the campaign
-expects the player to own on entry. Fresh development sessions seed only that
-set without writing save data. This lets Level 4 begin with Double Jump while
-still presenting Wall Jump as its own pickup.
+expects the player to own on entry. A fresh level-defined development entry
+state seeds exactly that set without writing save data. This lets Level 4 begin
+with Double Jump while still presenting Wall Jump as its own pickup, and lets
+Level 6 begin with the complete three-ability kit without adding a pickup.
 
-The first `WorldDefinition`, Green Zone, contains all five opening levels.
+The first `WorldDefinition`, Green Zone, contains six levels: five teach the
+base movement kit and Green Zone Finale combines it without adding a new
+ability.
 Missing future levels are not represented by fake scenes or disabled
 placeholder buttons. Development mode keeps all authored levels selectable.
 Production prerequisite/locking presentation is added only when campaign flow
@@ -237,7 +242,7 @@ Every lasting system receives focused validation. The current suite covers:
   reset, and session-local ability policy;
 - campaign catalog integrity, versioned progress serialization, and
   per-level ability filtering;
-- fresh-per-level development progression versus same-session restart
+- fresh level-defined development entry state versus same-session restart
   retention;
 - output-pixel camera stability during long horizontal travel;
 - movement, jump envelope, coyote time, buffering, and reset;
@@ -256,7 +261,10 @@ Every lasting system receives focused validation. The current suite covers:
   wall impact, attack priority, and Animation Lab contracts;
 - Level 5 route measurements, six Dash-required crossings, the rule prohibiting
   vertically stacked playable surfaces, safely spaced flow encounters, pickup
-  policy, checkpoints, reset, and full production-input completion.
+  policy, checkpoints, reset, and full production-input completion;
+- Level 6's two recap sections, strict Dash gap, full-kit entry policy,
+  uninterrupted Wall Jump → Double Jump → Dash final proof, checkpoints,
+  mutable-actor reset, raised-chest goal, and full production-input completion.
 
 Graphical capture scripts render deterministic 1920x1080 review positions for
 all current levels. Visual changes are inspected in the running game;
@@ -273,12 +281,13 @@ Before committing a gameplay milestone:
 
 ## Current baseline — 30 July 2026
 
-Levels 1–4 are protected regression baselines. New abilities and systems must
+Levels 1–5 are protected regression baselines. New abilities and systems must
 not silently change earlier movement, collision, enemy, checkpoint, or restart
 behavior.
 
 The typed world catalog and grouped selector, versioned progression payload,
 permanent ability ownership, per-level ability policy, Double Jump, reusable
 pickup actors, non-pausing ability tutorials, Wall Jump, opt-in vertical camera
-framing, Dash, and fresh-per-level development mode are established. The next
-milestone is hands-on Level 5 tuning followed by a full World 1 review.
+framing, Dash, and fresh level-defined development entry mode are established.
+Green Zone Finale is a playable first pass; the next milestone is hands-on
+Level 6 tuning followed by a full six-level World 1 review.

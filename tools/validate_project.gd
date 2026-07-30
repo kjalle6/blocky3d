@@ -33,6 +33,9 @@ func _validate() -> void:
 	var level_05_button := game_root.get_node(
 		"Interface/LevelSelect/Center/Panel/Margin/Options/WorldList/World01Level05Button"
 	) as Button
+	var level_06_button := game_root.get_node(
+		"Interface/LevelSelect/Center/Panel/Margin/Options/WorldList/World01Level06Button"
+	) as Button
 	var developer_heading := game_root.get_node(
 		"Interface/LevelSelect/Center/Panel/Margin/Options/WorldList/DeveloperToolsHeading"
 	) as Label
@@ -51,6 +54,8 @@ func _validate() -> void:
 	assert(level_04_button.text == "4  -  WALL JUMP")
 	assert(game_root.campaign.find_by_id(&"dash").display_number == 5)
 	assert(level_05_button.text == "5  -  DASH")
+	assert(game_root.campaign.find_by_id(&"green_zone_finale").display_number == 6)
+	assert(level_06_button.text == "6  -  GREEN ZONE FINALE")
 	assert(InputMap.has_action("dash"))
 	assert(developer_heading.text == "DEVELOPER TOOLS")
 	assert(animation_lab_button.text == "ANIMATION LAB")
@@ -80,6 +85,19 @@ func _validate() -> void:
 	assert(
 		game_root.current_level_definition.level_id == &"gaps_and_spikes",
 		"Enter should launch the focused level."
+	)
+	game_root.show_level_select()
+	var menu_six := InputEventKey.new()
+	menu_six.physical_keycode = KEY_6
+	menu_six.pressed = true
+	game_root._unhandled_input(menu_six)
+	assert(
+		game_root.current_level_definition.level_id == &"green_zone_finale",
+		"6 should launch the sixth campaign level."
+	)
+	assert(
+		game_root.current_level.name == "World01Level06",
+		"Level 6 should retain its catalog-derived runtime identity."
 	)
 	game_root.show_level_select()
 	game_root.load_level(&"fundamentals")

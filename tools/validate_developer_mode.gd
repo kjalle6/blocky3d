@@ -58,6 +58,41 @@ func _run() -> void:
 	)
 	assert(not fresh_pickup.is_claimed(), "The fresh level load must restore its pickup.")
 
+	game_root.show_level_select()
+	game_root.load_level(&"green_zone_finale")
+	await process_frame
+	var finale_session := game_root.current_level as LevelSession3D
+	_assert_complete_kit(finale_session, "Level 6 entry")
+
+	finale_session._reset_run()
+	await physics_frame
+	_assert_complete_kit(finale_session, "Level 6 manual restart")
+
+	finale_session.player.kill()
+	for frame in 40:
+		await physics_frame
+	assert(not finale_session.player.is_dead())
+	_assert_complete_kit(finale_session, "Level 6 death reset")
+
+	game_root.show_level_select()
+	game_root.load_level(&"green_zone_finale")
+	await process_frame
+	var fresh_finale_session := game_root.current_level as LevelSession3D
+	_assert_complete_kit(fresh_finale_session, "fresh Level 6 reload")
+
 	game_root.free()
 	print("Fresh-per-level developer progression validation passed.")
 	quit(0)
+
+
+func _assert_complete_kit(level: LevelSession3D, context: String) -> void:
+	for ability_id in PlayerAbility.IMPLEMENTED:
+		assert(
+			level.player.has_ability(ability_id),
+			"%s must provide %s." % [context, PlayerAbility.display_name(ability_id)]
+		)
+		assert(
+			level.is_session_ability_enabled(ability_id),
+			"%s must seed %s as a session ability."
+			% [context, PlayerAbility.display_name(ability_id)]
+		)

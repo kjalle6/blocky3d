@@ -14,14 +14,15 @@ remain read-only design references.
 - Level 2: Gaps & Spikes — complete fundamentals regression course
 - Level 3: Double Jump — complete ability-introduction level
 - Level 4: Wall Jump — complete vertical-movement introduction
-- Level 5: Dash — playable first pass awaiting hands-on tuning
-- All five World 1 levels are now playable
+- Level 5: Dash — complete ability-introduction level and protected baseline
+- Level 6: Green Zone Finale — playable first-pass full-kit capstone
+- All six World 1 levels are now playable
 - Typed world catalog and world-grouped mouse or `W`/`S` + `Enter` level
   selector
 - Development-only Animation Lab with a full-speed runway, test geometry,
   immediate ability toggles, and no campaign/save effects
-- Development mode starts progression fresh on every level load while
-  retaining unlocks through death and `R` inside that session
+- Development mode starts every level from its fresh level-defined entry state,
+  then retains session abilities through death and `R`
 - 1920x1080 presentation baseline
 
 The three living design documents are:
@@ -83,6 +84,8 @@ godot --headless --path . --script res://tools/validate_level4_runtime.gd
 godot --headless --path . --script res://tools/validate_level4_playthrough.gd
 godot --headless --path . --script res://tools/validate_level5_runtime.gd
 godot --headless --path . --script res://tools/validate_level5_playthrough.gd
+godot --headless --path . --script res://tools/validate_level6_runtime.gd
+godot --headless --path . --script res://tools/validate_level6_playthrough.gd
 ```
 
 Generate graphical review captures with:
@@ -93,5 +96,6 @@ godot --path . --script res://tools/capture_level2.gd
 godot --path . --script res://tools/capture_level3.gd
 godot --path . --script res://tools/capture_level4.gd
 godot --path . --script res://tools/capture_level5.gd
+godot --path . --script res://tools/capture_level6.gd
 godot --path . --script res://tools/capture_animation_lab.gd
 ```

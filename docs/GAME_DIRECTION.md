@@ -108,7 +108,7 @@ and be used where it creates a readable decision rather than a cheap death.
 
 ## Progression
 
-The base movement kit should be learned across roughly five campaign levels:
+The base movement kit is learned across the opening five campaign levels:
 
 1. Run, jump, stomp, knife, and fast restart.
 2. Harder fundamentals with gaps, spikes, and checkpoints.
@@ -116,15 +116,16 @@ The base movement kit should be learned across roughly five campaign levels:
 4. Wall jump.
 5. Dash.
 
-This is a progression target, not a promise that the final campaign has only
-five levels. Later levels combine the kit, add hazards and enemy families,
-explore route turns, and introduce original mechanics.
+Those five teaching levels establish the complete kit. A sixth Green Zone
+level then serves as a no-new-ability capstone, combining Double Jump, Wall
+Jump, and Dash before later worlds add hazards, enemy families, route turns,
+and original mechanics.
 
-Those five levels form World 1: the opening green-zone world. It is the
-player's learning arc, but it is not a separate tutorial that precedes the
-game. Level 1 is where the game begins. Each World 1 level must teach through
-play, contain a real execution test, and remain worth replaying after its
-lesson is understood.
+The five teaching levels and their sixth capstone form World 1: the opening
+green-zone world. It is the player's learning arc, but it is not a separate
+tutorial that precedes the game. Level 1 is where the game begins. Each World
+1 level must teach or combine through play, contain a real execution test, and
+remain worth replaying after its lesson is understood.
 
 A world is a themed collection of separate levels, not one continuous route.
 Worlds provide the larger pacing arc, visual identity, mechanic combinations,
@@ -134,8 +135,8 @@ developed, and tested. It should not be lengthened merely to appear more
 substantial.
 
 The final number of worlds and levels remains open until World 1 reveals the
-real production cost. The campaign will extend well beyond the opening five
-levels; the eleven Python levels do not define its final size.
+real production cost. The campaign will extend well beyond the six-level
+opening world; the eleven Python levels do not define its final size.
 
 Permanent ability ownership, save data, upgrades, collectibles, scoring, and
 records require explicit designs before implementation. The Python game's
@@ -148,8 +149,8 @@ approved rule for the current fast-retry game.
 - The game is an original precision platformer, not a literal port.
 - The presentation is coherent pixel-art 2.5D inside a 3D world.
 - The game is not designed as a rage game.
-- The base ability kit is introduced early, over roughly five levels.
-- Those five levels are World 1, where teaching is embedded in the real game.
+- The base ability kit is introduced across the first five levels.
+- Those five teaching levels plus a sixth full-kit capstone form World 1.
 - Worlds contain multiple short, replayable levels with a coherent theme and
   escalation.
 - Permanent ability ownership uses versioned save data and per-level ability
@@ -157,7 +158,7 @@ approved rule for the current fast-retry game.
 - Melee stays a focused traversal-compatible verb.
 - Collision, checkpoints, attacks, and hazards are authored for feel and
   readability.
-- Levels 1–3 are completed regression baselines.
+- Levels 1–5 are completed regression baselines.
 
 ## Open decisions
 

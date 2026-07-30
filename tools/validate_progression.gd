@@ -15,11 +15,13 @@ func _run() -> void:
 	var progress := GameProgress.new()
 	assert(progress.complete_level(&"fundamentals"))
 	assert(not progress.complete_level(&"fundamentals"))
+	assert(progress.complete_level(&"green_zone_finale"))
 	assert(progress.unlock_ability(PlayerAbility.DOUBLE_JUMP))
 	assert(not progress.unlock_ability(PlayerAbility.DOUBLE_JUMP))
 	var serialized := progress.to_dictionary()
 	var restored := GameProgress.from_dictionary(serialized)
 	assert(restored.has_completed(&"fundamentals"))
+	assert(restored.has_completed(&"green_zone_finale"))
 	assert(restored.owns_ability(PlayerAbility.DOUBLE_JUMP))
 
 	var test_save_path := "user://campaign_progress_validation.json"
@@ -28,12 +30,14 @@ func _run() -> void:
 	var first_store := ProgressionStore.new()
 	first_store.save_path = test_save_path
 	first_store.mark_level_completed(&"fundamentals")
+	first_store.mark_level_completed(&"green_zone_finale")
 	first_store.unlock_ability(PlayerAbility.DOUBLE_JUMP)
 	assert(FileAccess.file_exists(test_save_path))
 	var second_store := ProgressionStore.new()
 	second_store.save_path = test_save_path
 	second_store.load_progress()
 	assert(second_store.has_completed(&"fundamentals"))
+	assert(second_store.has_completed(&"green_zone_finale"))
 	assert(second_store.owns_ability(PlayerAbility.DOUBLE_JUMP))
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(test_save_path))
 	first_store.free()
@@ -79,13 +83,14 @@ func _run() -> void:
 	assert(green_zone.display_number == 1)
 	assert(green_zone.title == "Green Zone")
 	assert(green_zone.theme_id == &"green_zone")
-	assert(green_zone.ordered_levels().size() == 5)
-	assert(catalog.ordered_levels().size() == 5)
+	assert(green_zone.ordered_levels().size() == 6)
+	assert(catalog.ordered_levels().size() == 6)
 	assert(catalog.ordered_levels()[0].level_id == &"fundamentals")
 	assert(catalog.ordered_levels()[1].level_id == &"gaps_and_spikes")
 	assert(catalog.ordered_levels()[2].level_id == &"double_jump")
 	assert(catalog.ordered_levels()[3].level_id == &"wall_jump")
 	assert(catalog.ordered_levels()[4].level_id == &"dash")
+	assert(catalog.ordered_levels()[5].level_id == &"green_zone_finale")
 	assert(catalog.find_level(&"green_zone", 1).available_abilities.is_empty())
 	assert(catalog.find_level(&"green_zone", 2).available_abilities.is_empty())
 	assert(
@@ -116,9 +121,37 @@ func _run() -> void:
 			PlayerAbility.DASH,
 		]
 	)
+	var finale := catalog.find_level(&"green_zone", 6)
+	assert(finale != null)
+	assert(
+		finale.available_abilities
+		== [
+			PlayerAbility.DOUBLE_JUMP,
+			PlayerAbility.WALL_JUMP,
+			PlayerAbility.DASH,
+		]
+	)
+	assert(
+		finale.assumed_owned_abilities
+		== [
+			PlayerAbility.DOUBLE_JUMP,
+			PlayerAbility.WALL_JUMP,
+			PlayerAbility.DASH,
+		]
+	)
+	assert(
+		finale.required_abilities
+		== [
+			PlayerAbility.DOUBLE_JUMP,
+			PlayerAbility.WALL_JUMP,
+			PlayerAbility.DASH,
+		]
+	)
+	assert(finale.prerequisite_level_ids == [&"dash"])
 	assert(catalog.find_world_for_level(&"double_jump") == green_zone)
 	assert(catalog.find_world_for_level(&"wall_jump") == green_zone)
 	assert(catalog.find_world_for_level(&"dash") == green_zone)
+	assert(catalog.find_world_for_level(&"green_zone_finale") == green_zone)
 
 	print("Campaign progression and ability-policy validation passed.")
 	quit(0)
