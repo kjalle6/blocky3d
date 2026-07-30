@@ -9,7 +9,7 @@ hierarchy.
 | Responsibility | Current or intended owner |
 | --- | --- |
 | Application flow | `GameRoot`: active world container, interface container, and catalog-driven level selector |
-| Campaign content | `CampaignCatalog` and typed `LevelDefinition` resources; no level-number behavior branches |
+| Campaign content | `CampaignCatalog`, typed `WorldDefinition`, and typed `LevelDefinition` resources; no level-number behavior branches |
 | Level run state | `LevelSession3D`: player wiring, death, checkpoint respawn, full restart, and completion |
 | Locomotion | `PlayerCharacter` plus typed `PlayerMovementConfig` tuning |
 | Route plane | `TraversalRail3D`: world position and tangent for path-relative movement |
@@ -19,6 +19,7 @@ hierarchy.
 | Hazards | Reusable hazard areas; spike art and damage geometry remain independently authored |
 | Feedback | Replaceable presentation owner for flashes, hit pause, and future named audio cues |
 | Progression | `ProgressionStore` owns versioned `GameProgress` save data and permanent ability ownership |
+| Ability pickups | Focused pickup actors request unlocks through `LevelSession3D`; they never write save data directly |
 
 `GameRoot` has two stable top-level containers:
 
@@ -26,6 +27,13 @@ hierarchy.
 - `Interface` for menus, HUD, transitions, and accessibility UI
 
 Gameplay behavior does not accumulate directly on `GameRoot`.
+
+During active development, `GameRoot.developer_fresh_level_runs` is enabled.
+Each level selection therefore receives an empty progression view without
+reading or modifying the campaign save. Unlocks remain active through death
+and manual restart inside that loaded session, then clear when another level
+session is created. Disabling the mode restores the versioned persistent
+campaign behavior without changing level code.
 
 `PixelSideCamera3D` keeps a continuous internal follow position but quantizes
 its rendered transform to the current viewport's output-pixel grid. Static
@@ -112,6 +120,41 @@ When adapting a Python level:
    constrained the idea.
 6. Add presentation only after the route reads and plays correctly.
 
+## World composition
+
+`CampaignCatalog` owns ordered typed `WorldDefinition` resources. A world
+defines:
+
+- stable `world_id`;
+- display order, title, description, and stable theme ID;
+- ordered `LevelDefinition` resources;
+
+The catalog exposes both world-aware lookups and flattened stable-ID level
+lookups for runtime loading and save compatibility. Level display numbers are
+local to their owning world. Level IDs remain globally unique, and runtime
+loading accepts those IDs rather than ambiguous global numbers.
+
+`LevelDefinition` continues to own level metadata and scene references.
+`GameRoot` renders world headings and their level buttons from the catalog; it
+does not maintain a separate UI table. The active run retains both its level
+definition and owning world definition for presentation and future
+world-aware flow.
+
+The first `WorldDefinition`, Green Zone, contains the existing three levels
+and will later receive Levels 4 and 5. Missing levels are not represented by
+fake scenes or disabled placeholder buttons. Development mode keeps all
+authored levels selectable. Production prerequisite/locking presentation is
+added only when campaign flow is ready to be tested.
+
+Completed level IDs and permanent ability IDs remain globally stable, so
+introducing world grouping does not require changing the version-1 save
+payload. World completion can be derived from its member levels until a real
+world-specific reward requires persisted state.
+
+World data owns organization, not gameplay. Level geometry stays in composed
+scenes; themes select curated assets; movement abilities remain player
+contracts; no mechanic branches on a world number.
+
 ## Asset pipeline
 
 The complete downloaded packs remain outside the repository at
@@ -138,15 +181,21 @@ Every lasting system receives focused validation. The current suite covers:
 - application and level-selector structure, including keyboard navigation;
 - campaign catalog integrity, versioned progress serialization, and
   per-level ability filtering;
+- fresh-per-level development progression versus same-session restart
+  retention;
 - output-pixel camera stability during long horizontal travel;
 - movement, jump envelope, coyote time, buffering, and reset;
 - Level 1 combat, goal flow, reset, and full completion;
 - Level 2 route measurements, spike collision and centering, checkpoints,
   reset, and full completion.
+- Double Jump coyote, momentum, release, consumption, landing-refresh, and
+  animation contracts;
+- Level 3 route measurements, permanent pickup and replay behavior,
+  checkpoints, reset, and full completion.
 
 Graphical capture scripts render deterministic 1920x1080 review positions for
-both levels. Visual changes are inspected in the running game; screenshots do
-not replace hands-on movement and collision testing.
+all current levels. Visual changes are inspected in the running game;
+screenshots do not replace hands-on movement and collision testing.
 
 Before committing a gameplay milestone:
 
@@ -159,12 +208,12 @@ Before committing a gameplay milestone:
 
 ## Current baseline — 30 July 2026
 
-Level 1 and Level 2 are protected regression baselines. New abilities and
-systems must not silently change their movement, collision, enemy, checkpoint,
-or restart behavior.
+Levels 1–3 are protected regression baselines. New abilities and systems must
+not silently change earlier movement, collision, enemy, checkpoint, or restart
+behavior.
 
-The campaign catalog, versioned progression payload, permanent ability
-ownership, and per-level ability policy are now established. The next
-technical milestone is Double Jump itself plus its pickup/presentation
-contract in Level 3; it must use this foundation rather than adding
-level-number conditions.
+The typed world catalog and grouped selector, versioned progression payload,
+permanent ability ownership, per-level ability policy, Double Jump, reusable
+pickup actor, non-pausing ability tutorial, and fresh-per-level development
+mode are established. The next major system is Wall Jump with vertical camera
+framing.

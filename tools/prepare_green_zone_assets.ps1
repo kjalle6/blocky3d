@@ -24,6 +24,8 @@ $assets = [ordered]@{
         "weapons\beginner weapons\1 Characters\1 Biker\Run_attack.png"
     "characters/player_jump.png" =
         "characters\1 Biker\Biker_jump.png"
+    "characters/player_double_jump.png" =
+        "characters\1 Biker\Biker_doublejump.png"
     "characters/player_hurt.png" =
         "characters\1 Biker\Biker_hurt.png"
     "characters/player_death.png" =

@@ -120,6 +120,23 @@ This is a progression target, not a promise that the final campaign has only
 five levels. Later levels combine the kit, add hazards and enemy families,
 explore route turns, and introduce original mechanics.
 
+Those five levels form World 1: the opening green-zone world. It is the
+player's learning arc, but it is not a separate tutorial that precedes the
+game. Level 1 is where the game begins. Each World 1 level must teach through
+play, contain a real execution test, and remain worth replaying after its
+lesson is understood.
+
+A world is a themed collection of separate levels, not one continuous route.
+Worlds provide the larger pacing arc, visual identity, mechanic combinations,
+and escalation; individual levels retain the short, fast-retry structure that
+suits the game. A level should end when its idea has been introduced,
+developed, and tested. It should not be lengthened merely to appear more
+substantial.
+
+The final number of worlds and levels remains open until World 1 reveals the
+real production cost. The campaign will extend well beyond the opening five
+levels; the eleven Python levels do not define its final size.
+
 Permanent ability ownership, save data, upgrades, collectibles, scoring, and
 records require explicit designs before implementation. The Python game's
 three lives and ten-orbs-for-an-extra-life system is legacy evidence, not an
@@ -132,16 +149,20 @@ approved rule for the current fast-retry game.
 - The presentation is coherent pixel-art 2.5D inside a 3D world.
 - The game is not designed as a rage game.
 - The base ability kit is introduced early, over roughly five levels.
+- Those five levels are World 1, where teaching is embedded in the real game.
+- Worlds contain multiple short, replayable levels with a coherent theme and
+  escalation.
+- Permanent ability ownership uses versioned save data and per-level ability
+  availability.
 - Melee stays a focused traversal-compatible verb.
 - Collision, checkpoints, attacks, and hazards are authored for feel and
   readability.
-- Level 1 and Level 2 are completed regression baselines.
+- Levels 1–3 are completed regression baselines.
 
 ## Open decisions
 
 - Final protagonist and world fiction
 - Exact campaign order and final level count
-- Permanent progression and save-data format
 - Upgrade structure and what collectibles are for
 - Time, death, collectible, rank, or score records
 - Final audio identity and ownership of any legacy music

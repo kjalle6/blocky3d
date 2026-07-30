@@ -16,7 +16,7 @@ func _run() -> void:
 		await process_frame
 	_capture("level_select")
 
-	game_root.load_level(2)
+	game_root.load_level(&"gaps_and_spikes")
 	await process_frame
 	var level := game_root.current_level as LevelSession3D
 	game_root.get_node("Interface").visible = false

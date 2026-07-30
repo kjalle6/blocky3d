@@ -33,9 +33,15 @@ corner_radius_bottom_left = 6
 script = ExtResource("1_app")
 campaign = ExtResource("2_campaign")
 level_button_style = SubResource("Style_button")
+developer_fresh_level_runs = true
 
 [node name="World" type="Node3D" parent="."]
 unique_name_in_owner = true
+
+[node name="AbilityTutorialTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 3.8
+one_shot = true
 
 [node name="Interface" type="CanvasLayer" parent="."]
 
@@ -91,6 +97,36 @@ theme_override_font_sizes/font_size = 42
 text = "LEVEL COMPLETE\nR: run again    ESC: level select"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="AbilityTutorial" type="PanelContainer" parent="Interface"]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 10
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -440.0
+offset_top = 126.0
+offset_right = 440.0
+offset_bottom = 206.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("Style_panel")
+
+[node name="Margin" type="MarginContainer" parent="Interface/AbilityTutorial"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="AbilityTutorialLabel" type="Label" parent="Interface/AbilityTutorial/Margin"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.43, 1, 0.72, 1)
+theme_override_colors/font_shadow_color = Color(0.02, 0.02, 0.03, 0.9)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
 
 [node name="LevelSelect" type="Control" parent="Interface"]
 unique_name_in_owner = true
@@ -149,7 +185,7 @@ theme_override_font_sizes/font_size = 18
 text = "SELECT LEVEL"
 horizontal_alignment = 1
 
-[node name="LevelButtons" type="VBoxContainer" parent="Interface/LevelSelect/Center/Panel/Margin/Options"]
+[node name="WorldList" type="VBoxContainer" parent="Interface/LevelSelect/Center/Panel/Margin/Options"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 12
@@ -159,4 +195,12 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.72, 0.82, 1)
 theme_override_font_sizes/font_size = 15
 text = "Click or use W / S + ENTER    •    1-9 shortcuts"
+horizontal_alignment = 1
+
+[node name="DeveloperModeLabel" type="Label" parent="Interface/LevelSelect/Center/Panel/Margin/Options"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.78, 0.32, 1)
+theme_override_font_sizes/font_size = 14
+text = "DEV MODE  •  LEVEL LOADS START FRESH"
 horizontal_alignment = 1

@@ -5,9 +5,11 @@ extends Node
 @export var campaign: CampaignCatalog
 @export var level_button_style: StyleBox
 @export var persist_progression := true
+@export var developer_fresh_level_runs := true
 
 var current_level: LevelSession3D
 var current_level_definition: LevelDefinition
+var current_world_definition: WorldDefinition
 var _level_buttons: Array[Button] = []
 
 @onready var world: Node3D = %World
@@ -15,8 +17,12 @@ var _level_buttons: Array[Button] = []
 @onready var level_label: Label = %LevelLabel
 @onready var menu_hint: Label = %MenuHint
 @onready var completion_label: Label = %CompletionLabel
+@onready var ability_tutorial: PanelContainer = %AbilityTutorial
+@onready var ability_tutorial_label: Label = %AbilityTutorialLabel
+@onready var ability_tutorial_timer: Timer = %AbilityTutorialTimer
 @onready var level_select: Control = %LevelSelect
-@onready var level_buttons: VBoxContainer = %LevelButtons
+@onready var world_list: VBoxContainer = %WorldList
+@onready var developer_mode_label: Label = %DeveloperModeLabel
 
 
 func _ready() -> void:
@@ -26,7 +32,9 @@ func _ready() -> void:
 		catalog_errors.is_empty(),
 		"Campaign catalog is invalid:\n%s" % "\n".join(catalog_errors)
 	)
-	_build_level_buttons()
+	ability_tutorial_timer.timeout.connect(_hide_ability_tutorial)
+	developer_mode_label.visible = developer_fresh_level_runs
+	_build_world_list()
 	show_level_select()
 
 
@@ -53,9 +61,11 @@ func _unhandled_input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 
-func load_level(level_key: Variant) -> void:
-	var definition := _resolve_level(level_key)
-	assert(definition != null, "Unknown campaign level: %s" % level_key)
+func load_level(level_id: StringName) -> void:
+	var definition := campaign.find_by_id(level_id)
+	var world_definition := campaign.find_world_for_level(level_id)
+	assert(definition != null, "Unknown campaign level: %s" % level_id)
+	assert(world_definition != null, "Campaign level has no owning world: %s" % level_id)
 	_free_current_level()
 	current_level = definition.scene.instantiate() as LevelSession3D
 	assert(
@@ -63,13 +73,20 @@ func load_level(level_key: Variant) -> void:
 		"%s must instantiate a LevelSession3D." % definition.scene.resource_path
 	)
 	current_level_definition = definition
-	current_level.name = "Level%02d" % definition.display_number
+	current_world_definition = world_definition
+	current_level.name = (
+		"World%02dLevel%02d"
+		% [world_definition.display_number, definition.display_number]
+	)
 	current_level.configure(definition, _progression_store())
 	world.add_child(current_level)
 	current_level.run_completed.connect(_on_run_completed)
 	current_level.run_reset.connect(_on_run_reset)
+	current_level.ability_unlocked.connect(_on_ability_unlocked)
 	level_label.text = (
-		definition.heading()
+		world_definition.menu_heading()
+		+ " / "
+		+ definition.heading()
 		+ "\nMove: A / D or left stick    Jump: SPACE / gamepad A"
 		+ "    Attack: LEFT CLICK / J / gamepad X    Reset: R"
 	)
@@ -77,35 +94,50 @@ func load_level(level_key: Variant) -> void:
 	instructions.visible = true
 	menu_hint.visible = true
 	completion_label.visible = false
+	_hide_ability_tutorial()
 
 
 func show_level_select() -> void:
 	_free_current_level()
 	current_level_definition = null
+	current_world_definition = null
 	level_select.visible = true
 	instructions.visible = false
 	menu_hint.visible = false
 	completion_label.visible = false
+	_hide_ability_tutorial()
 	if not _level_buttons.is_empty():
 		_level_buttons.front().grab_focus()
 
 
-func _build_level_buttons() -> void:
-	for child in level_buttons.get_children():
+func _build_world_list() -> void:
+	for child in world_list.get_children():
 		child.queue_free()
 	_level_buttons.clear()
-	for definition in campaign.ordered_levels():
-		var button := Button.new()
-		button.name = "Level%02dButton" % definition.display_number
-		button.custom_minimum_size = Vector2(0.0, 64.0)
-		button.add_theme_font_size_override("font_size", 22)
-		if level_button_style != null:
-			button.add_theme_stylebox_override("normal", level_button_style)
-		button.text = definition.menu_label()
-		button.set_meta(&"level_id", definition.level_id)
-		button.pressed.connect(_load_button_level.bind(button))
-		level_buttons.add_child(button)
-		_level_buttons.append(button)
+	for world_definition in campaign.ordered_worlds():
+		var heading := Label.new()
+		heading.name = "World%02dHeading" % world_definition.display_number
+		heading.add_theme_color_override("font_color", Color(0.43, 1.0, 0.72, 1.0))
+		heading.add_theme_font_size_override("font_size", 19)
+		heading.text = world_definition.menu_heading()
+		heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		world_list.add_child(heading)
+
+		for definition in world_definition.ordered_levels():
+			var button := Button.new()
+			button.name = (
+				"World%02dLevel%02dButton"
+				% [world_definition.display_number, definition.display_number]
+			)
+			button.custom_minimum_size = Vector2(0.0, 64.0)
+			button.add_theme_font_size_override("font_size", 22)
+			if level_button_style != null:
+				button.add_theme_stylebox_override("normal", level_button_style)
+			button.text = definition.menu_label()
+			button.set_meta(&"level_id", definition.level_id)
+			button.pressed.connect(_load_button_level.bind(button))
+			world_list.add_child(button)
+			_level_buttons.append(button)
 
 
 func _move_level_focus(direction: int) -> void:
@@ -130,14 +162,8 @@ func _load_button_level(button: Button) -> void:
 	load_level(button.get_meta(&"level_id") as StringName)
 
 
-func _resolve_level(level_key: Variant) -> LevelDefinition:
-	if typeof(level_key) == TYPE_INT:
-		return campaign.find_by_number(int(level_key))
-	return campaign.find_by_id(StringName(level_key))
-
-
 func _progression_store() -> ProgressionStore:
-	if not persist_progression:
+	if developer_fresh_level_runs or not persist_progression:
 		return null
 	return get_node_or_null("/root/GameProgression") as ProgressionStore
 
@@ -159,3 +185,20 @@ func _on_run_completed() -> void:
 
 func _on_run_reset() -> void:
 	completion_label.visible = false
+
+
+func _on_ability_unlocked(ability_id: StringName) -> void:
+	ability_tutorial_label.text = (
+		"%s UNLOCKED\n%s"
+		% [
+			PlayerAbility.display_name(ability_id),
+			PlayerAbility.instruction(ability_id),
+		]
+	)
+	ability_tutorial.visible = true
+	ability_tutorial_timer.start()
+
+
+func _hide_ability_tutorial() -> void:
+	ability_tutorial_timer.stop()
+	ability_tutorial.visible = false

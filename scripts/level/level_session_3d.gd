@@ -6,6 +6,7 @@ extends Node3D
 signal run_completed
 signal run_reset
 signal checkpoint_changed(route_index: int)
+signal ability_unlocked(ability_id: StringName)
 
 @export_range(0.0, 1.0, 0.01) var reset_delay := 0.18
 
@@ -58,6 +59,9 @@ func _ready() -> void:
 	for node in get_tree().get_nodes_in_group("level_checkpoint"):
 		if is_ancestor_of(node) and node.has_signal("activated"):
 			node.activated.connect(_on_checkpoint_activated)
+	for node in get_tree().get_nodes_in_group("ability_pickup"):
+		if is_ancestor_of(node) and node.has_method("bind_to_level_session"):
+			node.call("bind_to_level_session", self)
 
 	_reset_run()
 	camera.snap_to_target()
@@ -138,11 +142,14 @@ func unlock_ability(ability_id: StringName) -> bool:
 			% [_definition.level_id, ability_id]
 		)
 		return false
+	var was_active := player.has_ability(ability_id)
 	if ability_id not in _session_unlocked_abilities:
 		_session_unlocked_abilities.append(ability_id)
 	if _progression_store != null:
 		_progression_store.unlock_ability(ability_id)
 	player.enable_ability(ability_id)
+	if not was_active and player.has_ability(ability_id):
+		ability_unlocked.emit(ability_id)
 	return player.has_ability(ability_id)
 
 

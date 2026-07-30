@@ -18,3 +18,27 @@ const ALL := [
 
 static func is_known(ability_id: StringName) -> bool:
 	return ability_id in ALL
+
+
+static func display_name(ability_id: StringName) -> String:
+	match ability_id:
+		DOUBLE_JUMP:
+			return "DOUBLE JUMP"
+		WALL_JUMP:
+			return "WALL JUMP"
+		DASH:
+			return "DASH"
+		_:
+			return String(ability_id).to_upper()
+
+
+static func instruction(ability_id: StringName) -> String:
+	match ability_id:
+		DOUBLE_JUMP:
+			return "JUMP AGAIN WHILE AIRBORNE"
+		WALL_JUMP:
+			return "JUMP AWAY FROM A WALL"
+		DASH:
+			return "DASH THROUGH THE AIR"
+		_:
+			return ""

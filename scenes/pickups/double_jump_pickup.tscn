@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/pickups/ability_pickup_3d.gd" id="1_pickup"]
+[ext_resource type="Texture2D" path="res://assets/art/shared/pickups/double_jump.svg" id="2_icon"]
+
+[sub_resource type="BoxShape3D" id="Shape_pickup"]
+size = Vector3(1.2, 1.7, 0.8)
+
+[node name="DoubleJumpPickup" type="Area3D"]
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("1_pickup")
+
+[node name="Icon" type="Sprite3D" parent="."]
+unique_name_in_owner = true
+position = Vector3(0, 1.05, 1.22)
+texture_filter = 0
+pixel_size = 0.045
+texture = ExtResource("2_icon")
+shaded = false
+render_priority = 12
+
+[node name="CollectionShape" type="CollisionShape3D" parent="."]
+unique_name_in_owner = true
+position = Vector3(0, 0.85, 0)
+shape = SubResource("Shape_pickup")

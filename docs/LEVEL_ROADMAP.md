@@ -9,21 +9,48 @@ orbs, and numbering are not mandates for the current Godot campaign.
 The Unreal prototype at `D:\UnrealProjects\Blocky3D` is a secondary reference
 for the approved Level 1 and Level 2 reinterpretations. Godot is now canonical.
 
-## Campaign spine
+## Campaign structure
 
-The current target teaches the complete base movement kit early:
+The campaign is organized into themed worlds containing separate short levels.
+World 1 is the opening green-zone world and teaches the complete base movement
+kit:
 
-| Campaign level | Purpose | New capability | Status |
+| World 1 level | Purpose | New capability | Status |
 | --- | --- | --- | --- |
 | 1: Fundamentals | Classic run, jump, gaps, enemies, stomp, knife, and finish | Base kit | Complete |
 | 2: Gaps & Spikes | Longer precision rhythm, fair spikes, and protected checkpoints | None | Complete |
-| 3: Double Jump | Safe introduction followed by required aerial crossings | Double jump | Next |
+| 3: Double Jump | Safe introduction followed by required aerial crossings | Double jump | Complete |
 | 4: Wall Jump | Turn the route upward and teach wall sensing, cling, and kick-off | Wall jump | Planned |
 | 5: Dash | Teach ground and air use in distinct readable zones | Dash | Planned |
 
-Later campaign numbering is deliberately open. Legacy mastery levels may be
-expanded, combined, split, reordered, or replaced once the reusable toolkit
-exists.
+World 1 is internally the learning world, but it must not present itself as a
+disposable tutorial island. These are the first real levels of the game.
+Shortness supports fast retry and replay; the world supplies the larger arc.
+By the end of Level 5, later worlds may assume the complete base movement kit.
+
+Later world count, names, themes, and level counts are deliberately open until
+World 1 establishes production cost and pacing. Legacy mastery levels may be
+expanded, combined, split, redistributed, or discarded.
+
+## Content selection rule
+
+The Python campaign is a quarry, not a blueprint. Every legacy level is broken
+into four kinds of evidence:
+
+1. a mechanic worth implementing;
+2. a teaching beat or obstacle sequence worth re-authoring;
+3. a set-piece or route-shape idea worth saving for a suitable world;
+4. prototype filler that should be discarded.
+
+Coordinates, lives, orb economy, placeholder corridors, repeated generic
+mastery stretches, and experimental code are not campaign content. Nothing is
+retained solely because it appeared in the old game.
+
+The final Python corridor is the clearest example. It is not a model for the
+finished game's identity or a required campaign level. Its reactive spikes,
+dropping floors, timed platforms, spawned platforms, and moving hazards are
+individual mechanic prototypes that can become a reusable trap toolkit and be
+placed wherever they support a real level.
 
 ## Current levels
 
@@ -74,21 +101,19 @@ input-driven completion.
 | 10: Dash | Five teaching zones: long ground gap, jump-then-air-dash, low ceiling dash, vertical combination climb, and delayed dash drop | Move the useful teaching zones forward into campaign Level 5 |
 | 11: Corridor Test | Reactive spike triggers, landing-dependent spikes, dropping floors, timed platforms, spawned platforms, and spawned saws | Source for a reusable reactive-level toolkit, not necessarily one final corridor level |
 
-## Level 3 brief: Double Jump
+### Level 3: Double Jump - complete
 
-Level 3 is the next milestone. The Python layout is evidence for a teaching
-sequence, not a coordinate sheet.
+Level 3 re-authors the Python teaching sequence as a 108-metre Godot route:
 
-The new level should contain:
-
-1. A protected opening and the Double Jump unlock.
-2. A safe space where the second jump can be discovered without dying.
-3. A crossing that clearly cannot be completed with one jump.
-4. Several variations: extra height, extra distance, and delayed timing.
-5. Recovery or checkpoint placement that supports learning without erasing the
-   challenge.
-6. A final section that proves the ability while still using the established
-   enemy, spike, and melee rules.
+- a physical permanent pickup on protected opening ground;
+- an immediate height lesson across a clean lethal gap;
+- a broad distance crossing that rewards delaying the second jump;
+- alternating ordinary and Double Jump crossings so double-tapping does not
+  replace timing;
+- one focused spike runway with a full-speed safe landing zone;
+- one isolated patrol encounter that supports melee, stomp, or aerial bypass;
+- a long rise to a high final-proof platform followed by a drop to the chest;
+- three grounded-only checkpoints.
 
 The foundation now defines permanent ability ownership in versioned campaign
 progress. Checkpoint death, manual restart, level transitions, and application
@@ -96,22 +121,27 @@ relaunch retain an earned unlock. Each `LevelDefinition` separately declares
 which owned abilities are active there, so Levels 1 and 2 remain single-jump
 courses.
 
-Before geometry is finalized, define:
+The initial movement contract is explicit:
 
-- how falling from a ledge, coyote time, buffering, and variable jump height
-  interact with the available aerial jump;
-- how the first pickup behaves on later replays when Double Jump is already
-  owned;
-- how future wall jump and dash refresh rules will compose with it.
+- Double Jump resets vertical velocity to the normal jump impulse and preserves
+  horizontal momentum;
+- early button release shortens either jump;
+- a coyote-time jump remains the ground jump and preserves the aerial jump;
+- running from a ledge leaves the aerial jump available;
+- only one aerial jump is available until landing or respawn;
+- pickup ownership survives every run reset;
+- replay sessions start with the ability active and the pickup absent.
 
-Level 1 and Level 2 must remain single-jump regression levels unless their
-future level data explicitly grants another ability.
+The route and mechanics pass automated full-speed completion, visual review,
+and hands-on feel approval. Level 3 is now a protected regression baseline.
 
 ## Later system milestones
 
-1. Ability ownership, versioned progression, and Double Jump through Level 3.
-2. Wall movement, directional hazards, and vertical camera framing.
-3. Dash moved into the early campaign and tested with the earlier abilities.
+1. Build Wall Jump, directional wall rules, and vertical camera framing for
+   World 1 Level 4.
+2. Build Dash and distinct ground/air teaching zones for World 1 Level 5.
+3. Review all five levels as one world: pacing, repeated material, difficulty,
+   visual continuity, unlock flow, and world completion.
 4. Generic moving hazards developed from the saw levels.
 5. Camera rails, route turns, large-level state, and multi-direction traversal
    developed from Long Way Around and Stepping Stones.

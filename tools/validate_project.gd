@@ -15,27 +15,37 @@ func _validate() -> void:
 	root.add_child(game_root)
 	assert(game_root.get_node_or_null("Interface/LevelSelect") is Control, "GameRoot requires level selection.")
 	await process_frame
+	var world_heading := game_root.get_node(
+		"Interface/LevelSelect/Center/Panel/Margin/Options/WorldList/World01Heading"
+	) as Label
 	var level_01_button := game_root.get_node(
-		"Interface/LevelSelect/Center/Panel/Margin/Options/LevelButtons/Level01Button"
+		"Interface/LevelSelect/Center/Panel/Margin/Options/WorldList/World01Level01Button"
 	) as Button
 	var level_02_button := game_root.get_node(
-		"Interface/LevelSelect/Center/Panel/Margin/Options/LevelButtons/Level02Button"
+		"Interface/LevelSelect/Center/Panel/Margin/Options/WorldList/World01Level02Button"
+	) as Button
+	var level_03_button := game_root.get_node(
+		"Interface/LevelSelect/Center/Panel/Margin/Options/WorldList/World01Level03Button"
 	) as Button
 	assert(game_root.campaign is CampaignCatalog, "GameRoot requires typed campaign data.")
 	assert(game_root.campaign.validation_errors().is_empty(), "Campaign data must validate.")
+	assert(world_heading.text == "WORLD 1 - GREEN ZONE")
+	assert(game_root.campaign.ordered_worlds().size() == 1)
+	assert(game_root.campaign.find_world_by_id(&"green_zone") is WorldDefinition)
 	assert(game_root.campaign.find_by_id(&"fundamentals").display_number == 1)
 	assert(game_root.campaign.find_by_id(&"gaps_and_spikes").display_number == 2)
+	assert(game_root.campaign.find_by_id(&"double_jump").display_number == 3)
 	assert(level_01_button.has_focus(), "The selector should initially focus Level 1.")
 	var menu_up := InputEventKey.new()
 	menu_up.physical_keycode = KEY_W
 	menu_up.pressed = true
 	game_root._unhandled_input(menu_up)
-	assert(level_02_button.has_focus(), "W should wrap selection from Level 1 to Level 2.")
+	assert(level_03_button.has_focus(), "W should wrap selection from Level 1 to Level 3.")
 	var menu_down := InputEventKey.new()
 	menu_down.physical_keycode = KEY_S
 	menu_down.pressed = true
 	game_root._unhandled_input(menu_down)
-	assert(level_01_button.has_focus(), "S should wrap selection from Level 2 to Level 1.")
+	assert(level_01_button.has_focus(), "S should wrap selection from Level 3 to Level 1.")
 	game_root._unhandled_input(menu_down)
 	assert(level_02_button.has_focus(), "S should move selection from Level 1 to Level 2.")
 	var menu_enter := InputEventKey.new()
@@ -47,13 +57,14 @@ func _validate() -> void:
 		"Enter should launch the focused level."
 	)
 	game_root.show_level_select()
-	game_root.load_level(1)
+	game_root.load_level(&"fundamentals")
 	await process_frame
 
 	assert(game_root.get_node_or_null("World") is Node3D, "GameRoot requires a 3D world root.")
 	assert(game_root.get_node_or_null("Interface") is CanvasLayer, "GameRoot requires a UI root.")
 	var level := game_root.current_level as LevelSession3D
 	assert(level != null, "The current milestone requires the pixel-art Level 1.")
+	assert(game_root.current_world_definition.world_id == &"green_zone")
 	assert(level.traversal_rail.length() > 50.0, "Level 1 route length should match the approved layout.")
 	assert(level.player.movement.ideal_jump_height() > 2.0, "The movement profile should retain a useful platforming jump.")
 	assert(level.get_node("Platforms").get_child_count() == 6, "Level 1 should preserve the approved six-platform rhythm.")

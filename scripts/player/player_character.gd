@@ -3,9 +3,12 @@ extends CharacterBody3D
 ## Core path-relative 2.5D controller. Abilities such as wall movement and dash
 ## will be composed later; this script owns only universally available motion.
 
+const DOUBLE_JUMP_VISUAL_DURATION := 0.43
+
 signal died
 signal attack_connected(target: Node3D)
 signal damage_received(source_position: Vector3)
+signal ability_performed(ability_id: StringName)
 
 @export var movement: PlayerMovementConfig
 @export var traversal_rail: TraversalRail3D
@@ -25,6 +28,8 @@ var _attack_remaining := 0.0
 var _attack_hit_applied := false
 var _available_abilities: Array[StringName] = []
 var _active_abilities: Array[StringName] = []
+var _aerial_jumps_remaining := 0
+var _double_jump_visual_remaining := 0.0
 
 @onready var pixel_visual: PixelPlayerVisual3D = get_node_or_null("PixelVisual") as PixelPlayerVisual3D
 
@@ -45,10 +50,13 @@ func _physics_process(delta: float) -> void:
 
 	_update_jump_timers(delta)
 	_update_attack(delta)
+	_double_jump_visual_remaining = maxf(0.0, _double_jump_visual_remaining - delta)
 	var input_axis := Input.get_axis("move_left", "move_right")
 	if not is_zero_approx(input_axis):
 		_facing_sign = signf(input_axis)
 	var grounded := is_on_floor()
+	if grounded:
+		_refresh_aerial_jumps()
 	var acceleration := movement.air_acceleration
 	if grounded:
 		acceleration = movement.ground_acceleration if not is_zero_approx(input_axis) else movement.ground_deceleration
@@ -60,11 +68,11 @@ func _physics_process(delta: float) -> void:
 	velocity.z = tangent.z * path_speed
 	velocity.y = maxf(velocity.y - movement.gravity * delta, -movement.maximum_fall_speed)
 
-	if _jump_buffer_remaining > 0.0 and _coyote_remaining > 0.0:
-		velocity.y = movement.jump_velocity
-		_coyote_remaining = 0.0
-		_jump_buffer_remaining = 0.0
-		floor_snap_length = 0.0
+	if _jump_buffer_remaining > 0.0:
+		if _coyote_remaining > 0.0:
+			_perform_ground_jump()
+		elif _can_double_jump():
+			_perform_double_jump()
 	elif grounded:
 		floor_snap_length = movement.floor_snap_length
 
@@ -128,6 +136,8 @@ func reset_at(spawn_transform: Transform3D) -> void:
 	_jump_buffer_remaining = 0.0
 	_attack_remaining = 0.0
 	_attack_hit_applied = false
+	_double_jump_visual_remaining = 0.0
+	_aerial_jumps_remaining = 1 if has_ability(PlayerAbility.DOUBLE_JUMP) else 0
 	_dead = false
 	_descending_before_slide = false
 	visible = true
@@ -152,17 +162,24 @@ func configure_abilities(
 	for ability_id in owned_abilities:
 		if ability_id in _available_abilities and ability_id not in _active_abilities:
 			_active_abilities.append(ability_id)
+	_aerial_jumps_remaining = 1 if has_ability(PlayerAbility.DOUBLE_JUMP) else 0
 
 
 func enable_ability(ability_id: StringName) -> bool:
 	if ability_id not in _available_abilities or ability_id in _active_abilities:
 		return false
 	_active_abilities.append(ability_id)
+	if ability_id == PlayerAbility.DOUBLE_JUMP:
+		_aerial_jumps_remaining = maxi(_aerial_jumps_remaining, 1)
 	return true
 
 
 func has_ability(ability_id: StringName) -> bool:
 	return ability_id in _active_abilities
+
+
+func aerial_jumps_remaining() -> int:
+	return _aerial_jumps_remaining
 
 
 func feet_world_y() -> float:
@@ -211,6 +228,33 @@ func _perform_melee_hit() -> void:
 			attack_connected.emit(target)
 
 
+func _perform_ground_jump() -> void:
+	velocity.y = movement.jump_velocity
+	_coyote_remaining = 0.0
+	_jump_buffer_remaining = 0.0
+	floor_snap_length = 0.0
+
+
+func _can_double_jump() -> bool:
+	return (
+		has_ability(PlayerAbility.DOUBLE_JUMP)
+		and _aerial_jumps_remaining > 0
+	)
+
+
+func _perform_double_jump() -> void:
+	velocity.y = movement.jump_velocity
+	_aerial_jumps_remaining -= 1
+	_jump_buffer_remaining = 0.0
+	floor_snap_length = 0.0
+	_double_jump_visual_remaining = DOUBLE_JUMP_VISUAL_DURATION
+	ability_performed.emit(PlayerAbility.DOUBLE_JUMP)
+
+
+func _refresh_aerial_jumps() -> void:
+	_aerial_jumps_remaining = 1 if has_ability(PlayerAbility.DOUBLE_JUMP) else 0
+
+
 func _update_pixel_visual(delta: float) -> void:
 	if pixel_visual == null:
 		return
@@ -221,5 +265,6 @@ func _update_pixel_visual(delta: float) -> void:
 		velocity.y,
 		_attack_remaining > 0.0,
 		_dead,
-		_facing_sign > 0.0
+		_facing_sign > 0.0,
+		_double_jump_visual_remaining > 0.0
 	)

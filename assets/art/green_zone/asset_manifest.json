@@ -19,6 +19,10 @@
                                        "source":  "characters/1 Biker/Biker_jump.png",
                                        "sha256":  "c1f7899cfef8946008d2002edcf635f08f0800c7897be6086bdef20f47feaa5d"
                                    },
+    "characters/player_double_jump.png":  {
+                                              "source":  "characters/1 Biker/Biker_doublejump.png",
+                                              "sha256":  "3a127a9a4c1aba5a0f0fb5a03592d083b38adaee1e5e2f549d0fe33daf8dd654"
+                                          },
     "characters/player_hurt.png":  {
                                        "source":  "characters/1 Biker/Biker_hurt.png",
                                        "sha256":  "e9eb068c4924e46d7c5a045f0196e33c60275b5c2f731933ea6821dbd5de2123"

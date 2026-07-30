@@ -73,11 +73,28 @@ func _run() -> void:
 	var catalog := load("res://resources/campaign/main_campaign.tres") as CampaignCatalog
 	assert(catalog != null)
 	assert(catalog.validation_errors().is_empty())
-	assert(catalog.ordered_levels().size() == 2)
+	assert(catalog.ordered_worlds().size() == 1)
+	var green_zone := catalog.find_world_by_id(&"green_zone")
+	assert(green_zone != null)
+	assert(green_zone.display_number == 1)
+	assert(green_zone.title == "Green Zone")
+	assert(green_zone.theme_id == &"green_zone")
+	assert(green_zone.ordered_levels().size() == 3)
+	assert(catalog.ordered_levels().size() == 3)
 	assert(catalog.ordered_levels()[0].level_id == &"fundamentals")
 	assert(catalog.ordered_levels()[1].level_id == &"gaps_and_spikes")
-	assert(catalog.find_by_number(1).available_abilities.is_empty())
-	assert(catalog.find_by_number(2).available_abilities.is_empty())
+	assert(catalog.ordered_levels()[2].level_id == &"double_jump")
+	assert(catalog.find_level(&"green_zone", 1).available_abilities.is_empty())
+	assert(catalog.find_level(&"green_zone", 2).available_abilities.is_empty())
+	assert(
+		catalog.find_level(&"green_zone", 3).available_abilities
+		== [PlayerAbility.DOUBLE_JUMP]
+	)
+	assert(
+		catalog.find_level(&"green_zone", 3).required_abilities
+		== [PlayerAbility.DOUBLE_JUMP]
+	)
+	assert(catalog.find_world_for_level(&"double_jump") == green_zone)
 
 	print("Campaign progression and ability-policy validation passed.")
 	quit(0)

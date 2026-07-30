@@ -1,10 +1,9 @@
-[gd_resource type="Resource" script_class="CampaignCatalog" load_steps=5 format=3]
+[gd_resource type="Resource" script_class="CampaignCatalog" load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/campaign/campaign_catalog.gd" id="1_catalog"]
-[ext_resource type="Resource" path="res://resources/campaign/level_01.tres" id="2_level_01"]
-[ext_resource type="Resource" path="res://resources/campaign/level_02.tres" id="3_level_02"]
-[ext_resource type="Script" path="res://scripts/campaign/level_definition.gd" id="4_definition"]
+[ext_resource type="Resource" path="res://resources/campaign/world_01.tres" id="2_world_01"]
+[ext_resource type="Script" path="res://scripts/campaign/world_definition.gd" id="3_world_definition"]
 
 [resource]
 script = ExtResource("1_catalog")
-levels = Array[ExtResource("4_definition")]([ExtResource("2_level_01"), ExtResource("3_level_02")])
+worlds = Array[ExtResource("3_world_definition")]([ExtResource("2_world_01")])

@@ -12,8 +12,13 @@ remain read-only design references.
 
 - Level 1: Fundamentals — complete production vertical slice
 - Level 2: Gaps & Spikes — complete fundamentals regression course
-- Level 3: Double Jump — next milestone
-- Catalog-driven mouse and `W`/`S` + `Enter` level selector
+- Level 3: Double Jump — complete ability-introduction level
+- World 1 is the five-level opening green-zone world; Wall Jump and Dash are
+  its remaining planned levels
+- Typed world catalog and world-grouped mouse or `W`/`S` + `Enter` level
+  selector
+- Development mode starts progression fresh on every level load while
+  retaining unlocks through death and `R` inside that session
 - 1920x1080 presentation baseline
 
 The three living design documents are:
@@ -57,12 +62,16 @@ powershell -ExecutionPolicy Bypass -File .\tools\prepare_green_zone_assets.ps1
 ```powershell
 godot --headless --path . --script res://tools/validate_project.gd
 godot --headless --path . --script res://tools/validate_progression.gd
+godot --headless --path . --script res://tools/validate_developer_mode.gd
 godot --headless --path . --script res://tools/validate_movement_runtime.gd
 godot --headless --path . --script res://tools/validate_camera_pixel_stability.gd
+godot --headless --path . --script res://tools/validate_double_jump_runtime.gd
 godot --headless --path . --script res://tools/validate_level1_runtime.gd
 godot --headless --path . --script res://tools/validate_level1_playthrough.gd
 godot --headless --path . --script res://tools/validate_level2_runtime.gd
 godot --headless --path . --script res://tools/validate_level2_playthrough.gd
+godot --headless --path . --script res://tools/validate_level3_runtime.gd
+godot --headless --path . --script res://tools/validate_level3_playthrough.gd
 ```
 
 Generate graphical review captures with:
@@ -70,4 +79,5 @@ Generate graphical review captures with:
 ```powershell
 godot --path . --script res://tools/capture_level1.gd
 godot --path . --script res://tools/capture_level2.gd
+godot --path . --script res://tools/capture_level3.gd
 ```

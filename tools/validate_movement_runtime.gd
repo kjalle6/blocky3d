@@ -12,7 +12,7 @@ func _run() -> void:
 	var game_root := packed_scene.instantiate()
 	game_root.persist_progression = false
 	root.add_child(game_root)
-	game_root.load_level(1)
+	game_root.load_level(&"fundamentals")
 	await process_frame
 	var level := game_root.current_level as LevelSession3D
 	var player := level.player
