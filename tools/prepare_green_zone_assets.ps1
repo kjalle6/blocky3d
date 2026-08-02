@@ -27,7 +27,7 @@ $assets = [ordered]@{
     "characters/player_double_jump.png" =
         "characters\1 Biker\Biker_doublejump.png"
     "characters/player_dash.png" =
-        "characters\potential extra animations\1\Dash.png"
+        "characters\animations\1\Dash.png"
     "characters/player_hurt.png" =
         "characters\1 Biker\Biker_hurt.png"
     "characters/player_death.png" =
@@ -88,7 +88,7 @@ $licenses = [ordered]@{
     "licenses/player_extra_animations.txt" =
         "characters\license.txt"
     "licenses/player_dash_animation.txt" =
-        "characters\potential extra animations\License.txt"
+        "characters\animations\License.txt"
     "licenses/green_zone_enemies.txt" =
         "enemies\green_zone_enemies\License.txt"
     "licenses/green_zone_tileset.txt" =

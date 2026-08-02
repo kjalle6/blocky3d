@@ -291,6 +291,10 @@ func dash_direction() -> float:
 	return _dash_direction
 
 
+func is_dash_airborne() -> bool:
+	return is_dashing() and not _has_dash_floor_support()
+
+
 func feet_world_y() -> float:
 	return global_position.y - 0.55
 
@@ -442,6 +446,18 @@ func _finish_dash(stopped_by_wall := false) -> void:
 		path_speed = signf(path_speed) * movement.dash_exit_speed
 
 
+func _has_dash_floor_support() -> bool:
+	if is_on_floor():
+		return true
+	# Dash deliberately disables floor snapping. A short test motion preserves
+	# the grounded presentation while the body is still directly supported,
+	# without mistaking a real gap crossing for a grounded Dash.
+	return test_move(
+		global_transform,
+		Vector3.DOWN * maxf(0.05, movement.floor_snap_length)
+	)
+
+
 func _update_wall_contact(tangent: Vector3) -> void:
 	_wall_contact_direction = 0.0
 	if not has_ability(PlayerAbility.WALL_JUMP) or not is_on_wall():
@@ -471,5 +487,6 @@ func _update_pixel_visual(delta: float) -> void:
 		_facing_sign > 0.0,
 		_double_jump_visual_remaining > 0.0,
 		_wall_sliding,
-		is_dashing()
+		is_dashing(),
+		is_dash_airborne()
 	)

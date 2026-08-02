@@ -43,7 +43,20 @@ func _run() -> void:
 		await process_frame
 	_capture("animation_lab_wall_slide")
 
-	room.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(8.0, 0.7, 0)))
+	room.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(8.0, 0.55, 0)))
+	for frame in 8:
+		await physics_frame
+	assert(room.player.is_on_floor(), "Ground Dash capture requires floor contact.")
+	assert(room.player._try_start_dash(1.0))
+	await physics_frame
+	room.camera.snap_to_target()
+	for frame in 2:
+		await process_frame
+	assert(not room.player.is_dash_airborne())
+	assert(room.player.pixel_visual.current_state() == "dash")
+	_capture("animation_lab_dash")
+
+	room.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(8.0, 5.0, 0)))
 	for frame in 3:
 		await physics_frame
 	assert(room.player._try_start_dash(1.0))
@@ -51,8 +64,12 @@ func _run() -> void:
 	room.camera.snap_to_target()
 	for frame in 2:
 		await process_frame
-	assert(room.player.pixel_visual.current_state() == "dash")
-	_capture("animation_lab_dash")
+	assert(room.player.is_dash_airborne())
+	assert(room.player.pixel_visual.current_state() == "air_dash")
+	assert(
+		room.player.pixel_visual.body.frame in PixelPlayerVisual3D.AIR_DASH_FRAMES
+	)
+	_capture("animation_lab_air_dash")
 	quit(0)
 
 

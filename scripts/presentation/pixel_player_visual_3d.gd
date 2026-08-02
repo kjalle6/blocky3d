@@ -10,6 +10,7 @@ const BODY_TEXTURES := {
 	"double_jump": preload("res://assets/art/green_zone/characters/player_double_jump.png"),
 	"wall_slide": preload("res://assets/art/green_zone/characters/player_jump.png"),
 	"dash": preload("res://assets/art/green_zone/characters/player_dash.png"),
+	"air_dash": preload("res://assets/art/green_zone/characters/player_dash.png"),
 	"attack": preload("res://assets/art/green_zone/characters/player_attack.png"),
 	"run_attack": preload("res://assets/art/green_zone/characters/player_run_attack.png"),
 	"hurt": preload("res://assets/art/green_zone/characters/player_hurt.png"),
@@ -28,6 +29,7 @@ const FRAME_COUNTS := {
 	"double_jump": 6,
 	"wall_slide": 4,
 	"dash": 6,
+	"air_dash": 6,
 	"attack": 6,
 	"run_attack": 6,
 	"hurt": 2,
@@ -40,11 +42,13 @@ const FRAME_RATES := {
 	"double_jump": 14.0,
 	"wall_slide": 0.0,
 	"dash": 24.0,
+	"air_dash": 24.0,
 	"attack": 18.0,
 	"run_attack": 18.0,
 	"hurt": 8.0,
 	"death": 13.0,
 }
+const AIR_DASH_FRAMES := [1, 2, 3, 2, 3, 4]
 
 var _state := ""
 var _elapsed := 0.0
@@ -72,13 +76,18 @@ func tick(
 	facing_right: bool,
 	double_jumping := false,
 	wall_sliding := false,
-	dashing := false
+	dashing := false,
+	dash_airborne := false
 ) -> void:
 	var desired_state := "idle"
 	if dead:
 		desired_state = "death"
 	elif dashing:
-		desired_state = "dash"
+		# The source Dash strip is authored as a grounded move: its first and
+		# last frames are upright recovery poses. Keep those frames on the
+		# ground, but use only the active burst poses while airborne so the
+		# character never appears to stand motionless in mid-air.
+		desired_state = "air_dash" if dash_airborne else "dash"
 	elif attacking:
 		desired_state = "run_attack" if grounded and absf(horizontal_speed) > 0.5 else "attack"
 	elif double_jumping:
@@ -147,6 +156,11 @@ func _apply_frame(vertical_speed: float) -> void:
 			frame = 3
 	elif _state == "wall_slide":
 		frame = 2
+	elif _state == "air_dash":
+		var step := mini(AIR_DASH_FRAMES.size() - 1, floori(
+			_elapsed * FRAME_RATES[_state]
+		))
+		frame = AIR_DASH_FRAMES[step]
 	elif _state in ["double_jump", "dash", "attack", "run_attack", "hurt", "death"]:
 		frame = mini(count - 1, floori(_elapsed * FRAME_RATES[_state]))
 	else:
