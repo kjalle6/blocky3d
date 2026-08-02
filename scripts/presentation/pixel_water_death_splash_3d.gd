@@ -1,0 +1,72 @@
+class_name PixelWaterDeathSplash3D
+extends Node3D
+## Presentation-only water death. PlayerCharacter retains the ordinary death
+## contract; this component swaps the body for a restrained shoreline splash
+## when a hazard reports the water death kind.
+
+@export var player_path: NodePath
+@export var water_surface_y := 0.0
+@export_range(1, 16, 1) var frame_count := 6
+@export_range(1.0, 30.0, 0.5) var frame_rate := 12.0
+
+var _player: PlayerCharacter
+var _elapsed := 0.0
+var _active := false
+
+@onready var sprite: Sprite3D = $Sprite
+
+
+func _ready() -> void:
+	_player = get_node_or_null(player_path) as PlayerCharacter
+	assert(_player != null, "%s requires a PlayerCharacter path." % name)
+	assert(sprite.texture != null, "%s requires a splash texture." % name)
+	assert(
+		sprite.texture.get_width() % frame_count == 0,
+		"%s splash strip must divide evenly into its frame count." % name
+	)
+	sprite.hframes = frame_count
+	sprite.frame = 0
+	sprite.visible = false
+	sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	sprite.shaded = false
+	sprite.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_player.death_started.connect(_on_death_started)
+	set_process(false)
+
+
+func _process(delta: float) -> void:
+	if not _active:
+		return
+	if not _player.is_dead():
+		_finish()
+		return
+	_elapsed += delta
+	sprite.frame = mini(frame_count - 1, floori(_elapsed * frame_rate))
+	if _elapsed >= float(frame_count) / frame_rate:
+		_finish()
+
+
+func is_playing() -> bool:
+	return _active
+
+
+func _on_death_started(kind: StringName, world_position: Vector3) -> void:
+	if kind != PlayerCharacter.DEATH_KIND_WATER:
+		return
+	_player.visible = false
+	global_position = Vector3(
+		world_position.x,
+		water_surface_y,
+		world_position.z
+	)
+	_elapsed = 0.0
+	_active = true
+	sprite.frame = 0
+	sprite.visible = true
+	set_process(true)
+
+
+func _finish() -> void:
+	_active = false
+	sprite.visible = false
+	set_process(false)

@@ -1,0 +1,629 @@
+extends SceneTree
+## Structural and session-state contract for the development-only replacement
+## candidate. The six campaign prototypes remain untouched while this matures.
+
+const EPSILON := 0.01
+
+
+func _init() -> void:
+	call_deferred("_run")
+
+
+func _run() -> void:
+	var definition := load(
+		"res://resources/dev/arrival_shoreline_slice.tres"
+	) as LevelDefinition
+	assert(definition != null)
+	assert(definition.validation_errors().is_empty())
+	assert(definition.level_id == &"dev_arrival_shoreline_slice")
+	assert(definition.available_abilities == [PlayerAbility.DOUBLE_JUMP])
+	assert(definition.assumed_owned_abilities.is_empty())
+	assert(definition.required_abilities == [PlayerAbility.DOUBLE_JUMP])
+
+	var packed_scene := load("res://scenes/app/game_root.tscn") as PackedScene
+	var game_root := packed_scene.instantiate()
+	game_root.persist_progression = false
+	root.add_child(game_root)
+	await process_frame
+	assert(game_root.campaign.find_by_id(definition.level_id) == null)
+	assert(
+		definition in game_root._ordered_developer_definitions(),
+		"The candidate must be reachable only through Developer Tools."
+	)
+
+	game_root.load_developer_level(definition)
+	await process_frame
+	var level := game_root.current_level as LevelSession3D
+	for frame in 10:
+		await physics_frame
+	assert(level != null)
+	assert(game_root.current_world_definition == null)
+	assert(game_root.current_level_definition == definition)
+	assert(level.name == "DeveloperArrivalShorelineSlice")
+	assert(
+		not (game_root.get_node("Interface/DeveloperAbilityPanel") as Control).visible,
+		"Only Animation Lab should expose developer ability toggles."
+	)
+	assert(is_equal_approx(level.traversal_rail.length(), 81.92))
+	assert(is_equal_approx(level.camera.maximum_center_x, 67.77))
+	assert(is_equal_approx(level.camera.camera_height, 6.48))
+	assert(is_equal_approx(level.camera.target_height, 3.98))
+	assert(level.get_node("Platforms").get_child_count() == 7)
+	assert(level.get_node("Checkpoints").get_child_count() == 1)
+	assert(_scoped_group_count(level, &"melee_target") == 1)
+	assert(_scoped_group_count(level, &"level_goal") == 1)
+	assert(level.get_node_or_null("Hazards/ShoreWater") is PixelWaterStrip3D)
+	_validate_geometry(level)
+	_validate_presentation(level)
+
+	var player := level.player
+	var pickup := level.get_node("DoubleJumpPickup") as AbilityPickup3D
+	var checkpoint := level.get_node(
+		"Checkpoints/PickupCheckpoint"
+	) as LevelCheckpoint3D
+	assert(not player.has_ability(PlayerAbility.DOUBLE_JUMP))
+	assert(not pickup.is_claimed())
+	assert(not checkpoint.is_activated())
+	var water_splash := level.get_node(
+		"WaterDeathSplash"
+	) as PixelWaterDeathSplash3D
+	player.reset_at(Transform3D(Basis.IDENTITY, Vector3(-0.8, 0.2, 0)))
+	for frame in 10:
+		await physics_frame
+		if player.is_dead():
+			break
+	assert(player.is_dead(), "Entering the shoreline water must kill the player.")
+	assert(player.death_kind() == PlayerCharacter.DEATH_KIND_WATER)
+	assert(water_splash.is_playing())
+	assert(not player.visible)
+	for frame in 40:
+		await physics_frame
+	assert(not player.is_dead())
+	assert(player.visible)
+	assert(not water_splash.is_playing())
+	assert(absf(player.global_position.x - 1.8) < 0.2)
+
+	player.reset_at(Transform3D(Basis.IDENTITY, Vector3(31.7, 1.34, 0)))
+	for frame in 5:
+		await physics_frame
+	assert(player.has_ability(PlayerAbility.DOUBLE_JUMP))
+	assert(pickup.is_claimed())
+	assert(
+		(game_root.get_node("Interface/AbilityTutorial") as Control).visible,
+		"Collecting the candidate pickup must explain Double Jump."
+	)
+
+	player.reset_at(Transform3D(Basis.IDENTITY, Vector3(36.3, 1.34, 0)))
+	for frame in 12:
+		await physics_frame
+	assert(checkpoint.is_activated())
+	assert(level.active_checkpoint_index() == 2)
+
+	player.kill()
+	for frame in 40:
+		await physics_frame
+	assert(not player.is_dead())
+	assert(player.has_ability(PlayerAbility.DOUBLE_JUMP))
+	assert(pickup.is_claimed())
+	assert(absf(player.global_position.x - 36.3) < 0.2)
+
+	level._reset_run()
+	await physics_frame
+	assert(player.has_ability(PlayerAbility.DOUBLE_JUMP))
+	assert(pickup.is_claimed())
+	assert(not checkpoint.is_activated())
+
+	game_root.show_level_select()
+	game_root.load_developer_level(definition)
+	await process_frame
+	var fresh_level := game_root.current_level as LevelSession3D
+	assert(fresh_level != level)
+	assert(not fresh_level.player.has_ability(PlayerAbility.DOUBLE_JUMP))
+	assert(not (fresh_level.get_node("DoubleJumpPickup") as AbilityPickup3D).is_claimed())
+	assert(game_root.current_world_definition == null)
+
+	print("Arrival / Shoreline slice structure and isolated session validation passed.")
+	quit(0)
+
+
+func _validate_geometry(level: LevelSession3D) -> void:
+	var sand := _platform(level, "SandArrival")
+	var transition := _platform(level, "ShorelineTransition")
+	var approach := _platform(level, "GreenApproach")
+	var pickup := _platform(level, "PickupIsland")
+	var height := _platform(level, "HeightProof")
+	var distance := _platform(level, "DistanceProof")
+	var finish := _platform(level, "FinishGround")
+	assert(
+		is_zero_approx(_gap(sand, transition))
+		and is_zero_approx(_gap(transition, approach)),
+		"The Green Zone bank must begin directly at the shoreline edge."
+	)
+	assert(is_equal_approx(sand.size.x, 10.24))
+	assert(is_equal_approx(transition.size.x, 3.84))
+	assert(is_equal_approx(approach.size.x, 11.52))
+	for bank_visual in [sand, transition, approach]:
+		assert(
+			not bank_visual.collision_enabled,
+			"The shoreline bank visuals must use their exact authored colliders."
+		)
+	var sand_collision := level.get_node("OpeningGroundCollision") as StaticBody3D
+	var sand_shape := sand_collision.get_node("Collision") as CollisionShape3D
+	var sand_box := sand_shape.shape as BoxShape3D
+	assert(sand_collision.global_position.is_equal_approx(Vector3(7.04, -1.28, 0.0)))
+	assert(sand_box.size.is_equal_approx(Vector3(14.08, 2.56, 2.0)))
+	var rise_collision := level.get_node("GreenRiseCollision") as StaticBody3D
+	var rise_shape := rise_collision.get_node("Collision") as CollisionShape3D
+	var rise_box := rise_shape.shape as BoxShape3D
+	assert(rise_collision.global_position.is_equal_approx(Vector3(19.84, -1.28, 0.0)))
+	assert(rise_box.size.is_equal_approx(Vector3(11.52, 3.84, 2.0)))
+	assert(
+		is_equal_approx(
+			_top(approach) - _top(transition),
+			PixelPlatform3D.TILE_WORLD_SIZE * 0.5
+		)
+	)
+	assert(is_equal_approx(_gap(approach, pickup), 3.84))
+	assert(is_equal_approx(_gap(pickup, height), 3.84))
+	assert(
+		_top(height) - _top(pickup) > level.player.movement.ideal_jump_height(),
+		"The pickup's first proof must exceed a normal Jump's height."
+	)
+	assert(is_equal_approx(_gap(height, distance), 7.68))
+	assert(is_equal_approx(_top(height) - _top(distance), 1.92))
+	assert(is_equal_approx(_gap(distance, finish), 2.56))
+	for grounded_terrain in [sand, transition]:
+		assert(is_equal_approx(grounded_terrain.size.y, 2.56))
+		assert(
+			is_zero_approx(_top(grounded_terrain)),
+			"Natural two-tile terrain must not move its walkable top."
+		)
+	for raised_terrain in [approach, pickup, finish]:
+		assert(is_equal_approx(raised_terrain.size.y, 3.84))
+		assert(
+			is_equal_approx(
+				_top(raised_terrain),
+				PixelPlatform3D.TILE_WORLD_SIZE * 0.5
+			),
+			"The Green Zone route must keep its restrained half-tile shoreline rise."
+		)
+	assert(is_equal_approx(height.size.y, 1.28))
+	assert(is_equal_approx(distance.size.y, 1.28))
+	assert(
+		level.get_node_or_null("Platforms/HeightProofCatch") == null,
+		"The Double Jump proof must not have playable ground beneath it."
+	)
+	for platform in [sand, transition, approach, pickup, height, distance, finish]:
+		assert(
+			absf(platform.size.x / PixelPlatform3D.TILE_WORLD_SIZE
+			- roundf(platform.size.x / PixelPlatform3D.TILE_WORLD_SIZE)) < EPSILON
+		)
+
+
+func _validate_presentation(level: LevelSession3D) -> void:
+	var sand := _platform(level, "SandArrival")
+	var transition := _platform(level, "ShorelineTransition")
+	var approach := _platform(level, "GreenApproach")
+	var finish := _platform(level, "FinishGround")
+	assert(
+		sand.style.resource_path.ends_with("shoreline_sand.tres"),
+		"Only the arrival island should use the sand platform style."
+	)
+	assert(
+		transition.style.resource_path.ends_with("shoreline_to_green.tres"),
+		"The final low shoreline tiles must hide their palette change under rock."
+	)
+	assert(
+		approach.style.resource_path.ends_with("green_zone.tres"),
+		"The route must visibly transition into Green Zone terrain."
+	)
+	assert(approach.style.has_deep_row())
+	assert(approach.style.has_bottom_row())
+	assert(approach.style.body_right.resource_path.ends_with("body_right.png"))
+	assert(approach.style.deep.resource_path.ends_with("deep.png"))
+	assert(approach.style.bottom.resource_path.ends_with("bottom.png"))
+	var rendered_bottom := approach.get_node("Tile_02_01") as Sprite3D
+	assert(
+		rendered_bottom.texture == approach.style.bottom,
+		"Three-row Green Zone terrain must finish with its authored bottom row."
+	)
+	assert(not sand.cap_right_edge)
+	assert(transition.cap_left_edge)
+	assert(transition.cap_right_edge)
+	assert(approach.cap_left_edge)
+	var transition_textures: Array[Texture2D] = [
+		transition.style.top_left,
+		transition.style.top,
+		transition.style.top_right,
+		transition.style.body_left,
+		transition.style.body,
+		transition.style.body_right,
+	]
+	for texture_index in transition_textures.size():
+		var texture := transition_textures[texture_index]
+		assert(texture != null)
+		var row_name := "top" if texture_index < 3 else "body"
+		var column := texture_index if texture_index < 3 else texture_index - 3
+		assert(texture.resource_path.ends_with(
+			"transition_%s_%d.png" % [row_name, column]
+		))
+	var sand_top := load(
+		"res://assets/art/green_zone/shoreline/tiles/top.png"
+	) as Texture2D
+	var sand_body := load(
+		"res://assets/art/green_zone/shoreline/tiles/body.png"
+	) as Texture2D
+	_assert_same_pixels(transition.style.top_left, sand_top)
+	_assert_same_pixels(transition.style.top, sand_top)
+	_assert_same_pixels(transition.style.body_left, sand_body)
+	_assert_same_pixels(transition.style.body, sand_body)
+	var water := level.get_node("Hazards/ShoreWater") as PixelWaterStrip3D
+	assert(is_equal_approx(water.width, 12.8))
+	assert(water.body_rows == 3)
+	assert(is_equal_approx(water.global_position.x - water.width * 0.5, -12.8))
+	assert(is_zero_approx(water.global_position.x + water.width * 0.5))
+	assert(is_zero_approx(water.global_position.y))
+	var water_contact := level.get_node(
+		"Hazards/ShoreWaterContact"
+	) as Hazard3D
+	var water_collision := water_contact.get_node("Collision") as CollisionShape3D
+	var water_box := water_collision.shape as BoxShape3D
+	assert(is_equal_approx(water_contact.global_position.x, -6.4))
+	assert(is_equal_approx(water_box.size.x, 12.8))
+	assert(water_contact.death_kind == PlayerCharacter.DEATH_KIND_WATER)
+	assert(
+		water_contact.global_position.y + water_box.size.y * 0.5 < 0.0,
+		"Lethal water contact must sit below the visible crest for fair edge play."
+	)
+	var kill_plane := level.get_node("KillPlane") as Area3D
+	var kill_shape := kill_plane.get_node("Collision") as CollisionShape3D
+	var kill_box := kill_shape.shape as BoxShape3D
+	assert(
+		kill_plane.global_position.y + kill_box.size.y * 0.5 < -3.0,
+		"The global fall plane must stay beneath later platforming gaps."
+	)
+	assert(level.get_node_or_null("Props/ArrivalSurfboard") == null)
+	assert(level.get_node_or_null("Props/ArrivalUmbrella") == null)
+	var transition_talus := level.get_node("Props/TransitionTalus") as Node3D
+	var transition_outcrop := transition_talus.get_node(
+		"TransitionOutcrop"
+	) as Sprite3D
+	assert(transition_outcrop.texture.resource_path.ends_with(
+		"transition_outcrop.png"
+	))
+	_assert_sprite_spans_terrain(
+		transition_outcrop,
+		_top(approach),
+		-2.56
+	)
+	var outcrop_width := (
+		float(transition_outcrop.texture.get_width())
+		* transition_outcrop.pixel_size
+		* transition_outcrop.scale.x
+	)
+	var outcrop_height := (
+		float(transition_outcrop.texture.get_height())
+		* transition_outcrop.pixel_size
+		* transition_outcrop.scale.y
+	)
+	var hidden_surface_change_x := _right(transition)
+	assert(
+		transition_outcrop.global_position.x - outcrop_width * 0.5
+		<= hidden_surface_change_x + EPSILON,
+		"The outcrop must cover the held-back surface transition."
+	)
+	assert(
+		transition_outcrop.global_position.x + outcrop_width * 0.5
+		>= _left(approach) + PixelPlatform3D.TILE_WORLD_SIZE,
+		"The outcrop must overlap the Green Zone body, not sit beside it."
+	)
+	var peak_height := (
+		transition_outcrop.global_position.y + outcrop_height * 0.5
+	)
+	assert(
+		peak_height >= _top(approach) - EPSILON
+		and peak_height - _top(approach) <= 0.04,
+		"The outcrop must meet the restrained Green Zone rise without towering over it."
+	)
+	assert(
+		transition_outcrop.find_children(
+			"*", "CollisionObject3D", true, false
+		).is_empty(),
+		"The embedded outcrop is presentation-only and must not block movement."
+	)
+	var player_body := level.player.get_node("PixelVisual/Body") as Sprite3D
+	assert(transition_outcrop.render_priority < player_body.render_priority)
+	assert(transition_outcrop.global_position.z < player_body.global_position.z)
+	var talus_rocks: Array[Sprite3D] = []
+	var talus_textures := {}
+	for child in transition_talus.get_children():
+		assert(child is Sprite3D)
+		var rock := child as Sprite3D
+		talus_rocks.append(rock)
+		talus_textures[rock.texture.resource_path] = true
+		assert(rock.texture != null)
+		assert(rock.scale.x > 0.0 and rock.scale.y > 0.0)
+		assert(rock.global_position.z < player_body.global_position.z)
+		assert(rock.render_priority < player_body.render_priority)
+		assert(
+			rock.find_children(
+				"*", "CollisionObject3D", true, false
+			).is_empty(),
+			"The transition talus must remain presentation-only."
+		)
+	assert(talus_rocks.size() >= 5 and talus_rocks.size() <= 8)
+	assert(
+		talus_textures.size() >= 5,
+		"The talus must use the full matching rock family, not scaled duplicates."
+	)
+	talus_rocks.sort_custom(func(a: Sprite3D, b: Sprite3D) -> bool:
+		return a.global_position.x > b.global_position.x
+	)
+	assert(talus_rocks.front() == transition_outcrop)
+	for rock in talus_rocks:
+		assert(
+			_talus_sprite_is_supported(rock, talus_rocks, -2.56),
+			"%s must be grounded, buried, or visibly supported by the layered pile."
+			% rock.name
+		)
+	for chain_index in range(1, talus_rocks.size()):
+		var previous := talus_rocks[chain_index - 1]
+		var current := talus_rocks[chain_index]
+		assert(_sprite_rendered_width(current) < _sprite_rendered_width(previous))
+		assert(_sprite_visible_top(current) < _sprite_visible_top(previous))
+		assert(
+			_sprite_visible_right(current) >= _sprite_visible_left(previous) + 0.04,
+			"The talus must read as one overlapping geological chain."
+		)
+		assert(
+			not is_equal_approx(current.global_position.z, previous.global_position.z),
+			"Overlapping talus sprites need distinct depth to avoid flicker."
+		)
+	assert(
+		_sprite_visible_left(talus_rocks.back())
+		<= _sprite_visible_left(transition_outcrop) - 4.2,
+		"The descending talus must extend meaningfully into the sand body."
+	)
+	var transition_bush := level.get_node("Props/TransitionBush") as Sprite3D
+	var approach_tree := level.get_node("Props/ApproachTree") as Sprite3D
+	var approach_tree_bush := level.get_node("Props/ApproachTreeBush") as Sprite3D
+	var approach_grass := level.get_node("Props/ApproachGrass") as Sprite3D
+	var pickup_bush := level.get_node("Props/PickupBush") as Sprite3D
+	var pickup_grass := level.get_node("Props/PickupGrass") as Sprite3D
+	var finish_bush := level.get_node("Props/FinishBush") as Sprite3D
+	assert(transition_bush.texture.resource_path.ends_with("bush_low.png"))
+	assert(approach_tree.texture.resource_path.ends_with("tree_small_grounded.png"))
+	assert(approach_tree_bush.texture.resource_path.ends_with("bush_small.png"))
+	assert(approach_grass.texture.resource_path.ends_with("grass_tuft_sparse.png"))
+	assert(pickup_bush.texture == transition_bush.texture)
+	assert(pickup_grass.texture.resource_path.ends_with("grass_tuft_thin.png"))
+	assert(finish_bush.texture == approach_tree_bush.texture)
+	for approach_prop in [
+		transition_bush,
+		approach_tree,
+		approach_tree_bush,
+		approach_grass,
+	]:
+		_assert_passive_scenery(approach_prop, _top(approach), player_body)
+	var pickup_top := _top(_platform(level, "PickupIsland"))
+	for pickup_prop in [pickup_bush, pickup_grass]:
+		_assert_passive_scenery(pickup_prop, pickup_top, player_body)
+	_assert_passive_scenery(finish_bush, _top(finish), player_body)
+	var water_splash := level.get_node(
+		"WaterDeathSplash"
+	) as PixelWaterDeathSplash3D
+	var splash_sprite := water_splash.get_node("Sprite") as Sprite3D
+	assert(
+		splash_sprite.texture.resource_path.ends_with("water_death_splash.png")
+	)
+	assert(water_splash.frame_count == 6)
+	assert(is_equal_approx(water_splash.frame_rate, 12.0))
+	_assert_passive_scenery(
+		level.get_node("Props/FinishTree") as Sprite3D,
+		_top(finish),
+		player_body
+	)
+	var finish_stone := level.get_node("Props/FinishStone") as Sprite3D
+	assert(finish_stone.texture.resource_path.ends_with("stone_medium.png"))
+	_assert_passive_scenery(
+		finish_stone,
+		_top(finish),
+		player_body
+	)
+	for layer_index in range(1, 6):
+		var layer := level.get_node("Background/Layer%d" % layer_index) as Sprite3D
+		assert(
+			"/green_zone/background/" in layer.texture.resource_path,
+			"The shared Green Zone backdrop must carry the shore inland coherently."
+		)
+
+
+func _assert_sprite_grounded(sprite: Sprite3D, support_top: float) -> void:
+	assert(sprite != null, "Grounded presentation sprite must exist.")
+	assert(sprite.texture != null, "%s must have a texture." % sprite.name)
+	var rendered_height := (
+		float(sprite.texture.get_height())
+		* sprite.pixel_size
+		* sprite.scale.y
+	)
+	assert(
+		absf(sprite.global_position.y - rendered_height * 0.5 - support_top) < EPSILON,
+		"%s must be explicitly bottom-anchored to its support." % sprite.name
+	)
+
+
+func _assert_passive_scenery(
+	sprite: Sprite3D,
+	support_top: float,
+	player_body: Sprite3D
+) -> void:
+	_assert_sprite_grounded(sprite, support_top)
+	assert(sprite.global_position.z < player_body.global_position.z)
+	assert(
+		sprite.find_children("*", "CollisionObject3D", true, false).is_empty(),
+		"%s must remain non-colliding scenery." % sprite.name
+	)
+
+
+func _sprite_rendered_width(sprite: Sprite3D) -> float:
+	return (
+		float(sprite.texture.get_width())
+		* sprite.pixel_size
+		* sprite.scale.x
+	)
+
+
+func _sprite_visible_rect(sprite: Sprite3D) -> Rect2:
+	var image := sprite.texture.get_image()
+	var opaque_pixels := image.get_used_rect()
+	var texture_width := float(sprite.texture.get_width())
+	var texture_height := float(sprite.texture.get_height())
+	var left_pixel := float(opaque_pixels.position.x)
+	var right_pixel := float(opaque_pixels.end.x)
+	if sprite.flip_h:
+		var flipped_left := texture_width - right_pixel
+		right_pixel = texture_width - left_pixel
+		left_pixel = flipped_left
+	var left := (
+		sprite.global_position.x
+		+ (left_pixel - texture_width * 0.5)
+		* sprite.pixel_size
+		* sprite.scale.x
+	)
+	var right := (
+		sprite.global_position.x
+		+ (right_pixel - texture_width * 0.5)
+		* sprite.pixel_size
+		* sprite.scale.x
+	)
+	var bottom := (
+		sprite.global_position.y
+		+ (texture_height * 0.5 - float(opaque_pixels.end.y))
+		* sprite.pixel_size
+		* sprite.scale.y
+	)
+	var top := (
+		sprite.global_position.y
+		+ (texture_height * 0.5 - float(opaque_pixels.position.y))
+		* sprite.pixel_size
+		* sprite.scale.y
+	)
+	return Rect2(left, bottom, right - left, top - bottom)
+
+
+func _sprite_visible_left(sprite: Sprite3D) -> float:
+	return _sprite_visible_rect(sprite).position.x
+
+
+func _sprite_visible_right(sprite: Sprite3D) -> float:
+	return _sprite_visible_rect(sprite).end.x
+
+
+func _sprite_visible_top(sprite: Sprite3D) -> float:
+	return _sprite_visible_rect(sprite).end.y
+
+
+func _sprite_visible_bottom(sprite: Sprite3D) -> float:
+	return _sprite_visible_rect(sprite).position.y
+
+
+func _talus_sprite_is_supported(
+	sprite: Sprite3D,
+	talus_rocks: Array[Sprite3D],
+	support_y: float
+) -> bool:
+	var bottom := _sprite_visible_bottom(sprite)
+	if bottom <= support_y + EPSILON:
+		return bottom >= support_y - 0.2
+	if bottom > support_y + 0.36:
+		return false
+
+	var left := _sprite_visible_left(sprite)
+	var right := _sprite_visible_right(sprite)
+	var support_intervals: Array[Vector2] = []
+	for other in talus_rocks:
+		if other == sprite:
+			continue
+		if other.global_position.z <= sprite.global_position.z + EPSILON:
+			continue
+		if _sprite_visible_bottom(other) > support_y + EPSILON:
+			continue
+		var overlap_left := maxf(left, _sprite_visible_left(other))
+		var overlap_right := minf(right, _sprite_visible_right(other))
+		if overlap_right > overlap_left + EPSILON:
+			support_intervals.append(Vector2(overlap_left, overlap_right))
+	support_intervals.sort_custom(func(a: Vector2, b: Vector2) -> bool:
+		return a.x < b.x
+	)
+	var covered_until := left
+	for interval in support_intervals:
+		if interval.x > covered_until + EPSILON:
+			return false
+		covered_until = maxf(covered_until, interval.y)
+		if covered_until >= right - EPSILON:
+			return true
+	return false
+
+
+func _assert_same_pixels(actual: Texture2D, expected: Texture2D) -> void:
+	assert(actual != null and expected != null)
+	var actual_image := actual.get_image()
+	var expected_image := expected.get_image()
+	assert(actual_image.get_size() == expected_image.get_size())
+	actual_image.convert(Image.FORMAT_RGBA8)
+	expected_image.convert(Image.FORMAT_RGBA8)
+	assert(
+		actual_image.get_data() == expected_image.get_data(),
+		"The exposed left side of the terrain transition must stay clean sand."
+	)
+
+
+func _assert_sprite_spans_terrain(
+	sprite: Sprite3D,
+	support_top: float,
+	terrain_bottom: float
+) -> void:
+	assert(sprite != null, "Terrain-spanning presentation sprite must exist.")
+	assert(sprite.texture != null, "%s must have a texture." % sprite.name)
+	var rendered_height := (
+		float(sprite.texture.get_height())
+		* sprite.pixel_size
+		* sprite.scale.y
+	)
+	var sprite_top := sprite.global_position.y + rendered_height * 0.5
+	var sprite_bottom := sprite.global_position.y - rendered_height * 0.5
+	assert(
+		sprite_top >= support_top - EPSILON,
+		"%s must meet the walkable surface." % sprite.name
+	)
+	assert(
+		sprite_bottom <= terrain_bottom + EPSILON,
+		"%s must cover the full visible terrain seam." % sprite.name
+	)
+
+
+func _scoped_group_count(level: LevelSession3D, group: StringName) -> int:
+	return get_nodes_in_group(group).filter(
+		func(node: Node) -> bool:
+			return level.is_ancestor_of(node)
+	).size()
+
+
+func _platform(level: LevelSession3D, node_name: String) -> PixelPlatform3D:
+	return level.get_node("Platforms/%s" % node_name) as PixelPlatform3D
+
+
+func _left(platform: PixelPlatform3D) -> float:
+	return platform.global_position.x - platform.size.x * 0.5
+
+
+func _right(platform: PixelPlatform3D) -> float:
+	return platform.global_position.x + platform.size.x * 0.5
+
+
+func _top(platform: PixelPlatform3D) -> float:
+	return platform.global_position.y + platform.size.y * 0.5
+
+
+func _gap(left_platform: PixelPlatform3D, right_platform: PixelPlatform3D) -> float:
+	return _left(right_platform) - _right(left_platform)

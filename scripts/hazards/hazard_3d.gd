@@ -3,6 +3,8 @@ extends Area3D
 ## Reusable lethal contact. Presentation and collision remain authored by the
 ## owning scene so future spikes are not forced into one primitive shape.
 
+@export var death_kind := PlayerCharacter.DEATH_KIND_GENERIC
+
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
@@ -11,7 +13,7 @@ func _ready() -> void:
 
 func _on_body_entered(body: Node3D) -> void:
 	if body is PlayerCharacter:
-		body.kill()
+		body.kill(death_kind)
 
 
 func _on_area_entered(area: Area3D) -> void:
@@ -19,4 +21,4 @@ func _on_area_entered(area: Area3D) -> void:
 		return
 	var player := area.get_parent() as PlayerCharacter
 	if player != null:
-		player.kill()
+		player.kill(death_kind)

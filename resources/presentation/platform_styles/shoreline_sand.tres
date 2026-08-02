@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="PixelPlatformStyle" load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/presentation/pixel_platform_style.gd" id="1_style"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/tiles/top_left.png" id="2_top_left"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/tiles/top.png" id="3_top"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/tiles/top_right.png" id="4_top_right"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/tiles/body_left.png" id="5_body_left"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/tiles/body.png" id="6_body"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/tiles/body_right.png" id="7_body_right"]
+
+[resource]
+script = ExtResource("1_style")
+top_left = ExtResource("2_top_left")
+top = ExtResource("3_top")
+top_right = ExtResource("4_top_right")
+body_left = ExtResource("5_body_left")
+body = ExtResource("6_body")
+body_right = ExtResource("7_body_right")
+crop_top_pixels = 1

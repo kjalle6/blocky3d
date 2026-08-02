@@ -4,6 +4,21 @@ This document records the current Godot architecture and the contracts future
 levels must preserve. It describes responsibilities, not a frozen class
 hierarchy.
 
+## Product name and implementation identity
+
+The public title is TBD. `blocky3d` remains the internal repository codename
+and stable technical identity. Public-facing title text must come from one
+configuration source rather than being repeated through scenes and scripts.
+Changing the title must not silently change the `user://` save location,
+progress IDs, or other persisted identifiers; any eventual identifier migration
+must be explicit and versioned.
+
+The product is a side-scrolling pixel-art platformer. Its current use of
+`Node3D`, `CharacterBody3D`, orthographic cameras, and traversal rails is an
+implementation technique that supports composed depth and optional authored
+route turns. Game logic must not require free 3D movement merely because the
+scene tree is three-dimensional.
+
 ## Runtime ownership
 
 | Responsibility | Current or intended owner |
@@ -17,9 +32,14 @@ hierarchy.
 | Player presentation | `PixelPlayerVisual3D`, separate from movement and gameplay collision |
 | Enemy behavior | Focused enemy scenes/scripts with separate body, stomp, attack, hurt, and presentation contracts |
 | Hazards | Reusable hazard areas; spike art and damage geometry remain independently authored |
+| Player combat | Focused melee and future firearm owners that request movement-compatible actions without owning locomotion |
+| Projectiles | Reusable projectile contract with explicitly authored allegiance, collision, speed, damage, lifetime, and reset behavior |
+| Firearms and ammo | Intended typed firearm data plus run-scoped ammo state; neither belongs in level geometry scripts |
+| Boss encounters | Boss-specific state machines using shared damage, projectile, feedback, and deterministic-reset contracts |
 | Feedback | Replaceable presentation owner for flashes, hit pause, and future named audio cues |
 | Progression | `ProgressionStore` owns versioned `GameProgress` save data and permanent ability ownership |
 | Ability pickups | Focused pickup actors request unlocks through `LevelSession3D`; they never write save data directly |
+| Interface theme | Intended curated Godot `Theme` resources shared by start, selector, pause, options, HUD, and development tools |
 
 `GameRoot` has two stable top-level containers:
 
@@ -53,6 +73,12 @@ finished until it can be enabled and disabled in the lab, survives a lab
 restart while enabled, and its important animation states can be triggered
 there. Focused runtime checks and its authored introduction level own mechanic
 validation.
+
+A separate Combat Lab is planned before firearm and boss production. It will
+preview enemy behavior and animation, body/attack/hurt/stomp geometry, melee
+visual sets, projectiles, firearm poses and aim angles, ammo behavior, and boss
+states. It must remain development-only and must not become a substitute for
+testing complete encounters in authored levels.
 
 `PixelSideCamera3D` keeps a continuous internal follow position but quantizes
 its rendered transform to the current viewport's output-pixel grid. Static
@@ -140,6 +166,29 @@ input can cancel Dash into the existing ground, wall, or Double Jump contract.
 This leaves dash-jumping available as optional speed mastery while keeping
 each ability's resource ownership independent.
 
+## Firearm and ammunition contract
+
+Firearms are planned, not currently implemented. Their first approved use is a
+fixed weapon introduced shortly before the World 1 boss.
+
+- Melee and shooting remain distinct actions so obtaining a gun does not remove
+  the dependable close-range verb.
+- Initial aim directions are route-horizontal and upward-diagonal. Free mouse
+  aim and twin-stick behavior are outside the current direction.
+- A firearm definition owns visual references, projectile choice, cadence,
+  supported directions, and ammo cost; it does not own player locomotion.
+- Projectile appearance, collision, and damage geometry remain separate.
+- Ammo is initially an authored run resource rather than a global stockpile.
+- Death, checkpoint respawn, manual restart, and encounter reset must each have
+  an explicit deterministic ammo/pickup policy before the system is accepted.
+- Zero ammo cannot make an encounter impossible. Required damage always has a
+  melee route or a deterministic replenishment rule.
+- The contextual ammo HUD is absent before the player has a firearm.
+
+Gun construction, crafting, inventories, skill trees, and permanent firearm
+progression are not current technical milestones. The asset library makes them
+possible; it does not authorize speculative architecture for them.
+
 ## Checkpoint contract
 
 A checkpoint:
@@ -192,13 +241,16 @@ world-aware flow.
 
 `LevelDefinition.assumed_owned_abilities` records abilities the campaign
 expects the player to own on entry. A fresh level-defined development entry
-state seeds exactly that set without writing save data. This lets Level 4 begin
-with Double Jump while still presenting Wall Jump as its own pickup, and lets
-Level 6 begin with the complete three-ability kit without adding a pickup.
+state seeds exactly that set without writing save data. The current prototypes
+use this to test later abilities independently. The replacement campaign levels
+will use the same contract while introducing more than one ability within a
+substantial level where appropriate.
 
-The first `WorldDefinition`, Green Zone, contains six levels: five teach the
-base movement kit and Green Zone Finale combines it without adding a new
-ability.
+The current first `WorldDefinition`, Green Zone, still contains six validated
+prototype levels. The target campaign structure is approximately three
+re-authored levels: Arrival / Shoreline, Overgrown Coastal Ascent, and Green
+Zone Finale. Both sets may coexist in development during migration, but only
+the replacement set belongs in the eventual production catalog.
 Missing future levels are not represented by fake scenes or disabled
 placeholder buttons. Development mode keeps all authored levels selectable.
 Production prerequisite/locking presentation is added only when campaign flow
@@ -226,11 +278,41 @@ the game repository.
 - Establish ground contact, pivots, frame dimensions, and transparent padding
   before placing scenery.
 - Gameplay collision is authored separately from imported art.
-- Do not mix visual packs without a deliberate palette and style decision.
+- Asset-pack folders record source families rather than usage restrictions.
+- Borrow across packs only through a deliberate palette, scale, silhouette, and
+  local-composition decision.
+- Curate GUI frames, button states, font, cursors, and required icons into a
+  reusable theme; do not import the complete GUI pack.
+- Do not infer gameplay systems from available crafting panels, skill icons,
+  bars, weapon art, enemies, or bosses.
 
 The shared green-zone runtime set is refreshed through
 `tools/prepare_green_zone_assets.ps1`; its manifest and license notes live
 beneath `assets/art/green_zone`.
+
+`PixelPlatformStyle` owns six required 32-pixel top/body textures, optional
+deep and bottom triplets, and any style-specific top-row crop.
+`PixelPlatform3D` retains collision size and the shared 1.28-metre grid, so
+changing sand to grass cannot silently change jump measurements. Two-row
+terrain remains top/body; three-row terrain becomes top/body/bottom; taller
+terrain uses the tileset's calm dark deep fill before its authored bottom cap.
+Exposed and joined side caps remain explicit. This prevents root/body art from
+forming fake horizontal stripes when terrain becomes deeper.
+
+The shoreline's generated transition finishes beneath a restrained half-tile
+Green Zone rise with two adjoining, non-overlapping colliders. A scaled mossy
+outcrop covers the full biome seam without dominating the screen. Curated low
+bushes, grass, a smaller approach tree, and Green Zone stone are explicitly
+bottom-anchored, non-colliding, and behind the player and enemy plane. All
+downstream route geometry moves together, preserving the established gaps and
+proof-jump deltas.
+`PixelWaterStrip3D` is presentation-only; explicit hazard areas continue to own
+death and reset behavior.
+
+Replacement slices remain outside `CampaignCatalog` while they are candidates.
+`GameRoot.developer_level_definitions` exposes them under Developer Tools with a
+null world definition, so completion and pickups cannot mutate campaign saves.
+Animation Lab remains the only developer level with ability toggles.
 
 ## Validation and visual review
 
@@ -263,8 +345,11 @@ Every lasting system receives focused validation. The current suite covers:
   vertically stacked playable surfaces, safely spaced flow encounters, pickup
   policy, checkpoints, reset, and full production-input completion;
 - Level 6's two recap sections, strict Dash gap, full-kit entry policy,
-  uninterrupted Wall Jump → Double Jump → Dash final proof, checkpoints,
+  uninterrupted Wall Jump, Double Jump, and Dash final proof, checkpoints,
   mutable-actor reset, raised-chest goal, and full production-input completion.
+- the Arrival / Shoreline candidate's catalog isolation, typed sand style,
+  visual-only water, grounded scenery, session-local Double Jump pickup,
+  checkpoint/reset policy, two required proof jumps, and real-input completion.
 
 Graphical capture scripts render deterministic 1920x1080 review positions for
 all current levels. Visual changes are inspected in the running game;
@@ -279,15 +364,20 @@ Before committing a gameplay milestone:
 4. Play the complete route at normal speed.
 5. Confirm `git diff --check` and review the staged file set.
 
-## Current baseline — 30 July 2026
+## Current baseline - 2 August 2026
 
-Levels 1–5 are protected regression baselines. New abilities and systems must
-not silently change earlier movement, collision, enemy, checkpoint, or restart
-behavior.
+Prototype Levels 1-5 are protected regression baselines, and prototype Level 6
+is a validated playable first pass. New abilities and systems must not silently
+change their proven movement, collision, enemy, checkpoint, or restart behavior
+during campaign migration.
 
 The typed world catalog and grouped selector, versioned progression payload,
 permanent ability ownership, per-level ability policy, Double Jump, reusable
 pickup actors, non-pausing ability tutorials, Wall Jump, opt-in vertical camera
 framing, Dash, and fresh level-defined development entry mode are established.
-Green Zone Finale is a playable first pass; the next milestone is hands-on
-Level 6 tuning followed by a full six-level World 1 review.
+The public title is TBD and `blocky3d` remains the internal codename. A polished
+20-30 second Arrival / Shoreline candidate now passes structural, real-input,
+legacy-regression, and 1920x1080 capture checks. Hands-on review is the current
+gate before it expands into the complete re-authored level. Firearms, saws,
+bosses, Combat Lab, and the curated cyberpunk UI theme follow only when their
+corresponding campaign milestone requires them.

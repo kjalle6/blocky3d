@@ -75,6 +75,10 @@
                            "source":  "tilesets/green_zone/3 Objects/Other/Tree2.png",
                            "sha256":  "c1fbbaeb1a857bad10b7b7a8b20b4a660d970215c10c249278dd5a0cc29ff22d"
                        },
+    "props/tree_small.png":  {
+                                 "source":  "tilesets/green_zone/3 Objects/Other/Tree1.png",
+                                 "sha256":  "1cd7df5860c34b0b8e8c55ededc09df9fa02ddb7485c5b3415b55f4b682deaee"
+                             },
     "props/bench.png":  {
                             "source":  "tilesets/green_zone/3 Objects/Benches/2.png",
                             "sha256":  "53afcf793ccc9fbdd27b29713dc534f5f6212b78efacf8d5d5028d9a768da60e"
@@ -83,10 +87,38 @@
                            "source":  "tilesets/green_zone/3 Objects/Bushes/3.png",
                            "sha256":  "8646f725b158386a9f989bd67858dbe3474a3325b2c4070621a0b0db9b54cb69"
                        },
+    "props/bush_low.png":  {
+                               "source":  "tilesets/green_zone/3 Objects/Bushes/13.png",
+                               "sha256":  "b219de8a0c1c92e3f7295b7c7f53029c426da545f480c6649be0ded63fb4e9cf"
+                           },
+    "props/bush_small.png":  {
+                                 "source":  "tilesets/green_zone/3 Objects/Bushes/16.png",
+                                 "sha256":  "2fa9323569da74e59191bab4f626a73ca5ec3c3f33da65463bc790a217b7ee3a"
+                             },
+    "props/stone_small.png":  {
+                                  "source":  "tilesets/green_zone/3 Objects/Stones/2.png",
+                                  "sha256":  "9b3edf79e1fcb7c76029b28592cf788b22ee3295ec17da023a451937119e70d2"
+                              },
+    "props/stone_medium.png":  {
+                                   "source":  "tilesets/green_zone/3 Objects/Stones/4.png",
+                                   "sha256":  "996247eb4da17dee1e71c76ae3c361db7f1e3a40f90dec97223a414d18c1b8f6"
+                               },
     "props/fence.png":  {
                             "source":  "tilesets/green_zone/3 Objects/Fence/3.png",
                             "sha256":  "28e2f2df106c3bc7073bb3ba502172d8adac2baa787e9925b76cb52238a451a2"
                         },
+    "props/grass_tuft_sparse.png":  {
+                                        "source":  "tilesets/green_zone/3 Objects/Grass/5.png",
+                                        "sha256":  "5b7036f9de1b173213e6cfaf6f67e152163d073ce4540b7047c40d4457496983"
+                                    },
+    "props/grass_tuft_thin.png":  {
+                                      "source":  "tilesets/green_zone/3 Objects/Grass/7.png",
+                                      "sha256":  "fb1efe6014d2503cbeab2f47657a762b3b027bd5144c2155731e60426107542f"
+                                  },
+    "props/grass_tuft_small.png":  {
+                                       "source":  "tilesets/green_zone/3 Objects/Grass/12.png",
+                                       "sha256":  "12e5a0855ac4f3ce2efe975d8b39aa98cfc62190e3ea7ac07db9b7db5679440d"
+                                   },
     "tiles/top_left.png":  {
                                "source":  "tilesets/green_zone/1 Tiles/Tile_01.png",
                                "sha256":  "61bd5eb1f251ca7416495754daf9a60806b13ba5df9ca57a2bf327006aa7fc20"
@@ -108,9 +140,33 @@
                            "sha256":  "d841ceb7f8cfb3c072e3835e1577b794a17487af69b2c32c17ddc606b4ffe4e0"
                        },
     "tiles/body_right.png":  {
-                                 "source":  "tilesets/green_zone/1 Tiles/Tile_15.png",
-                                 "sha256":  "91dde23fb77327a48c82aa3c93587c8a7eb474c1a38e2874edde7e9ae9e2c9cb"
+                                 "source":  "tilesets/green_zone/1 Tiles/Tile_16.png",
+                                 "sha256":  "76695950594b0474c08d911c642fbe963627b35b832224515db0a6e1c20eeeb9"
                              },
+    "tiles/deep_left.png":  {
+                                "source":  "tilesets/green_zone/1 Tiles/Tile_61.png",
+                                "sha256":  "61558f2870b043aa4754890e25de2fdc9d0294a911fec180d8debbdf2532f771"
+                            },
+    "tiles/deep.png":  {
+                           "source":  "tilesets/green_zone/1 Tiles/Tile_04.png",
+                           "sha256":  "1293b583e9c191bd5ed12f5527a25090f081b85800fc43b7614c7c10826e45fc"
+                       },
+    "tiles/deep_right.png":  {
+                                 "source":  "tilesets/green_zone/1 Tiles/Tile_62.png",
+                                 "sha256":  "e16572e3231b4575b691a06a2ac07e08488810596016abc2bb5553027f5113e1"
+                             },
+    "tiles/bottom_left.png":  {
+                                  "source":  "tilesets/green_zone/1 Tiles/Tile_25.png",
+                                  "sha256":  "33fd8efb108b57e8708bfa874f236a775a53d0353c57d0c59f1f0573c36d40ee"
+                              },
+    "tiles/bottom.png":  {
+                             "source":  "tilesets/green_zone/1 Tiles/Tile_26.png",
+                             "sha256":  "cf4ddc751bbc1066af251cf89e196c53463fd5ae97f9d30db8ae52100658b5d1"
+                         },
+    "tiles/bottom_right.png":  {
+                                   "source":  "tilesets/green_zone/1 Tiles/Tile_28.png",
+                                   "sha256":  "990d3d96bb5f4d3babca92c238bb47ed644033473b69ed2ed5dea8d89cdf9033"
+                               },
     "background/layer_1.png":  {
                                    "source":  "tilesets/green_zone/2 Background/Day/1.png",
                                    "sha256":  "1fff6725a6917ac649e5698d01f7ded3ae1f9695f6a15d84a7cf59d8e321e781"
@@ -131,9 +187,186 @@
                                    "source":  "tilesets/green_zone/2 Background/Day/5.png",
                                    "sha256":  "36c48f6c8c1af8add7edcae2925dc421672c182c3ae7923e1f38006ec9cafa67"
                                },
+    "shoreline/tiles/top_left.png":  {
+                                         "source":  "tilesets/beach_zone/1 Tiles/SandTile_01.png",
+                                         "sha256":  "2c64b269f687bf8f2d936f3ac41e149a04ce0767739e979df046e94175b42215"
+                                     },
+    "shoreline/tiles/top.png":  {
+                                    "source":  "tilesets/beach_zone/1 Tiles/SandTile_02.png",
+                                    "sha256":  "7de2d92c511296f022f95be3371347795bb0e4b30ecc65bc0fedd2460630eacc"
+                                },
+    "shoreline/tiles/top_right.png":  {
+                                          "source":  "tilesets/beach_zone/1 Tiles/SandTile_03.png",
+                                          "sha256":  "f03461ff56d079410c173f876eac988c574b76f1b5f7857350dc80eff0978223"
+                                      },
+    "shoreline/tiles/body_left.png":  {
+                                          "source":  "tilesets/beach_zone/1 Tiles/SandTile_08.png",
+                                          "sha256":  "aed7c9af7ef3270babe7ede0e938c50feba84e3c52c7e8e749fb5278721cb86b"
+                                      },
+    "shoreline/tiles/body.png":  {
+                                     "source":  "tilesets/beach_zone/1 Tiles/SandTile_09.png",
+                                     "sha256":  "fa1e6e703f3154c4068af5aedeb7cdada2aa8d86a893eac494563ae91c86012a"
+                                 },
+    "shoreline/tiles/body_right.png":  {
+                                           "source":  "tilesets/beach_zone/1 Tiles/SandTile_10.png",
+                                           "sha256":  "dbedbd3bcb7a22957c2b57a6ddc5fc7c67c8a61af2a765c3554e2e424e7c8013"
+                                       },
+    "shoreline/water/surface_1.png":  {
+                                          "source":  "tilesets/beach_zone/1 Tiles/WaterTile_01.png",
+                                          "sha256":  "41da5b869f446ee656067840b247289d906d08ddaf7919a3c56dbed037f6f92c"
+                                      },
+    "shoreline/water/surface_2.png":  {
+                                          "source":  "tilesets/beach_zone/1 Tiles/WaterTile_02.png",
+                                          "sha256":  "eff21d2433bfb17b5a49029ec3e90298cf874485759812a2bff11d24d9eb7321"
+                                      },
+    "shoreline/water/surface_3.png":  {
+                                          "source":  "tilesets/beach_zone/1 Tiles/WaterTile_03.png",
+                                          "sha256":  "cc54774b3c1008b3f18297bacbe9c0c1fdbd8febd7d7a7a00c5c4b839e5885a2"
+                                      },
+    "shoreline/water/surface_4.png":  {
+                                          "source":  "tilesets/beach_zone/1 Tiles/WaterTile_04.png",
+                                          "sha256":  "1cd7773b1c4e109cd14901ae9a43435d0bd08d75d76309af9be82c2e3a87dd65"
+                                      },
+    "shoreline/water/body_1.png":  {
+                                       "source":  "tilesets/beach_zone/1 Tiles/WaterTile_05.png",
+                                       "sha256":  "8b73a04a09fab8ceda6ea2003b040f8be4b9125d632fa2fc2641075f4d7da775"
+                                   },
+    "shoreline/water/body_2.png":  {
+                                       "source":  "tilesets/beach_zone/1 Tiles/WaterTile_06.png",
+                                       "sha256":  "0ce00e7352b39d683d0fd42a5b8bb1324df354164881b7eb9034815a1b1f8da1"
+                                   },
+    "shoreline/water/body_3.png":  {
+                                       "source":  "tilesets/beach_zone/1 Tiles/WaterTile_07.png",
+                                       "sha256":  "0ed3ca2aa57560e3e96d397d6c8e4d92edae19723df6b6c8e732ae261810c251"
+                                   },
+    "shoreline/water/body_4.png":  {
+                                       "source":  "tilesets/beach_zone/1 Tiles/WaterTile_08.png",
+                                       "sha256":  "8293be783a017772526c2f21304fb8c8e37917e8626cbff39e9e072715361724"
+                                   },
+    "shoreline/effects/water_death_splash.png":  {
+                                                     "source":  "visual_addons/effects/1 Water splashes/48x/1.png",
+                                                     "sha256":  "21d38db0f4ea50c55f9b6556d83103ef5ee4ccb28a71bf321cad1407bc70c198"
+                                                 },
+    "shoreline/background/layer_1.png":  {
+                                             "source":  "tilesets/beach_zone/3 Background/Day/1.png",
+                                             "sha256":  "88daa1baa96b8f977b6c68c5c400e0d5879492d39b1188453b9582750e7afd97"
+                                         },
+    "shoreline/background/layer_2.png":  {
+                                             "source":  "tilesets/beach_zone/3 Background/Day/2.png",
+                                             "sha256":  "10b3775484bc25ece1169365c28235ea9b3e01f8b8de7a941bf8016556e78eac"
+                                         },
+    "shoreline/background/layer_3.png":  {
+                                             "source":  "tilesets/beach_zone/3 Background/Day/3.png",
+                                             "sha256":  "c7d3d5feb042531a29a7263d06011acfd1dcbecdfee5afd25e877d9d2e01442f"
+                                         },
+    "shoreline/background/layer_4.png":  {
+                                             "source":  "tilesets/beach_zone/3 Background/Day/4.png",
+                                             "sha256":  "faaabab7e36d65f8639d859c75ce62f0127f9f0375a6d22062acaf30f5667045"
+                                         },
+    "shoreline/background/layer_5.png":  {
+                                             "source":  "tilesets/beach_zone/3 Background/Day/5.png",
+                                             "sha256":  "9c8ca610864a3f381d07758962d0d166bc32ca83bcb45560a475fe281ef3624b"
+                                         },
+    "shoreline/props/surfboard.png":  {
+                                          "source":  "tilesets/beach_zone/3 Objects/3 Other/1.png",
+                                          "sha256":  "597ca2a7aa6638a98a861ff6f5142a9936718dc9362bf0dcb172bcb9aa00c057"
+                                      },
+    "shoreline/props/umbrella.png":  {
+                                         "source":  "tilesets/beach_zone/3 Objects/3 Other/4.png",
+                                         "sha256":  "398ac66e44374a4444e37d0a353fbf7bd02d1411e0dadf54ede25d74bb40255d"
+                                     },
+    "shoreline/props/stone.png":  {
+                                      "source":  "tilesets/beach_zone/3 Objects/2 Stones/5.png",
+                                      "sha256":  "6281c24b5e89ebb8b00cd32a910ba9b912fe4658892134fdc933aa900e9edcfe"
+                                  },
+    "shoreline/props/transition_stone_sand.png":  {
+                                                      "source":  "tilesets/beach_zone/3 Objects/2 Stones/3.png",
+                                                      "sha256":  "d21f057e0be4bdae6364ee5790612d4f29c1cd390ee267e14228c1e3019b0319"
+                                                  },
+    "shoreline/props/transition_pebble_sand.png":  {
+                                                       "source":  "tilesets/beach_zone/3 Objects/2 Stones/4.png",
+                                                       "sha256":  "f1901d6ae62ce0c2372098aabcbcf3ef55ca2e2f186352c4a9211d55d1dd5315"
+                                                   },
+    "props/transition_pebble_green.png":  {
+                                              "source":  "tilesets/green_zone/3 Objects/Stones/1.png",
+                                              "sha256":  "53cad88a1a3ebe7732d5559c30e1f13d5e9b7608b054a62a48882a87de19b5fd"
+                                          },
+    "shoreline/props/transition_outcrop_tall.png":  {
+                                                        "source":  "potential_rocks/PNG/middle_lane_rocks1/middle_lane_rock1_1.png",
+                                                        "sha256":  "ebf2153ed776b00473224b9e6661c968eaea9a2bb17c0a7eaa4a3e143398cf38"
+                                                    },
+    "shoreline/props/transition_outcrop_broad.png":  {
+                                                         "source":  "potential_rocks/PNG/middle_lane_rocks1/middle_lane_rock1_2.png",
+                                                         "sha256":  "23904f47f33c4253d96dd6a6dab4c6759165fe9805fefdb40d6f3e66a624511d"
+                                                     },
+    "shoreline/props/transition_outcrop.png":  {
+                                                   "source":  "potential_rocks/PNG/middle_lane_rocks1/middle_lane_rock1_3.png",
+                                                   "sha256":  "54dc99d70adf934e1fea508638561682cd50b98bb1d717f777407ac5ed0f292d"
+                                               },
+    "shoreline/props/transition_outcrop_medium.png":  {
+                                                          "source":  "potential_rocks/PNG/middle_lane_rocks1/middle_lane_rock1_4.png",
+                                                          "sha256":  "b4d990c95cbeaea001f53beaaba51a74614c596811989a6ed084afb68e7315ea"
+                                                      },
+    "shoreline/props/transition_outcrop_small.png":  {
+                                                         "source":  "potential_rocks/PNG/middle_lane_rocks1/middle_lane_rock1_5.png",
+                                                         "sha256":  "49787b63b79f0707f619dbb3f86cc7fdd4bf670332597efe1285aadd3ee7026f"
+                                                     },
     "props/tree_grounded.png":  {
                                     "source":  "tilesets/green_zone/3 Objects/Other/Tree2.png",
                                     "transform":  "Removed the final all-black pixel row for grounded rendering.",
                                     "sha256":  "8590a1f29bfe2dab5ec4c9c91b8b8b99b1ffe97479d8a528fc1b3375e8b40c0c"
-                                }
+                                },
+    "props/tree_small_grounded.png":  {
+                                          "source":  "tilesets/green_zone/3 Objects/Other/Tree1.png",
+                                          "transform":  "Removed the final all-black pixel row for grounded rendering.",
+                                          "sha256":  "6fac3fd64544345e104db59d53c048a4948ca56bc9c01dd1b124ec7f772ea3fa"
+                                      },
+    "shoreline/tiles/transition_top_0.png":  {
+                                                 "sources":  [
+                                                                 "tilesets/beach_zone/1 Tiles/SandTile_02.png",
+                                                                 "tilesets/green_zone/1 Tiles/Tile_02.png"
+                                                             ],
+                                                 "transform":  "Rock-masked surface takeover held in the final tile, column 0.",
+                                                 "sha256":  "1888652a9b8382d061635fb1301b3b06e3e56e1b8229a6cf836e4a25f2615baf"
+                                             },
+    "shoreline/tiles/transition_body_0.png":  {
+                                                  "sources":  [
+                                                                  "tilesets/beach_zone/1 Tiles/SandTile_09.png",
+                                                                  "tilesets/green_zone/1 Tiles/Tile_14.png"
+                                                              ],
+                                                  "transform":  "One-tile-late, low-frequency palette bridge from sand body to Green Zone body, column 0.",
+                                                  "sha256":  "11d37c06d1dfb89b38500b2afd22b128aa4246f083a01dbad0c7b387100ef103"
+                                              },
+    "shoreline/tiles/transition_top_1.png":  {
+                                                 "sources":  [
+                                                                 "tilesets/beach_zone/1 Tiles/SandTile_02.png",
+                                                                 "tilesets/green_zone/1 Tiles/Tile_02.png"
+                                                             ],
+                                                 "transform":  "Rock-masked surface takeover held in the final tile, column 1.",
+                                                 "sha256":  "1888652a9b8382d061635fb1301b3b06e3e56e1b8229a6cf836e4a25f2615baf"
+                                             },
+    "shoreline/tiles/transition_body_1.png":  {
+                                                  "sources":  [
+                                                                  "tilesets/beach_zone/1 Tiles/SandTile_09.png",
+                                                                  "tilesets/green_zone/1 Tiles/Tile_14.png"
+                                                              ],
+                                                  "transform":  "One-tile-late, low-frequency palette bridge from sand body to Green Zone body, column 1.",
+                                                  "sha256":  "11d37c06d1dfb89b38500b2afd22b128aa4246f083a01dbad0c7b387100ef103"
+                                              },
+    "shoreline/tiles/transition_top_2.png":  {
+                                                 "sources":  [
+                                                                 "tilesets/beach_zone/1 Tiles/SandTile_02.png",
+                                                                 "tilesets/green_zone/1 Tiles/Tile_02.png"
+                                                             ],
+                                                 "transform":  "Rock-masked surface takeover held in the final tile, column 2.",
+                                                 "sha256":  "4b916958ed70d2e0e2eb1e35bb93ea182d464c70cf94a516e1122685b3d934c5"
+                                             },
+    "shoreline/tiles/transition_body_2.png":  {
+                                                  "sources":  [
+                                                                  "tilesets/beach_zone/1 Tiles/SandTile_09.png",
+                                                                  "tilesets/green_zone/1 Tiles/Tile_14.png"
+                                                              ],
+                                                  "transform":  "One-tile-late, low-frequency palette bridge from sand body to Green Zone body, column 2.",
+                                                  "sha256":  "3f051b72f401783d44a828d15ec4eef31d51370968552c06a2df0f4da58b76d3"
+                                              }
 }

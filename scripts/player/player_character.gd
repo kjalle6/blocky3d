@@ -4,8 +4,11 @@ extends CharacterBody3D
 ## by the active level's declared ability policy and share typed tuning.
 
 const DOUBLE_JUMP_VISUAL_DURATION := 0.43
+const DEATH_KIND_GENERIC: StringName = &"generic"
+const DEATH_KIND_WATER: StringName = &"water"
 
 signal died
+signal death_started(kind: StringName, world_position: Vector3)
 signal attack_connected(target: Node3D)
 signal damage_received(source_position: Vector3)
 signal ability_performed(ability_id: StringName)
@@ -22,6 +25,7 @@ var path_speed := 0.0
 var _coyote_remaining := 0.0
 var _jump_buffer_remaining := 0.0
 var _dead := false
+var _death_kind := DEATH_KIND_GENERIC
 var _descending_before_slide := false
 var _facing_sign := 1.0
 var _attack_remaining := 0.0
@@ -166,16 +170,18 @@ func _update_jump_timers(delta: float) -> void:
 		_jump_buffer_remaining = maxf(0.0, _jump_buffer_remaining - delta)
 
 
-func kill() -> void:
+func kill(kind: StringName = DEATH_KIND_GENERIC) -> void:
 	if _dead:
 		return
 	_dead = true
+	_death_kind = kind
 	_dash_remaining = 0.0
 	_dash_available = false
 	velocity = Vector3.ZERO
 	path_speed = 0.0
 	if pixel_visual != null:
 		pixel_visual.tick(0.0, is_on_floor(), 0.0, 0.0, false, true, _facing_sign > 0.0)
+	death_started.emit(_death_kind, global_position)
 	died.emit()
 
 
@@ -220,6 +226,7 @@ func reset_at(spawn_transform: Transform3D) -> void:
 	_dash_direction = _facing_sign
 	_aerial_jumps_remaining = 1 if has_ability(PlayerAbility.DOUBLE_JUMP) else 0
 	_dead = false
+	_death_kind = DEATH_KIND_GENERIC
 	_descending_before_slide = false
 	visible = true
 	set_physics_process(true)
@@ -232,6 +239,10 @@ func reset_at(spawn_transform: Transform3D) -> void:
 
 func is_dead() -> bool:
 	return _dead
+
+
+func death_kind() -> StringName:
+	return _death_kind
 
 
 func configure_abilities(

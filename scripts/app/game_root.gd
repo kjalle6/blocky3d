@@ -4,6 +4,7 @@ extends Node
 
 @export var campaign: CampaignCatalog
 @export var developer_room_definition: LevelDefinition
+@export var developer_level_definitions: Array[LevelDefinition] = []
 @export var level_button_style: StyleBox
 @export var persist_progression := true
 @export var developer_fresh_level_runs := true
@@ -79,15 +80,28 @@ func load_level(level_id: StringName) -> void:
 func load_developer_room() -> void:
 	assert(developer_tools_enabled, "Developer tools are disabled.")
 	assert(developer_room_definition != null, "GameRoot requires a developer room definition.")
-	var room_errors := developer_room_definition.validation_errors()
+	load_developer_level(developer_room_definition)
+
+
+func load_developer_level(definition: LevelDefinition) -> void:
+	assert(developer_tools_enabled, "Developer tools are disabled.")
+	assert(definition != null, "A developer level definition is required.")
+	assert(
+		definition in _ordered_developer_definitions(),
+		"Unknown developer level: %s" % definition.level_id
+	)
+	var room_errors := definition.validation_errors()
 	assert(
 		room_errors.is_empty(),
-		"Developer room definition is invalid:\n%s" % "\n".join(room_errors)
+		"Developer level definition is invalid:\n%s" % "\n".join(room_errors)
 	)
+	var initial_abilities := definition.assumed_owned_abilities.duplicate()
+	if definition == developer_room_definition:
+		initial_abilities = definition.available_abilities.duplicate()
 	_start_session(
-		developer_room_definition,
+		definition,
 		null,
-		developer_room_definition.available_abilities
+		initial_abilities
 	)
 
 
@@ -105,7 +119,10 @@ func _start_session(
 	current_level_definition = definition
 	current_world_definition = world_definition
 	if world_definition == null:
-		current_level.name = "DeveloperAnimationLab"
+		current_level.name = (
+			"Developer"
+			+ String(definition.level_id).trim_prefix("dev_").to_pascal_case()
+		)
 	else:
 		current_level.name = (
 			"World%02dLevel%02d"
@@ -179,7 +196,8 @@ func _build_world_list() -> void:
 			world_list.add_child(button)
 			_level_buttons.append(button)
 
-	if developer_tools_enabled and developer_room_definition != null:
+	var developer_definitions := _ordered_developer_definitions()
+	if developer_tools_enabled and not developer_definitions.is_empty():
 		var heading := Label.new()
 		heading.name = "DeveloperToolsHeading"
 		heading.add_theme_color_override("font_color", Color(1.0, 0.78, 0.32, 1.0))
@@ -188,17 +206,33 @@ func _build_world_list() -> void:
 		heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 		world_list.add_child(heading)
 
-		var button := Button.new()
-		button.name = "AnimationLabButton"
-		button.custom_minimum_size = Vector2(0.0, 58.0)
-		button.add_theme_font_size_override("font_size", 20)
-		if level_button_style != null:
-			button.add_theme_stylebox_override("normal", level_button_style)
-		button.text = "ANIMATION LAB"
-		button.set_meta(&"developer_room", true)
-		button.pressed.connect(_load_button_level.bind(button))
-		world_list.add_child(button)
-		_level_buttons.append(button)
+		for definition in developer_definitions:
+			var button := Button.new()
+			button.name = (
+				"%sButton"
+				% String(definition.level_id).trim_prefix("dev_").to_pascal_case()
+			)
+			button.custom_minimum_size = Vector2(0.0, 58.0)
+			button.add_theme_font_size_override("font_size", 20)
+			if level_button_style != null:
+				button.add_theme_stylebox_override("normal", level_button_style)
+			button.text = definition.title.to_upper()
+			button.set_meta(&"developer_level_definition", definition)
+			if definition == developer_room_definition:
+				button.set_meta(&"developer_room", true)
+			button.pressed.connect(_load_button_level.bind(button))
+			world_list.add_child(button)
+			_level_buttons.append(button)
+
+
+func _ordered_developer_definitions() -> Array[LevelDefinition]:
+	var definitions: Array[LevelDefinition] = []
+	for definition in developer_level_definitions:
+		if definition != null and definition not in definitions:
+			definitions.append(definition)
+	if developer_room_definition != null and developer_room_definition not in definitions:
+		definitions.append(developer_room_definition)
+	return definitions
 
 
 func _move_level_focus(direction: int) -> void:
@@ -220,8 +254,13 @@ func _load_focused_level() -> void:
 
 
 func _load_button_level(button: Button) -> void:
-	if button.get_meta(&"developer_room", false):
-		load_developer_room()
+	var developer_definition: LevelDefinition
+	if button.has_meta(&"developer_level_definition"):
+		developer_definition = button.get_meta(
+			&"developer_level_definition"
+		) as LevelDefinition
+	if developer_definition != null:
+		load_developer_level(developer_definition)
 	else:
 		load_level(button.get_meta(&"level_id") as StringName)
 

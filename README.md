@@ -1,22 +1,28 @@
-# Blocky 3D
+# Working title: TBD
 
-Blocky 3D is a Godot 4.6 pixel-art 2.5D precision platformer. It combines fast
-side-scroller movement with a 3D world that can support authored turns,
-vertical routes, and controlled depth changes without becoming a free-roaming
-3D game.
+`blocky3d` is the internal codename for a Godot 4.6 pixel-art precision
+platformer. The public title is still undecided. The game combines fast,
+expressive side-scroller movement with light combat and a larger cyberpunk
+setting that begins on a beach and in the natural Green Zone.
+
+The current implementation uses Godot 3D nodes to stage its pixel art and leave
+room for optional authored route turns. That is an internal level-building
+choice, not a claim that the finished game is a 3D platformer.
 
 Godot is the canonical implementation. The Python game and Unreal prototype
 remain read-only design references.
 
 ## Current state
 
-- Level 1: Fundamentals — complete production vertical slice
-- Level 2: Gaps & Spikes — complete fundamentals regression course
-- Level 3: Double Jump — complete ability-introduction level
-- Level 4: Wall Jump — complete vertical-movement introduction
-- Level 5: Dash — complete ability-introduction level and protected baseline
-- Level 6: Green Zone Finale — playable first-pass full-kit capstone
-- All six World 1 levels are now playable
+- Six short Green Zone prototype levels validate Fundamentals, Gaps & Spikes,
+  Double Jump, Wall Jump, Dash, and full-kit movement
+- Those six levels are temporary regression evidence, not the final World 1
+- World 1 is being re-authored as approximately three substantial levels:
+  Arrival / Shoreline, Overgrown Coastal Ascent, and Green Zone Finale
+- A development-only 20-30 second Arrival / Shoreline candidate is playable
+  from the selector and has passed structural, real-input, and 1080p visual QA
+- The intended finale adds moving saws, a limited firearm lesson, and a simple
+  first boss while keeping melee viable
 - Typed world catalog and world-grouped mouse or `W`/`S` + `Enter` level
   selector
 - Development-only Animation Lab with a full-speed runway, test geometry,
@@ -24,6 +30,8 @@ remain read-only design references.
 - Development mode starts every level from its fresh level-defined entry state,
   then retains session abilities through death and `R`
 - 1920x1080 presentation baseline
+- Next milestone: hands-on review of the slice, then expansion into the complete
+  re-authored Level 1
 
 The three living design documents are:
 
@@ -71,6 +79,7 @@ godot --headless --path . --script res://tools/validate_progression.gd
 godot --headless --path . --script res://tools/validate_developer_mode.gd
 godot --headless --path . --script res://tools/validate_movement_runtime.gd
 godot --headless --path . --script res://tools/validate_camera_pixel_stability.gd
+godot --headless --path . --script res://tools/validate_pixel_platform_renderer.gd
 godot --headless --path . --script res://tools/validate_double_jump_runtime.gd
 godot --headless --path . --script res://tools/validate_wall_jump_runtime.gd
 godot --headless --path . --script res://tools/validate_dash_runtime.gd
@@ -86,6 +95,8 @@ godot --headless --path . --script res://tools/validate_level5_runtime.gd
 godot --headless --path . --script res://tools/validate_level5_playthrough.gd
 godot --headless --path . --script res://tools/validate_level6_runtime.gd
 godot --headless --path . --script res://tools/validate_level6_playthrough.gd
+godot --headless --path . --script res://tools/validate_arrival_shoreline_slice.gd
+godot --headless --path . --script res://tools/validate_arrival_shoreline_slice_playthrough.gd
 ```
 
 Generate graphical review captures with:
@@ -98,4 +109,5 @@ godot --path . --script res://tools/capture_level4.gd
 godot --path . --script res://tools/capture_level5.gd
 godot --path . --script res://tools/capture_level6.gd
 godot --path . --script res://tools/capture_animation_lab.gd
+godot --path . --resolution 1920x1080 --script res://tools/capture_arrival_shoreline_slice.gd
 ```

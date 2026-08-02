@@ -39,6 +39,9 @@ func _validate() -> void:
 	var developer_heading := game_root.get_node(
 		"Interface/LevelSelect/Center/Panel/Margin/Options/WorldList/DeveloperToolsHeading"
 	) as Label
+	var arrival_slice_button := game_root.get_node(
+		"Interface/LevelSelect/Center/Panel/Margin/Options/WorldList/ArrivalShorelineSliceButton"
+	) as Button
 	var animation_lab_button := game_root.get_node(
 		"Interface/LevelSelect/Center/Panel/Margin/Options/WorldList/AnimationLabButton"
 	) as Button
@@ -58,7 +61,9 @@ func _validate() -> void:
 	assert(level_06_button.text == "6  -  GREEN ZONE FINALE")
 	assert(InputMap.has_action("dash"))
 	assert(developer_heading.text == "DEVELOPER TOOLS")
+	assert(arrival_slice_button.text == "ARRIVAL / SHORELINE SLICE")
 	assert(animation_lab_button.text == "ANIMATION LAB")
+	assert(game_root.campaign.find_by_id(&"dev_arrival_shoreline_slice") == null)
 	assert(level_01_button.has_focus(), "The selector should initially focus Level 1.")
 	var menu_up := InputEventKey.new()
 	menu_up.physical_keycode = KEY_W
@@ -120,6 +125,13 @@ func _validate() -> void:
 		FileAccess.file_exists("res://assets/art/green_zone/asset_manifest.json"),
 		"The curated green-zone asset manifest must exist."
 	)
+
+	game_root.show_level_select()
+	game_root._load_button_level(arrival_slice_button)
+	await process_frame
+	assert(game_root.current_world_definition == null)
+	assert(game_root.current_level_definition.level_id == &"dev_arrival_shoreline_slice")
+	assert(game_root.current_level.name == "DeveloperArrivalShorelineSlice")
 
 	print("Project, campaign catalog, and pixel Level 1 validation passed.")
 	quit(0)
