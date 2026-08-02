@@ -62,6 +62,9 @@ selector. It is a disposable `LevelSession3D` test course, not a campaign
 world or level. Current test abilities are granted as session-local unlocks:
 they survive `R`, never enter the save payload, and never mark campaign
 completion. An in-room panel toggles each implemented ability immediately.
+Gameplay tool panels are hidden when a session opens and toggle together with
+`F1`; only the compact `F1 / ESC` reminder remains on screen. This keeps
+composition inspection unobstructed without removing development controls.
 The room provides clear surfaces for triggering and inspecting idle, run,
 jump, Double Jump, wall contact, attack, landing, and transition timing
 without level hazards or scenery. It is an animation lab, not a mechanic
@@ -80,18 +83,45 @@ visual sets, projectiles, firearm poses and aim angles, ammo behavior, and boss
 states. It must remain development-only and must not become a substitute for
 testing complete encounters in authored levels.
 
-`PixelSideCamera3D` keeps a continuous internal follow position but quantizes
-its rendered transform to the current viewport's output-pixel grid. Static
-nearest-filtered world art therefore retains a stable sampling phase during
-long camera travel. Parallax layers snap to the same grid after applying their
-individual movement factors. Levels opt into vertical follow explicitly;
-camera and parallax layers then share pixel-quantized vertical motion while
-earlier horizontal levels retain their approved framing.
+`PixelSideCamera3D` keeps a continuous follow position and quantizes its
+rendered transform to the current output-pixel grid. The default side camera is
+flat (`camera_height == target_height`), so equal world Y projects to equal
+screen Y at every gameplay and background depth. Levels may override framing,
+bounds, and opt-in vertical follow. Camera pitch is an authored exception and
+requires projection and visual regression checks.
 
-The reusable `pixel_level_base.tscn` scene owns the common green-zone runtime
-frame: session, feedback, environment, traversal rail, parallax background,
-route containers, player, camera, and kill plane. Individual level scenes
-inherit it and contain only authored route content and intentional overrides.
+`PixelBackgroundRig3D` owns presentation behind the route. It consumes a typed
+`PixelBackgroundProfile` made of ordered `PixelBackgroundLayerProfile` tracks.
+A track declares its texture, depth, tint, pixel offset, horizontal motion
+policy, parallax amount, vertical policy, repeat policy, and optional camera-X
+fades. The rig derives
+every position from one stable initial camera reference and recycles a fixed
+sprite pool. Checkpoints, death, manual restart, and direct camera teleports
+therefore reproduce the same phase; restart snapping must not recapture the
+reference.
+
+Viewport-covering background art uses the foreground pixel scale: 576x324
+pixels at 0.04 metres per pixel produces a 23.04x12.96-metre panel matching the
+16:9 framing. Coverage panels repeat only across X. Decorative tracks may use
+smaller transparent textures and explicit repeat spacing, leaving the clean
+environment sky visible between objects such as clouds. Mirrored repetition is
+the default because the source images are not fully seamless, and complete
+horizon art is never repeated vertically. `SCREEN_LOCKED` is the default
+vertical policy, including climbing levels; `PARALLAX` and `WORLD_LOCKED`
+require a deliberate level-specific composition.
+
+Horizontal motion is likewise explicit: `SCREEN_LOCKED`, `PARALLAX`, or
+`WORLD_LOCKED`. Terrain silhouettes use `PARALLAX`; decorative clouds may use
+`WORLD_LOCKED` so they occupy stable world positions instead of appearing
+attached to the camera. Autonomous drift is a separate future presentation
+choice and must not be simulated with near-zero parallax.
+
+The reusable `pixel_level_base.tscn` scene owns the common runtime frame and the
+default `green_zone_day` background profile. Authored levels override the
+profile resource, as Arrival does with `arrival_shoreline`, rather than adding
+private background sprites or level-specific movement scripts. Individual
+level scenes otherwise contain only authored route content and intentional
+overrides.
 
 ## Engineering rules
 
@@ -290,6 +320,11 @@ The shared green-zone runtime set is refreshed through
 `tools/prepare_green_zone_assets.ps1`; its manifest and license notes live
 beneath `assets/art/green_zone`.
 
+Background textures are imported losslessly with mipmaps disabled and rendered
+nearest-filtered. A world or zone profile is reusable theme data; camera-X fades
+and per-track opacity and offsets create local transitions without making the
+background part of gameplay geometry.
+
 `PixelPlatformStyle` owns six required 32-pixel top/body textures, optional
 deep and bottom triplets, and any style-specific top-row crop.
 `PixelPlatform3D` retains collision size and the shared 1.28-metre grid, so
@@ -306,7 +341,17 @@ bushes, grass, a smaller approach tree, and Green Zone stone are explicitly
 bottom-anchored, non-colliding, and behind the player and enemy plane. All
 downstream route geometry moves together, preserving the established gaps and
 proof-jump deltas.
-`PixelWaterStrip3D` is presentation-only; explicit hazard areas continue to own
+`PixelWaterStrip3D` reads the beach pack's four-frame by ten-band water atlas
+instead of treating animation frames as spatial tile variants. Every visible
+surface and depth tile advances on one clock, preserving seamless edges while
+keeping the water body alive. `PixelShoreWave3D` independently recycles the
+pack's subsiding wave strip through a deterministic two-wave set. A medium crest
+enters offshore while the preceding small crest is still visible near shore, so
+both occupy the narrow water strip together. Each retains the source pack's
+right-facing silhouette and selects progressively smaller frames while travelling
+toward positive X. A separate
+low 48-pixel foam strip plays once at contact, preventing stacked effects.
+Both systems are presentation-only; explicit hazard areas continue to own
 death and reset behavior.
 
 Replacement slices remain outside `CampaignCatalog` while they are candidates.
@@ -327,6 +372,10 @@ Every lasting system receives focused validation. The current suite covers:
 - fresh level-defined development entry state versus same-session restart
   retention;
 - output-pixel camera stability during long horizontal travel;
+- native background scale and import settings, flat-camera cross-depth
+  projection, allocation-free pooled recycling through travel and teleports,
+  16:9 and ultrawide edge coverage, mirrored joins, and screen-locked vertical
+  coverage using prototype Levels 4 and 6 as regression fixtures;
 - movement, jump envelope, coyote time, buffering, and reset;
 - Level 1 combat, goal flow, reset, and full completion;
 - Level 2 route measurements, spike collision and centering, checkpoints,
@@ -348,8 +397,9 @@ Every lasting system receives focused validation. The current suite covers:
   uninterrupted Wall Jump, Double Jump, and Dash final proof, checkpoints,
   mutable-actor reset, raised-chest goal, and full production-input completion.
 - the Arrival / Shoreline candidate's catalog isolation, typed sand style,
-  visual-only water, grounded scenery, session-local Double Jump pickup,
-  checkpoint/reset policy, two required proof jumps, and real-input completion.
+  synchronized animated water, collision-free travelling shore wave, grounded
+  scenery, session-local Double Jump pickup, checkpoint/reset policy, two
+  required proof jumps, and real-input completion.
 
 Graphical capture scripts render deterministic 1920x1080 review positions for
 all current levels. Visual changes are inspected in the running game;
@@ -359,7 +409,8 @@ Before committing a gameplay milestone:
 
 1. Run every existing validation, not only the new level's check.
 2. Capture representative visual states.
-3. Inspect silhouettes, scenery grounding, hazard clarity, camera framing, and
+3. Inspect silhouettes, scenery grounding, hazard clarity, camera framing,
+   background phase, seams, repetition, gameplay/background separation, and
    platform spacing.
 4. Play the complete route at normal speed.
 5. Confirm `git diff --check` and review the staged file set.
@@ -374,7 +425,8 @@ during campaign migration.
 The typed world catalog and grouped selector, versioned progression payload,
 permanent ability ownership, per-level ability policy, Double Jump, reusable
 pickup actors, non-pausing ability tutorials, Wall Jump, opt-in vertical camera
-framing, Dash, and fresh level-defined development entry mode are established.
+framing, flat cross-depth camera projection, the typed reusable background rig,
+Dash, and fresh level-defined development entry mode are established.
 The public title is TBD and `blocky3d` remains the internal codename. A polished
 20-30 second Arrival / Shoreline candidate now passes structural, real-input,
 legacy-regression, and 1920x1080 capture checks. Hands-on review is the current

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3217o8p8wwse"
-path="res://.godot/imported/layer_1.png-35041075c88b3e97b8caec7c343699e3.ctex"
+uid="uid://n75u2jae6lc5"
+path="res://.godot/imported/wave_end.png-ce4beb6d57b517713ba33c4b33849ce7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/green_zone/background/layer_1.png"
-dest_files=["res://.godot/imported/layer_1.png-35041075c88b3e97b8caec7c343699e3.ctex"]
+source_file="res://assets/art/green_zone/shoreline/effects/wave_end.png"
+dest_files=["res://.godot/imported/wave_end.png-ce4beb6d57b517713ba33c4b33849ce7.ctex"]
 
 [params]
 

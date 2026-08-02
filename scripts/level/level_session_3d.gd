@@ -13,6 +13,7 @@ signal ability_unlocked(ability_id: StringName)
 @onready var traversal_rail: TraversalRail3D = %TraversalRail
 @onready var player: PlayerCharacter = %Player
 @onready var camera = %RailCamera
+@onready var background := get_node_or_null("Background") as PixelBackgroundRig3D
 @onready var spawn_point: Marker3D = %SpawnPoint
 @onready var combat_feedback := get_node_or_null("%CombatFeedback")
 
@@ -57,6 +58,8 @@ func _ready() -> void:
 	_apply_ability_policy()
 	camera.target = player
 	camera.traversal_rail = traversal_rail
+	if background != null:
+		background.bind_camera(camera)
 	player.died.connect(_on_player_died)
 	if combat_feedback != null:
 		combat_feedback.bind_player(player)
@@ -79,12 +82,16 @@ func _ready() -> void:
 
 	_reset_run()
 	camera.snap_to_target()
+	if background != null:
+		background.snap_to_camera(true)
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("restart"):
 		_reset_run()
 		camera.snap_to_target()
+		if background != null:
+			background.snap_to_camera()
 		get_viewport().set_input_as_handled()
 
 
@@ -99,6 +106,8 @@ func _on_player_died() -> void:
 		return
 	_reset_world()
 	camera.snap_to_target()
+	if background != null:
+		background.snap_to_camera()
 	_resetting = false
 
 

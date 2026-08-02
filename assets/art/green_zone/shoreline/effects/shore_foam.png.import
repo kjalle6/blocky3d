@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3217o8p8wwse"
-path="res://.godot/imported/layer_1.png-35041075c88b3e97b8caec7c343699e3.ctex"
+uid="uid://bnl2gnovoe4i8"
+path="res://.godot/imported/shore_foam.png-cb65936f4e9d4aeb7175ff15f7369cc5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/green_zone/background/layer_1.png"
-dest_files=["res://.godot/imported/layer_1.png-35041075c88b3e97b8caec7c343699e3.ctex"]
+source_file="res://assets/art/green_zone/shoreline/effects/shore_foam.png"
+dest_files=["res://.godot/imported/shore_foam.png-cb65936f4e9d4aeb7175ff15f7369cc5.ctex"]
 
 [params]
 

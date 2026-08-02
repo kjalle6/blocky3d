@@ -11,21 +11,6 @@ size = Vector3(36, 1, 8)
 [node name="TraversalRail" parent="." index="2"]
 control_points = PackedVector3Array(0, 0, 0, 30.72, 0, 0)
 
-[node name="Layer1" parent="Background" index="0"]
-position = Vector3(15.36, 12.5, -5)
-
-[node name="Layer2" parent="Background" index="1"]
-position = Vector3(15.36, 12.5, -4.8)
-
-[node name="Layer3" parent="Background" index="2"]
-position = Vector3(15.36, 12.5, -4.6)
-
-[node name="Layer4" parent="Background" index="3"]
-position = Vector3(15.36, 12.5, -4.4)
-
-[node name="Layer5" parent="Background" index="4"]
-position = Vector3(15.36, 12.5, -4.2)
-
 [node name="Floor" type="StaticBody3D" parent="Platforms" index="0"]
 position = Vector3(15.36, -0.64, 0)
 script = ExtResource("2_platform")

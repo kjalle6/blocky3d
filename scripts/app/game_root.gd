@@ -14,6 +14,8 @@ var current_level: LevelSession3D
 var current_level_definition: LevelDefinition
 var current_world_definition: WorldDefinition
 var _level_buttons: Array[Button] = []
+var _gameplay_tools_visible := false
+var _developer_ability_panel_available := false
 
 @onready var world: Node3D = %World
 @onready var instructions: PanelContainer = %Instructions
@@ -45,6 +47,16 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo:
+		return
+	if (
+		not level_select.visible
+		and (
+			event.physical_keycode == KEY_F1
+			or event.keycode == KEY_F1
+		)
+	):
+		_set_gameplay_tools_visible(not _gameplay_tools_visible)
+		get_viewport().set_input_as_handled()
 		return
 	if level_select.visible:
 		match event.physical_keycode:
@@ -146,17 +158,18 @@ func _start_session(
 		+ "    Attack: LEFT CLICK / J / gamepad X    Reset: R"
 	)
 	level_select.visible = false
-	instructions.visible = true
 	menu_hint.visible = true
 	completion_label.visible = false
 	_hide_ability_tutorial()
 	_configure_developer_ability_panel(world_definition == null)
+	_set_gameplay_tools_visible(false)
 
 
 func show_level_select() -> void:
 	_free_current_level()
 	current_level_definition = null
 	current_world_definition = null
+	_gameplay_tools_visible = false
 	level_select.visible = true
 	instructions.visible = false
 	menu_hint.visible = false
@@ -268,13 +281,14 @@ func _load_button_level(button: Button) -> void:
 func _configure_developer_ability_panel(enabled: bool) -> void:
 	for child in developer_ability_toggles.get_children():
 		child.queue_free()
-	developer_ability_panel.visible = (
+	_developer_ability_panel_available = (
 		enabled
 		and developer_tools_enabled
 		and current_level != null
 		and current_level_definition == developer_room_definition
 	)
-	if not developer_ability_panel.visible:
+	developer_ability_panel.visible = false
+	if not _developer_ability_panel_available:
 		return
 	for ability_id in developer_room_definition.available_abilities:
 		var toggle := CheckButton.new()
@@ -285,6 +299,30 @@ func _configure_developer_ability_panel(enabled: bool) -> void:
 		toggle.button_pressed = current_level.player.has_ability(ability_id)
 		toggle.toggled.connect(_on_developer_ability_toggled.bind(ability_id))
 		developer_ability_toggles.add_child(toggle)
+	_apply_gameplay_tools_visibility()
+
+
+func _set_gameplay_tools_visible(visible: bool) -> void:
+	_gameplay_tools_visible = (
+		visible
+		and current_level != null
+		and not level_select.visible
+	)
+	_apply_gameplay_tools_visibility()
+
+
+func _apply_gameplay_tools_visibility() -> void:
+	instructions.visible = _gameplay_tools_visible
+	developer_ability_panel.visible = (
+		_gameplay_tools_visible
+		and _developer_ability_panel_available
+	)
+	if menu_hint.visible:
+		menu_hint.text = (
+			"F1: HIDE TOOLS    ESC: LEVEL SELECT"
+			if _gameplay_tools_visible
+			else "F1: TOOLS    ESC: LEVEL SELECT"
+		)
 
 
 func _on_developer_ability_toggled(enabled: bool, ability_id: StringName) -> void:

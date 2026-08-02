@@ -1,0 +1,49 @@
+[gd_resource type="Resource" script_class="PixelBackgroundProfile" load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/presentation/pixel_background_profile.gd" id="1_profile"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_background_layer_profile.gd" id="2_layer"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/clouds/broad.png" id="3_cloud_broad"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/clouds/puff.png" id="4_cloud_puff"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/layer_5.png" id="8_green_forest"]
+
+[sub_resource type="Resource" id="Layer_cloud_broad"]
+script = ExtResource("2_layer")
+texture = ExtResource("3_cloud_broad")
+horizontal_policy = 2
+depth = -4.9
+offset_pixels = Vector2(-85, 104)
+tint = Color(0.8, 0.9, 1, 0.6)
+cover_viewport_width = false
+repeat_spacing_pixels = 720.0
+fade_out_enabled = true
+fade_out_start_x = 18.0
+fade_out_end_x = 34.0
+
+[sub_resource type="Resource" id="Layer_cloud_puff"]
+script = ExtResource("2_layer")
+texture = ExtResource("4_cloud_puff")
+horizontal_policy = 2
+depth = -4.7
+offset_pixels = Vector2(230, 75)
+tint = Color(0.78, 0.9, 1, 0.48)
+cover_viewport_width = false
+repeat_spacing_pixels = 900.0
+fade_out_enabled = true
+fade_out_start_x = 30.0
+fade_out_end_x = 48.0
+
+[sub_resource type="Resource" id="Layer_green_forest"]
+script = ExtResource("2_layer")
+texture = ExtResource("8_green_forest")
+horizontal_parallax = 0.22
+depth = -4.2
+offset_pixels = Vector2(-26, -36)
+tint = Color(1, 1, 1, 0.72)
+fade_in_enabled = true
+fade_in_start_x = 12.0
+fade_in_end_x = 27.0
+
+[resource]
+script = ExtResource("1_profile")
+profile_id = &"arrival_shoreline"
+layers = Array[ExtResource("2_layer")]([SubResource("Layer_cloud_broad"), SubResource("Layer_cloud_puff"), SubResource("Layer_green_forest")])

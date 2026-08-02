@@ -38,6 +38,18 @@ func _run() -> void:
 		func(node: Node) -> bool:
 			return room.is_ancestor_of(node)
 	).is_empty())
+	var instructions := game_root.get_node("Interface/Instructions") as Control
+	var ability_panel := game_root.get_node(
+		"Interface/DeveloperAbilityPanel"
+	) as Control
+	assert(not instructions.visible)
+	assert(not ability_panel.visible)
+	_toggle_gameplay_tools(game_root)
+	assert(instructions.visible)
+	assert(ability_panel.visible)
+	_toggle_gameplay_tools(game_root)
+	assert(not instructions.visible)
+	assert(not ability_panel.visible)
 
 	var double_jump_toggle := game_root.get_node(
 		"Interface/DeveloperAbilityPanel/Margin/Options"
@@ -84,3 +96,10 @@ func _run() -> void:
 
 	print("Animation Lab structure and ability validation passed.")
 	quit(0)
+
+
+func _toggle_gameplay_tools(game_root: Node) -> void:
+	var event := InputEventKey.new()
+	event.pressed = true
+	event.physical_keycode = KEY_F1
+	game_root._unhandled_input(event)

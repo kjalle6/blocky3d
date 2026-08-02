@@ -6,7 +6,7 @@ extends Camera3D
 @export var target: Node3D
 @export var traversal_rail: TraversalRail3D
 @export var look_ahead := 2.6
-@export var camera_height := 5.2
+@export var camera_height := 2.7
 @export var target_height := 2.7
 @export var side_distance := 24.0
 @export var follow_response := 8.0

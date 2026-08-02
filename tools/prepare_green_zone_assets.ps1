@@ -108,6 +108,10 @@ $assets = [ordered]@{
         "tilesets\green_zone\2 Background\Day\4.png"
     "background/layer_5.png" =
         "tilesets\green_zone\2 Background\Day\5.png"
+    "background/clouds/broad.png" =
+        "visual_addons\clouds\PNG\Clouds_white\Shape2\cloud_shape2_3.png"
+    "background/clouds/puff.png" =
+        "visual_addons\clouds\PNG\Clouds_white\Shape3\cloud_shape3_4.png"
     "shoreline/tiles/top_left.png" =
         "tilesets\beach_zone\1 Tiles\SandTile_01.png"
     "shoreline/tiles/top.png" =
@@ -136,8 +140,14 @@ $assets = [ordered]@{
         "tilesets\beach_zone\1 Tiles\WaterTile_07.png"
     "shoreline/water/body_4.png" =
         "tilesets\beach_zone\1 Tiles\WaterTile_08.png"
+    "shoreline/water/water_tiles.png" =
+        "tilesets\beach_zone\1 Tiles\WaterTiles.png"
     "shoreline/effects/water_death_splash.png" =
         "visual_addons\effects\1 Water splashes\48x\1.png"
+    "shoreline/effects/wave_end.png" =
+        "visual_addons\effects\3 Waves\1End.png"
+    "shoreline/effects/shore_foam.png" =
+        "visual_addons\effects\1 Water splashes\48x\2.png"
     "shoreline/background/layer_1.png" =
         "tilesets\beach_zone\3 Background\Day\1.png"
     "shoreline/background/layer_2.png" =
@@ -189,6 +199,8 @@ $licenses = [ordered]@{
         "visual_addons\effects\license.txt"
     "licenses/rocks.txt" =
         "potential_rocks\License.txt"
+    "licenses/clouds.txt" =
+        "visual_addons\clouds\License.txt"
 }
 
 $manifest = [ordered]@{}

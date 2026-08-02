@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3217o8p8wwse"
-path="res://.godot/imported/layer_1.png-35041075c88b3e97b8caec7c343699e3.ctex"
+uid="uid://d2xhwxwnl1mqp"
+path="res://.godot/imported/puff.png-a44b52a5f73b116ee0283e2dcdb3aec5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/green_zone/background/layer_1.png"
-dest_files=["res://.godot/imported/layer_1.png-35041075c88b3e97b8caec7c343699e3.ctex"]
+source_file="res://assets/art/green_zone/background/clouds/puff.png"
+dest_files=["res://.godot/imported/puff.png-a44b52a5f73b116ee0283e2dcdb3aec5.ctex"]
 
 [params]
 

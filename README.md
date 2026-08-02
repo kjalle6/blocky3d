@@ -21,6 +21,9 @@ remain read-only design references.
   Arrival / Shoreline, Overgrown Coastal Ascent, and Green Zone Finale
 - A development-only 20-30 second Arrival / Shoreline candidate is playable
   from the selector and has passed structural, real-input, and 1080p visual QA
+- A reusable profile-driven pixel-background rig provides native-scale,
+  seam-safe horizontal coverage, authored coastal-to-green transitions, and
+  stable framing during vertical camera travel
 - The intended finale adds moving saws, a limited firearm lesson, and a simple
   first boss while keeping melee viable
 - Typed world catalog and world-grouped mouse or `W`/`S` + `Enter` level
@@ -72,42 +75,27 @@ powershell -ExecutionPolicy Bypass -File .\tools\prepare_green_zone_assets.ps1
 
 ## Validate
 
+Use the guarded runner rather than launching Godot directly. It preserves the
+running editor/game by default and uses the normal Compatibility renderer. Do
+not use `--headless`: Godot 4.6.3 Mono produces native access-violation dialogs
+with headless project scripts on this machine, while the same validators pass
+normally without that flag. Pass `-CloseRunningGodot` only when a particular
+automation run genuinely requires exclusive access.
+
 ```powershell
-godot --headless --path . --script res://tools/validate_project.gd
-godot --headless --path . --script res://tools/validate_animation_lab.gd
-godot --headless --path . --script res://tools/validate_progression.gd
-godot --headless --path . --script res://tools/validate_developer_mode.gd
-godot --headless --path . --script res://tools/validate_movement_runtime.gd
-godot --headless --path . --script res://tools/validate_camera_pixel_stability.gd
-godot --headless --path . --script res://tools/validate_pixel_platform_renderer.gd
-godot --headless --path . --script res://tools/validate_double_jump_runtime.gd
-godot --headless --path . --script res://tools/validate_wall_jump_runtime.gd
-godot --headless --path . --script res://tools/validate_dash_runtime.gd
-godot --headless --path . --script res://tools/validate_level1_runtime.gd
-godot --headless --path . --script res://tools/validate_level1_playthrough.gd
-godot --headless --path . --script res://tools/validate_level2_runtime.gd
-godot --headless --path . --script res://tools/validate_level2_playthrough.gd
-godot --headless --path . --script res://tools/validate_level3_runtime.gd
-godot --headless --path . --script res://tools/validate_level3_playthrough.gd
-godot --headless --path . --script res://tools/validate_level4_runtime.gd
-godot --headless --path . --script res://tools/validate_level4_playthrough.gd
-godot --headless --path . --script res://tools/validate_level5_runtime.gd
-godot --headless --path . --script res://tools/validate_level5_playthrough.gd
-godot --headless --path . --script res://tools/validate_level6_runtime.gd
-godot --headless --path . --script res://tools/validate_level6_playthrough.gd
-godot --headless --path . --script res://tools/validate_arrival_shoreline_slice.gd
-godot --headless --path . --script res://tools/validate_arrival_shoreline_slice_playthrough.gd
+powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Script res://tools/validate_project.gd
+powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Script res://tools/validate_arrival_shoreline_slice.gd
+powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Script res://tools/validate_arrival_shoreline_slice_playthrough.gd
 ```
+
+Pass any other `res://tools/validate_*.gd` script through the same runner.
 
 Generate graphical review captures with:
 
 ```powershell
-godot --path . --script res://tools/capture_level1.gd
-godot --path . --script res://tools/capture_level2.gd
-godot --path . --script res://tools/capture_level3.gd
-godot --path . --script res://tools/capture_level4.gd
-godot --path . --script res://tools/capture_level5.gd
-godot --path . --script res://tools/capture_level6.gd
-godot --path . --script res://tools/capture_animation_lab.gd
-godot --path . --resolution 1920x1080 --script res://tools/capture_arrival_shoreline_slice.gd
+powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Visual -Script res://tools/capture_level1.gd
+powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Visual -Script res://tools/capture_animation_lab.gd
+powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Visual -Script res://tools/capture_arrival_shoreline_slice.gd
 ```
+
+Pass any other `res://tools/capture_*.gd` script through the same runner.

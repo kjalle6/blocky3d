@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="PixelBackgroundProfile" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/presentation/pixel_background_profile.gd" id="1_profile"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_background_layer_profile.gd" id="2_layer"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/layer_5.png" id="6_forest"]
+
+[sub_resource type="Resource" id="Layer_forest"]
+script = ExtResource("2_layer")
+texture = ExtResource("6_forest")
+horizontal_parallax = 0.22
+depth = -4.2
+offset_pixels = Vector2(-26, -36)
+tint = Color(1, 1, 1, 0.72)
+
+[resource]
+script = ExtResource("1_profile")
+profile_id = &"green_zone_day"
+layers = Array[ExtResource("2_layer")]([SubResource("Layer_forest")])

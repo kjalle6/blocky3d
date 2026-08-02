@@ -1,16 +1,12 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/level/level_session_3d.gd" id="1_session"]
 [ext_resource type="Script" path="res://scripts/traversal/traversal_rail_3d.gd" id="2_rail"]
 [ext_resource type="PackedScene" path="res://scenes/player/pixel_player_character.tscn" id="3_player"]
 [ext_resource type="Script" path="res://scripts/camera/pixel_side_camera_3d.gd" id="4_camera"]
 [ext_resource type="Script" path="res://scripts/hazards/hazard_3d.gd" id="5_hazard"]
-[ext_resource type="Script" path="res://scripts/presentation/pixel_parallax_layer_3d.gd" id="6_parallax"]
-[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/layer_1.png" id="7_bg1"]
-[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/layer_2.png" id="8_bg2"]
-[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/layer_3.png" id="9_bg3"]
-[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/layer_4.png" id="10_bg4"]
-[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/layer_5.png" id="11_bg5"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_background_rig_3d.gd" id="6_background"]
+[ext_resource type="Resource" path="res://resources/presentation/backgrounds/green_zone_day.tres" id="7_background_profile"]
 [ext_resource type="Script" path="res://scripts/presentation/combat_feedback_3d.gd" id="12_feedback"]
 
 [sub_resource type="Environment" id="Environment_level"]
@@ -40,41 +36,9 @@ script = ExtResource("2_rail")
 control_points = PackedVector3Array(0, 0, 0, 51.2, 0, 0)
 
 [node name="Background" type="Node3D" parent="."]
-
-[node name="Layer1" type="Sprite3D" parent="Background"]
-position = Vector3(25.6, 12.5, -5)
-pixel_size = 0.14
-texture = ExtResource("7_bg1")
-script = ExtResource("6_parallax")
-parallax_factor = 0.04
-
-[node name="Layer2" type="Sprite3D" parent="Background"]
-position = Vector3(25.6, 12.5, -4.8)
-pixel_size = 0.14
-texture = ExtResource("8_bg2")
-script = ExtResource("6_parallax")
-parallax_factor = 0.1
-
-[node name="Layer3" type="Sprite3D" parent="Background"]
-position = Vector3(25.6, 12.5, -4.6)
-pixel_size = 0.14
-texture = ExtResource("9_bg3")
-script = ExtResource("6_parallax")
-parallax_factor = 0.17
-
-[node name="Layer4" type="Sprite3D" parent="Background"]
-position = Vector3(25.6, 12.5, -4.4)
-pixel_size = 0.14
-texture = ExtResource("10_bg4")
-script = ExtResource("6_parallax")
-parallax_factor = 0.25
-
-[node name="Layer5" type="Sprite3D" parent="Background"]
-position = Vector3(25.6, 12.5, -4.2)
-pixel_size = 0.14
-texture = ExtResource("11_bg5")
-script = ExtResource("6_parallax")
-parallax_factor = 0.34
+unique_name_in_owner = true
+script = ExtResource("6_background")
+profile = ExtResource("7_background_profile")
 
 [node name="Platforms" type="Node3D" parent="."]
 

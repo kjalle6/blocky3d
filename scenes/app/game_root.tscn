@@ -77,14 +77,14 @@ visible = false
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -245.0
+offset_left = -330.0
 offset_top = 24.0
 offset_right = -20.0
 offset_bottom = 58.0
 grow_horizontal = 0
 theme_override_colors/font_color = Color(0.84, 0.9, 0.94, 0.85)
 theme_override_font_sizes/font_size = 16
-text = "ESC: LEVEL SELECT"
+text = "F1: TOOLS    ESC: LEVEL SELECT"
 horizontal_alignment = 2
 
 [node name="CompletionLabel" type="Label" parent="Interface"]

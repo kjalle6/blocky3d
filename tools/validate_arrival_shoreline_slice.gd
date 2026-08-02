@@ -46,15 +46,88 @@ func _run() -> void:
 	)
 	assert(is_equal_approx(level.traversal_rail.length(), 81.92))
 	assert(is_equal_approx(level.camera.maximum_center_x, 67.77))
-	assert(is_equal_approx(level.camera.camera_height, 6.48))
+	assert(is_equal_approx(level.camera.camera_height, 3.98))
 	assert(is_equal_approx(level.camera.target_height, 3.98))
+	assert(is_zero_approx(level.camera.rotation.x))
 	assert(level.get_node("Platforms").get_child_count() == 7)
 	assert(level.get_node("Checkpoints").get_child_count() == 1)
 	assert(_scoped_group_count(level, &"melee_target") == 1)
 	assert(_scoped_group_count(level, &"level_goal") == 1)
 	assert(level.get_node_or_null("Hazards/ShoreWater") is PixelWaterStrip3D)
+	var instructions := game_root.get_node("Interface/Instructions") as Control
+	var menu_hint := game_root.get_node("Interface/MenuHint") as Label
+	assert(not instructions.visible)
+	assert(menu_hint.visible)
+	assert(menu_hint.text == "F1: TOOLS    ESC: LEVEL SELECT")
+	_toggle_gameplay_tools(game_root)
+	assert(instructions.visible)
+	assert(menu_hint.text == "F1: HIDE TOOLS    ESC: LEVEL SELECT")
+	assert(
+		not (game_root.get_node("Interface/DeveloperAbilityPanel") as Control).visible,
+		"Arrival has no ability-testing panel even when its tools are open."
+	)
+	_toggle_gameplay_tools(game_root)
+	assert(not instructions.visible)
+	assert(menu_hint.text == "F1: TOOLS    ESC: LEVEL SELECT")
 	_validate_geometry(level)
 	_validate_presentation(level)
+	var water := level.get_node("Hazards/ShoreWater") as PixelWaterStrip3D
+	var initial_water_frame := water.current_frame()
+	for frame in 10:
+		await physics_frame
+	assert(
+		water.current_frame() != initial_water_frame,
+		"The shoreline atlas must advance instead of remaining a static pattern."
+	)
+	var shore_wave := level.get_node("ShoreWave") as PixelShoreWave3D
+	shore_wave.start_now()
+	var offshore_position := shore_wave.sprite.position.x
+	assert(shore_wave.starting_frames == PackedInt32Array([2, 1]))
+	assert(shore_wave.launch_offsets == PackedFloat32Array([0.0, 1.9]))
+	assert(shore_wave.sprite.frame == shore_wave.current_starting_frame(0))
+	assert(shore_wave.wave_is_active(0))
+	assert(not shore_wave.wave_is_active(1))
+	assert(not shore_wave.following_sprite.visible)
+	for frame in 75:
+		await physics_frame
+	assert(shore_wave.phase() == PixelShoreWave3D.Phase.APPROACHING)
+	assert(shore_wave.sprite.visible)
+	assert(
+		shore_wave.sprite.frame > 0,
+		"The approaching wave must select progressively smaller crest frames."
+	)
+	assert(
+		shore_wave.sprite.position.x > offshore_position,
+		"The wave must travel right toward the authored shoreline."
+	)
+	assert(not shore_wave.following_sprite.visible)
+	for frame in 50:
+		await physics_frame
+	assert(shore_wave.phase() == PixelShoreWave3D.Phase.APPROACHING)
+	assert(shore_wave.wave_is_active(0))
+	assert(shore_wave.wave_is_active(1))
+	assert(shore_wave.sprite.visible)
+	assert(shore_wave.following_sprite.visible)
+	assert(shore_wave.following_sprite.frame == 1)
+	assert(shore_wave.sprite.position.x > shore_wave.following_sprite.position.x)
+	var saw_first_contact_foam := false
+	for frame in 200:
+		await physics_frame
+		saw_first_contact_foam = (
+			saw_first_contact_foam
+			or (
+				shore_wave.shore_foam_is_playing()
+				and shore_wave.wave_is_active(1)
+			)
+		)
+		if shore_wave.phase() == PixelShoreWave3D.Phase.CONTACT:
+			break
+	assert(saw_first_contact_foam)
+	assert(shore_wave.phase() == PixelShoreWave3D.Phase.CONTACT)
+	assert(
+		shore_wave.shore_foam_is_playing(),
+		"A restrained foam accent must begin when each crest reaches the beach."
+	)
 
 	var player := level.player
 	var pickup := level.get_node("DoubleJumpPickup") as AbilityPickup3D
@@ -260,6 +333,27 @@ func _validate_presentation(level: LevelSession3D) -> void:
 	var water := level.get_node("Hazards/ShoreWater") as PixelWaterStrip3D
 	assert(is_equal_approx(water.width, 12.8))
 	assert(water.body_rows == 3)
+	assert(water.frame_count == 4)
+	assert(is_equal_approx(water.frame_rate, 8.0))
+	assert(water.tile_sheet.resource_path.ends_with("water_tiles.png"))
+	assert(water.runtime_tile_count() == 40)
+	var surface_tile := water.get_node("Surface_00") as Sprite3D
+	var surface_atlas := surface_tile.texture as AtlasTexture
+	assert(surface_atlas != null)
+	assert(surface_atlas.atlas == water.tile_sheet)
+	assert(is_zero_approx(surface_atlas.region.position.y))
+	assert(is_equal_approx(
+		surface_atlas.region.position.x,
+		water.current_frame() * 32.0
+	))
+	var third_body_tile := water.get_node("Body_03_00") as Sprite3D
+	var third_body_atlas := third_body_tile.texture as AtlasTexture
+	assert(third_body_atlas != null)
+	assert(is_equal_approx(third_body_atlas.region.position.y, 96.0))
+	assert(is_equal_approx(
+		third_body_atlas.region.position.x,
+		water.current_frame() * 32.0
+	))
 	assert(is_equal_approx(water.global_position.x - water.width * 0.5, -12.8))
 	assert(is_zero_approx(water.global_position.x + water.width * 0.5))
 	assert(is_zero_approx(water.global_position.y))
@@ -275,6 +369,62 @@ func _validate_presentation(level: LevelSession3D) -> void:
 		water_contact.global_position.y + water_box.size.y * 0.5 < 0.0,
 		"Lethal water contact must sit below the visible crest for fair edge play."
 	)
+	var shore_wave := level.get_node("ShoreWave") as PixelShoreWave3D
+	assert(shore_wave != null)
+	assert(shore_wave.offshore_x < shore_wave.shoreline_x)
+	assert(
+		not shore_wave.sprite.flip_h,
+		"The source wave already travels right and must retain its authored facing."
+	)
+	assert(is_equal_approx(shore_wave.global_position.x, water.global_position.x))
+	assert(
+		is_equal_approx(
+			shore_wave.global_position.x + shore_wave.shoreline_x,
+			0.0
+		),
+		"The subsiding wave and contact ripple must finish at the sand edge."
+	)
+	assert(shore_wave.subside_texture.resource_path.ends_with("wave_end.png"))
+	assert(shore_wave.shore_foam_texture.resource_path.ends_with("shore_foam.png"))
+	assert(shore_wave.starting_frames == PackedInt32Array([2, 1]))
+	assert(shore_wave.launch_offsets == PackedFloat32Array([0.0, 1.9]))
+	assert(
+		shore_wave.launch_offsets[1] < shore_wave.travel_duration,
+		"The medium follow-up must enter before the small crest reaches shore."
+	)
+	assert(is_equal_approx(shore_wave.quiet_duration, 3.4))
+	assert(is_equal_approx(shore_wave.travel_duration, 2.8))
+	assert(shore_wave.shore_foam_frame_count == 6)
+	assert(is_equal_approx(shore_wave.shore_foam_frame_rate, 10.0))
+	assert(
+		shore_wave.find_children("*", "CollisionObject3D", true, false).is_empty(),
+		"The travelling wave is presentation-only and must never affect movement."
+	)
+	assert(is_equal_approx(shore_wave.sprite.pixel_size, 0.02))
+	assert(is_equal_approx(shore_wave.following_sprite.pixel_size, 0.02))
+	assert(is_equal_approx(shore_wave.shore_foam.pixel_size, 0.015))
+	assert(
+		shore_wave.sprite.render_priority == 0,
+		"The travelling crest must use depth ordering so sand masks its overlap."
+	)
+	assert(shore_wave.following_sprite.render_priority == 0)
+	assert(not shore_wave.following_sprite.flip_h)
+	assert(
+		water.face_depth < shore_wave.sprite.global_position.z
+		and shore_wave.sprite.global_position.z < sand.face_depth,
+		"The crest must render between the water face and foreground sand face."
+	)
+	assert(
+		water.face_depth < shore_wave.following_sprite.global_position.z
+		and shore_wave.following_sprite.global_position.z < sand.face_depth
+	)
+	assert(
+		shore_wave.shore_foam.render_priority > shore_wave.sprite.render_priority,
+		"The final shoreline splash must remain a visible foreground accent."
+	)
+	assert(shore_wave.sprite.global_position.z < level.player.get_node(
+		"PixelVisual/Body"
+	).global_position.z)
 	var kill_plane := level.get_node("KillPlane") as Area3D
 	var kill_shape := kill_plane.get_node("Collision") as CollisionShape3D
 	var kill_box := kill_shape.shape as BoxShape3D
@@ -430,12 +580,49 @@ func _validate_presentation(level: LevelSession3D) -> void:
 		_top(finish),
 		player_body
 	)
-	for layer_index in range(1, 6):
-		var layer := level.get_node("Background/Layer%d" % layer_index) as Sprite3D
+	var background := level.get_node("Background") as PixelBackgroundRig3D
+	assert(background != null)
+	assert(background.profile != null)
+	assert(background.profile.profile_id == &"arrival_shoreline")
+	assert(background.profile.validation_errors().is_empty())
+	assert(is_equal_approx(background.profile.pixel_size, 0.04))
+	assert(background.runtime_layer_count() == 3)
+	var expected_paths := PackedStringArray([
+		"res://assets/art/green_zone/background/clouds/broad.png",
+		"res://assets/art/green_zone/background/clouds/puff.png",
+		"res://assets/art/green_zone/background/layer_5.png",
+	])
+	var expected_sizes := [Vector2i(144, 33), Vector2i(72, 51), Vector2i(576, 324)]
+	for layer_index in background.profile.layers.size():
+		var layer := background.profile.layers[layer_index]
+		assert(layer.texture.resource_path == expected_paths[layer_index])
 		assert(
-			"/green_zone/background/" in layer.texture.resource_path,
-			"The shared Green Zone backdrop must carry the shore inland coherently."
+			Vector2i(layer.texture.get_width(), layer.texture.get_height())
+			== expected_sizes[layer_index]
 		)
+		assert(layer.cover_viewport_width == (layer_index == 2))
+		assert(
+			layer.horizontal_policy
+			== (
+				PixelBackgroundLayerProfile.HorizontalPolicy.WORLD_LOCKED
+				if layer_index < 2
+				else PixelBackgroundLayerProfile.HorizontalPolicy.PARALLAX
+			)
+		)
+		assert(
+			layer.vertical_policy
+			== PixelBackgroundLayerProfile.VerticalPolicy.SCREEN_LOCKED
+		)
+		var copies := background.runtime_copies(layer_index)
+		assert(copies.size() >= 3)
+		for sprite in copies:
+			assert(is_equal_approx(sprite.pixel_size, 0.04))
+			assert(sprite.texture_filter == BaseMaterial3D.TEXTURE_FILTER_NEAREST)
+			assert(not sprite.shaded)
+			assert(
+				sprite.cast_shadow
+				== GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			)
 
 
 func _assert_sprite_grounded(sprite: Sprite3D, support_top: float) -> void:
@@ -607,6 +794,13 @@ func _scoped_group_count(level: LevelSession3D, group: StringName) -> int:
 		func(node: Node) -> bool:
 			return level.is_ancestor_of(node)
 	).size()
+
+
+func _toggle_gameplay_tools(game_root: Node) -> void:
+	var event := InputEventKey.new()
+	event.pressed = true
+	event.physical_keycode = KEY_F1
+	game_root._unhandled_input(event)
 
 
 func _platform(level: LevelSession3D, node_name: String) -> PixelPlatform3D:

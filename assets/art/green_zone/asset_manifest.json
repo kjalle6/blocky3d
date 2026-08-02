@@ -187,6 +187,14 @@
                                    "source":  "tilesets/green_zone/2 Background/Day/5.png",
                                    "sha256":  "36c48f6c8c1af8add7edcae2925dc421672c182c3ae7923e1f38006ec9cafa67"
                                },
+    "background/clouds/broad.png":  {
+                                        "source":  "visual_addons/clouds/PNG/Clouds_white/Shape2/cloud_shape2_3.png",
+                                        "sha256":  "0a2a97b3cfd1edd024e0ee25d0a6c64e55f11a74d0f9518fb6b888816777e663"
+                                    },
+    "background/clouds/puff.png":  {
+                                       "source":  "visual_addons/clouds/PNG/Clouds_white/Shape3/cloud_shape3_4.png",
+                                       "sha256":  "cbfcbf7ad8205de2eb00641d44a95725e4676879485364880fa55e42ecb253c6"
+                                   },
     "shoreline/tiles/top_left.png":  {
                                          "source":  "tilesets/beach_zone/1 Tiles/SandTile_01.png",
                                          "sha256":  "2c64b269f687bf8f2d936f3ac41e149a04ce0767739e979df046e94175b42215"
@@ -243,10 +251,22 @@
                                        "source":  "tilesets/beach_zone/1 Tiles/WaterTile_08.png",
                                        "sha256":  "8293be783a017772526c2f21304fb8c8e37917e8626cbff39e9e072715361724"
                                    },
+    "shoreline/water/water_tiles.png":  {
+                                            "source":  "tilesets/beach_zone/1 Tiles/WaterTiles.png",
+                                            "sha256":  "4e67baaaf744c025d48dae38f62ffb05804eca4ec4f6e34c3d779d2040e5e20b"
+                                        },
     "shoreline/effects/water_death_splash.png":  {
                                                      "source":  "visual_addons/effects/1 Water splashes/48x/1.png",
                                                      "sha256":  "21d38db0f4ea50c55f9b6556d83103ef5ee4ccb28a71bf321cad1407bc70c198"
                                                  },
+    "shoreline/effects/wave_end.png":  {
+                                           "source":  "visual_addons/effects/3 Waves/1End.png",
+                                           "sha256":  "f5c003c2649a7715fd3e954f02cf64aa7add66aea492ed03f9693f6f6ec3a812"
+                                       },
+    "shoreline/effects/shore_foam.png":  {
+                                             "source":  "visual_addons/effects/1 Water splashes/48x/2.png",
+                                             "sha256":  "6533a6a00dd6bb4c9d25c6544cc9a985eaa2ee2f71be100d8c9e1c7b6f1972f6"
+                                         },
     "shoreline/background/layer_1.png":  {
                                              "source":  "tilesets/beach_zone/3 Background/Day/1.png",
                                              "sha256":  "88daa1baa96b8f977b6c68c5c400e0d5879492d39b1188453b9582750e7afd97"
