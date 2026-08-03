@@ -16,7 +16,8 @@ size = Vector3(203.52, 1, 8)
 [node name="Level05Dash" instance=ExtResource("1_base")]
 
 [node name="TraversalRail" parent="." index="2"]
-control_points = PackedVector3Array(0, 0, 0, 193.28, 0, 0)
+route_start_x = 0
+route_end_x = 193.28
 
 [node name="OpeningGround" type="StaticBody3D" parent="Platforms" index="0"]
 position = Vector3(5.12, -1.28, 0)

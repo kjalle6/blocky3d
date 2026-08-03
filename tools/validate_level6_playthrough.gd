@@ -578,7 +578,7 @@ func _fail(
 			player.global_position.x,
 			player.global_position.y,
 			player.feet_world_y(),
-			level.traversal_rail.closest_offset(player.global_position),
+			level.traversal_rail.offset_of(player.global_position.x),
 			player.is_on_floor(),
 			player.wall_contact_direction(),
 			final_events,

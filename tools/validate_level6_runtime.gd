@@ -229,7 +229,6 @@ func _validate_route(level: LevelSession3D, player: PlayerCharacter) -> void:
 func _validate_camera(level: LevelSession3D, player: PlayerCharacter) -> void:
 	assert(level.camera is PixelSideCamera3D)
 	assert(level.camera.target == player)
-	assert(level.camera.traversal_rail == level.traversal_rail)
 	assert(level.camera.vertical_follow_enabled)
 	assert(is_equal_approx(level.camera.look_ahead, 8.0))
 	assert(is_equal_approx(level.camera.maximum_vertical_offset, 16.5))

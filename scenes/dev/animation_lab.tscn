@@ -9,7 +9,8 @@ size = Vector3(36, 1, 8)
 [node name="AnimationLab" instance=ExtResource("1_base")]
 
 [node name="TraversalRail" parent="." index="2"]
-control_points = PackedVector3Array(0, 0, 0, 30.72, 0, 0)
+route_start_x = 0
+route_end_x = 30.72
 
 [node name="Floor" type="StaticBody3D" parent="Platforms" index="0"]
 position = Vector3(15.36, -0.64, 0)

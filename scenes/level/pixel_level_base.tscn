@@ -33,7 +33,8 @@ environment = SubResource("Environment_level")
 [node name="TraversalRail" type="Node3D" parent="."]
 unique_name_in_owner = true
 script = ExtResource("2_rail")
-control_points = PackedVector3Array(0, 0, 0, 51.2, 0, 0)
+route_start_x = 0
+route_end_x = 51.2
 
 [node name="Background" type="Node3D" parent="."]
 unique_name_in_owner = true

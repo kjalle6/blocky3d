@@ -14,7 +14,6 @@ signal damage_received(source_position: Vector3)
 signal ability_performed(ability_id: StringName)
 
 @export var movement: PlayerMovementConfig
-@export var traversal_rail: TraversalRail3D
 @export var fall_limit_y := -8.0
 @export_range(0.05, 1.0, 0.01) var attack_duration := 0.34
 @export_range(0.0, 1.0, 0.01) var attack_impact_time := 0.13
@@ -55,8 +54,6 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	if traversal_rail == null:
-		return
 	if _dead:
 		_update_pixel_visual(delta)
 		return
@@ -104,7 +101,6 @@ func _physics_process(delta: float) -> void:
 		var target_speed := input_axis * movement.maximum_speed
 		path_speed = move_toward(path_speed, target_speed, acceleration * delta)
 
-	var tangent := traversal_rail.tangent_at_world_position(global_position)
 	_wall_sliding = (
 		has_ability(PlayerAbility.WALL_JUMP)
 		and not is_dashing()
@@ -136,12 +132,11 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_released("jump") and velocity.y > 0.0:
 		velocity.y *= movement.released_jump_multiplier
 
-	velocity.x = tangent.x * path_speed
-	velocity.z = tangent.z * path_speed
+	velocity.x = path_speed
+	velocity.z = 0.0
 	_descending_before_slide = velocity.y < -0.5
 	move_and_slide()
-	global_position = traversal_rail.constrain_world_position(global_position)
-	_update_wall_contact(tangent)
+	_update_wall_contact()
 	if is_dashing() and is_on_wall():
 		_finish_dash(true)
 	_wall_sliding = (
@@ -233,8 +228,6 @@ func reset_at(spawn_transform: Transform3D) -> void:
 	if pixel_visual != null:
 		pixel_visual.reset_feedback()
 		pixel_visual.set_state("idle", true)
-	if traversal_rail != null:
-		global_position = traversal_rail.constrain_world_position(global_position)
 
 
 func is_dead() -> bool:
@@ -340,13 +333,12 @@ func _update_attack(delta: float) -> void:
 
 
 func _perform_melee_hit() -> void:
-	var tangent := traversal_rail.tangent_at_world_position(global_position)
 	for candidate in get_tree().get_nodes_in_group("melee_target"):
 		if not candidate is Node3D or not candidate.has_method("receive_melee_hit"):
 			continue
 		var target := candidate as Node3D
 		var offset := target.global_position - global_position
-		var forward_distance := offset.dot(tangent) * _facing_sign
+		var forward_distance := offset.x * _facing_sign
 		if (
 			forward_distance >= 0.0
 			and forward_distance <= attack_reach
@@ -469,11 +461,11 @@ func _has_dash_floor_support() -> bool:
 	)
 
 
-func _update_wall_contact(tangent: Vector3) -> void:
+func _update_wall_contact() -> void:
 	_wall_contact_direction = 0.0
 	if not has_ability(PlayerAbility.WALL_JUMP) or not is_on_wall():
 		return
-	var along_route := get_wall_normal().dot(tangent)
+	var along_route := get_wall_normal().x
 	if absf(along_route) < 0.5:
 		return
 	_wall_contact_direction = -signf(along_route)

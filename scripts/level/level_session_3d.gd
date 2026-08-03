@@ -54,19 +54,14 @@ func configure(
 func _ready() -> void:
 	_initial_spawn_transform = spawn_point.global_transform
 	_active_respawn_transform = _initial_spawn_transform
-	player.traversal_rail = traversal_rail
 	_apply_ability_policy()
 	camera.target = player
-	camera.traversal_rail = traversal_rail
 	if background != null:
 		background.bind_camera(camera)
 	player.died.connect(_on_player_died)
 	if combat_feedback != null:
 		combat_feedback.bind_player(player)
 
-	for node in get_tree().get_nodes_in_group("rail_bound"):
-		if is_ancestor_of(node) and node.has_method("bind_to_traversal_rail"):
-			node.call("bind_to_traversal_rail", traversal_rail)
 	for node in get_tree().get_nodes_in_group("melee_target"):
 		if combat_feedback != null and is_ancestor_of(node) and node is StompableEnemy3D:
 			combat_feedback.bind_enemy(node as StompableEnemy3D)

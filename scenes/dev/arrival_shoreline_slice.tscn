@@ -48,7 +48,8 @@ size = Vector3(11.52, 3.84, 2)
 profile = ExtResource("38_background_profile")
 
 [node name="TraversalRail" parent="." index="2"]
-control_points = PackedVector3Array(-5.12, 0, 0, 76.8, 0, 0)
+route_start_x = -5.12
+route_end_x = 76.8
 
 [node name="OpeningGroundCollision" type="StaticBody3D" parent="." index="3"]
 position = Vector3(7.04, -1.28, 0)

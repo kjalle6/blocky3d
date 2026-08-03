@@ -19,7 +19,6 @@ const MINIMUM_PATROL_PROGRESS_RATIO := 0.25
 @export_range(0.0, 2.0, 0.05) var attack_cooldown := 0.65
 @export_range(0.1, 2.0, 0.05) var attack_vertical_tolerance := 0.9
 
-var traversal_rail: TraversalRail3D
 var _direction := 1.0
 var _defeated := false
 var _dying := false
@@ -37,18 +36,13 @@ var _attack_damage_applied := false
 func _ready() -> void:
 	_initial_transform = global_transform
 	_direction = 1.0 if starts_moving_right else -1.0
-	add_to_group("rail_bound")
 	add_to_group("run_resettable")
 	add_to_group("melee_target")
 	contact_area.body_entered.connect(_on_body_entered)
 
 
-func bind_to_traversal_rail(rail: TraversalRail3D) -> void:
-	traversal_rail = rail
-
-
 func _physics_process(delta: float) -> void:
-	if _defeated or traversal_rail == null:
+	if _defeated:
 		if _dying and pixel_visual != null:
 			pixel_visual.tick(delta, "death", _direction > 0.0)
 		return
@@ -58,19 +52,17 @@ func _physics_process(delta: float) -> void:
 		return
 	if _try_start_attack():
 		return
-	var tangent := traversal_rail.tangent_at_world_position(global_position)
-	velocity.x = tangent.x * patrol_speed * _direction
-	velocity.z = tangent.z * patrol_speed * _direction
+	velocity.x = patrol_speed * _direction
+	velocity.z = 0.0
 	velocity.y = maxf(velocity.y - gravity * delta, -25.0)
 	var started_grounded := is_on_floor()
 	var starting_position := global_position
 	move_and_slide()
-	global_position = traversal_rail.constrain_world_position(global_position)
 	var contact := _classify_horizontal_contact()
 	var blocked_by_player: bool = contact.player
 	var blocked_by_level: bool = contact.level
 	var patrol_progress := (
-		(global_position - starting_position).dot(tangent) * _direction
+		(global_position.x - starting_position.x) * _direction
 	)
 	var stalled_by_level := (
 		started_grounded
@@ -80,7 +72,7 @@ func _physics_process(delta: float) -> void:
 	)
 	if (
 		blocked_by_level
-		or (is_on_floor() and not _has_floor_ahead(tangent))
+		or (is_on_floor() and not _has_floor_ahead())
 		or stalled_by_level
 	):
 		_direction *= -1.0
@@ -89,8 +81,8 @@ func _physics_process(delta: float) -> void:
 		pixel_visual.tick(delta, movement_state, _direction > 0.0)
 
 
-func _has_floor_ahead(tangent: Vector3) -> bool:
-	var ahead := global_position + tangent * _direction * 0.72 + Vector3.UP * 0.15
+func _has_floor_ahead() -> bool:
+	var ahead := global_position + Vector3.RIGHT * _direction * 0.72 + Vector3.UP * 0.15
 	var query := PhysicsRayQueryParameters3D.create(ahead, ahead + Vector3.DOWN * 1.35, 1, [get_rid()])
 	return not get_world_3d().direct_space_state.intersect_ray(query).is_empty()
 
