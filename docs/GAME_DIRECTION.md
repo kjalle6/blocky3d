@@ -12,12 +12,11 @@ are not promises about the eventual title or a description of the finished
 game.
 
 The game is a fast, demanding pixel-art precision platformer with the immediate
-retry rhythm and authored challenge associated with *Super Meat Boy*. Its
-player-facing identity is a side-scroller. The Godot implementation may use 3D
-nodes to stage pixel art and leave room for authored route turns, but free 3D
-movement is neither a requirement nor part of the pitch. A level may remain
-visually flat, climb or descend, or later use a controlled 2.5D turn when that
-creates a better route.
+retry rhythm and authored challenge associated with *Super Meat Boy*. It is a
+2D side-scroller, and that is settled. The Godot implementation uses 3D nodes to
+stage pixel art on layered depth planes, but the game plays on a single flat
+plane: no route turns, no plane transitions, no 2.5D. A level may run flat,
+climb, or descend, and that is the whole of its dimensionality.
 
 The larger world has a cyberpunk identity. It opens on a beach and in a green,
 natural area because that contrast is part of the appeal: technology, machinery,
@@ -85,14 +84,15 @@ are a useful library, but route and encounter quality still comes first.
 
 ## Movement and camera
 
-Each local section plays on a clear side-scrolling plane. Later routes may bend
-toward or away from the former camera, wrap around a structure, climb, descend,
-or transition between planes. The player should never have to guess which input
-corresponds to ambiguous world depth.
+The whole game plays on one side-scrolling plane. Routes run flat, climb, or
+descend; they never bend toward or away from the camera, wrap around a
+structure, or transition between planes. World depth is a presentation tool for
+layering art, never something the player navigates, so no input is ever
+ambiguous about it.
 
-The camera interprets the route; it does not own player movement. Camera turns
-and vertical reframing are authored separately from collision and abilities.
-There is no requirement to build a free-camera or free-roaming 3D level.
+The camera interprets the route; it does not own player movement. Vertical
+reframing is authored separately from collision and abilities. There is no
+free camera, no camera turn, and no free-roaming 3D level.
 
 The opening movement kit consists of ordinary running and jumping, Double Jump,
 Wall Jump, and Dash. Stomping and the knife complement traversal. Ability rules
@@ -194,7 +194,8 @@ require explicit designs before implementation.
 - The public title is TBD; `blocky3d` remains the stable internal codename.
 - Godot 4.6 is the canonical engine and repository.
 - The product is a pixel-art side-scrolling precision platformer, not a 3D game.
-- Controlled 2.5D route turns remain an optional level-design tool.
+- The game is 2D. Route turns, plane transitions, and 2.5D are ruled out, not
+  deferred. 3D nodes stage layered art; they never carry gameplay depth.
 - The larger setting and persistent interface have a cyberpunk identity.
 - World 1 intentionally begins with beach and green-zone imagery.
 - The game is original, movement-first, and not designed as a rage game.

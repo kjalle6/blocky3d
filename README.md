@@ -5,9 +5,10 @@ platformer. The public title is still undecided. The game combines fast,
 expressive side-scroller movement with light combat and a larger cyberpunk
 setting that begins on a beach and in the natural Green Zone.
 
-The current implementation uses Godot 3D nodes to stage its pixel art and leave
-room for optional authored route turns. That is an internal level-building
-choice, not a claim that the finished game is a 3D platformer.
+The game is 2D and stays 2D. The implementation uses Godot 3D nodes to stage
+pixel art on layered depth planes, which is an internal presentation choice, not
+a claim that the finished game is a 3D platformer. Gameplay never leaves its
+single flat plane.
 
 Godot is the canonical implementation. The Python game and Unreal prototype
 remain read-only design references.

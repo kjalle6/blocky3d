@@ -13,10 +13,11 @@ Changing the title must not silently change the `user://` save location,
 progress IDs, or other persisted identifiers; any eventual identifier migration
 must be explicit and versioned.
 
-The product is a side-scrolling pixel-art platformer. Its current use of
-`Node3D`, `CharacterBody3D`, orthographic cameras, and traversal rails is an
-implementation technique that supports composed depth and optional authored
-route turns. Game logic must not require free 3D movement merely because the
+The product is a 2D side-scrolling pixel-art platformer. Its use of `Node3D`,
+`CharacterBody3D`, and orthographic cameras is an implementation technique for
+composing layered depth in the presentation. Gameplay stays on one flat plane:
+route turns and plane transitions are ruled out, so Z is for sorting art and
+nothing else. Game logic must never require free 3D movement merely because the
 scene tree is three-dimensional.
 
 ## Runtime ownership
@@ -27,7 +28,7 @@ scene tree is three-dimensional.
 | Campaign content | `CampaignCatalog`, typed `WorldDefinition`, and typed `LevelDefinition` resources; no level-number behavior branches |
 | Level run state | `LevelSession3D`: player wiring, death, checkpoint respawn, full restart, and completion |
 | Locomotion | `PlayerCharacter` plus typed `PlayerMovementConfig` tuning |
-| Route plane | `TraversalRail3D`: world position and tangent for path-relative movement |
+| Route plane | `TraversalRail3D`: holds the route to one flat plane. A leftover of the abandoned 2.5D direction; every level authors it as a straight line |
 | Camera | `PixelSideCamera3D`, independent from player movement ownership |
 | Player presentation | `PixelPlayerVisual3D`, separate from movement and gameplay collision |
 | Enemy behavior | Focused enemy scenes/scripts with separate body, stomp, attack, hurt, and presentation contracts |

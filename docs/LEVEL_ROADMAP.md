@@ -38,7 +38,7 @@ larger cyberpunk setting.
 
 | Target level | Core arc | New capability | Status |
 | --- | --- | --- | --- |
-| 1: Arrival / Shoreline | Classic fundamentals grow into an aerial route | Double Jump | Opening slice playable; reusable camera/background foundation implemented; hands-on visual review in progress |
+| 1: Arrival / Shoreline | Classic fundamentals grow into an aerial route | Double Jump | Opening slice reviewed and locked; camera, background rig, and shoreline surf implemented; ready to expand |
 | 2: Overgrown Coastal Ascent | Horizontal travel turns upward, then accelerates | Wall Jump and Dash | Planned from proven prototypes |
 | 3: Green Zone Finale | Full-kit mastery, saws, enemy escalation, gun lesson, and boss | Limited firearm | Planned concept |
 
@@ -72,18 +72,27 @@ ordinary-jump step is real collision, while the entire downstream route moves
 with it so the existing gaps and Double Jump proofs keep their established
 measurements. Structural,
 session-isolation, real-input, legacy-regression, and 1080p capture checks pass.
-Hands-on review now decides whether this locks platform scale, prop grounding,
-and opening pace before expansion.
+Hands-on review has passed: platform scale, prop grounding, and opening pace
+are locked, and expansion builds on this route.
 
-The arrival water uses the beach pack's complete synchronized tile animation.
-A smaller crest arrives first; as it nears shore, the previous medium crest
-enters offshore so both waves occupy the narrow visible water simultaneously.
-A longer quiet gap follows the pair. Each wave becomes progressively smaller
-while travelling right and disappears before a low foam
-accent plays at the shoreline, without adding collision or changing the
-lethal-water volume.
-Deterministic capture frames cover both open-water travel and shore impact so
-future presentation changes cannot quietly desynchronize the effect.
+The arrival water uses the beach pack's synchronized tile animation. Three
+authored crests repeat on a fixed cycle, so the surf is deterministic and
+survives death and restart without resetting. A crest is the source clip's low
+frames played at the terrain pixel scale, never the full-size roller shrunk to a
+finer resolution.
+
+Crests swell, lap a short distance inshore, and sink back. They submerge less
+the nearer they break, so waves grow toward the beach rather than a distant
+swell towering over a near one, and each swell peaks on arrival so the wave is
+still at full size when it lands. Only a crest that reaches the sand triggers
+the shore splash; the splash lands on that crest's body and the crest is cut as
+it appears, so the wave reads as becoming the effect. Sprites anchor on the
+clip's own waterline and visible leading edge rather than on frame bounds, since
+a submerged crest's tapering toe is masked by the water. None of this adds
+collision or changes the lethal-water volume.
+
+Deterministic capture frames cover both the offshore swell and the shore break
+so future presentation changes cannot quietly desynchronize the effect.
 
 Its authored background profile moves from a restrained coastal hint into
 established Green Zone depth as the camera travels inland. Prototype Levels
@@ -160,7 +169,7 @@ other asset may be borrowed when it fits the local composition.
 | 5: Wall Jump | Early pickup, safe shaft, horizontal breathers, and alternating-wall finish | New Level 2 opening material |
 | 6: Mastery II | Directional wall hazards, longer climbs, enemies, and reward ledges | New Level 2 and later mastery material |
 | 7: Saws | Horizontal and vertical moving hazards in climbs and runways | New Level 3 reusable hazard family |
-| 8: Long Way Around | A route that climbs, returns beneath itself, and finishes above | Later multidirectional routes and controlled 2.5D turns |
+| 8: Long Way Around | A route that climbs, returns beneath itself, and finishes above | Discarded. It existed for multidirectional routes and 2.5D turns, which the game no longer does |
 | 9: Stepping Stones | Small-platform endurance, wall climbs, hard gaps, and a chasing saw | Later mastery material after rescaling |
 | 10: Dash | Ground gap, air Dash, low route, vertical combination, and delayed Dash | New Level 2 second half |
 | 11: Corridor Test | Reactive spikes, dropping floors, timed and spawned platforms, and spawned saws | Reusable reactive-trap toolkit for later worlds |
@@ -181,14 +190,18 @@ other asset may be borrowed when it fits the local composition.
 6. Completed: replace oversized hand-placed parallax sprites with the
    native-scale reusable background rig; validate flat projection,
    horizontal/ultrawide recycling, and vertical-camera coverage.
-7. In progress: hands-on review the slice at normal speed and lock its opening
-   composition, unobtrusive development overlay, cloud behavior, and transition
-   timing.
-8. Before expanding Arrival, add a named scene-owned background transition
+7. Completed: hands-on review of the slice at normal speed. Its opening
+   composition, development overlay, cloud behavior, and transition timing are
+   locked.
+8. Completed: author the shoreline surf as small lapping crests at the terrain
+   pixel scale, breaking at the sand and handing off to a splash. Sprites anchor
+   on the art's own waterline and visible leading edge rather than on frame
+   bounds.
+9. Before expanding Arrival, add a named scene-owned background transition
    anchor at the shoreline/Green Zone seam. Express the forest and cloud fade
    windows as offsets from that anchor, and validate that moving the anchor
    keeps presentation synchronized with the motivating terrain.
-9. Expand only after that review establishes what should be retained or tuned.
+10. Expand the approved route into the complete Arrival / Shoreline level.
 
 ### Needed before the finale
 
@@ -246,11 +259,12 @@ level. It must also:
 ## Current review gate
 
 The new Level 1 opening slice is implemented as a development-only candidate,
-not yet a production campaign entry. The next action is hands-on review. It
-still deliberately excludes guns, crafting, saws, spikes, and new enemy
+not yet a production campaign entry. Hands-on review has passed and its
+presentation is locked, so the next action is expansion. It still deliberately
+excludes guns, crafting, saws, spikes, and new enemy
 families: its job is to prove the new campaign scale and presentation using
-mechanics that already feel good. After approval, extend this same route into
-the complete Arrival / Shoreline level instead of starting another prototype.
+mechanics that already feel good. Extend this same route into the complete
+Arrival / Shoreline level instead of starting another prototype.
 The background transition anchor is the first required implementation step of
 that expansion so the approved shoreline composition cannot drift away from
 later geometry edits.
