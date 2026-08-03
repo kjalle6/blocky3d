@@ -80,54 +80,157 @@ func _run() -> void:
 		"The shoreline atlas must advance instead of remaining a static pattern."
 	)
 	var shore_wave := level.get_node("ShoreWave") as PixelShoreWave3D
-	shore_wave.start_now()
-	var offshore_position := shore_wave.sprite.position.x
-	assert(shore_wave.starting_frames == PackedInt32Array([2, 1]))
-	assert(shore_wave.launch_offsets == PackedFloat32Array([0.0, 1.9]))
-	assert(shore_wave.sprite.frame == shore_wave.current_starting_frame(0))
-	assert(shore_wave.wave_is_active(0))
-	assert(not shore_wave.wave_is_active(1))
-	assert(not shore_wave.following_sprite.visible)
-	for frame in 75:
-		await physics_frame
-	assert(shore_wave.phase() == PixelShoreWave3D.Phase.APPROACHING)
-	assert(shore_wave.sprite.visible)
+	assert(shore_wave.crest_count() == 3)
+	assert(shore_wave.crest_offsets_x.size() == shore_wave.crest_delays.size())
 	assert(
-		shore_wave.sprite.frame > 0,
-		"The approaching wave must select progressively smaller crest frames."
+		is_equal_approx(
+			shore_wave.crest_sprite(0).pixel_size,
+			PixelPlatform3D.TILE_PIXEL_SIZE
+		),
+		"Surf must render on the same pixel scale as the terrain it breaks against."
 	)
 	assert(
-		shore_wave.sprite.position.x > offshore_position,
-		"The wave must travel right toward the authored shoreline."
+		is_equal_approx(
+			shore_wave.shore_foam_sprite().pixel_size,
+			PixelPlatform3D.TILE_PIXEL_SIZE
+		),
+		"Foam must share the terrain pixel scale."
 	)
-	assert(not shore_wave.following_sprite.visible)
-	for frame in 50:
-		await physics_frame
-	assert(shore_wave.phase() == PixelShoreWave3D.Phase.APPROACHING)
-	assert(shore_wave.wave_is_active(0))
-	assert(shore_wave.wave_is_active(1))
-	assert(shore_wave.sprite.visible)
-	assert(shore_wave.following_sprite.visible)
-	assert(shore_wave.following_sprite.frame == 1)
-	assert(shore_wave.sprite.position.x > shore_wave.following_sprite.position.x)
-	var saw_first_contact_foam := false
-	for frame in 200:
-		await physics_frame
-		saw_first_contact_foam = (
-			saw_first_contact_foam
-			or (
-				shore_wave.shore_foam_is_playing()
-				and shore_wave.wave_is_active(1)
+	assert(
+		is_equal_approx(shore_wave.foam_offset_pixels(), 16.0),
+		"The splash must be seated on the water by its own art base, not the frame."
+	)
+	assert(
+		is_equal_approx(
+			shore_wave.global_position.x + shore_wave.shoreline_x,
+			0.0
+		),
+		"The shoreline the crests break against is the sand edge."
+	)
+	assert(
+		shore_wave.foam_body_offset < 0.0,
+		"The splash lands seaward of a crest's tip, over the wave's mass."
+	)
+	assert(
+		is_equal_approx(shore_wave.waterline_offset_pixels(), 33.0),
+		"Crests must be offset so the clip's own waterline lands on the node origin."
+	)
+	assert(
+		is_equal_approx(shore_wave.global_position.y, 0.0),
+		"The surf node sits on the water surface, so crests break in the water."
+	)
+	for crest_index in range(1, shore_wave.crest_count()):
+		assert(
+			shore_wave.crest_offsets_x[crest_index]
+			> shore_wave.crest_offsets_x[crest_index - 1],
+			"Crests must be authored offshore-to-inshore."
+		)
+		assert(
+			shore_wave.crest_sprite(crest_index).global_position.y
+			> shore_wave.crest_sprite(crest_index - 1).global_position.y,
+			(
+				"Each crest nearer the beach must sit higher out of the water. "
+				+ "Otherwise a small wave can appear behind a larger one."
 			)
 		)
-		if shore_wave.phase() == PixelShoreWave3D.Phase.CONTACT:
-			break
-	assert(saw_first_contact_foam)
-	assert(shore_wave.phase() == PixelShoreWave3D.Phase.CONTACT)
+	var offshore_crests := 0
+	for crest_index in shore_wave.crest_count():
+		if not shore_wave.crest_ever_reaches_shore(crest_index):
+			offshore_crests += 1
 	assert(
-		shore_wave.shore_foam_is_playing(),
-		"A restrained foam accent must begin when each crest reaches the beach."
+		offshore_crests > 0,
+		"Some crests must settle offshore, or the splash test proves nothing."
 	)
+	var seen_peak := 0
+	var seen_foam := false
+	var seen_settled := false
+	var foam_was_playing := false
+	for frame in 700:
+		await physics_frame
+		for crest_index in shore_wave.crest_count():
+			if not shore_wave.crest_is_active(crest_index):
+				continue
+			var crest_frame := shore_wave.crest_sprite(crest_index).frame
+			assert(
+				crest_frame <= shore_wave.peak_frame,
+				"A shore crest must never reach the pack's full-size roller."
+			)
+			seen_peak = maxi(seen_peak, crest_frame)
+			var progress := shore_wave.crest_progress(crest_index)
+			if progress > 0.9 and crest_frame == 0:
+				seen_settled = true
+		var foam_playing := shore_wave.shore_foam_is_playing()
+		if foam_playing and not foam_was_playing:
+			# The splash is caused by water arriving, so at the instant it starts
+			# some crest must actually be at the beach.
+			var crest_at_shore := false
+			for crest_index in shore_wave.crest_count():
+				crest_at_shore = crest_at_shore or shore_wave.crest_reaches_shore(
+					crest_index,
+					shore_wave.crest_progress(crest_index)
+				)
+			assert(
+				crest_at_shore,
+				"The shore splash must only fire when a crest reaches the sand."
+			)
+			# Arriving is not enough: the wave has to still be there. A crest
+			# that peaks early has collapsed by the time it lands, and the
+			# splash then plays over empty water.
+			var arriving_crest_is_risen := false
+			for crest_index in shore_wave.crest_count():
+				if not shore_wave.crest_reaches_shore(
+					crest_index,
+					shore_wave.crest_progress(crest_index)
+				):
+					continue
+				arriving_crest_is_risen = (
+					arriving_crest_is_risen
+					or shore_wave.crest_sprite(crest_index).frame
+					== shore_wave.peak_frame
+				)
+			for crest_index in shore_wave.crest_count():
+				if not shore_wave.crest_reaches_shore(
+					crest_index,
+					shore_wave.crest_progress(crest_index)
+				):
+					continue
+				assert(
+					not shore_wave.crest_sprite(crest_index).visible,
+					(
+						"A breaking crest must be gone the instant its splash "
+						+ "appears, so the wave reads as becoming the effect "
+						+ "rather than standing behind it."
+					)
+				)
+				assert(
+					absf(
+						shore_wave.shore_foam_sprite().global_position.x
+						- shore_wave.crest_sprite(crest_index).global_position.x
+					) <= absf(shore_wave.foam_body_offset) + 0.05,
+					(
+						"The splash must land on the crest that caused it, not "
+						+ "at a fixed point the wave may not have reached."
+					)
+				)
+			assert(
+				arriving_crest_is_risen,
+				(
+					"The crest landing on the beach must still be at full size "
+					+ "when its splash fires, or the two read as unrelated."
+				)
+			)
+		foam_was_playing = foam_playing
+		seen_foam = seen_foam or foam_playing
+		assert(
+			shore_wave.shore_foam_sprite().frame < shore_wave.foam_frame_limit,
+			"The shore splash must stay within its authored opening frames."
+		)
+	assert(
+		seen_peak == shore_wave.peak_frame,
+		"Crests must swell to their authored peak."
+	)
+	assert(seen_settled, "Crests must sink back into the water rather than vanish.")
+	assert(seen_foam, "Water reaching the beach must land the shore splash.")
 
 	var player := level.player
 	var pickup := level.get_node("DoubleJumpPickup") as AbilityPickup3D
@@ -371,60 +474,67 @@ func _validate_presentation(level: LevelSession3D) -> void:
 	)
 	var shore_wave := level.get_node("ShoreWave") as PixelShoreWave3D
 	assert(shore_wave != null)
-	assert(shore_wave.offshore_x < shore_wave.shoreline_x)
-	assert(
-		not shore_wave.sprite.flip_h,
-		"The source wave already travels right and must retain its authored facing."
-	)
 	assert(is_equal_approx(shore_wave.global_position.x, water.global_position.x))
 	assert(
-		is_equal_approx(
-			shore_wave.global_position.x + shore_wave.shoreline_x,
-			0.0
-		),
-		"The subsiding wave and contact ripple must finish at the sand edge."
+		is_equal_approx(shore_wave.global_position.y, 0.0),
+		"Surf sits on the water surface so the clip's own waterline lines up."
 	)
-	assert(shore_wave.subside_texture.resource_path.ends_with("wave_end.png"))
-	assert(shore_wave.shore_foam_texture.resource_path.ends_with("shore_foam.png"))
-	assert(shore_wave.starting_frames == PackedInt32Array([2, 1]))
-	assert(shore_wave.launch_offsets == PackedFloat32Array([0.0, 1.9]))
 	assert(
-		shore_wave.launch_offsets[1] < shore_wave.travel_duration,
-		"The medium follow-up must enter before the small crest reaches shore."
+		shore_wave.crest_texture.resource_path.ends_with("wave_start.png"),
+		"Crests come from the clip whose low frames are small waves."
 	)
-	assert(is_equal_approx(shore_wave.quiet_duration, 3.4))
-	assert(is_equal_approx(shore_wave.travel_duration, 2.8))
-	assert(shore_wave.shore_foam_frame_count == 6)
-	assert(is_equal_approx(shore_wave.shore_foam_frame_rate, 10.0))
+	assert(shore_wave.foam_texture.resource_path.ends_with("shore_foam.png"))
 	assert(
 		shore_wave.find_children("*", "CollisionObject3D", true, false).is_empty(),
-		"The travelling wave is presentation-only and must never affect movement."
+		"Shoreline surf is presentation-only and must never affect movement."
 	)
-	assert(is_equal_approx(shore_wave.sprite.pixel_size, 0.02))
-	assert(is_equal_approx(shore_wave.following_sprite.pixel_size, 0.02))
-	assert(is_equal_approx(shore_wave.shore_foam.pixel_size, 0.015))
+	var water_left := water.global_position.x - water.width * 0.5
+	var water_right := water.global_position.x + water.width * 0.5
+	var foam := shore_wave.shore_foam_sprite()
 	assert(
-		shore_wave.sprite.render_priority == 0,
-		"The travelling crest must use depth ordering so sand masks its overlap."
-	)
-	assert(shore_wave.following_sprite.render_priority == 0)
-	assert(not shore_wave.following_sprite.flip_h)
-	assert(
-		water.face_depth < shore_wave.sprite.global_position.z
-		and shore_wave.sprite.global_position.z < sand.face_depth,
-		"The crest must render between the water face and foreground sand face."
+		is_equal_approx(foam.pixel_size, PixelPlatform3D.TILE_PIXEL_SIZE),
+		"Foam renders at the terrain pixel scale, not a finer one."
 	)
 	assert(
-		water.face_depth < shore_wave.following_sprite.global_position.z
-		and shore_wave.following_sprite.global_position.z < sand.face_depth
+		water.face_depth < foam.global_position.z
+		and foam.global_position.z < sand.face_depth,
+		"The splash is surface spray and stays in front of the water."
 	)
-	assert(
-		shore_wave.shore_foam.render_priority > shore_wave.sprite.render_priority,
-		"The final shoreline splash must remain a visible foreground accent."
-	)
-	assert(shore_wave.sprite.global_position.z < level.player.get_node(
-		"PixelVisual/Body"
-	).global_position.z)
+	for crest_index in shore_wave.crest_count():
+		var crest := shore_wave.crest_sprite(crest_index)
+		assert(
+			is_equal_approx(crest.pixel_size, PixelPlatform3D.TILE_PIXEL_SIZE),
+			"Surf renders at the terrain pixel scale, not a finer one."
+		)
+		assert(not crest.flip_h, "The source crest already faces the shore.")
+		var break_x := (
+			shore_wave.global_position.x
+			+ shore_wave.crest_offsets_x[crest_index]
+			+ shore_wave.crest_travel
+		)
+		assert(
+			break_x > water_left
+			and break_x <= water_right + shore_wave.shoreline_wash + EPSILON,
+			"Crests may lap onto the sand but never run across the tiles."
+		)
+		assert(
+			foam.render_priority > crest.render_priority,
+			"The splash must stay a visible accent in front of the crests."
+		)
+		assert(
+			crest.global_position.z < water.face_depth,
+			(
+				"Crests render behind the water face so the surface masks a "
+				+ "submerged base. Without that the sink does nothing."
+			)
+		)
+		assert(
+			crest.render_priority < 0,
+			"Depth alone is not enough; the crest must also sort behind the water."
+		)
+		assert(crest.global_position.z < level.player.get_node(
+			"PixelVisual/Body"
+		).global_position.z)
 	var kill_plane := level.get_node("KillPlane") as Area3D
 	var kill_shape := kill_plane.get_node("Collision") as CollisionShape3D
 	var kill_box := kill_shape.shape as BoxShape3D

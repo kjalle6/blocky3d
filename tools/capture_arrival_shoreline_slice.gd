@@ -94,30 +94,22 @@ func _capture_shore_wave(level: LevelSession3D) -> void:
 	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(3.2, 0.7, 0)))
 	level.player.set_physics_process(false)
 	level.camera.snap_to_target()
-	wave.start_now()
-	assert(wave.starting_frames == PackedInt32Array([2, 1]))
-	assert(wave.sprite.frame == wave.current_starting_frame(0))
-	assert(not wave.following_sprite.visible)
-	await _capture("arrival_slice_01a_shore_wave_offshore")
-	for frame in 75:
+	assert(wave.crest_count() == 3)
+	# Sample the surf cycle rather than driving it: the crests are authored on a
+	# fixed loop, so waiting lands on real states instead of forced ones.
+	var captured_swell := false
+	var captured_foam := false
+	for frame in 700:
 		await physics_frame
-	assert(wave.phase() == PixelShoreWave3D.Phase.APPROACHING)
-	assert(wave.sprite.frame > 0)
-	await _capture("arrival_slice_01ab_shore_wave_subsiding")
-	for frame in 50:
-		await physics_frame
-	assert(wave.phase() == PixelShoreWave3D.Phase.APPROACHING)
-	assert(wave.wave_is_active(0))
-	assert(wave.wave_is_active(1))
-	assert(wave.sprite.visible and wave.following_sprite.visible)
-	await _capture("arrival_slice_01ac_shore_wave_overlap")
-	for frame in 200:
-		await physics_frame
-		if wave.phase() == PixelShoreWave3D.Phase.CONTACT:
+		if not captured_swell and wave.crest_sprite(0).frame == wave.peak_frame:
+			captured_swell = true
+			await _capture("arrival_slice_01a_shore_wave_swell")
+		if not captured_foam and wave.shore_foam_is_playing():
+			captured_foam = true
+			await _capture("arrival_slice_01aa_shore_wave_break")
+		if captured_swell and captured_foam:
 			break
-	assert(wave.phase() == PixelShoreWave3D.Phase.CONTACT)
-	assert(wave.shore_foam_is_playing())
-	await _capture("arrival_slice_01aa_shore_wave_impact")
+	assert(captured_swell and captured_foam)
 
 
 func _freeze_enemies(level: LevelSession3D) -> void:

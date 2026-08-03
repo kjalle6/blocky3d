@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3]
+[gd_scene load_steps=35 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="2_platform"]
@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/effects/water_death_splash.png" id="22_water_splash"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_water_death_splash_3d.gd" id="23_water_splash_script"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_shore_wave_3d.gd" id="24_shore_wave_script"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/effects/wave_start.png" id="24_wave_start"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/effects/wave_end.png" id="24_wave_end"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/effects/shore_foam.png" id="24_shore_foam"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/tree_grounded.png" id="25_tree"]
@@ -284,32 +285,12 @@ shaded = false
 render_priority = 12
 
 [node name="ShoreWave" type="Node3D" parent="." index="16"]
-position = Vector3(-6.4, 0, 0)
+position = Vector3(-6.4, 0, 0.98)
 script = ExtResource("24_shore_wave_script")
-subside_texture = ExtResource("24_wave_end")
-shore_foam_texture = ExtResource("24_shore_foam")
-starting_frames = PackedInt32Array(2, 1)
-launch_offsets = PackedFloat32Array(0, 1.9)
-
-[node name="Sprite" type="Sprite3D" parent="ShoreWave" index="0"]
-position = Vector3(0, 0.42, 0.96)
-texture_filter = 0
-pixel_size = 0.02
-shaded = false
-render_priority = 0
-
-[node name="FollowingSprite" type="Sprite3D" parent="ShoreWave" index="1"]
-position = Vector3(0, 0.42, 0.96)
-texture_filter = 0
-pixel_size = 0.02
-shaded = false
-render_priority = 0
-
-[node name="ShoreFoam" type="Sprite3D" parent="ShoreWave" index="2"]
-position = Vector3(0, 0.1, 0.99)
-texture_filter = 0
-pixel_size = 0.015
-shaded = false
-render_priority = 4
+crest_texture = ExtResource("24_wave_start")
+foam_texture = ExtResource("24_shore_foam")
+crest_offsets_x = PackedFloat32Array(2, 4, 5.7)
+crest_delays = PackedFloat32Array(0, 2.1, 4)
+crest_submerged_depths = PackedFloat32Array(0.4, 0.35, 0.3)
 
 [editable path="Player"]

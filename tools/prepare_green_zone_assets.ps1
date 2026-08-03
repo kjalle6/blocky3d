@@ -144,6 +144,8 @@ $assets = [ordered]@{
         "tilesets\beach_zone\1 Tiles\WaterTiles.png"
     "shoreline/effects/water_death_splash.png" =
         "visual_addons\effects\1 Water splashes\48x\1.png"
+    "shoreline/effects/wave_start.png" =
+        "visual_addons\effects\3 Waves\1Start.png"
     "shoreline/effects/wave_end.png" =
         "visual_addons\effects\3 Waves\1End.png"
     "shoreline/effects/shore_foam.png" =
