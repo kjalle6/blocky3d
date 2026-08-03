@@ -146,8 +146,6 @@ $assets = [ordered]@{
         "visual_addons\effects\1 Water splashes\48x\1.png"
     "shoreline/effects/wave_start.png" =
         "visual_addons\effects\3 Waves\1Start.png"
-    "shoreline/effects/wave_end.png" =
-        "visual_addons\effects\3 Waves\1End.png"
     "shoreline/effects/shore_foam.png" =
         "visual_addons\effects\1 Water splashes\48x\2.png"
     "shoreline/background/layer_1.png" =

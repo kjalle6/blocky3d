@@ -263,10 +263,6 @@
                                              "source":  "visual_addons/effects/3 Waves/1Start.png",
                                              "sha256":  "fb53e126663313ccd98c18747ffe5fbbecb21fc7006561526149cc7ee7b46eb9"
                                          },
-    "shoreline/effects/wave_end.png":  {
-                                           "source":  "visual_addons/effects/3 Waves/1End.png",
-                                           "sha256":  "f5c003c2649a7715fd3e954f02cf64aa7add66aea492ed03f9693f6f6ec3a812"
-                                       },
     "shoreline/effects/shore_foam.png":  {
                                              "source":  "visual_addons/effects/1 Water splashes/48x/2.png",
                                              "sha256":  "6533a6a00dd6bb4c9d25c6544cc9a985eaa2ee2f71be100d8c9e1c7b6f1972f6"

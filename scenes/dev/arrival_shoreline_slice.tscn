@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3]
+[gd_scene load_steps=34 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="2_platform"]
@@ -15,7 +15,6 @@
 [ext_resource type="Script" path="res://scripts/presentation/pixel_water_death_splash_3d.gd" id="23_water_splash_script"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_shore_wave_3d.gd" id="24_shore_wave_script"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/effects/wave_start.png" id="24_wave_start"]
-[ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/effects/wave_end.png" id="24_wave_end"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/effects/shore_foam.png" id="24_shore_foam"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/tree_grounded.png" id="25_tree"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/props/transition_outcrop_tall.png" id="27_transition_outcrop_tall"]
