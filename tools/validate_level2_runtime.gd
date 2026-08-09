@@ -10,6 +10,7 @@ func _init() -> void:
 func _run() -> void:
 	var packed_scene := load("res://scenes/app/game_root.tscn") as PackedScene
 	var game_root := packed_scene.instantiate()
+	game_root.campaign = load("res://resources/regression/main_campaign.tres") as CampaignCatalog
 	game_root.persist_progression = false
 	root.add_child(game_root)
 	game_root.load_level(&"gaps_and_spikes")
@@ -113,6 +114,35 @@ func _validate_spike_geometry(level: LevelSession3D) -> void:
 			shape.size.y <= spike.spike_height * 0.5,
 			"Spike damage should stay in the lower half of the visible art."
 		)
+		for spike_sprite in spike.find_children("Spike*", "Sprite3D", false, false):
+			var sprite := spike_sprite as Sprite3D
+			assert(
+				is_equal_approx(
+					sprite.position.y - spike.spike_height * 0.5,
+					0.0
+				),
+				"Every spike visual must begin exactly at the walkable surface."
+			)
+		_assert_spike_art_has_no_base_bar(PixelSpikeRow3D.SPIKE_TEXTURE)
+
+
+func _assert_spike_art_has_no_base_bar(texture: Texture2D) -> void:
+	var image := texture.get_image()
+	assert(image != null)
+	var bottom_y := image.get_height() - 1
+	for sample_x in [4, 12, 20]:
+		var base_pixel := image.get_pixel(sample_x, bottom_y)
+		assert(base_pixel.a > 0.9)
+		assert(
+			base_pixel.get_luminance() > 0.18,
+			"The spike base must use its body colours, not a black plinth."
+		)
+	var coloured_tip := image.get_pixel(12, 1)
+	assert(coloured_tip.a > 0.9)
+	assert(
+		coloured_tip.get_luminance() > 0.18,
+		"The spike needs a coloured point inside its dark outline, not a black cap."
+	)
 
 
 func _validate_gap_spike_centering(level: LevelSession3D) -> void:

@@ -16,8 +16,8 @@ tint = Color(0.8, 0.9, 1, 0.6)
 cover_viewport_width = false
 repeat_spacing_pixels = 720.0
 fade_out_enabled = true
-fade_out_start_x = 18.0
-fade_out_end_x = 34.0
+fade_out_start_offset_x = 3.92
+fade_out_end_offset_x = 19.92
 
 [sub_resource type="Resource" id="Layer_cloud_puff"]
 script = ExtResource("2_layer")
@@ -29,8 +29,8 @@ tint = Color(0.78, 0.9, 1, 0.48)
 cover_viewport_width = false
 repeat_spacing_pixels = 900.0
 fade_out_enabled = true
-fade_out_start_x = 30.0
-fade_out_end_x = 48.0
+fade_out_start_offset_x = 15.92
+fade_out_end_offset_x = 33.92
 
 [sub_resource type="Resource" id="Layer_green_forest"]
 script = ExtResource("2_layer")
@@ -40,8 +40,8 @@ depth = -4.2
 offset_pixels = Vector2(-26, -36)
 tint = Color(1, 1, 1, 0.72)
 fade_in_enabled = true
-fade_in_start_x = 12.0
-fade_in_end_x = 27.0
+fade_in_start_offset_x = -2.08
+fade_in_end_offset_x = 12.92
 
 [resource]
 script = ExtResource("1_profile")

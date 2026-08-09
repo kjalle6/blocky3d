@@ -41,24 +41,32 @@ enum HorizontalRepeat {
 @export_range(0.0, 2048.0, 1.0) var repeat_spacing_pixels := 0.0
 @export_category("Camera-position visibility")
 @export var fade_in_enabled := false
-@export var fade_in_start_x := 0.0
-@export var fade_in_end_x := 0.0
+@export var fade_in_start_offset_x := 0.0
+@export var fade_in_end_offset_x := 0.0
 @export var fade_out_enabled := false
-@export var fade_out_start_x := 0.0
-@export var fade_out_end_x := 0.0
+@export var fade_out_start_offset_x := 0.0
+@export var fade_out_end_offset_x := 0.0
 
 
-func opacity_at(camera_x: float) -> float:
+func opacity_at(camera_x: float, transition_anchor_x: float) -> float:
 	var opacity := tint.a
 	if fade_in_enabled:
-		opacity *= smoothstep(fade_in_start_x, fade_in_end_x, camera_x)
+		opacity *= smoothstep(
+			transition_anchor_x + fade_in_start_offset_x,
+			transition_anchor_x + fade_in_end_offset_x,
+			camera_x
+		)
 	if fade_out_enabled:
 		opacity *= 1.0 - smoothstep(
-			fade_out_start_x,
-			fade_out_end_x,
+			transition_anchor_x + fade_out_start_offset_x,
+			transition_anchor_x + fade_out_end_offset_x,
 			camera_x
 		)
 	return clampf(opacity, 0.0, 1.0)
+
+
+func uses_transition_anchor() -> bool:
+	return fade_in_enabled or fade_out_enabled
 
 
 func repeat_step_pixels() -> float:
@@ -79,9 +87,9 @@ func validation_errors() -> PackedStringArray:
 		vertical_parallax < 0.0 or vertical_parallax > 1.0
 	):
 		errors.append("Vertical parallax must stay between zero and one.")
-	if fade_in_enabled and fade_in_end_x <= fade_in_start_x:
+	if fade_in_enabled and fade_in_end_offset_x <= fade_in_start_offset_x:
 		errors.append("Fade-in end must be after fade-in start.")
-	if fade_out_enabled and fade_out_end_x <= fade_out_start_x:
+	if fade_out_enabled and fade_out_end_offset_x <= fade_out_start_offset_x:
 		errors.append("Fade-out end must be after fade-out start.")
 	if texture != null and repeat_step_pixels() <= 0.0:
 		errors.append("Background repeat spacing must be positive.")

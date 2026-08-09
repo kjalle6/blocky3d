@@ -69,6 +69,7 @@ func _init() -> void:
 func _run() -> void:
 	var packed_scene := load("res://scenes/app/game_root.tscn") as PackedScene
 	var game_root := packed_scene.instantiate()
+	game_root.campaign = load("res://resources/regression/main_campaign.tres") as CampaignCatalog
 	game_root.persist_progression = false
 	root.add_child(game_root)
 	game_root.load_level(&"dash")
@@ -419,6 +420,9 @@ func _validate_first_gap_requires_dash() -> void:
 	_release_inputs()
 	var packed_scene := load("res://scenes/app/game_root.tscn") as PackedScene
 	var control_root := packed_scene.instantiate()
+	control_root.campaign = load(
+		"res://resources/regression/main_campaign.tres"
+	) as CampaignCatalog
 	control_root.persist_progression = false
 	root.add_child(control_root)
 	control_root.load_level(&"dash")

@@ -43,6 +43,7 @@ func _run() -> void:
 	)
 	var packed_scene := load("res://scenes/app/game_root.tscn") as PackedScene
 	var game_root := packed_scene.instantiate()
+	game_root.campaign = load("res://resources/regression/main_campaign.tres") as CampaignCatalog
 	game_root.persist_progression = false
 	root.add_child(game_root)
 	for frame in 8:

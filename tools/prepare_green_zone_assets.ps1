@@ -54,6 +54,8 @@ $assets = [ordered]@{
         "tilesets\green_zone\3 Objects\Other\Tree2.png"
     "props/tree_small.png" =
         "tilesets\green_zone\3 Objects\Other\Tree1.png"
+    "props/tree_canopy.png" =
+        "tilesets\green_zone\3 Objects\Other\Tree3.png"
     "props/bench.png" =
         "tilesets\green_zone\3 Objects\Benches\2.png"
     "props/bush.png" =
@@ -62,12 +64,30 @@ $assets = [ordered]@{
         "tilesets\green_zone\3 Objects\Bushes\13.png"
     "props/bush_small.png" =
         "tilesets\green_zone\3 Objects\Bushes\16.png"
+    "props/canopy_shrub_wide.png" =
+        "tilesets\green_zone\3 Objects\Bushes\17.png"
+    "props/canopy_shrub_slope.png" =
+        "tilesets\green_zone\3 Objects\Bushes\18.png"
+    "props/canopy_shrub_mid.png" =
+        "tilesets\green_zone\3 Objects\Bushes\19.png"
+    "props/canopy_shrub_small.png" =
+        "tilesets\green_zone\3 Objects\Bushes\20.png"
+    "props/hedge_low_left.png" =
+        "tilesets\green_zone\3 Objects\Bushes\9.png"
+    "props/hedge_low_right.png" =
+        "tilesets\green_zone\3 Objects\Bushes\12.png"
+    "props/hedge_mid_left.png" =
+        "tilesets\green_zone\3 Objects\Bushes\5.png"
+    "props/hedge_mid_right.png" =
+        "tilesets\green_zone\3 Objects\Bushes\8.png"
     "props/stone_small.png" =
         "tilesets\green_zone\3 Objects\Stones\2.png"
     "props/stone_medium.png" =
         "tilesets\green_zone\3 Objects\Stones\4.png"
     "props/fence.png" =
         "tilesets\green_zone\3 Objects\Fence\3.png"
+    "props/garden_gate_open.png" =
+        "tilesets\green_zone\3 Objects\Fence\2.png"
     "props/grass_tuft_sparse.png" =
         "tilesets\green_zone\3 Objects\Grass\5.png"
     "props/grass_tuft_thin.png" =
@@ -407,7 +427,8 @@ function New-PixelTerrainTransitionTriplet {
 
 foreach ($tree in @(
     @{ source = "props/tree.png"; destination = "props/tree_grounded.png" },
-    @{ source = "props/tree_small.png"; destination = "props/tree_small_grounded.png" }
+    @{ source = "props/tree_small.png"; destination = "props/tree_small_grounded.png" },
+    @{ source = "props/tree_canopy.png"; destination = "props/tree_canopy_grounded.png" }
 )) {
     $treeSourcePath = Join-Path $OutputRoot $tree.source
     $treeGroundedPath = Join-Path $OutputRoot $tree.destination

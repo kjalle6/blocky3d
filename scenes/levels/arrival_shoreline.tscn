@@ -1,0 +1,574 @@
+[gd_scene load_steps=49 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="2_platform"]
+[ext_resource type="Resource" path="res://resources/presentation/platform_styles/shoreline_sand.tres" id="3_sand_style"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/pixel_patrol_enemy.tscn" id="4_enemy"]
+[ext_resource type="PackedScene" path="res://scenes/level/pixel_chest_goal.tscn" id="5_goal"]
+[ext_resource type="PackedScene" path="res://scenes/pickups/double_jump_pickup.tscn" id="6_pickup"]
+[ext_resource type="PackedScene" path="res://scenes/level/level_checkpoint.tscn" id="7_checkpoint"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_water_strip_3d.gd" id="8_water"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/water/water_tiles.png" id="9_water_tiles"]
+[ext_resource type="Script" path="res://scripts/hazards/hazard_3d.gd" id="20_hazard"]
+[ext_resource type="Resource" path="res://resources/presentation/platform_styles/shoreline_to_green.tres" id="21_transition_style"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/effects/water_death_splash.png" id="22_water_splash"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_water_death_splash_3d.gd" id="23_water_splash_script"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_shore_wave_3d.gd" id="24_shore_wave_script"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/effects/wave_start.png" id="24_wave_start"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/effects/shore_foam.png" id="24_shore_foam"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/tree_grounded.png" id="25_tree"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/props/transition_outcrop_tall.png" id="27_transition_outcrop_tall"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/props/transition_outcrop_broad.png" id="28_transition_outcrop_broad"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/props/transition_outcrop.png" id="29_transition_outcrop"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/props/transition_outcrop_medium.png" id="30_transition_outcrop_medium"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/props/transition_outcrop_small.png" id="31_transition_outcrop_small"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/tree_small_grounded.png" id="32_tree_small"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/bush_low.png" id="33_bush_low"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/bush_small.png" id="34_bush_small"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/grass_tuft_sparse.png" id="35_grass_sparse"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/grass_tuft_thin.png" id="36_grass_thin"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/stone_medium.png" id="37_stone_medium"]
+[ext_resource type="Resource" path="res://resources/presentation/backgrounds/arrival_shoreline.tres" id="38_background_profile"]
+[ext_resource type="PackedScene" path="res://scenes/hazards/pixel_spike_row.tscn" id="39_spikes"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/bench.png" id="40_bench"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/grass_tuft_small.png" id="41_grass_small"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/stone_small.png" id="42_stone_small"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/hedge_low_left.png" id="43_hedge_low_left"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/hedge_low_right.png" id="44_hedge_low_right"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/hedge_mid_left.png" id="45_hedge_mid_left"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/hedge_mid_right.png" id="46_hedge_mid_right"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/garden_gate_open.png" id="47_gate"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/tree_canopy_grounded.png" id="48_tree_canopy"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/canopy_shrub_wide.png" id="49_canopy_shrub_wide"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/canopy_shrub_slope.png" id="50_canopy_shrub_slope"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/canopy_shrub_mid.png" id="51_canopy_shrub_mid"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/canopy_shrub_small.png" id="52_canopy_shrub_small"]
+
+[sub_resource type="BoxShape3D" id="Shape_kill_plane"]
+size = Vector3(184.32, 1, 8)
+
+[sub_resource type="BoxShape3D" id="Shape_shore_water"]
+size = Vector3(12.8, 5, 8)
+
+[sub_resource type="BoxShape3D" id="Shape_arrival_sand"]
+size = Vector3(14.08, 2.56, 2)
+
+[sub_resource type="BoxShape3D" id="Shape_green_rise"]
+size = Vector3(11.52, 3.84, 2)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_clean_gate"]
+atlas = ExtResource("47_gate")
+region = Rect2(1, 2, 33, 60)
+filter_clip = true
+
+[node name="ArrivalShoreline" instance=ExtResource("1_base")]
+
+[node name="Background" parent="." index="3"]
+profile = ExtResource("38_background_profile")
+transition_anchor_path = NodePath("../BackgroundTransitionAnchor")
+
+[node name="RouteExtent" parent="." index="2"]
+route_start_x = -5.12
+route_end_x = 174.08
+
+[node name="OpeningGroundCollision" type="StaticBody3D" parent="." index="3"]
+position = Vector3(7.04, -1.28, 0)
+
+[node name="Collision" type="CollisionShape3D" parent="OpeningGroundCollision" index="0"]
+shape = SubResource("Shape_arrival_sand")
+
+[node name="GreenRiseCollision" type="StaticBody3D" parent="." index="4"]
+position = Vector3(19.84, -1.28, 0)
+
+[node name="Collision" type="CollisionShape3D" parent="GreenRiseCollision" index="0"]
+shape = SubResource("Shape_green_rise")
+
+[node name="BackgroundTransitionAnchor" type="Marker3D" parent="." index="5"]
+position = Vector3(14.08, 0, 0)
+
+[node name="SandArrival" type="StaticBody3D" parent="Platforms" index="0"]
+position = Vector3(5.12, -1.28, 0)
+script = ExtResource("2_platform")
+size = Vector3(10.24, 2.56, 2)
+style = ExtResource("3_sand_style")
+collision_enabled = false
+cap_right_edge = false
+
+[node name="ShorelineTransition" type="StaticBody3D" parent="Platforms" index="1"]
+position = Vector3(12.16, -1.28, 0)
+script = ExtResource("2_platform")
+size = Vector3(3.84, 2.56, 2)
+style = ExtResource("21_transition_style")
+collision_enabled = false
+
+[node name="GreenApproach" type="StaticBody3D" parent="Platforms" index="2"]
+position = Vector3(19.84, -1.28, 0)
+script = ExtResource("2_platform")
+size = Vector3(11.52, 3.84, 2)
+collision_enabled = false
+
+[node name="ThresholdRun" type="StaticBody3D" parent="Platforms" index="3"]
+position = Vector3(34.56, -1.28, 0)
+script = ExtResource("2_platform")
+size = Vector3(11.52, 3.84, 2)
+
+[node name="ThresholdCrown" type="StaticBody3D" parent="Platforms" index="4"]
+position = Vector3(47.36, 3.2, 0)
+script = ExtResource("2_platform")
+size = Vector3(5.12, 1.28, 2)
+
+[node name="ThresholdLanding" type="StaticBody3D" parent="Platforms" index="5"]
+position = Vector3(59.52, -0.64, 0)
+script = ExtResource("2_platform")
+size = Vector3(10.24, 3.84, 2)
+
+[node name="ThornGardenEntry" type="StaticBody3D" parent="Platforms" index="6"]
+position = Vector3(73.6, -1.28, 0)
+script = ExtResource("2_platform")
+size = Vector3(10.24, 3.84, 2)
+
+[node name="ThornTerrace" type="StaticBody3D" parent="Platforms" index="8"]
+position = Vector3(90.24, 0, 0)
+script = ExtResource("2_platform")
+size = Vector3(7.68, 3.84, 2)
+
+[node name="ThornWall" type="StaticBody3D" parent="Platforms" index="10"]
+position = Vector3(103.04, 1.28, 0)
+script = ExtResource("2_platform")
+size = Vector3(7.68, 3.84, 2)
+
+[node name="ThornGardenExit" type="StaticBody3D" parent="Platforms" index="11"]
+position = Vector3(119.04, -1.28, 0)
+script = ExtResource("2_platform")
+size = Vector3(15.36, 3.84, 2)
+
+[node name="CanopyRoot" type="StaticBody3D" parent="Platforms" index="12"]
+position = Vector3(132.48, 0, 0)
+script = ExtResource("2_platform")
+size = Vector3(5.12, 2.56, 2)
+
+[node name="CanopyFork" type="StaticBody3D" parent="Platforms" index="13"]
+position = Vector3(141.44, 3.84, 0)
+script = ExtResource("2_platform")
+size = Vector3(3.84, 1.28, 2)
+
+[node name="CanopyRest" type="StaticBody3D" parent="Platforms" index="14"]
+position = Vector3(150.4, 1.92, 0)
+script = ExtResource("2_platform")
+size = Vector3(6.4, 2.56, 2)
+
+[node name="CanopyNeedle" type="StaticBody3D" parent="Platforms" index="15"]
+position = Vector3(159.36, 5.76, 0)
+script = ExtResource("2_platform")
+size = Vector3(2.56, 1.28, 2)
+
+[node name="CanopyCrown" type="StaticBody3D" parent="Platforms" index="16"]
+position = Vector3(168.96, 4.48, 0)
+script = ExtResource("2_platform")
+size = Vector3(7.68, 2.56, 2)
+
+[node name="TransitionTalus" type="Node3D" parent="Props" index="0"]
+
+[node name="TransitionOutcrop" type="Sprite3D" parent="Props/TransitionTalus" index="0"]
+position = Vector3(14.6, -0.95, 1.07)
+scale = Vector3(1.1, 1.2, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("29_transition_outcrop")
+shaded = false
+render_priority = 1
+
+[node name="TransitionShoulderBroad" type="Sprite3D" parent="Props/TransitionTalus" index="1"]
+position = Vector3(13.6, -1.2124, 1.035)
+scale = Vector3(0.72, 0.72, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("28_transition_outcrop_broad")
+shaded = false
+render_priority = 1
+
+[node name="TransitionBuriedBase" type="Sprite3D" parent="Props/TransitionTalus" index="2"]
+position = Vector3(11.55, -1.7296, 1.055)
+scale = Vector3(0.36, 0.36, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("27_transition_outcrop_tall")
+shaded = false
+render_priority = 1
+
+[node name="TransitionRockMedium" type="Sprite3D" parent="Props/TransitionTalus" index="3"]
+position = Vector3(10.25, -2, 1.06)
+scale = Vector3(0.75, 0.75, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("30_transition_outcrop_medium")
+shaded = false
+render_priority = 1
+
+[node name="TransitionRockSmall" type="Sprite3D" parent="Props/TransitionTalus" index="4"]
+position = Vector3(9.15, -2.216, 1.065)
+scale = Vector3(0.7, 0.7, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("31_transition_outcrop_small")
+shaded = false
+render_priority = 1
+
+[node name="TransitionPebble" type="Sprite3D" parent="Props/TransitionTalus" index="5"]
+position = Vector3(8.45, -2.3716, 1.067)
+scale = Vector3(0.42, 0.42, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("31_transition_outcrop_small")
+flip_h = true
+shaded = false
+render_priority = 1
+
+[node name="TransitionBush" type="Sprite3D" parent="Props" index="1"]
+position = Vector3(16.55, 0.946, 1.04)
+scale = Vector3(0.9, 0.9, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("33_bush_low")
+shaded = false
+
+[node name="ApproachTree" type="Sprite3D" parent="Props" index="2"]
+position = Vector3(23.35, 2.68, 0.96)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("32_tree_small")
+shaded = false
+
+[node name="ApproachTreeBush" type="Sprite3D" parent="Props" index="3"]
+position = Vector3(22.45, 0.84, 0.98)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("34_bush_small")
+shaded = false
+
+[node name="ApproachGrass" type="Sprite3D" parent="Props" index="4"]
+position = Vector3(24.55, 0.8, 1.02)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("35_grass_sparse")
+shaded = false
+
+[node name="ThresholdBush" type="Sprite3D" parent="Props" index="5"]
+position = Vector3(39.0, 0.912, 0.98)
+scale = Vector3(0.8, 0.8, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("33_bush_low")
+shaded = false
+
+[node name="ThresholdGrass" type="Sprite3D" parent="Props" index="6"]
+position = Vector3(33.9, 0.78, 1.02)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("36_grass_thin")
+shaded = false
+
+[node name="GardenEntryTree" type="Sprite3D" parent="Props" index="7"]
+position = Vector3(71.0, 2.68, 0.92)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("32_tree_small")
+shaded = false
+
+[node name="GardenEntryBush" type="Sprite3D" parent="Props" index="8"]
+position = Vector3(75.8, 0.84, 0.98)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("34_bush_small")
+shaded = false
+
+[node name="ThresholdLandingStone" type="Sprite3D" parent="Props" index="9"]
+position = Vector3(61.4, 1.62, 0.9)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("37_stone_medium")
+shaded = false
+render_priority = -1
+
+[node name="GardenExitBench" type="Sprite3D" parent="Props" index="10"]
+position = Vector3(116.5, 1.08, 0.94)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("40_bench")
+shaded = false
+
+[node name="GardenExitTree" type="Sprite3D" parent="Props" index="11"]
+position = Vector3(112.8, 2.68, 0.92)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("32_tree_small")
+shaded = false
+
+[node name="ThornWallGrass" type="Sprite3D" parent="Props" index="12"]
+position = Vector3(104.3, 3.28, 0.98)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("41_grass_small")
+shaded = false
+
+[node name="ThornTerraceHedgeLeftEnd" type="Sprite3D" parent="Props" index="13"]
+position = Vector3(87.04, 2.24, 0.96)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("43_hedge_low_left")
+shaded = false
+
+[node name="ThornEdgeStone" type="Sprite3D" parent="Props" index="14"]
+position = Vector3(78.0, 0.9, 0.9)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("42_stone_small")
+shaded = false
+
+[node name="ThresholdLandingTree" type="Sprite3D" parent="Props" index="15"]
+position = Vector3(63.0, 3.84, 0.92)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("25_tree")
+shaded = false
+
+[node name="GardenExitGrass" type="Sprite3D" parent="Props" index="16"]
+position = Vector3(120.2, 0.72, 0.98)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("41_grass_small")
+shaded = false
+
+[node name="ThresholdLandingBush" type="Sprite3D" parent="Props" index="18"]
+position = Vector3(56.0, 1.48, 0.96)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("34_bush_small")
+shaded = false
+
+[node name="ThornTerraceHedgeLeftCap" type="Sprite3D" parent="Props" index="19"]
+position = Vector3(88.32, 2.24, 0.98)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("44_hedge_low_right")
+shaded = false
+
+[node name="ThornTerraceGrass" type="Sprite3D" parent="Props" index="20"]
+position = Vector3(89.4, 2.06, 1.0)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("36_grass_thin")
+shaded = false
+
+[node name="ThornTerraceHedgeRightEnd" type="Sprite3D" parent="Props" index="21"]
+position = Vector3(92.16, 2.24, 0.96)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("43_hedge_low_left")
+shaded = false
+
+[node name="ThornWallHedgeLeftEnd" type="Sprite3D" parent="Props" index="22"]
+position = Vector3(99.84, 3.7, 0.96)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("45_hedge_mid_left")
+shaded = false
+
+[node name="ThornWallHedgeLeftCap" type="Sprite3D" parent="Props" index="23"]
+position = Vector3(101.12, 3.7, 0.98)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("46_hedge_mid_right")
+shaded = false
+
+[node name="ThornTerraceHedgeRightCap" type="Sprite3D" parent="Props" index="24"]
+position = Vector3(93.44, 2.24, 0.98)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("44_hedge_low_right")
+shaded = false
+
+[node name="ThornWallHedgeRightEnd" type="Sprite3D" parent="Props" index="25"]
+position = Vector3(104.96, 3.7, 0.96)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("45_hedge_mid_left")
+shaded = false
+
+[node name="ThornWallHedgeRightCap" type="Sprite3D" parent="Props" index="26"]
+position = Vector3(106.24, 3.7, 0.98)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("46_hedge_mid_right")
+shaded = false
+
+[node name="ThornTerraceGate" type="Sprite3D" parent="Props" index="27"]
+position = Vector3(90.24, 2.9044, 1.34)
+scale = Vector3(1.45, 0.83, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = SubResource("AtlasTexture_clean_gate")
+shaded = false
+render_priority = 12
+
+[node name="ThornWallGate" type="Sprite3D" parent="Props" index="28"]
+position = Vector3(103.04, 4.2996, 1.34)
+scale = Vector3(1.55, 0.92, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = SubResource("AtlasTexture_clean_gate")
+flip_h = true
+shaded = false
+render_priority = 12
+
+[node name="CanopyAnchorTree" type="Sprite3D" parent="Props" index="29"]
+position = Vector3(134.2, 5.06, 0.86)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("48_tree_canopy")
+shaded = false
+render_priority = -2
+
+[node name="CanopyRootShrub" type="Sprite3D" parent="Props" index="30"]
+position = Vector3(130.8, 1.66, 0.94)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("52_canopy_shrub_small")
+shaded = false
+render_priority = -1
+
+[node name="CanopyForkShrub" type="Sprite3D" parent="Props" index="31"]
+position = Vector3(140.32, 4.98, 0.94)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("49_canopy_shrub_wide")
+shaded = false
+render_priority = -1
+
+[node name="CanopyRestTree" type="Sprite3D" parent="Props" index="32"]
+position = Vector3(151.1, 5.76, 0.88)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("25_tree")
+flip_h = true
+shaded = false
+render_priority = -2
+
+[node name="CanopyRestShrub" type="Sprite3D" parent="Props" index="33"]
+position = Vector3(148.1, 3.64, 0.94)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("51_canopy_shrub_mid")
+shaded = false
+render_priority = -1
+
+[node name="CanopyCrownTree" type="Sprite3D" parent="Props" index="34"]
+position = Vector3(167.2, 7.8, 0.88)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("32_tree_small")
+shaded = false
+render_priority = -2
+
+[node name="CanopyCrownShrub" type="Sprite3D" parent="Props" index="35"]
+position = Vector3(171.0, 6.24, 0.94)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("50_canopy_shrub_slope")
+flip_h = true
+shaded = false
+render_priority = -1
+
+[node name="ShoreWater" type="Node3D" parent="Hazards" index="0"]
+position = Vector3(-6.4, 0, 0)
+script = ExtResource("8_water")
+width = 12.8
+tile_sheet = ExtResource("9_water_tiles")
+body_rows = 3
+
+[node name="ShoreWaterContact" type="Area3D" parent="Hazards" index="1"]
+position = Vector3(-6.4, -2.75, 0)
+script = ExtResource("20_hazard")
+death_kind = &"water"
+
+[node name="Collision" type="CollisionShape3D" parent="Hazards/ShoreWaterContact" index="0"]
+shape = SubResource("Shape_shore_water")
+
+[node name="ThresholdSpikes" parent="Hazards" index="2" instance=ExtResource("39_spikes")]
+position = Vector3(31.8, 0.64, 0)
+row_width = 1.8
+
+[node name="ThornBasinASpikes" parent="Hazards" index="3" instance=ExtResource("39_spikes")]
+position = Vector3(82.56, -2.4, 0)
+row_width = 6.2
+
+[node name="ThornPocketSpikes" parent="Hazards" index="4" instance=ExtResource("39_spikes")]
+position = Vector3(96.64, -2.4, 0)
+row_width = 4.0
+
+[node name="PickupCheckpoint" parent="Checkpoints" index="0" instance=ExtResource("7_checkpoint")]
+position = Vector3(36.2, 0.64, 0)
+route_index = 2
+
+[node name="ThornGardenExitCheckpoint" parent="Checkpoints" index="1" instance=ExtResource("7_checkpoint")]
+position = Vector3(120.0, 0.64, 0)
+route_index = 3
+
+[node name="SpawnPoint" parent="." index="8"]
+position = Vector3(1.8, 0.7, 0)
+
+[node name="Player" parent="." index="9"]
+position = Vector3(1.8, 0.7, 0)
+
+[node name="GameplayCamera" parent="." index="10"]
+camera_height = 3.98
+target_height = 3.98
+maximum_center_x = 165.05
+
+[node name="KillPlane" parent="." index="11"]
+position = Vector3(84.48, -4.34, 0)
+
+[node name="Collision" parent="KillPlane" index="0"]
+shape = SubResource("Shape_kill_plane")
+
+[node name="DoubleJumpPickup" parent="." index="12" instance=ExtResource("6_pickup")]
+position = Vector3(36.2, 0.64, 0)
+
+[node name="ApproachPatrol" parent="." index="13" instance=ExtResource("4_enemy")]
+position = Vector3(20.7, 1.06, 0)
+patrol_speed = 1.7
+
+[node name="ThresholdLandingPatrol" parent="." index="14" instance=ExtResource("4_enemy")]
+position = Vector3(58.2, 1.66, 0)
+patrol_speed = 1.7
+
+[node name="ThornWallPatrol" parent="." index="15" instance=ExtResource("4_enemy")]
+position = Vector3(102.8, 3.58, 0)
+patrol_speed = 1.7
+starts_moving_right = false
+
+[node name="Goal" parent="." index="25" instance=ExtResource("5_goal")]
+position = Vector3(170.88, 5.76, 0)
+
+[node name="WaterDeathSplash" type="Node3D" parent="." index="26"]
+script = ExtResource("23_water_splash_script")
+player_path = NodePath("../Player")
+
+[node name="Sprite" type="Sprite3D" parent="WaterDeathSplash" index="0"]
+position = Vector3(0, 0.64, 1.22)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("22_water_splash")
+shaded = false
+render_priority = 12
+
+[node name="ShoreWave" type="Node3D" parent="." index="27"]
+position = Vector3(-6.4, 0, 0.98)
+script = ExtResource("24_shore_wave_script")
+crest_texture = ExtResource("24_wave_start")
+foam_texture = ExtResource("24_shore_foam")
+crest_offsets_x = PackedFloat32Array(2, 4, 5.7)
+crest_delays = PackedFloat32Array(0, 2.1, 4)
+crest_submerged_depths = PackedFloat32Array(0.4, 0.35, 0.3)
+
+[editable path="Player"]

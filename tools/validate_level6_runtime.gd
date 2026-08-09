@@ -14,6 +14,7 @@ func _init() -> void:
 func _run() -> void:
 	var packed_scene := load("res://scenes/app/game_root.tscn") as PackedScene
 	var game_root := packed_scene.instantiate()
+	game_root.campaign = load("res://resources/regression/main_campaign.tres") as CampaignCatalog
 	game_root.persist_progression = false
 	root.add_child(game_root)
 	game_root.load_level(&"green_zone_finale")
@@ -60,7 +61,7 @@ func _validate_identity_and_entry_policy(
 	level: LevelSession3D,
 	player: PlayerCharacter
 ) -> void:
-	assert(game_root.current_world_definition.world_id == &"green_zone")
+	assert(game_root.current_world_definition.world_id == &"green_zone_regression")
 	assert(game_root.current_level_definition.level_id == &"green_zone_finale")
 	assert(game_root.current_level_definition.display_number == 6)
 	assert(level.name == "World01Level06")

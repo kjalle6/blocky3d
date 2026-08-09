@@ -11,6 +11,7 @@ func _init() -> void:
 func _run() -> void:
 	var packed_scene := load("res://scenes/app/game_root.tscn") as PackedScene
 	var game_root := packed_scene.instantiate()
+	game_root.campaign = load("res://resources/regression/main_campaign.tres") as CampaignCatalog
 	assert(game_root.developer_fresh_level_runs)
 	assert(game_root.persist_progression)
 	root.add_child(game_root)

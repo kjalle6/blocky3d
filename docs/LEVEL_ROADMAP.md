@@ -1,8 +1,8 @@
 # Level roadmap
 
-This document separates the currently running prototype baseline from the
-intended campaign. The prototypes prove mechanics; they do not dictate the
-final number, size, or order of levels.
+This document separates the production campaign from the protected prototype
+baseline. The prototypes prove mechanics; they do not dictate the final number,
+size, or order of levels.
 
 The Python game at
 `C:\Users\kappe\Code\platformertwo\platformersecond` remains the primary idea
@@ -12,7 +12,8 @@ reference. Godot is canonical.
 
 ## Current implementation
 
-Six short Green Zone levels are playable and validated:
+Arrival / Shoreline is the only current production campaign entry. Six short
+Green Zone prototypes remain playable through a separate regression catalog:
 
 | Prototype | Proven material | Migration role |
 | --- | --- | --- |
@@ -24,9 +25,10 @@ Six short Green Zone levels are playable and validated:
 | 6: Green Zone Finale | Full-kit combinations and capstone route fragments | Material for new Level 3 |
 
 These scenes and their focused tests remain protected during re-authoring. They
-are temporary regression evidence, not six finished campaign levels. Once the
-three replacement levels preserve the useful contracts, obsolete scenes, menu
-entries, captures, and tests are removed together. Git is the long-term archive.
+are regression evidence, not six finished campaign levels and not production
+selector entries. Once the replacement campaign preserves every useful
+contract, obsolete fixtures, captures, and tests are removed together. Git is
+the long-term archive.
 
 ## Target World 1 structure
 
@@ -38,7 +40,7 @@ larger cyberpunk setting.
 
 | Target level | Core arc | New capability | Status |
 | --- | --- | --- | --- |
-| 1: Arrival / Shoreline | Classic fundamentals grow into an aerial route | Double Jump | Opening slice reviewed and locked; camera, background rig, and shoreline surf implemented; ready to expand |
+| 1: Arrival / Shoreline | Classic fundamentals grow into an aerial route | Double Jump | Shoreline, Green Threshold, and Thorn Garden authored; the technically traversable Canopy draft was rejected visually and is the active rebuild milestone |
 | 2: Overgrown Coastal Ascent | Horizontal travel turns upward, then accelerates | Wall Jump and Dash | Planned from proven prototypes |
 | 3: Green Zone Finale | Full-kit mastery, saws, enemy escalation, gun lesson, and boss | Limited firearm | Planned concept |
 
@@ -54,26 +56,66 @@ a tutorial interface:
 1. arrive in a calm, readable beach/green-zone space;
 2. establish running, variable jump height, gaps, and fast restart;
 3. introduce one familiar patrol through jump-over, stomp, or knife options;
-4. establish fair spikes and a protected checkpoint;
-5. award Double Jump in a safe position;
-6. require it immediately for height, then later for distance and timing;
-7. finish with a short proof that combines the established vocabulary.
+4. award Double Jump beside a protected checkpoint;
+5. require it immediately for height and then distance;
+6. establish fair spike rhythms and a second landmark checkpoint;
+7. develop Double Jump through height, distance, and short-release timing;
+8. mix in a flow encounter, final checkpoint, spike recap, and combined finish.
 
-The first production step is now a development-only polished 20-30 second slice
-containing the arrival, one ordinary traversal beat, one patrol encounter, the
-Double Jump pickup, and immediate height and distance proofs. It uses shoreline
-sand and water against the Green Zone background, then joins directly into the
-existing Green Zone terrain. Grounded land now uses the complete source-tile
-grammar: top and root rows, dark deep fill where needed, and a proper bottom
-cap instead of repeated body art. The Green Zone side rises half a tile above
-the beach at a scaled mossy outcrop, with low foliage and a smaller tree
-carrying the transition into the zone without blocking actors. That
-ordinary-jump step is real collision, while the entire downstream route moves
-with it so the existing gaps and Double Jump proofs keep their established
-measurements. Structural,
-session-isolation, real-input, legacy-regression, and 1080p capture checks pass.
-Hands-on review has passed: platform scale, prop grounding, and opening pace
-are locked, and expansion builds on this route.
+The production level is being authored in reviewable slices rather than padded
+to its target runtime in one pass. Its locked opening includes the shoreline,
+one ordinary traversal beat, and one patrol encounter. Green Threshold adds a
+short readable thorn row, protects the Double Jump unlock, then asks for an
+immediate height proof and a landing encounter. Thorn Garden develops that
+ability through two sunken lethal beds, raised recovery terrain, an enemy perch,
+and a committed descent to a landmark checkpoint. The first Canopy Ascent draft
+adds five technically legal landings, but hands-on review rejected its mostly
+horizontal floating-block composition and complete trees placed on individual
+islands. It remains only as a disposable implementation checkpoint while the
+section is rebuilt. Ravine, grove, and finale material remain planned rather
+than present.
+
+#### Canopy Ascent rebuild contract
+
+Canopy Ascent is the first real vertical-presentation milestone, not another
+short platform phrase:
+
+1. Begin at the Thorn Garden exit without changing any earlier route geometry,
+   checkpoint behavior, camera composition, or background timing.
+2. Replace the current five-landing draft with an upward-dominant climb. Small
+   horizontal switchbacks may shape jumps, but progress must visibly be more
+   vertical than horizontal for a sustained section.
+3. At minimum, exceed twice the rejected draft's meaningful traversal length
+   and twice its vertical gain. This is a floor, not permission to pad the route
+   with a repeated staircase; every landing must change timing, correction,
+   recovery, or route reading.
+4. Remove the pattern of complete tree sprites standing on floating terrain.
+   Compose trunks, branches, and crowns as continuous multi-depth forest masses
+   behind the route. Large forms may begin below or beyond the viewport and be
+   deliberately cropped so the camera reveals progressively more treetop as it
+   climbs.
+5. Activate vertical camera follow through a scene-authored Canopy region. A
+   jump before that region must not disturb the approved horizontal framing.
+6. Drive canopy presentation from sustained rendered camera height, not raw
+   player Y. Distant forest, midground trunks, nearer foliage, and the eventual
+   upper cloud band receive explicit depth, parallax, and height windows. Do not
+   fake approach by scaling one tree during play.
+7. Treat foreground foliage as optional edge framing. It must never obscure a
+   player, enemy, landing, hazard, or implied collision surface.
+8. Review deterministic low-, middle-, and high-ascent captures before adding
+   combat or further route sections. Automated traversal proves legality only;
+   the user judges difficulty, pacing, and whether the climb reads as one place.
+
+The opening uses shoreline sand and water against the Green Zone background,
+then joins directly into existing Green Zone terrain. Grounded land uses the
+complete source-tile grammar: top and root rows, dark deep fill where needed,
+and a proper bottom cap instead of repeated body art. The Green Zone side rises
+half a tile above the beach at a scaled mossy outcrop, with low foliage and a
+smaller tree carrying the transition into the zone without blocking actors.
+Structural and session-isolation checks own technical correctness. Automated
+traversal may prove that legal inputs can complete the current route, but it
+does not approve difficulty, fairness, pacing, or feel. Those remain gated on
+normal-speed human playtesting before the next section is authored.
 
 The arrival water uses the beach pack's synchronized tile animation. Three
 authored crests repeat on a fixed cycle, so the surf is deterministic and
@@ -178,12 +220,12 @@ other asset may be borrowed when it fits the local composition.
 
 ### Needed for new Level 1
 
-1. Completed: keep the candidate isolated from canonical campaign progression
-   while preserving all six prototypes.
+1. Completed: promote Arrival / Shoreline into the production campaign while
+   preserving all six prototypes in a separate regression catalog.
 2. Completed: add reusable typed platform styles without changing the shared
    1.28-metre gameplay grid.
 3. Completed: curate only the beach/green-zone art used by the opening slice.
-4. Completed: build and capture the 20-30 second slice at 1920x1080.
+4. Completed: build and capture the opening slice at 1920x1080.
 5. Completed: validate movement, collision, session-local unlock/checkpoint
    behavior, camera bounds, prop grounding, route completion, and legacy
    regressions.
@@ -197,11 +239,18 @@ other asset may be borrowed when it fits the local composition.
    pixel scale, breaking at the sand and handing off to a splash. Sprites anchor
    on the art's own waterline and visible leading edge rather than on frame
    bounds.
-9. Before expanding Arrival, add a named scene-owned background transition
+9. Completed: add a named scene-owned background transition
    anchor at the shoreline/Green Zone seam. Express the forest and cloud fade
    windows as offsets from that anchor, and validate that moving the anchor
    keeps presentation synchronized with the motivating terrain.
-10. Expand the approved route into the complete Arrival / Shoreline level.
+10. In progress: rebuild the rejected Canopy draft to the contract above. The
+    present geometry is a commit-safe technical scaffold, not approved content.
+11. Next: add the minimum reusable scene-authored vertical camera-region and
+    camera-height background-transition contracts required by that rebuild.
+12. Then: capture and inspect the ascent at low, middle, and high elevations,
+    run structural and real-input validation, and hand the complete section to
+    the user for difficulty, fairness, pacing, readability, and composition
+    review. Bot failure alone must never authorize easier geometry.
 
 ### Needed before the finale
 
@@ -241,7 +290,10 @@ A level is complete when:
 - decoration never hides gameplay or implies false collision;
 - reusable behavior is not hidden in a level-specific patch;
 - focused runtime and input-driven route validation cover lasting contracts;
-- visual captures and hands-on playtesting agree.
+- visual captures and hands-on playtesting agree;
+- automated completion is treated as technical evidence, never as the
+  difficulty authority. If a legal route defeats the bot, improve the bot or
+  flag the case for human review rather than silently softening the level.
 
 ## Definition of done for a player ability
 
@@ -258,13 +310,14 @@ level. It must also:
 
 ## Current review gate
 
-The new Level 1 opening slice is implemented as a development-only candidate,
-not yet a production campaign entry. Hands-on review has passed and its
-presentation is locked, so the next action is expansion. It still deliberately
-excludes guns, crafting, saws, spikes, and new enemy
-families: its job is to prove the new campaign scale and presentation using
-mechanics that already feel good. Extend this same route into the complete
-Arrival / Shoreline level instead of starting another prototype.
-The background transition anchor is the first required implementation step of
-that expansion so the approved shoreline composition cannot drift away from
-later geometry edits.
+Arrival / Shoreline is now the production campaign's Level 1. The shoreline,
+Green Threshold, and Thorn Garden form the current authored baseline. The first
+Canopy Ascent attempt is technically validated but visually rejected and must
+be replaced according to the rebuild contract; it is not an approved review
+slice. Automation checks loading, collision support, hazards, checkpoints,
+reset, completion, camera/background coverage, and visual regressions without
+tuning the route around bot skill.
+The user owns the difficulty, fairness, pacing, and feel verdict after playing
+the build. Tune reported beats in place, then choose the next section; do not
+add new systems or begin Level 2 until Level 1 is accepted. Guns, crafting,
+saws, secrets, currency, lives, and new enemy families remain outside Level 1.

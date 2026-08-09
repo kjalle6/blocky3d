@@ -1,12 +1,14 @@
 [gd_resource type="Resource" script_class="LevelDefinition" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/campaign/level_definition.gd" id="1_definition"]
-[ext_resource type="PackedScene" path="res://scenes/levels/level_01_pixel.tscn" id="2_scene"]
+[ext_resource type="PackedScene" path="res://scenes/levels/arrival_shoreline.tscn" id="2_scene"]
 
 [resource]
 script = ExtResource("1_definition")
-level_id = &"fundamentals"
+level_id = &"arrival_shoreline"
 display_number = 1
-title = "Fundamentals"
-lesson = "Run, jump, cross gaps, handle the first patrol, and reach the finish."
+title = "Arrival / Shoreline"
+lesson = "Arrive on the tutorial island, establish the fundamentals, unlock Double Jump, and prove it through the Green Zone."
 scene = ExtResource("2_scene")
+available_abilities = Array[StringName]([&"double_jump"])
+required_abilities = Array[StringName]([&"double_jump"])

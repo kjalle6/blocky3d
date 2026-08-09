@@ -15,16 +15,22 @@ remain read-only design references.
 
 ## Current state
 
-- Six short Green Zone prototype levels validate Fundamentals, Gaps & Spikes,
-  Double Jump, Wall Jump, Dash, and full-kit movement
-- Those six levels are temporary regression evidence, not the final World 1
+- Arrival / Shoreline is the first production campaign level. Its reviewed
+  shoreline now leads into the first production passes of Green Threshold and
+  Thorn Garden. The current Canopy Ascent geometry is a technically traversable
+  composition draft, not approved content; its replacement is the active
+  milestone
+- Six earlier Green Zone prototype levels remain in a separate regression
+  catalog to validate Fundamentals, Gaps & Spikes, Double Jump, Wall Jump,
+  Dash, and full-kit movement
 - World 1 is being re-authored as approximately three substantial levels:
   Arrival / Shoreline, Overgrown Coastal Ascent, and Green Zone Finale
-- A development-only 20-30 second Arrival / Shoreline candidate is playable
-  from the selector and has passed structural, real-input, and 1080p visual QA
+- The production selector currently exposes Arrival / Shoreline; Animation Lab
+  remains the only development-tool entry
 - A reusable profile-driven pixel-background rig provides native-scale,
   seam-safe horizontal coverage, authored coastal-to-green transitions, and
-  stable framing during vertical camera travel
+  stable framing during vertical camera travel. Canopy Ascent will extend this
+  with scene-authored vertical camera regions and height-aware layered parallax
 - The intended finale adds moving saws, a limited firearm lesson, and a simple
   first boss while keeping melee viable
 - Typed world catalog and world-grouped mouse or `W`/`S` + `Enter` level
@@ -34,8 +40,9 @@ remain read-only design references.
 - Development mode starts every level from its fresh level-defined entry state,
   then retains session abilities through death and `R`
 - 1920x1080 presentation baseline
-- Next milestone: hands-on review of the slice, then expansion into the complete
-  re-authored Level 1
+- Next milestone: rebuild Canopy Ascent as a substantially longer, primarily
+  vertical climb through continuous layered tree masses, then review its low,
+  middle, and high compositions at normal speed
 
 The three living design documents are:
 

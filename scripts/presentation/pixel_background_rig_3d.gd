@@ -14,11 +14,15 @@ class RuntimeLayer:
 ## Scene-load configuration. Authored levels select a profile resource before
 ## this node enters the tree; live profile replacement is intentionally absent.
 @export var profile: PixelBackgroundProfile
+## Scene-owned landmark that keeps camera-position fades tied to the terrain
+## transition that motivates them. Profiles store offsets from this anchor.
+@export var transition_anchor_path: NodePath
 
 var _camera: PixelSideCamera3D
 var _runtime_layers: Array[RuntimeLayer] = []
 var _reference_ready := false
 var _generated_root: Node3D
+var _transition_anchor: Node3D
 
 
 func _ready() -> void:
@@ -30,6 +34,7 @@ func _ready() -> void:
 		"%s has an invalid background profile:\n%s"
 		% [name, "\n".join(profile_errors)]
 	)
+	_resolve_transition_anchor()
 	_build_layers()
 
 
@@ -122,7 +127,10 @@ func _update_layer(
 	var first_panel_index := floori(
 		(view_left - content_center_x + texture_width * 0.5) / repeat_step
 	) - 1
-	var opacity := layer.opacity_at(_camera.global_position.x)
+	var opacity := layer.opacity_at(
+		_camera.global_position.x,
+		_transition_anchor_global_x()
+	)
 	for copy_index in runtime.copies.size():
 		var sprite := runtime.copies[copy_index]
 		if copy_index >= required_copies:
@@ -201,6 +209,28 @@ func _ensure_copy_count(
 		sprite.render_priority = -100 + layer_index
 		runtime.root.add_child(sprite)
 		runtime.copies.append(sprite)
+
+
+func _resolve_transition_anchor() -> void:
+	var needs_anchor := false
+	for layer in profile.layers:
+		needs_anchor = needs_anchor or layer.uses_transition_anchor()
+	if not needs_anchor:
+		return
+	assert(
+		not transition_anchor_path.is_empty(),
+		"%s requires a scene-owned transition anchor for faded layers." % name
+	)
+	_transition_anchor = get_node_or_null(transition_anchor_path) as Node3D
+	assert(
+		_transition_anchor != null,
+		"%s could not resolve transition anchor '%s'."
+		% [name, transition_anchor_path]
+	)
+
+
+func _transition_anchor_global_x() -> float:
+	return _transition_anchor.global_position.x if _transition_anchor != null else 0.0
 
 
 func _screen_center_on_depth(depth: float) -> Vector3:

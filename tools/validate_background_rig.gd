@@ -22,15 +22,16 @@ func _run() -> void:
 	await process_frame
 
 	var arrival_definition := load(
-		"res://resources/dev/arrival_shoreline_slice.tres"
+		"res://resources/campaign/level_01.tres"
 	) as LevelDefinition
-	game_root.load_developer_level(arrival_definition)
+	game_root.load_level(arrival_definition.level_id)
 	await process_frame
 	var arrival := game_root.current_level as LevelSession3D
 	for frame in 3:
 		await process_frame
 	_validate_arrival_projection(arrival)
 	_validate_profile_and_imports(arrival.background.profile)
+	_validate_transition_anchor(arrival)
 
 	var camera := arrival.camera as PixelSideCamera3D
 	var background := arrival.background as PixelBackgroundRig3D
@@ -103,6 +104,7 @@ func _run() -> void:
 	root.content_scale_size = OUTPUT_SIZE
 	root.size = OUTPUT_SIZE
 	await process_frame
+	game_root.campaign = load("res://resources/regression/main_campaign.tres") as CampaignCatalog
 	await _validate_vertical_fixture(game_root, &"wall_jump", 14.5)
 	await _validate_vertical_fixture(game_root, &"green_zone_finale", 16.5)
 
@@ -181,6 +183,74 @@ func _validate_profile_and_imports(profile: PixelBackgroundProfile) -> void:
 		assert("compress/mode=0" in import_text)
 		assert("mipmaps/generate=false" in import_text)
 		assert("\"vram_texture\": false" in import_text)
+
+
+func _validate_transition_anchor(level: LevelSession3D) -> void:
+	var background := level.background as PixelBackgroundRig3D
+	var camera := level.camera as PixelSideCamera3D
+	var anchor := level.get_node("BackgroundTransitionAnchor") as Node3D
+	assert(anchor != null)
+	assert(
+		background.transition_anchor_path
+		== NodePath("../BackgroundTransitionAnchor")
+	)
+	assert(is_equal_approx(anchor.global_position.x, 14.08))
+	var expected_offsets := [
+		Vector2(3.92, 19.92),
+		Vector2(15.92, 33.92),
+		Vector2(-2.08, 12.92),
+	]
+	for layer_index in background.profile.layers.size():
+		var layer := background.profile.layers[layer_index]
+		assert(layer.uses_transition_anchor())
+		var actual_offsets := (
+			Vector2(
+				layer.fade_in_start_offset_x,
+				layer.fade_in_end_offset_x
+			)
+			if layer.fade_in_enabled
+			else Vector2(
+				layer.fade_out_start_offset_x,
+				layer.fade_out_end_offset_x
+			)
+		)
+		assert(actual_offsets.is_equal_approx(expected_offsets[layer_index]))
+
+	_set_camera_center(level, 23.0)
+	var original_opacities := PackedFloat32Array()
+	for layer_index in background.runtime_layer_count():
+		original_opacities.append(
+			background.runtime_copies(layer_index)[0].modulate.a
+		)
+	anchor.position.x += 6.4
+	background.snap_to_camera()
+	var changed_layer := false
+	for layer_index in background.runtime_layer_count():
+		var expected_opacity := background.profile.layers[layer_index].opacity_at(
+			camera.global_position.x,
+			anchor.global_position.x
+		)
+		var actual_opacity := (
+			background.runtime_copies(layer_index)[0].modulate.a
+		)
+		assert(absf(actual_opacity - expected_opacity) < 0.001)
+		changed_layer = (
+			changed_layer
+			or absf(actual_opacity - original_opacities[layer_index]) > 0.01
+		)
+	assert(
+		changed_layer,
+		"Moving the terrain transition anchor must shift its background fades."
+	)
+	anchor.position.x -= 6.4
+	background.snap_to_camera()
+	for layer_index in background.runtime_layer_count():
+		assert(
+			absf(
+				background.runtime_copies(layer_index)[0].modulate.a
+				- original_opacities[layer_index]
+			) < 0.001
+		)
 
 
 func _set_camera_center(level: LevelSession3D, center_x: float) -> void:

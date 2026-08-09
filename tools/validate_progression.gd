@@ -13,14 +13,14 @@ func _run() -> void:
 	assert(not PlayerAbility.is_known(&"legacy_super_jump"))
 
 	var progress := GameProgress.new()
-	assert(progress.complete_level(&"fundamentals"))
-	assert(not progress.complete_level(&"fundamentals"))
+	assert(progress.complete_level(&"arrival_shoreline"))
+	assert(not progress.complete_level(&"arrival_shoreline"))
 	assert(progress.complete_level(&"green_zone_finale"))
 	assert(progress.unlock_ability(PlayerAbility.DOUBLE_JUMP))
 	assert(not progress.unlock_ability(PlayerAbility.DOUBLE_JUMP))
 	var serialized := progress.to_dictionary()
 	var restored := GameProgress.from_dictionary(serialized)
-	assert(restored.has_completed(&"fundamentals"))
+	assert(restored.has_completed(&"arrival_shoreline"))
 	assert(restored.has_completed(&"green_zone_finale"))
 	assert(restored.owns_ability(PlayerAbility.DOUBLE_JUMP))
 
@@ -29,14 +29,14 @@ func _run() -> void:
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(test_save_path))
 	var first_store := ProgressionStore.new()
 	first_store.save_path = test_save_path
-	first_store.mark_level_completed(&"fundamentals")
+	first_store.mark_level_completed(&"arrival_shoreline")
 	first_store.mark_level_completed(&"green_zone_finale")
 	first_store.unlock_ability(PlayerAbility.DOUBLE_JUMP)
 	assert(FileAccess.file_exists(test_save_path))
 	var second_store := ProgressionStore.new()
 	second_store.save_path = test_save_path
 	second_store.load_progress()
-	assert(second_store.has_completed(&"fundamentals"))
+	assert(second_store.has_completed(&"arrival_shoreline"))
 	assert(second_store.has_completed(&"green_zone_finale"))
 	assert(second_store.owns_ability(PlayerAbility.DOUBLE_JUMP))
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(test_save_path))
@@ -83,75 +83,30 @@ func _run() -> void:
 	assert(green_zone.display_number == 1)
 	assert(green_zone.title == "Green Zone")
 	assert(green_zone.theme_id == &"green_zone")
-	assert(green_zone.ordered_levels().size() == 6)
-	assert(catalog.ordered_levels().size() == 6)
-	assert(catalog.ordered_levels()[0].level_id == &"fundamentals")
-	assert(catalog.ordered_levels()[1].level_id == &"gaps_and_spikes")
-	assert(catalog.ordered_levels()[2].level_id == &"double_jump")
-	assert(catalog.ordered_levels()[3].level_id == &"wall_jump")
-	assert(catalog.ordered_levels()[4].level_id == &"dash")
-	assert(catalog.ordered_levels()[5].level_id == &"green_zone_finale")
-	assert(catalog.find_level(&"green_zone", 1).available_abilities.is_empty())
-	assert(catalog.find_level(&"green_zone", 2).available_abilities.is_empty())
-	assert(
-		catalog.find_level(&"green_zone", 3).available_abilities
-		== [PlayerAbility.DOUBLE_JUMP]
-	)
-	assert(
-		catalog.find_level(&"green_zone", 3).required_abilities
-		== [PlayerAbility.DOUBLE_JUMP]
-	)
-	assert(
-		catalog.find_level(&"green_zone", 4).assumed_owned_abilities
-		== [PlayerAbility.DOUBLE_JUMP]
-	)
-	assert(
-		catalog.find_level(&"green_zone", 4).required_abilities
-		== [PlayerAbility.DOUBLE_JUMP, PlayerAbility.WALL_JUMP]
-	)
-	assert(
-		catalog.find_level(&"green_zone", 5).assumed_owned_abilities
-		== [PlayerAbility.DOUBLE_JUMP, PlayerAbility.WALL_JUMP]
-	)
-	assert(
-		catalog.find_level(&"green_zone", 5).required_abilities
-		== [
-			PlayerAbility.DOUBLE_JUMP,
-			PlayerAbility.WALL_JUMP,
-			PlayerAbility.DASH,
-		]
-	)
-	var finale := catalog.find_level(&"green_zone", 6)
-	assert(finale != null)
-	assert(
-		finale.available_abilities
-		== [
-			PlayerAbility.DOUBLE_JUMP,
-			PlayerAbility.WALL_JUMP,
-			PlayerAbility.DASH,
-		]
-	)
-	assert(
-		finale.assumed_owned_abilities
-		== [
-			PlayerAbility.DOUBLE_JUMP,
-			PlayerAbility.WALL_JUMP,
-			PlayerAbility.DASH,
-		]
-	)
-	assert(
-		finale.required_abilities
-		== [
-			PlayerAbility.DOUBLE_JUMP,
-			PlayerAbility.WALL_JUMP,
-			PlayerAbility.DASH,
-		]
-	)
-	assert(finale.prerequisite_level_ids == [&"dash"])
-	assert(catalog.find_world_for_level(&"double_jump") == green_zone)
-	assert(catalog.find_world_for_level(&"wall_jump") == green_zone)
-	assert(catalog.find_world_for_level(&"dash") == green_zone)
-	assert(catalog.find_world_for_level(&"green_zone_finale") == green_zone)
+	assert(green_zone.ordered_levels().size() == 1)
+	assert(catalog.ordered_levels().size() == 1)
+	var arrival := catalog.find_level(&"green_zone", 1)
+	assert(arrival.level_id == &"arrival_shoreline")
+	assert(arrival.available_abilities == [PlayerAbility.DOUBLE_JUMP])
+	assert(arrival.assumed_owned_abilities.is_empty())
+	assert(arrival.required_abilities == [PlayerAbility.DOUBLE_JUMP])
+	assert(arrival.prerequisite_level_ids.is_empty())
+	assert(catalog.find_world_for_level(&"arrival_shoreline") == green_zone)
+
+	# The discarded six-level campaign remains a typed regression fixture. It
+	# protects the mechanics we learned there without exposing those scenes as
+	# current campaign content.
+	var regression_catalog := load(
+		"res://resources/regression/main_campaign.tres"
+	) as CampaignCatalog
+	assert(regression_catalog.validation_errors().is_empty())
+	assert(regression_catalog.ordered_levels().size() == 6)
+	assert(regression_catalog.ordered_levels()[0].level_id == &"fundamentals")
+	assert(regression_catalog.ordered_levels()[1].level_id == &"gaps_and_spikes")
+	assert(regression_catalog.ordered_levels()[2].level_id == &"double_jump")
+	assert(regression_catalog.ordered_levels()[3].level_id == &"wall_jump")
+	assert(regression_catalog.ordered_levels()[4].level_id == &"dash")
+	assert(regression_catalog.ordered_levels()[5].level_id == &"green_zone_finale")
 
 	print("Campaign progression and ability-policy validation passed.")
 	quit(0)

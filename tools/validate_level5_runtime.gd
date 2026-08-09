@@ -13,6 +13,7 @@ func _init() -> void:
 func _run() -> void:
 	var packed_scene := load("res://scenes/app/game_root.tscn") as PackedScene
 	var game_root := packed_scene.instantiate()
+	game_root.campaign = load("res://resources/regression/main_campaign.tres") as CampaignCatalog
 	game_root.persist_progression = false
 	root.add_child(game_root)
 	game_root.load_level(&"dash")
@@ -22,7 +23,7 @@ func _run() -> void:
 	for frame in 8:
 		await physics_frame
 
-	assert(game_root.current_world_definition.world_id == &"green_zone")
+	assert(game_root.current_world_definition.world_id == &"green_zone_regression")
 	assert(game_root.current_level_definition.display_number == 5)
 	assert(is_equal_approx(level.route_extent.length(), 193.28))
 	assert(level.get_node("Platforms").get_child_count() == 8)

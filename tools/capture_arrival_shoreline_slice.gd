@@ -1,6 +1,5 @@
 extends SceneTree
-## Deterministic 1920 x 1080 review frames for the development-only campaign
-## candidate. These captures validate composition before the slice expands.
+## Deterministic 1920 x 1080 review frames for production World 1 / Level 1.
 
 const OUTPUT_SIZE := Vector2i(1920, 1080)
 
@@ -24,9 +23,9 @@ func _run() -> void:
 		await process_frame
 
 	var definition := load(
-		"res://resources/dev/arrival_shoreline_slice.tres"
+		"res://resources/campaign/level_01.tres"
 	) as LevelDefinition
-	game_root.load_developer_level(definition)
+	game_root.load_level(definition.level_id)
 	await process_frame
 	var level := game_root.current_level as LevelSession3D
 	assert(level != null, "Arrival / Shoreline must instantiate for capture.")
@@ -46,13 +45,26 @@ func _run() -> void:
 		Vector3(14.5, 1.34, 0)
 	)
 	await _capture_background_only(level, "arrival_background_02_transition")
-	await _capture_at(level, "arrival_slice_02b_established_inland", Vector3(24.0, 1.34, 0))
+	await _capture_at(
+		level,
+		"arrival_slice_02b_established_inland",
+		Vector3(24.0, 1.34, 0)
+	)
 	await _capture_background_only(level, "arrival_background_03_inland")
-	await _capture_at(level, "arrival_slice_03_pickup_height", Vector3(30.1, 1.34, 0))
+	await _capture_at(
+		level,
+		"arrival_slice_03_green_threshold",
+		Vector3(29.6, 1.34, 0)
+	)
+	await _capture_at(
+		level,
+		"arrival_slice_04_threshold_unlock",
+		Vector3(36.2, 1.34, 0)
+	)
 
 	level.unlock_ability(PlayerAbility.DOUBLE_JUMP)
 	(level.get_node("DoubleJumpPickup") as Node3D).visible = false
-	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(40.35, 3.14, 0)))
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(47.36, 4.54, 0)))
 	level.player.set_physics_process(false)
 	level.player.pixel_visual.tick(
 		0.12,
@@ -65,11 +77,78 @@ func _run() -> void:
 		true
 	)
 	level.camera.snap_to_target()
-	await _capture("arrival_slice_04_double_jump_proof")
+	await _capture("arrival_slice_05_double_jump_proof")
 
-	await _capture_at(level, "arrival_slice_05_transition_finish", Vector3(59.0, 2.62, 0))
-	await _capture_at(level, "arrival_slice_06_right_clamp", Vector3(73.0, 1.34, 0))
+	await _capture_at(
+		level,
+		"arrival_slice_06_threshold_landing",
+		Vector3(56.0, 1.98, 0)
+	)
+	await _capture_at(
+		level,
+		"arrival_slice_07_thorn_garden_entry",
+		Vector3(73.6, 1.34, 0)
+	)
+	await _capture_at(
+		level,
+		"arrival_slice_08_thorn_basin",
+		Vector3(88.4, 2.62, 0)
+	)
+	await _capture_at(
+		level,
+		"arrival_slice_08a_terrace_gate_crossing",
+		Vector3(90.24, 2.62, 0)
+	)
+	await _capture_at(
+		level,
+		"arrival_slice_09_thorn_pocket",
+		Vector3(92.2, 2.62, 0)
+	)
+	await _capture_at(
+		level,
+		"arrival_slice_10_thorn_wall",
+		Vector3(101.0, 3.9, 0)
+	)
+	await _capture_wall_gate_crossing(level)
+	await _capture_at(
+		level,
+		"arrival_slice_11_garden_exit",
+		Vector3(119.0, 1.34, 0)
+	)
+	await _capture_at(
+		level,
+		"arrival_slice_12_canopy_root",
+		Vector3(132.48, 1.98, 0)
+	)
+	await _capture_at(
+		level,
+		"arrival_slice_13_canopy_height",
+		Vector3(141.44, 5.18, 0)
+	)
+	await _capture_at(
+		level,
+		"arrival_slice_14_canopy_recovery",
+		Vector3(149.4, 3.9, 0)
+	)
+	await _capture_at(
+		level,
+		"arrival_slice_15_canopy_timing",
+		Vector3(159.36, 7.1, 0)
+	)
+	await _capture_at(
+		level,
+		"arrival_slice_16_canopy_crown",
+		Vector3(168.0, 6.46, 0)
+	)
+	await _capture_at(
+		level,
+		"arrival_slice_17_right_clamp",
+		Vector3(170.88, 6.46, 0)
+	)
 	await _capture_background_only(level, "arrival_background_04_right_clamp")
+	root.remove_child(game_root)
+	game_root.free()
+	await process_frame
 	quit(0)
 
 
@@ -132,6 +211,21 @@ func _capture_at(
 	level.player.set_physics_process(false)
 	level.camera.snap_to_target()
 	await _capture(file_name)
+
+
+func _capture_wall_gate_crossing(level: LevelSession3D) -> void:
+	var enemy := level.get_node("ThornWallPatrol") as CharacterBody3D
+	var previous_enemy_transform := enemy.global_transform
+	enemy.global_position = Vector3(103.04, 3.58, 0)
+	level.player.reset_at(
+		Transform3D(Basis.IDENTITY, Vector3(103.04, 3.9, 0))
+	)
+	level.player.set_physics_process(false)
+	level.player.visible = false
+	level.camera.snap_to_target()
+	await _capture("arrival_slice_10a_wall_gate_crossing")
+	level.player.visible = true
+	enemy.global_transform = previous_enemy_transform
 
 
 func _capture_background_only(level: LevelSession3D, file_name: String) -> void:

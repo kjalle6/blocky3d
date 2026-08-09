@@ -91,6 +91,13 @@ screen Y at every gameplay and background depth. Levels may override framing,
 bounds, and opt-in vertical follow. Camera pitch is an authored exception and
 requires projection and visual regression checks.
 
+The Canopy milestone will add scene-authored vertical framing regions rather
+than enabling vertical follow for an entire mixed horizontal/vertical level.
+A region declares when vertical tracking becomes active and the permitted
+offset range; leaving or restarting restores deterministic framing. This keeps
+ordinary jumps in the approved shoreline, threshold, and garden sections from
+moving the camera while allowing sustained later climbs to reframe naturally.
+
 `PixelBackgroundRig3D` owns presentation behind the route. It consumes a typed
 `PixelBackgroundProfile` made of ordered `PixelBackgroundLayerProfile` tracks.
 A track declares its texture, depth, tint, pixel offset, horizontal motion
@@ -100,6 +107,13 @@ every position from one stable initial camera reference and recycles a fixed
 sprite pool. Checkpoints, death, manual restart, and direct camera teleports
 therefore reproduce the same phase; restart snapping must not recapture the
 reference.
+
+Camera-height opacity windows are the next deliberate extension to this typed
+profile. They will be expressed relative to a named scene-owned height anchor,
+just as Arrival's horizontal fades are tied to its shoreline transition anchor.
+The rig evaluates rendered camera Y rather than raw player Y, preventing a
+single jump from flashing a new background band into view. Existing profiles
+without vertical windows retain identical behavior.
 
 Viewport-covering background art uses the foreground pixel scale: 576x324
 pixels at 0.04 metres per pixel produces a 23.04x12.96-metre panel matching the
@@ -123,6 +137,13 @@ profile resource, as Arrival does with `arrival_shoreline`, rather than adding
 private background sprites or level-specific movement scripts. Individual
 level scenes otherwise contain only authored route content and intentional
 overrides.
+
+Canopy Ascent is the first consumer of these additions. Its background is a
+continuous composition of fixed-scale layers: distant forest, midground trunks
+and crowns, optional near edge foliage, and a higher cloud band. Depth,
+parallax, intentional viewport cropping, and camera-height fades create the
+sense of moving up and closer through the trees. Runtime scaling of individual
+trees is specifically excluded because it reads as zooming rather than travel.
 
 ## Engineering rules
 
@@ -277,11 +298,12 @@ use this to test later abilities independently. The replacement campaign levels
 will use the same contract while introducing more than one ability within a
 substantial level where appropriate.
 
-The current first `WorldDefinition`, Green Zone, still contains six validated
-prototype levels. The target campaign structure is approximately three
+The production `CampaignCatalog` currently contains Arrival / Shoreline as the
+first Green Zone level. The six validated prototypes live in a separate
+regression catalog, keeping their tests available without presenting them as
+campaign content. The target campaign structure remains approximately three
 re-authored levels: Arrival / Shoreline, Overgrown Coastal Ascent, and Green
-Zone Finale. Both sets may coexist in development during migration, but only
-the replacement set belongs in the eventual production catalog.
+Zone Finale.
 Missing future levels are not represented by fake scenes or disabled
 placeholder buttons. Development mode keeps all authored levels selectable.
 Production prerequisite/locking presentation is added only when campaign flow
@@ -355,10 +377,10 @@ low 48-pixel foam strip plays once at contact, preventing stacked effects.
 Both systems are presentation-only; explicit hazard areas continue to own
 death and reset behavior.
 
-Replacement slices remain outside `CampaignCatalog` while they are candidates.
-`GameRoot.developer_level_definitions` exposes them under Developer Tools with a
-null world definition, so completion and pickups cannot mutate campaign saves.
-Animation Lab remains the only developer level with ability toggles.
+Approved replacement levels enter `CampaignCatalog`; protected prototypes use
+the separate regression catalog. `GameRoot.developer_level_definitions` is
+reserved for disposable tools with a null world definition. Animation Lab is
+currently the only developer level and the only one with ability toggles.
 
 ## Validation and visual review
 
@@ -397,14 +419,21 @@ Every lasting system receives focused validation. The current suite covers:
 - Level 6's two recap sections, strict Dash gap, full-kit entry policy,
   uninterrupted Wall Jump, Double Jump, and Dash final proof, checkpoints,
   mutable-actor reset, raised-chest goal, and full production-input completion.
-- the Arrival / Shoreline candidate's catalog isolation, typed sand style,
+- production Arrival / Shoreline's catalog identity, typed sand style,
   synchronized animated water, collision-free travelling shore wave, grounded
-  scenery, session-local Double Jump pickup, checkpoint/reset policy, two
-  required proof jumps, and real-input completion.
+  scenery, session-local Double Jump pickup, checkpoint/reset policy, Green
+  Threshold and Thorn Garden geometry, and focused real-input completion.
 
 Graphical capture scripts render deterministic 1920x1080 review positions for
 all current levels. Visual changes are inspected in the running game;
 screenshots do not replace hands-on movement and collision testing.
+
+Automated playthroughs are technical legality checks, not difficulty judges.
+They may prove that collision, inputs, checkpoints, and completion work, but
+they cannot approve fairness, challenge, pacing, readability at speed, or feel.
+A bot failure must first be treated as an automation limitation or a case for
+human review; it does not authorize simplifying authored geometry. Human
+playtesting owns those design decisions.
 
 Before committing a gameplay milestone:
 
@@ -416,21 +445,26 @@ Before committing a gameplay milestone:
 4. Play the complete route at normal speed.
 5. Confirm `git diff --check` and review the staged file set.
 
-## Current baseline - 2 August 2026
+## Current baseline - 10 August 2026
 
-Prototype Levels 1-5 are protected regression baselines, and prototype Level 6
-is a validated playable first pass. New abilities and systems must not silently
-change their proven movement, collision, enemy, checkpoint, or restart behavior
-during campaign migration.
+Prototype Levels 1-6 are protected in the regression catalog. New abilities
+and systems must not silently change their proven movement, collision, enemy,
+checkpoint, or restart behavior during campaign migration.
 
 The typed world catalog and grouped selector, versioned progression payload,
 permanent ability ownership, per-level ability policy, Double Jump, reusable
 pickup actors, non-pausing ability tutorials, Wall Jump, opt-in vertical camera
 framing, flat cross-depth camera projection, the typed reusable background rig,
 Dash, and fresh level-defined development entry mode are established.
-The public title is TBD and `blocky3d` remains the internal codename. A polished
-20-30 second Arrival / Shoreline candidate now passes structural, real-input,
-legacy-regression, and 1920x1080 capture checks. Hands-on review is the current
-gate before it expands into the complete re-authored level. Firearms, saws,
-bosses, Combat Lab, and the curated cyberpunk UI theme follow only when their
-corresponding campaign milestone requires them.
+The public title is TBD and `blocky3d` remains the internal codename. Arrival /
+Shoreline is now the first production campaign level. Its locked shoreline and
+first Green Threshold/Thorn Garden expansion form the authored baseline. The
+current five-landing Canopy Ascent draft is technically traversable but rejected
+as a composition and is preserved only as the pre-rebuild checkpoint. The next
+milestone replaces it with a substantially longer upward route and adds the
+minimum reusable vertical camera-region and camera-height layered-parallax
+contracts it genuinely requires. Structural, visual, and regression automation
+owns technical confidence; hands-on human review remains the gate for
+difficulty, fairness, pacing, and feel. Firearms, saws, bosses, Combat Lab, and
+the curated cyberpunk UI theme follow only when their corresponding campaign
+milestone requires them.
