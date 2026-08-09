@@ -28,7 +28,7 @@ scene tree is three-dimensional.
 | Campaign content | `CampaignCatalog`, typed `WorldDefinition`, and typed `LevelDefinition` resources; no level-number behavior branches |
 | Level run state | `LevelSession3D`: player wiring, death, checkpoint respawn, full restart, and completion |
 | Locomotion | `PlayerCharacter` plus typed `PlayerMovementConfig` tuning |
-| Route extent | `TraversalRail3D`: the authored start and end of a level's route. Movement is plain +X; nothing projects onto a path |
+| Route extent | `RouteExtent3D`: metadata describing the authored start and end of a level's route. Movement is plain +X; nothing projects onto a path |
 | Camera | `PixelSideCamera3D`, independent from player movement ownership |
 | Player presentation | `PixelPlayerVisual3D`, separate from movement and gameplay collision |
 | Enemy behavior | Focused enemy scenes/scripts with separate body, stomp, attack, hurt, and presentation contracts |

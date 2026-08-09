@@ -20,7 +20,7 @@ func _run() -> void:
 
 	assert(game_root.current_world_definition.world_id == &"green_zone")
 	assert(game_root.current_level_definition.display_number == 4)
-	assert(level.traversal_rail.length() == 84.0)
+	assert(level.route_extent.length() == 84.0)
 	assert(level.get_node("Platforms").get_child_count() == 14)
 	assert(level.get_node("Checkpoints").get_child_count() == 3)
 	assert(level.get_node("Hazards").get_child_count() == 0)
@@ -54,7 +54,7 @@ func _run() -> void:
 	for frame in 2:
 		await physics_frame
 	assert(performed_count[0] == 1)
-	assert(player.path_speed < -9.0)
+	assert(player.horizontal_speed < -9.0)
 	Input.action_release("jump")
 	Input.action_release("move_right")
 

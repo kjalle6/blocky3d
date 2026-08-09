@@ -41,7 +41,7 @@ func _run() -> void:
 	Input.action_release("dash")
 	assert(player.is_dashing())
 	assert(player.dash_direction() < -0.5)
-	assert(player.path_speed < -17.0)
+	assert(player.horizontal_speed < -17.0)
 	assert(absf(player.velocity.y) < 0.01)
 	assert(not player.dash_available())
 	assert(performed_count[0] == 1)
@@ -79,7 +79,7 @@ func _run() -> void:
 	# Touching the ground restores the charge.
 	player.global_position = Vector3(12.0, 0.8, 0)
 	player.velocity = Vector3.ZERO
-	player.path_speed = 0.0
+	player.horizontal_speed = 0.0
 	for frame in 8:
 		await physics_frame
 	assert(player.is_on_floor())
@@ -128,9 +128,9 @@ func _run() -> void:
 	Input.action_release("move_right")
 	assert(not player.is_dashing())
 	assert(
-		absf(player.path_speed) < 0.01,
+		absf(player.horizontal_speed) < 0.01,
 		"Wall Dash retained speed %.2f at x=%.2f."
-		% [player.path_speed, player.global_position.x]
+		% [player.horizontal_speed, player.global_position.x]
 	)
 
 	# A complete airborne burst must use motion frames throughout, then hand

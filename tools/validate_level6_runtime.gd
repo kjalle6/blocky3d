@@ -108,7 +108,7 @@ func _validate_route(level: LevelSession3D, player: PlayerCharacter) -> void:
 		)
 
 	assert(
-		absf(level.traversal_rail.length() - 208.64) <= GEOMETRY_TOLERANCE
+		absf(level.route_extent.length() - 208.64) <= GEOMETRY_TOLERANCE
 	)
 	assert(is_equal_approx(_top_edge(_platform(level, "OpeningGround")), 0.0))
 	assert(is_equal_approx(_gap(
@@ -221,8 +221,8 @@ func _validate_route(level: LevelSession3D, player: PlayerCharacter) -> void:
 	assert(is_equal_approx(kill_plane.global_position.x, 104.32))
 	assert(
 		kill_plane.global_position.x + kill_box.size.x * 0.5
-			> level.traversal_rail.length(),
-		"The kill plane must cover the complete authored rail."
+			> level.route_extent.length(),
+		"The kill plane must cover the complete authored route."
 	)
 
 

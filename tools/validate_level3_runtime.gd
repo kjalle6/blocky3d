@@ -22,7 +22,7 @@ func _run() -> void:
 	assert(level.get_node("Hazards").get_child_count() == 1, "Level 3 requires one focused spike row.")
 	assert(level.get_node("Checkpoints").get_child_count() == 3, "Level 3 requires three checkpoints.")
 	assert(get_nodes_in_group("melee_target").size() == 1, "Level 3 requires one patrol encounter.")
-	assert(level.traversal_rail.length() >= 108.0)
+	assert(level.route_extent.length() >= 108.0)
 	_validate_lesson_geometry(level)
 
 	var player := level.player

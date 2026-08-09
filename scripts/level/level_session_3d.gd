@@ -10,9 +10,9 @@ signal ability_unlocked(ability_id: StringName)
 
 @export_range(0.0, 1.0, 0.01) var reset_delay := 0.18
 
-@onready var traversal_rail: TraversalRail3D = %TraversalRail
+@onready var route_extent: RouteExtent3D = %RouteExtent
 @onready var player: PlayerCharacter = %Player
-@onready var camera = %RailCamera
+@onready var camera = %GameplayCamera
 @onready var background := get_node_or_null("Background") as PixelBackgroundRig3D
 @onready var spawn_point: Marker3D = %SpawnPoint
 @onready var combat_feedback := get_node_or_null("%CombatFeedback")

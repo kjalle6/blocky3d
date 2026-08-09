@@ -51,7 +51,7 @@ func _run() -> void:
 		"Wall Jump should provide its stronger dedicated vertical impulse."
 	)
 	assert(
-		player.path_speed < -9.0,
+		player.horizontal_speed < -9.0,
 		"A right-wall jump should kick decisively left."
 	)
 	assert(
@@ -68,7 +68,7 @@ func _run() -> void:
 	# must not manufacture another Wall Jump or refill the aerial jump.
 	player.global_position = Vector3(28.9, 4.2, 0)
 	player.velocity = Vector3(0, -7.0, 0)
-	player.path_speed = 0.0
+	player.horizontal_speed = 0.0
 	Input.action_press("move_right")
 	for frame in 60:
 		await physics_frame
@@ -91,7 +91,7 @@ func _run() -> void:
 	# With Double Jump spent, returning to that wall again cannot climb.
 	player.global_position = Vector3(28.9, 4.2, 0)
 	player.velocity = Vector3(0, -7.0, 0)
-	player.path_speed = 0.0
+	player.horizontal_speed = 0.0
 	Input.action_press("move_right")
 	for frame in 60:
 		await physics_frame
@@ -112,7 +112,7 @@ func _run() -> void:
 	# refill the already-spent Double Jump.
 	player.global_position = Vector3(1.82, 4.2, 0)
 	player.velocity = Vector3(0, -7.0, 0)
-	player.path_speed = 0.0
+	player.horizontal_speed = 0.0
 	Input.action_press("move_left")
 	for frame in 60:
 		await physics_frame
@@ -126,7 +126,7 @@ func _run() -> void:
 	for frame in 2:
 		await physics_frame
 	assert(performed_count[0] == 2)
-	assert(player.path_speed > 9.0)
+	assert(player.horizontal_speed > 9.0)
 	assert(
 		player.aerial_jumps_remaining() == 0,
 		"Wall Jump must not refill a spent Double Jump."

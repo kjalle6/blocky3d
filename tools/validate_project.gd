@@ -113,7 +113,7 @@ func _validate() -> void:
 	var level := game_root.current_level as LevelSession3D
 	assert(level != null, "The current milestone requires the pixel-art Level 1.")
 	assert(game_root.current_world_definition.world_id == &"green_zone")
-	assert(level.traversal_rail.length() > 50.0, "Level 1 route length should match the approved layout.")
+	assert(level.route_extent.length() > 50.0, "Level 1 route length should match the approved layout.")
 	assert(level.player.movement.ideal_jump_height() > 2.0, "The movement profile should retain a useful platforming jump.")
 	assert(level.get_node("Platforms").get_child_count() == 6, "Level 1 should preserve the approved six-platform rhythm.")
 	assert(level.get_node_or_null("GreenZonePatrol") is StompableEnemy3D, "Level 1 needs its introductory patrol.")

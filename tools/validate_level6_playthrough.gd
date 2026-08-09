@@ -570,7 +570,7 @@ func _fail(
 	push_error(
 		(
 			"Level 6 playthrough %s in %s at (%.2f, %.2f), "
-			+ "feet=%.2f, rail=%.2f, floor=%s, wall=%.1f, final=%s."
+			+ "feet=%.2f, route=%.2f, floor=%s, wall=%.1f, final=%s."
 		)
 		% [
 			reason,
@@ -578,7 +578,7 @@ func _fail(
 			player.global_position.x,
 			player.global_position.y,
 			player.feet_world_y(),
-			level.traversal_rail.offset_of(player.global_position.x),
+			level.route_extent.offset_of(player.global_position.x),
 			player.is_on_floor(),
 			player.wall_contact_direction(),
 			final_events,

@@ -57,7 +57,7 @@ func _run() -> void:
 	# Allow the coyote window to expire, then reset vertical velocity once.
 	for frame in 10:
 		await physics_frame
-	var horizontal_speed_before := player.path_speed
+	var horizontal_speed_before := player.horizontal_speed
 	Input.action_press("jump")
 	for frame in 2:
 		await physics_frame
@@ -65,7 +65,7 @@ func _run() -> void:
 	assert(player.aerial_jumps_remaining() == 0, "Double Jump should consume exactly one aerial jump.")
 	assert(performed_count[0] == 1, "Double Jump should emit one explicit ability-use event.")
 	assert(
-		absf(player.path_speed - horizontal_speed_before) < 0.2,
+		absf(player.horizontal_speed - horizontal_speed_before) < 0.2,
 		"Double Jump must preserve horizontal momentum."
 	)
 

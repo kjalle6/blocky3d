@@ -47,7 +47,7 @@ size = Vector3(11.52, 3.84, 2)
 [node name="Background" parent="." index="3"]
 profile = ExtResource("38_background_profile")
 
-[node name="TraversalRail" parent="." index="2"]
+[node name="RouteExtent" parent="." index="2"]
 route_start_x = -5.12
 route_end_x = 76.8
 
@@ -251,7 +251,7 @@ position = Vector3(1.8, 0.7, 0)
 [node name="Player" parent="." index="9"]
 position = Vector3(1.8, 0.7, 0)
 
-[node name="RailCamera" parent="." index="10"]
+[node name="GameplayCamera" parent="." index="10"]
 camera_height = 3.98
 target_height = 3.98
 maximum_center_x = 67.77

@@ -27,11 +27,11 @@ func _run() -> void:
 		await physics_frame
 	Input.action_release("move_right")
 	assert(player.global_position.x > start_x + 1.5, "Right input should move the production player.")
-	assert(player.path_speed > 7.0, "The player should reach the authored maximum speed promptly.")
+	assert(player.horizontal_speed > 7.0, "The player should reach the authored maximum speed promptly.")
 
 	for frame in 12:
 		await physics_frame
-	assert(absf(player.path_speed) < 0.5, "Ground release should decelerate the player cleanly.")
+	assert(absf(player.horizontal_speed) < 0.5, "Ground release should decelerate the player cleanly.")
 
 	var grounded_y := player.global_position.y
 	var highest_y := grounded_y

@@ -22,7 +22,7 @@ func _run() -> void:
 	assert(level.get_node("Hazards").get_child_count() == 5, "Level 2 requires five spike rows.")
 	assert(level.get_node("Checkpoints").get_child_count() == 4, "Level 2 requires four checkpoints.")
 	assert(get_nodes_in_group("melee_target").size() == 6, "Level 2 requires six patrol enemies.")
-	assert(level.traversal_rail.length() > 130.0, "Level 2 route should retain its full course length.")
+	assert(level.route_extent.length() > 130.0, "Level 2 route should retain its full course length.")
 	_validate_route(level)
 	_validate_spike_geometry(level)
 	_validate_gap_spike_centering(level)

@@ -345,7 +345,7 @@ func _fail(
 		(
 			"Arrival / Shoreline playthrough %s during '%s' "
 			+ "(phase=%s, x=%.2f, y=%.2f, feet=%.2f, grounded=%s, "
-			+ "path_speed=%.2f, velocity=%s, slides=%d)."
+			+ "horizontal_speed=%.2f, velocity=%s, slides=%d)."
 		)
 		% [
 			reason,
@@ -355,7 +355,7 @@ func _fail(
 			player.global_position.y,
 			player.feet_world_y(),
 			player.is_on_floor(),
-			player.path_speed,
+			player.horizontal_speed,
 			player.velocity,
 			player.get_slide_collision_count(),
 		]

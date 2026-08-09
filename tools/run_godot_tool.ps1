@@ -1,10 +1,11 @@
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory = $true)]
     [ValidatePattern('^res://tools/[A-Za-z0-9_./-]+\.gd$')]
     [string]$Script,
 
     [switch]$Visual,
+
+    [switch]$EditorImport,
 
     [switch]$CloseRunningGodot,
 
@@ -21,6 +22,17 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+
+if ($EditorImport) {
+    if (-not [string]::IsNullOrWhiteSpace($Script)) {
+        throw '-EditorImport cannot be combined with -Script.'
+    }
+    if ($Visual) {
+        throw '-EditorImport cannot be combined with -Visual.'
+    }
+} elseif ([string]::IsNullOrWhiteSpace($Script)) {
+    throw '-Script is required unless -EditorImport is used.'
+}
 
 $projectRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
 $activeGodot = @(
@@ -94,10 +106,17 @@ if (-not (Test-Path -LiteralPath $GodotExecutable -PathType Leaf)) {
 # violation in headless project-script runs on this machine, while the same
 # scripts pass through the normal Compatibility renderer.
 $arguments = @('--path', $projectRoot)
-if ($Visual) {
-    $arguments += @('--resolution', ('{0}x{1}' -f $Width, $Height))
+if ($EditorImport) {
+    # A normal-renderer editor pass refreshes Godot's generated global class
+    # cache after class_name scripts are renamed. Project-script mode alone
+    # intentionally skips that editor filesystem scan.
+    $arguments += @('--editor', '--quit')
+} else {
+    if ($Visual) {
+        $arguments += @('--resolution', ('{0}x{1}' -f $Width, $Height))
+    }
+    $arguments += @('--script', $Script)
 }
-$arguments += @('--script', $Script)
 
 & $GodotExecutable @arguments
 exit $LASTEXITCODE

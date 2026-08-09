@@ -44,7 +44,7 @@ func _run() -> void:
 		not (game_root.get_node("Interface/DeveloperAbilityPanel") as Control).visible,
 		"Only Animation Lab should expose developer ability toggles."
 	)
-	assert(is_equal_approx(level.traversal_rail.length(), 81.92))
+	assert(is_equal_approx(level.route_extent.length(), 81.92))
 	assert(is_equal_approx(level.camera.maximum_center_x, 67.77))
 	assert(is_equal_approx(level.camera.camera_height, 3.98))
 	assert(is_equal_approx(level.camera.target_height, 3.98))
@@ -144,13 +144,18 @@ func _run() -> void:
 	var seen_peak := 0
 	var seen_foam := false
 	var seen_settled := false
+	var seen_overlapping_crests := false
 	var foam_was_playing := false
 	for frame in 700:
 		await physics_frame
+		var active_crests := 0
+		var active_peak := false
 		for crest_index in shore_wave.crest_count():
 			if not shore_wave.crest_is_active(crest_index):
 				continue
+			active_crests += 1
 			var crest_frame := shore_wave.crest_sprite(crest_index).frame
+			active_peak = active_peak or crest_frame == shore_wave.peak_frame
 			assert(
 				crest_frame <= shore_wave.peak_frame,
 				"A shore crest must never reach the pack's full-size roller."
@@ -159,6 +164,10 @@ func _run() -> void:
 			var progress := shore_wave.crest_progress(crest_index)
 			if progress > 0.9 and crest_frame == 0:
 				seen_settled = true
+		seen_overlapping_crests = (
+			seen_overlapping_crests
+			or (active_crests >= 2 and active_peak)
+		)
 		var foam_playing := shore_wave.shore_foam_is_playing()
 		if foam_playing and not foam_was_playing:
 			# The splash is caused by water arriving, so at the instant it starts
@@ -231,6 +240,14 @@ func _run() -> void:
 	)
 	assert(seen_settled, "Crests must sink back into the water rather than vanish.")
 	assert(seen_foam, "Water reaching the beach must land the shore splash.")
+	assert(
+		seen_overlapping_crests,
+		(
+			"A new small crest must already be visible while another crest is "
+			+ "fully risen, so the surf reads as a continuous sequence rather "
+			+ "than one wave on a timer."
+		)
+	)
 
 	var player := level.player
 	var pickup := level.get_node("DoubleJumpPickup") as AbilityPickup3D

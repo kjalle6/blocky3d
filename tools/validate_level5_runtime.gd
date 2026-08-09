@@ -24,7 +24,7 @@ func _run() -> void:
 
 	assert(game_root.current_world_definition.world_id == &"green_zone")
 	assert(game_root.current_level_definition.display_number == 5)
-	assert(is_equal_approx(level.traversal_rail.length(), 193.28))
+	assert(is_equal_approx(level.route_extent.length(), 193.28))
 	assert(level.get_node("Platforms").get_child_count() == 8)
 	assert(level.get_node("Checkpoints").get_child_count() == 4)
 	assert(level.get_node("Hazards").get_child_count() == 0)
@@ -94,7 +94,7 @@ func _run() -> void:
 	assert(pickup.is_claimed())
 	player._try_start_dash(1.0)
 	assert(player.is_dashing())
-	assert(player.path_speed >= 21.5)
+	assert(player.horizontal_speed >= 21.5)
 	assert(not player.dash_available())
 
 	level._reset_run()

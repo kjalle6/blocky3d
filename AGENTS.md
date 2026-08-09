@@ -16,10 +16,14 @@ same validators pass through the normal Compatibility renderer.
 - Never bypass the runner with a direct Godot command.
 - Use the runner's `-Visual` switch for graphical capture scripts so they get
   an explicit review resolution. Validators still use the normal renderer.
+- After renaming a `class_name` script or its file, refresh Godot's generated
+  class cache with the runner's `-EditorImport` switch before validation. Add
+  `-CloseRunningGodot` when an open editor still holds the old class registry.
 
 Canonical examples:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Script res://tools/validate_project.gd
 powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Visual -Script res://tools/capture_arrival_shoreline_slice.gd
+powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -EditorImport -CloseRunningGodot
 ```

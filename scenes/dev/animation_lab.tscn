@@ -8,7 +8,7 @@ size = Vector3(36, 1, 8)
 
 [node name="AnimationLab" instance=ExtResource("1_base")]
 
-[node name="TraversalRail" parent="." index="2"]
+[node name="RouteExtent" parent="." index="2"]
 route_start_x = 0
 route_end_x = 30.72
 
@@ -43,7 +43,7 @@ position = Vector3(2.56, 0.7, 0)
 [node name="Player" parent="." index="9"]
 position = Vector3(2.56, 0.7, 0)
 
-[node name="RailCamera" parent="." index="10"]
+[node name="GameplayCamera" parent="." index="10"]
 minimum_center_x = 6.47
 maximum_center_x = 24.25
 

@@ -11,7 +11,7 @@ size = Vector3(94, 1, 8)
 
 [node name="Level04WallJump" instance=ExtResource("1_base")]
 
-[node name="TraversalRail" parent="." index="2"]
+[node name="RouteExtent" parent="." index="2"]
 route_start_x = 0
 route_end_x = 84
 
@@ -103,7 +103,7 @@ position = Vector3(3.2, 0.7, 0)
 [node name="Player" parent="." index="9"]
 position = Vector3(3.2, 0.7, 0)
 
-[node name="RailCamera" parent="." index="10"]
+[node name="GameplayCamera" parent="." index="10"]
 maximum_center_x = 77.53
 vertical_follow_enabled = true
 maximum_vertical_offset = 14.5

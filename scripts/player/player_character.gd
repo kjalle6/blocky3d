@@ -1,6 +1,6 @@
 class_name PlayerCharacter
 extends CharacterBody3D
-## Core path-relative 2.5D controller. Optional movement abilities are gated
+## Core 2D side-scrolling controller. Optional movement abilities are gated
 ## by the active level's declared ability policy and share typed tuning.
 
 const DOUBLE_JUMP_VISUAL_DURATION := 0.43
@@ -20,7 +20,7 @@ signal ability_performed(ability_id: StringName)
 @export_range(0.1, 3.0, 0.05) var attack_reach := 1.25
 @export_range(0.1, 2.0, 0.05) var attack_vertical_tolerance := 0.9
 
-var path_speed := 0.0
+var horizontal_speed := 0.0
 var _coyote_remaining := 0.0
 var _jump_buffer_remaining := 0.0
 var _dead := false
@@ -89,7 +89,7 @@ func _physics_process(delta: float) -> void:
 		_wall_coyote_remaining = maxf(0.0, _wall_coyote_remaining - delta)
 
 	if is_dashing():
-		path_speed = _dash_direction * movement.dash_speed
+		horizontal_speed = _dash_direction * movement.dash_speed
 	elif _wall_jump_control_lock_remaining <= 0.0:
 		var acceleration := movement.air_acceleration
 		if grounded:
@@ -99,7 +99,7 @@ func _physics_process(delta: float) -> void:
 				else movement.ground_deceleration
 			)
 		var target_speed := input_axis * movement.maximum_speed
-		path_speed = move_toward(path_speed, target_speed, acceleration * delta)
+		horizontal_speed = move_toward(horizontal_speed, target_speed, acceleration * delta)
 
 	_wall_sliding = (
 		has_ability(PlayerAbility.WALL_JUMP)
@@ -132,7 +132,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_released("jump") and velocity.y > 0.0:
 		velocity.y *= movement.released_jump_multiplier
 
-	velocity.x = path_speed
+	velocity.x = horizontal_speed
 	velocity.z = 0.0
 	_descending_before_slide = velocity.y < -0.5
 	move_and_slide()
@@ -173,7 +173,7 @@ func kill(kind: StringName = DEATH_KIND_GENERIC) -> void:
 	_dash_remaining = 0.0
 	_dash_available = false
 	velocity = Vector3.ZERO
-	path_speed = 0.0
+	horizontal_speed = 0.0
 	if pixel_visual != null:
 		pixel_visual.tick(0.0, is_on_floor(), 0.0, 0.0, false, true, _facing_sign > 0.0)
 	death_started.emit(_death_kind, global_position)
@@ -197,14 +197,14 @@ func was_descending_before_slide() -> bool:
 func stop_for_completion() -> void:
 	_dash_remaining = 0.0
 	velocity = Vector3.ZERO
-	path_speed = 0.0
+	horizontal_speed = 0.0
 	set_physics_process(false)
 
 
 func reset_at(spawn_transform: Transform3D) -> void:
 	global_transform = spawn_transform
 	velocity = Vector3.ZERO
-	path_speed = 0.0
+	horizontal_speed = 0.0
 	_coyote_remaining = 0.0
 	_jump_buffer_remaining = 0.0
 	_attack_remaining = 0.0
@@ -379,7 +379,7 @@ func _perform_wall_jump() -> void:
 	var source_wall_direction := _last_wall_contact_direction
 	var jump_direction := -source_wall_direction
 	velocity.y = movement.wall_jump_vertical_speed
-	path_speed = jump_direction * movement.wall_jump_horizontal_speed
+	horizontal_speed = jump_direction * movement.wall_jump_horizontal_speed
 	_facing_sign = jump_direction
 	_blocked_wall_jump_direction = source_wall_direction
 	_wall_jump_control_lock_remaining = movement.wall_jump_control_lock_time
@@ -435,7 +435,7 @@ func _try_start_dash(input_axis: float) -> bool:
 	_wall_contact_direction = 0.0
 	_wall_sliding = false
 	velocity.y = 0.0
-	path_speed = _dash_direction * movement.dash_speed
+	horizontal_speed = _dash_direction * movement.dash_speed
 	floor_snap_length = 0.0
 	ability_performed.emit(PlayerAbility.DASH)
 	return true
@@ -444,9 +444,9 @@ func _try_start_dash(input_axis: float) -> bool:
 func _finish_dash(stopped_by_wall := false) -> void:
 	_dash_remaining = 0.0
 	if stopped_by_wall:
-		path_speed = 0.0
-	elif absf(path_speed) > movement.dash_exit_speed:
-		path_speed = signf(path_speed) * movement.dash_exit_speed
+		horizontal_speed = 0.0
+	elif absf(horizontal_speed) > movement.dash_exit_speed:
+		horizontal_speed = signf(horizontal_speed) * movement.dash_exit_speed
 
 
 func _has_dash_floor_support() -> bool:
@@ -483,7 +483,7 @@ func _update_pixel_visual(delta: float) -> void:
 	pixel_visual.tick(
 		delta,
 		is_on_floor(),
-		path_speed,
+		horizontal_speed,
 		velocity.y,
 		_attack_remaining > 0.0,
 		_dead,

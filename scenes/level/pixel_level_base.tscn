@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/level/level_session_3d.gd" id="1_session"]
-[ext_resource type="Script" path="res://scripts/traversal/traversal_rail_3d.gd" id="2_rail"]
+[ext_resource type="Script" path="res://scripts/traversal/route_extent_3d.gd" id="2_route_extent"]
 [ext_resource type="PackedScene" path="res://scenes/player/pixel_player_character.tscn" id="3_player"]
 [ext_resource type="Script" path="res://scripts/camera/pixel_side_camera_3d.gd" id="4_camera"]
 [ext_resource type="Script" path="res://scripts/hazards/hazard_3d.gd" id="5_hazard"]
@@ -30,9 +30,9 @@ script = ExtResource("12_feedback")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_level")
 
-[node name="TraversalRail" type="Node3D" parent="."]
+[node name="RouteExtent" type="Node3D" parent="."]
 unique_name_in_owner = true
-script = ExtResource("2_rail")
+script = ExtResource("2_route_extent")
 route_start_x = 0
 route_end_x = 51.2
 
@@ -57,7 +57,7 @@ position = Vector3(1.8, 0.7, 0)
 unique_name_in_owner = true
 position = Vector3(1.8, 0.7, 0)
 
-[node name="RailCamera" type="Camera3D" parent="."]
+[node name="GameplayCamera" type="Camera3D" parent="."]
 unique_name_in_owner = true
 script = ExtResource("4_camera")
 current = true

@@ -14,7 +14,7 @@ size = Vector3(220.16, 1, 8)
 
 [node name="Level06GreenZoneFinale" instance=ExtResource("1_base")]
 
-[node name="TraversalRail" parent="." index="2"]
+[node name="RouteExtent" parent="." index="2"]
 route_start_x = 0
 route_end_x = 208.64
 
@@ -170,7 +170,7 @@ position = Vector3(1.6, 0.7, 0)
 [node name="Player" parent="." index="9"]
 position = Vector3(1.6, 0.7, 0)
 
-[node name="RailCamera" parent="." index="10"]
+[node name="GameplayCamera" parent="." index="10"]
 look_ahead = 8.0
 maximum_center_x = 202.17
 vertical_follow_enabled = true
