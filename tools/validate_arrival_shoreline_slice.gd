@@ -41,15 +41,15 @@ func _run() -> void:
 	assert(level != null)
 	assert(game_root.current_world_definition.world_id == &"green_zone")
 	assert(game_root.current_level_definition == definition)
-	assert(is_equal_approx(level.route_extent.length(), 189.44))
-	assert(is_equal_approx(level.camera.maximum_center_x, 172.8))
+	assert(is_equal_approx(level.route_extent.length(), 203.52))
+	assert(is_equal_approx(level.camera.maximum_center_x, 186.88))
 	assert(is_equal_approx(level.camera.camera_height, 3.98))
 	assert(is_equal_approx(level.camera.target_height, 3.98))
 	assert(not level.camera.vertical_follow_enabled)
 	assert(is_zero_approx(level.camera.rotation.x))
 	assert(level.get_node("Platforms").get_child_count() == 15)
 	assert(level.get_node("Checkpoints").get_child_count() == 2)
-	assert(_scoped_group_count(level, &"melee_target") == 3)
+	assert(_scoped_group_count(level, &"melee_target") == 5)
 	assert(_scoped_group_count(level, &"level_goal") == 1)
 
 	_validate_tools_ui(game_root)
@@ -70,10 +70,16 @@ func _validate_tools_ui(game_root: Node) -> void:
 	var menu_hint := game_root.get_node("Interface/MenuHint") as Label
 	assert(not instructions.visible)
 	assert(menu_hint.visible)
-	assert(menu_hint.text == "F1: TOOLS    ESC: LEVEL SELECT")
+	assert(
+		menu_hint.text
+		== "F1: TOOLS    F7: HITBOXES    F10: GRID    F11: INSPECT    ESC: SELECT"
+	)
 	_toggle_gameplay_tools(game_root)
 	assert(instructions.visible)
-	assert(menu_hint.text == "F1: HIDE TOOLS    ESC: LEVEL SELECT")
+	assert(
+		menu_hint.text
+		== "F1: HIDE    F7: HITBOXES    F10: GRID    F11: INSPECT    ESC: SELECT"
+	)
 	assert(
 		not (game_root.get_node(
 			"Interface/DeveloperAbilityPanel"
@@ -163,7 +169,7 @@ func _validate_geometry(level: LevelSession3D) -> void:
 		aerial_peak, Vector3(160, 7.04, 0), Vector3(3.84, 1.28, 2)
 	)
 	_assert_platform(
-		aerial_landing, Vector3(171.52, -1.28, 0), Vector3(25.6, 3.84, 2)
+		aerial_landing, Vector3(181.76, -1.28, 0), Vector3(46.08, 3.84, 2)
 	)
 	assert(is_equal_approx(_gap(garden_exit, aerial_rise), 3.2))
 	assert(is_equal_approx(_gap(aerial_rise, aerial_crown), 6.4))
@@ -175,6 +181,11 @@ func _validate_geometry(level: LevelSession3D) -> void:
 	assert(_top(aerial_dip) < _top(aerial_crown))
 	assert(_top(aerial_peak) > _top(aerial_crown))
 	assert(_top(aerial_landing) < _top(aerial_dip))
+	assert(
+		_right(aerial_landing)
+		> level.camera.maximum_center_x + level.camera.size * 16.0 / 9.0 * 0.5,
+		"The flat tire-swing clearing must continue beyond the final camera frame."
+	)
 
 	var spike_contracts := [["ThresholdSpikes", threshold_run, 1.8]]
 	for contract in spike_contracts:
@@ -243,14 +254,28 @@ func _validate_geometry(level: LevelSession3D) -> void:
 		_left(aerial_landing)
 	))
 	assert(is_equal_approx(blind_landing.global_position.y, _top(aerial_landing)))
-	assert(is_equal_approx(blind_landing.row_width, 2.56))
-	var blind_spike_pitch := blind_landing.row_width / 3.0
+	assert(is_equal_approx(blind_landing.row_width, 8.272))
+	var blind_spike_count := roundi(
+		blind_landing.row_width / blind_landing.spike_height
+	)
+	assert(blind_spike_count == 11)
+	var blind_spike_pitch := (
+		blind_landing.row_width / float(blind_spike_count)
+	)
 	assert(absf(
 		blind_landing.global_position.x
-		- (162.56 + blind_spike_pitch * 2.0)
+		- blind_landing.row_width * 0.5
+		+ blind_spike_pitch * 0.5
+		- 159.52
+	) < 0.001)
+	assert(absf(
+		blind_landing.global_position.x
+		+ blind_landing.row_width * 0.5
+		- blind_spike_pitch * 0.5
+		- 167.04
 	) < 0.001)
 	assert(blind_landing.global_position.x + blind_landing.row_width * 0.5 < _right(aerial_landing))
-	var blind_drop_x := 164.0
+	var blind_drop_x := 167.04
 	assert(
 		blind_landing.global_position.x - blind_landing.row_width * 0.5
 		<= blind_drop_x
@@ -284,6 +309,8 @@ func _validate_geometry(level: LevelSession3D) -> void:
 		["ApproachPatrol", approach, 1.7],
 		["ThresholdLandingPatrol", threshold_landing, 1.7],
 		["ThornWallPatrol", wall, 1.7],
+		["AerialDipPatrol", aerial_dip, 1.7],
+		["AerialLandingPatrol", aerial_landing, 1.7],
 	]
 	for contract in enemy_contracts:
 		var enemy := level.get_node(str(contract[0])) as StompableEnemy3D
@@ -293,6 +320,35 @@ func _validate_geometry(level: LevelSession3D) -> void:
 		assert(absf(enemy.global_position.y - (_top(support) + 0.38)) < 0.02)
 		assert(enemy.global_position.x > _left(support))
 		assert(enemy.global_position.x < _right(support))
+	var aerial_dip_enemy := level.get_node(
+		"AerialDipPatrol"
+	) as StompableEnemy3D
+	var aerial_landing_enemy := level.get_node(
+		"AerialLandingPatrol"
+	) as StompableEnemy3D
+	assert(is_zero_approx(aerial_dip_enemy.patrol_left_distance))
+	assert(is_zero_approx(aerial_dip_enemy.patrol_right_distance))
+	assert(is_equal_approx(aerial_landing_enemy.patrol_left_distance, 10.5))
+	assert(is_equal_approx(aerial_landing_enemy.patrol_right_distance, 5.1))
+	assert(
+		aerial_dip_enemy.global_position.x > _left(aerial_dip)
+		and aerial_dip_enemy.global_position.x < _right(aerial_dip),
+		"The aerial dip patrol must begin on its support and use natural ledge reversal."
+	)
+	var landing_patrol_bounds := aerial_landing_enemy.authored_patrol_bounds_x()
+	assert(
+		landing_patrol_bounds.x
+		> blind_landing.global_position.x + blind_landing.row_width * 0.5
+		and landing_patrol_bounds.x
+		< blind_landing.global_position.x + blind_landing.row_width * 0.5 + 0.6,
+		"The landing patrol must walk up to the blind spikes without entering them."
+	)
+	assert(
+		landing_patrol_bounds.y > 183.0
+		and landing_patrol_bounds.y < 184.0
+		and _right(aerial_landing) - landing_patrol_bounds.y > 7.0,
+		"The landing patrol must end before the safe finish clearing."
+	)
 
 	var pickup := level.get_node("DoubleJumpPickup") as AbilityPickup3D
 	var pickup_checkpoint := level.get_node(
@@ -310,7 +366,8 @@ func _validate_geometry(level: LevelSession3D) -> void:
 	assert(pickup_checkpoint.global_position == pickup.global_position)
 	assert(exit_checkpoint.route_index == 3)
 	assert(is_equal_approx(exit_checkpoint.global_position.y, _top(garden_exit)))
-	var goal := level.get_node("Goal") as Node3D
+	var goal := level.get_node("Goal") as LevelGoal3D
+	assert(not goal is PixelGoal3D)
 	assert(goal.global_position.x > exit_checkpoint.global_position.x)
 	assert(goal.global_position.x > _left(aerial_landing))
 	assert(goal.global_position.x < _right(aerial_landing))
@@ -367,13 +424,26 @@ func _validate_presentation(level: LevelSession3D) -> void:
 		"ThornWallHedgeRightCap": _top(_platform(level, "ThornWall")),
 		"GardenExitBench": _top(_platform(level, "ThornGardenExit")),
 		"GardenExitTree": _top(_platform(level, "ThornGardenExit")),
+		"GardenExitSkateRamp": _top(_platform(level, "ThornGardenExit")),
+		"GardenExitSkateRampLeft": _top(_platform(level, "ThornGardenExit")),
 		"GardenExitGrass": _top(_platform(level, "ThornGardenExit")),
+		"AerialRiseBush": _top(_platform(level, "AerialRise")),
 		"AerialRiseGrass": _top(_platform(level, "AerialRise")),
-		"AerialCrownStone": _top(_platform(level, "AerialCrown")),
+		"AerialCrownGrass": _top(_platform(level, "AerialCrown")),
+		"AerialCrownBush": _top(_platform(level, "AerialCrown")),
 		"AerialDipBush": _top(_platform(level, "AerialDip")),
+		"AerialDipGrass": _top(_platform(level, "AerialDip")),
 		"AerialPeakGrass": _top(_platform(level, "AerialPeak")),
+		"AerialPeakBush": _top(_platform(level, "AerialPeak")),
 		"AerialLandingBush": _top(_platform(level, "AerialLanding")),
+		"AerialLandingTree": _top(_platform(level, "AerialLanding")),
+		"AerialLandingStone": _top(_platform(level, "AerialLanding")),
 		"AerialLandingGrass": _top(_platform(level, "AerialLanding")),
+		"AerialExitApproachGrass": _top(_platform(level, "AerialLanding")),
+		"AerialExitApproachStone": _top(_platform(level, "AerialLanding")),
+		"AerialExitTrailBush": _top(_platform(level, "AerialLanding")),
+		"AerialExitTrailGrass": _top(_platform(level, "AerialLanding")),
+		"AerialExitTireSwingTree": _top(_platform(level, "AerialLanding")),
 	}
 	for prop_name in support_contracts:
 		var prop := level.get_node("Props/%s" % prop_name) as Sprite3D
@@ -431,6 +501,9 @@ func _validate_presentation(level: LevelSession3D) -> void:
 		assert(rock.global_position.z < player_body.global_position.z)
 		assert(rock.render_priority < player_body.render_priority)
 		assert(rock.find_children("*", "CollisionObject3D", true, false).is_empty())
+
+	assert(level.get_node_or_null("Props/TrailheadSlopeMass") == null)
+	assert(level.get_node_or_null("Platforms/TrailheadEmbankment") == null)
 
 	var background := level.background
 	assert(background != null)
@@ -528,8 +601,25 @@ func _validate_session(
 	assert(not player.is_dead())
 	assert(absf(player.global_position.x - 120.0) < 0.2)
 
+	var goal := level.get_node("Goal") as LevelGoal3D
+	var completion_fade := game_root.get_node("Interface/CompletionFade") as ColorRect
+	var completion_label := game_root.get_node("Interface/CompletionLabel") as Label
+	assert(not completion_fade.visible)
+	assert(not completion_label.visible)
+	player.reset_at(Transform3D(Basis.IDENTITY, goal.global_position + Vector3.UP * 0.7))
+	for frame in 4:
+		await physics_frame
+	assert(not player.is_physics_processing())
+	assert(completion_fade.visible)
+	assert(completion_label.visible)
+	for frame in 20:
+		await process_frame
+	assert(completion_fade.modulate.a > 0.2)
+
 	level._reset_run()
 	await physics_frame
+	assert(not completion_fade.visible)
+	assert(not completion_label.visible)
 	assert(player.has_ability(PlayerAbility.DOUBLE_JUMP))
 	assert(pickup.is_claimed())
 	assert(not pickup_checkpoint.is_activated())

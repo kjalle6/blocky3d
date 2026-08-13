@@ -157,6 +157,9 @@ func _run() -> void:
 	var death_count := [0]
 	var double_jump_count := [0]
 	var wrong_ability_count := [0]
+	var attack_count := 0
+	var total_frames := 0
+	var route_trace: Array[Dictionary] = []
 	player.died.connect(func() -> void: death_count[0] += 1)
 	player.ability_performed.connect(
 		func(ability_id: StringName) -> void:
@@ -178,6 +181,7 @@ func _run() -> void:
 	_set_horizontal_input(1.0)
 
 	for frame in MAXIMUM_FRAMES:
+		total_frames = frame + 1
 		if player.is_dead() or completion_label.visible:
 			break
 
@@ -187,6 +191,7 @@ func _run() -> void:
 		elif _enemy_is_approaching_melee_range(level, player):
 			Input.action_press("attack")
 			release_attack = true
+			attack_count += 1
 
 		var jump_released_this_frame := false
 		if jump_held:
@@ -262,6 +267,14 @@ func _run() -> void:
 							quit(1)
 							return
 						landed_platforms.append(target.name)
+						route_trace.append({
+							"crossing": str(crossing.name),
+							"target": str(target.name),
+							"frames": stage_frames,
+							"landing_x": snappedf(player.global_position.x, 0.01),
+							"landing_feet_y": snappedf(player.feet_world_y(), 0.01),
+							"double_jump": second_jump_sent,
+						})
 						crossing_index += 1
 						phase = &"approach"
 						stage_frames = 0
@@ -300,6 +313,19 @@ func _run() -> void:
 		"Arrival / Shoreline focused real-input traversal passed: %s"
 		% ", ".join(landed_platforms)
 	)
+	_write_route_trace(route_trace, total_frames, attack_count)
+	for beat in route_trace:
+		print(
+			"  %s -> %s: %d frames, landing=(%.2f, %.2f), double_jump=%s"
+			% [
+				beat.crossing,
+				beat.target,
+				beat.frames,
+				beat.landing_x,
+				beat.landing_feet_y,
+				beat.double_jump,
+			]
+		)
 	root.remove_child(game_root)
 	game_root.free()
 	await process_frame
@@ -360,6 +386,24 @@ func _release_inputs() -> void:
 	Input.action_release("jump")
 	Input.action_release("dash")
 	Input.action_release("attack")
+
+
+func _write_route_trace(
+	beats: Array[Dictionary],
+	total_frames: int,
+	attack_count: int
+) -> void:
+	var output_directory := "res://build/diagnostics"
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output_directory))
+	var output_path := "%s/arrival_route_trace.json" % output_directory
+	var file := FileAccess.open(output_path, FileAccess.WRITE)
+	assert(file != null, "The Arrival route trace must be writable.")
+	file.store_string(JSON.stringify({
+		"level_id": "arrival_shoreline",
+		"total_frames": total_frames,
+		"attack_count": attack_count,
+		"beats": beats,
+	}, "  "))
 
 
 func _fail(

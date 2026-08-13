@@ -26,6 +26,9 @@ var _reset_request_serial := 0
 var _definition: LevelDefinition
 var _progression_store: ProgressionStore
 var _session_unlocked_abilities: Array[StringName] = []
+var _developer_inspection_enabled := false
+var _developer_measurement_grid: DeveloperMeasurementGrid3D
+var _developer_collision_overlay: DeveloperCollisionOverlay3D
 
 
 func configure(
@@ -151,6 +154,82 @@ func _reset_world() -> void:
 
 func active_checkpoint_index() -> int:
 	return _active_checkpoint_index
+
+
+func set_developer_inspection_enabled(enabled: bool) -> void:
+	if _developer_inspection_enabled == enabled:
+		return
+	_developer_inspection_enabled = enabled
+	if enabled:
+		_reset_request_serial += 1
+		_resetting = false
+		if player.is_dead():
+			player.reset_at(player.global_transform)
+		_grant_developer_inspection_abilities()
+	player.set_developer_inspection_enabled(enabled)
+	camera.set_developer_inspection_enabled(enabled)
+	if background != null:
+		background.snap_to_camera()
+
+
+func is_developer_inspection_enabled() -> bool:
+	return _developer_inspection_enabled
+
+
+func _grant_developer_inspection_abilities() -> void:
+	if _definition == null:
+		return
+	# F11 turns only this loaded session into a test run. Use the session-local
+	# ability policy so exiting inspection, dying, or pressing R keeps every
+	# mechanic available without collecting pickups or writing campaign data.
+	for ability_id in _definition.available_abilities:
+		if ability_id not in _session_unlocked_abilities:
+			_session_unlocked_abilities.append(ability_id)
+	_apply_ability_policy()
+
+
+func set_developer_measurement_grid_enabled(enabled: bool) -> void:
+	if enabled and _developer_measurement_grid == null:
+		_developer_measurement_grid = DeveloperMeasurementGrid3D.new()
+		_developer_measurement_grid.name = "DeveloperMeasurementGrid"
+		add_child(_developer_measurement_grid)
+		_developer_measurement_grid.bind_camera(camera)
+	if _developer_measurement_grid != null:
+		_developer_measurement_grid.visible = enabled
+		_developer_measurement_grid.set_process(enabled)
+
+
+func is_developer_measurement_grid_enabled() -> bool:
+	return (
+		_developer_measurement_grid != null
+		and _developer_measurement_grid.visible
+	)
+
+
+func developer_measurement_grid() -> DeveloperMeasurementGrid3D:
+	return _developer_measurement_grid
+
+
+func set_developer_collision_overlay_enabled(enabled: bool) -> void:
+	if enabled and _developer_collision_overlay == null:
+		_developer_collision_overlay = DeveloperCollisionOverlay3D.new()
+		_developer_collision_overlay.name = "DeveloperCollisionOverlay"
+		add_child(_developer_collision_overlay)
+		_developer_collision_overlay.bind_level(self)
+	if _developer_collision_overlay != null:
+		_developer_collision_overlay.visible = enabled
+		_developer_collision_overlay.set_process(enabled)
+
+
+func is_developer_collision_overlay_enabled() -> bool:
+	return (
+		_developer_collision_overlay != null
+		and _developer_collision_overlay.visible
+	)
+
+
+func developer_collision_overlay() -> DeveloperCollisionOverlay3D:
+	return _developer_collision_overlay
 
 
 func unlock_ability(ability_id: StringName) -> bool:

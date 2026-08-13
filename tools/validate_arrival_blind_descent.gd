@@ -4,7 +4,7 @@ extends SceneTree
 ## The full Arrival playthrough separately proves the forward Double Jump clear.
 
 const OUTPUT_SIZE := Vector2i(1920, 1080)
-const FORWARD_DROP_POSITION := Vector3(164.0, 8.23, 0.0)
+const FORWARD_DROP_POSITION := Vector3(167.04, 8.23, 0.0)
 const MAXIMUM_DROP_FRAMES := 180
 
 

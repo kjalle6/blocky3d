@@ -1,0 +1,151 @@
+[gd_resource type="Resource" script_class="DressingPalette" load_steps=34 format=3]
+
+[ext_resource type="Script" path="res://scripts/dressing/dressing_palette.gd" id="1_palette"]
+[ext_resource type="Script" path="res://scripts/dressing/dressing_asset_definition.gd" id="2_asset"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/grass_tuft_sparse.png" id="3_grass_sparse"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/grass_tuft_thin.png" id="4_grass_thin"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/grass_tuft_small.png" id="5_grass_small"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/bush_low.png" id="6_bush_low"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/bush_small.png" id="7_bush_small"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/bush_wild_left.png" id="8_bush_wild_left"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/bush_wild_right.png" id="9_bush_wild_right"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/bush_wild_full.png" id="10_bush_wild_full"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/stone_small.png" id="11_stone_small"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/stone_medium.png" id="12_stone_medium"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/stone_cluster.png" id="13_stone_cluster"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/stone_flat.png" id="14_stone_flat"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/tree_small_grounded.png" id="15_tree_small"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/tree_grounded.png" id="16_tree"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/tree_tire_swing.png" id="17_tree_tire_swing"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/skate_ramp_right.png" id="18_skate_ramp_right"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/skate_ramp_left.png" id="19_skate_ramp_left"]
+
+[sub_resource type="Resource" id="Asset_grass_sparse"]
+script = ExtResource("2_asset")
+asset_id = &"grass_sparse"
+texture = ExtResource("3_grass_sparse")
+tags = Array[StringName]([&"ground_cover", &"wild"])
+
+[sub_resource type="Resource" id="Asset_grass_thin"]
+script = ExtResource("2_asset")
+asset_id = &"grass_thin"
+texture = ExtResource("4_grass_thin")
+tags = Array[StringName]([&"ground_cover", &"wild"])
+
+[sub_resource type="Resource" id="Asset_grass_small"]
+script = ExtResource("2_asset")
+asset_id = &"grass_small"
+texture = ExtResource("5_grass_small")
+tags = Array[StringName]([&"ground_cover", &"edge"])
+
+[sub_resource type="Resource" id="Asset_bush_low"]
+script = ExtResource("2_asset")
+asset_id = &"bush_low"
+texture = ExtResource("6_bush_low")
+tags = Array[StringName]([&"ground_cover", &"cluster_member"])
+
+[sub_resource type="Resource" id="Asset_bush_small"]
+script = ExtResource("2_asset")
+asset_id = &"bush_small"
+texture = ExtResource("7_bush_small")
+tags = Array[StringName]([&"ground_cover", &"cluster_member"])
+
+[sub_resource type="Resource" id="Asset_bush_wild_left"]
+script = ExtResource("2_asset")
+asset_id = &"bush_wild_left"
+texture = ExtResource("8_bush_wild_left")
+clearance_class = 1
+tags = Array[StringName]([&"wild", &"edge", &"cluster_member"])
+allow_flip_h = false
+
+[sub_resource type="Resource" id="Asset_bush_wild_right"]
+script = ExtResource("2_asset")
+asset_id = &"bush_wild_right"
+texture = ExtResource("9_bush_wild_right")
+clearance_class = 1
+tags = Array[StringName]([&"wild", &"edge", &"cluster_member"])
+allow_flip_h = false
+
+[sub_resource type="Resource" id="Asset_bush_wild_full"]
+script = ExtResource("2_asset")
+asset_id = &"bush_wild_full"
+texture = ExtResource("10_bush_wild_full")
+clearance_class = 1
+tags = Array[StringName]([&"wild", &"rear_mass"])
+
+[sub_resource type="Resource" id="Asset_stone_small"]
+script = ExtResource("2_asset")
+asset_id = &"stone_small"
+texture = ExtResource("11_stone_small")
+tags = Array[StringName]([&"stone", &"cluster_member"])
+
+[sub_resource type="Resource" id="Asset_stone_medium"]
+script = ExtResource("2_asset")
+asset_id = &"stone_medium"
+texture = ExtResource("12_stone_medium")
+clearance_class = 1
+tags = Array[StringName]([&"stone", &"cluster_member"])
+
+[sub_resource type="Resource" id="Asset_stone_cluster"]
+script = ExtResource("2_asset")
+asset_id = &"stone_cluster"
+texture = ExtResource("13_stone_cluster")
+clearance_class = 1
+tags = Array[StringName]([&"stone", &"cluster_member"])
+
+[sub_resource type="Resource" id="Asset_stone_flat"]
+script = ExtResource("2_asset")
+asset_id = &"stone_flat"
+texture = ExtResource("14_stone_flat")
+clearance_class = 1
+tags = Array[StringName]([&"stone", &"edge"])
+
+[sub_resource type="Resource" id="Asset_tree_small"]
+script = ExtResource("2_asset")
+asset_id = &"tree_small"
+texture = ExtResource("15_tree_small")
+depth_band = 0
+clearance_class = 2
+tags = Array[StringName]([&"landmark", &"tree", &"rear_mass"])
+allow_flip_h = false
+
+[sub_resource type="Resource" id="Asset_tree"]
+script = ExtResource("2_asset")
+asset_id = &"tree"
+texture = ExtResource("16_tree")
+depth_band = 0
+clearance_class = 2
+tags = Array[StringName]([&"landmark", &"tree", &"rear_mass"])
+allow_flip_h = false
+
+[sub_resource type="Resource" id="Asset_tree_tire_swing"]
+script = ExtResource("2_asset")
+asset_id = &"tree_tire_swing"
+texture = ExtResource("17_tree_tire_swing")
+depth_band = 0
+clearance_class = 2
+tags = Array[StringName]([&"landmark", &"tree", &"rear_mass", &"exit"])
+allow_flip_h = false
+
+[sub_resource type="Resource" id="Asset_skate_ramp_right"]
+script = ExtResource("2_asset")
+asset_id = &"skate_ramp_right"
+texture = ExtResource("18_skate_ramp_right")
+depth_band = 0
+clearance_class = 2
+tags = Array[StringName]([&"landmark", &"urban", &"rear_mass", &"takeoff"])
+allow_flip_h = false
+
+[sub_resource type="Resource" id="Asset_skate_ramp_left"]
+script = ExtResource("2_asset")
+asset_id = &"skate_ramp_left"
+texture = ExtResource("19_skate_ramp_left")
+depth_band = 0
+clearance_class = 2
+tags = Array[StringName]([&"landmark", &"urban", &"rear_mass", &"takeoff"])
+allow_flip_h = false
+
+[resource]
+script = ExtResource("1_palette")
+palette_id = &"arrival_green_zone"
+assets = Array[ExtResource("2_asset")]([SubResource("Asset_grass_sparse"), SubResource("Asset_grass_thin"), SubResource("Asset_grass_small"), SubResource("Asset_bush_low"), SubResource("Asset_bush_small"), SubResource("Asset_bush_wild_left"), SubResource("Asset_bush_wild_right"), SubResource("Asset_bush_wild_full"), SubResource("Asset_stone_small"), SubResource("Asset_stone_medium"), SubResource("Asset_stone_cluster"), SubResource("Asset_stone_flat"), SubResource("Asset_tree_small"), SubResource("Asset_tree"), SubResource("Asset_tree_tire_swing"), SubResource("Asset_skate_ramp_right"), SubResource("Asset_skate_ramp_left")])

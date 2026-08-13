@@ -22,6 +22,12 @@ func _init() -> void:
 	_configure_action("restart", 0.2, [
 		_key(KEY_R), _joy_button(JOY_BUTTON_Y),
 	])
+	_configure_action("developer_fly_up", 0.2, [
+		_key(KEY_W), _key(KEY_UP), _key(KEY_SPACE),
+	])
+	_configure_action("developer_fly_down", 0.2, [
+		_key(KEY_S), _key(KEY_DOWN),
+	])
 	var error := ProjectSettings.save()
 	assert(error == OK, "Could not save default input actions.")
 	print("Default input actions configured.")

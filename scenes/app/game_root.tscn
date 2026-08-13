@@ -76,15 +76,91 @@ visible = false
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -330.0
+offset_left = -620.0
 offset_top = 24.0
 offset_right = -20.0
 offset_bottom = 58.0
 grow_horizontal = 0
 theme_override_colors/font_color = Color(0.84, 0.9, 0.94, 0.85)
 theme_override_font_sizes/font_size = 16
-text = "F1: TOOLS    ESC: LEVEL SELECT"
+text = "F1: TOOLS    F7: HITBOXES    F10: GRID    F11: INSPECT    ESC: SELECT"
 horizontal_alignment = 2
+
+[node name="DeveloperInspectionLabel" type="Label" parent="Interface"]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 10
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -390.0
+offset_top = 22.0
+offset_right = 390.0
+offset_bottom = 100.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.78, 0.32, 1)
+theme_override_colors/font_shadow_color = Color(0.02, 0.02, 0.03, 0.95)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 18
+text = "INSPECTION MODE — GOD / NOCLIP / FREE FLIGHT\nWASD or arrows: fly    SPACE: up    SHIFT: faster    F11: exit\nLEVEL ABILITIES STAY UNLOCKED UNTIL RELOAD"
+horizontal_alignment = 1
+
+[node name="DeveloperMeasurementLabel" type="Label" parent="Interface"]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 12
+anchor_right = 1.0
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -54.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.72, 0.94, 1, 0.9)
+theme_override_colors/font_shadow_color = Color(0.02, 0.02, 0.03, 0.95)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 17
+text = "GRID 1.28 m / 0.64 m    PLAYER FEET  X 0.00    Y 0.00"
+horizontal_alignment = 1
+
+[node name="DeveloperCursorCoordinateLabel" type="Label" parent="Interface"]
+unique_name_in_owner = true
+visible = false
+mouse_filter = 2
+z_index = 100
+theme_override_colors/font_color = Color(0.72, 0.94, 1, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.025, 0.04, 0.96)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 16
+text = "X 0.00    Y 0.00"
+
+[node name="DeveloperCollisionLegend" type="Label" parent="Interface"]
+unique_name_in_owner = true
+visible = false
+offset_left = 20.0
+offset_top = 108.0
+offset_right = 550.0
+offset_bottom = 162.0
+theme_override_colors/font_color = Color(0.94, 0.96, 1, 0.94)
+theme_override_colors/font_outline_color = Color(0.02, 0.025, 0.04, 0.96)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 15
+text = "HITBOXES  BLUE terrain  CYAN player  MAGENTA enemy  RED lethal\nORANGE contact/attacks  YELLOW checkpoints  PURPLE pickups  GREEN goal"
+
+[node name="CompletionFade" type="ColorRect" parent="Interface"]
+unique_name_in_owner = true
+visible = false
+modulate = Color(1, 1, 1, 0)
+mouse_filter = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.015, 0.02, 0.035, 1)
 
 [node name="CompletionLabel" type="Label" parent="Interface"]
 unique_name_in_owner = true

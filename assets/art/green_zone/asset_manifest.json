@@ -79,10 +79,22 @@
                                  "source":  "tilesets/green_zone/3 Objects/Other/Tree1.png",
                                  "sha256":  "1cd7df5860c34b0b8e8c55ededc09df9fa02ddb7485c5b3415b55f4b682deaee"
                              },
+    "props/tree_tire_swing.png":  {
+                                      "source":  "tilesets/green_zone/3 Objects/Other/Tree4.png",
+                                      "sha256":  "4683f5948e139e4cdb7f48b1790e2c6c04a4c14f3789d9e80a47129adb025c82"
+                                  },
     "props/bench.png":  {
                             "source":  "tilesets/green_zone/3 Objects/Benches/2.png",
                             "sha256":  "53afcf793ccc9fbdd27b29713dc534f5f6212b78efacf8d5d5028d9a768da60e"
                         },
+    "props/skate_ramp_right.png":  {
+                                       "source":  "tilesets/green_zone/3 Objects/Other/Ramp2.png",
+                                       "sha256":  "109cc0f6f7eb07fc98e6a25c1337bee9bba072e3cc8db1de61ba51d22c76b4da"
+                                   },
+    "props/skate_ramp_left.png":  {
+                                      "source":  "tilesets/green_zone/3 Objects/Other/Ramp1.png",
+                                      "sha256":  "fee17fc735d20c0e2963f8c0ffb8926bf713826f4f8a6e395da5416dc3a77f88"
+                                  },
     "props/bush.png":  {
                            "source":  "tilesets/green_zone/3 Objects/Bushes/3.png",
                            "sha256":  "8646f725b158386a9f989bd67858dbe3474a3325b2c4070621a0b0db9b54cb69"
@@ -95,6 +107,18 @@
                                  "source":  "tilesets/green_zone/3 Objects/Bushes/16.png",
                                  "sha256":  "2fa9323569da74e59191bab4f626a73ca5ec3c3f33da65463bc790a217b7ee3a"
                              },
+    "props/bush_wild_left.png":  {
+                                     "source":  "tilesets/green_zone/3 Objects/Bushes/17.png",
+                                     "sha256":  "014d04606380e16d740cc876db279a617f9cdb1cff9dc20aec08edaf61f27fde"
+                                 },
+    "props/bush_wild_right.png":  {
+                                      "source":  "tilesets/green_zone/3 Objects/Bushes/18.png",
+                                      "sha256":  "f40d3b5cee1d342b0a48a60f579a30ab179bb4e3bd313986037d5e27e6ceac5c"
+                                  },
+    "props/bush_wild_full.png":  {
+                                     "source":  "tilesets/green_zone/3 Objects/Bushes/19.png",
+                                     "sha256":  "6c426f62d27d51bc604d28fc83d9645b92a48e6538f43c722ddac64dc6e3ead9"
+                                 },
     "props/hedge_low_left.png":  {
                                      "source":  "tilesets/green_zone/3 Objects/Bushes/9.png",
                                      "sha256":  "7cf965400daa695d0e4d1999867a5ef210149f577dfab154f43ab91f01da056e"
@@ -119,6 +143,14 @@
                                    "source":  "tilesets/green_zone/3 Objects/Stones/4.png",
                                    "sha256":  "996247eb4da17dee1e71c76ae3c361db7f1e3a40f90dec97223a414d18c1b8f6"
                                },
+    "props/stone_cluster.png":  {
+                                    "source":  "tilesets/green_zone/3 Objects/Stones/3.png",
+                                    "sha256":  "8e4cb0faf0d07d976513b8e05df8bdfb11f4e64b0fd7783fbaad3161e65bd840"
+                                },
+    "props/stone_flat.png":  {
+                                 "source":  "tilesets/green_zone/3 Objects/Stones/5.png",
+                                 "sha256":  "e3614e6347c9010904ab4bc344d6de07cbeffb698dd62ec66d687cf13884e901"
+                             },
     "props/fence.png":  {
                             "source":  "tilesets/green_zone/3 Objects/Fence/3.png",
                             "sha256":  "28e2f2df106c3bc7073bb3ba502172d8adac2baa787e9925b76cb52238a451a2"

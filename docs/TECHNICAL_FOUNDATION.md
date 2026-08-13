@@ -66,6 +66,28 @@ completion. An in-room panel toggles each implemented ability immediately.
 Gameplay tool panels are hidden when a session opens and toggle together with
 `F1`; only the compact `F1 / ESC` reminder remains on screen. This keeps
 composition inspection unobstructed without removing development controls.
+`F11` independently toggles a development-only inspection state in any loaded
+session. The real player becomes invulnerable and non-colliding, flies directly
+with `WASD`/arrows (`Space` also rises and `Shift` accelerates), and drives the
+existing camera without route clamps. Exiting keeps the inspected position but
+restores body collision, the separate hazard sensor, gravity, and normal camera
+policy. Entering F11 also grants every ability available in that level as a
+session-local test unlock. Those abilities remain after exiting inspection and
+through death or `R`, allowing a real-physics test from the inspected position;
+reloading the level restores its genuine unlock state. The mode is gated by
+`developer_tools_enabled`, never writes progression, and displays a persistent
+warning so footage cannot be mistaken for release play.
+`F10` toggles a separate world-locked measurement overlay during normal play or
+inspection. Major lines are one 1.28 m terrain tile apart, minor lines are half
+a tile (0.64 m), sparse axis labels report world coordinates, and a compact HUD
+shows the player's live `X / Y`. The grid recycles around the camera but remains
+anchored to world zero, allowing screenshot feedback to name exact distances.
+
+The next highest-value developer overlay is collision/hitbox visualization,
+because fair platform, spike, player, and combat geometry is a core feel rule.
+Useful later candidates are a mouse world-coordinate probe, checkpoint warping,
+a freeze-world toggle for moving hazards and enemies, and coordinate-stamped
+review captures. These remain backlog ideas rather than bundled F10/F11 scope.
 The room provides clear surfaces for triggering and inspecting idle, run,
 jump, Double Jump, wall contact, attack, landing, and transition timing
 without level hazards or scenery. It is an animation lab, not a mechanic
@@ -131,6 +153,24 @@ Horizontal motion is likewise explicit: `SCREEN_LOCKED`, `PARALLAX`, or
 attached to the camera. Autonomous drift is a separate future presentation
 choice and must not be simulated with near-zero parallax.
 
+Developer measurement mode is toggled with F10. Its world-locked major and
+minor lines correspond to one terrain tile and half a terrain tile, while its
+HUD reports the player's ground-contact point rather than the less intuitive
+centre of the physics body. A second readout follows the mouse
+and projects the camera ray onto the gameplay plane at Z = 0, so coordinates
+can be taken from level geometry without moving the player. Both readouts and
+the grid remain unavailable when developer tools are disabled.
+
+F7 independently projects gameplay collision onto the side-scrolling plane.
+It distinguishes terrain, player body and hazard sensor, enemy body and contact
+sensor, lethal hazards, checkpoints, pickups, and goals. Melee damage regions
+are drawn only while their corresponding attack is active. The overlay is a
+read-only visualization and does not modify physics layers, masks, or shapes.
+
+Spike rows use a small fixed horizontal collision inset at each visible end.
+The inset must not scale with total row width: proportional shrinkage creates
+large nonlethal gutters on long hazard beds even though spike art fills them.
+
 The reusable `pixel_level_base.tscn` scene owns the common runtime frame and the
 default `green_zone_day` background profile. Authored levels override the
 profile resource, as Arrival does with `arrival_shoreline`, rather than adding
@@ -188,6 +228,13 @@ The established interaction priority is:
 
 Defeated enemies and dead players are ignored. New enemy families change
 declared behavior rather than introducing collision-order exceptions.
+
+Ordinary patrols still use wall and ledge sensing as their default movement
+contract. A scene may additionally author independent `patrol_left_distance`
+and `patrol_right_distance` values when a readable route must stop at a nearby
+hazard instead of a terrain ledge. The bounds are measured from the enemy's
+reset transform, reverse direction without teleporting, and remain optional so
+ordinary full-platform patrols do not change.
 
 ## Wall movement contract
 

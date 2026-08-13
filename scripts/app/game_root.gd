@@ -16,6 +16,9 @@ var current_world_definition: WorldDefinition
 var _level_buttons: Array[Button] = []
 var _gameplay_tools_visible := false
 var _developer_ability_panel_available := false
+var _developer_inspection_enabled := false
+var _developer_measurement_grid_enabled := false
+var _developer_collision_overlay_enabled := false
 
 @onready var world: Node3D = %World
 @onready var instructions: PanelContainer = %Instructions
@@ -30,6 +33,13 @@ var _developer_ability_panel_available := false
 @onready var developer_mode_label: Label = %DeveloperModeLabel
 @onready var developer_ability_panel: PanelContainer = %DeveloperAbilityPanel
 @onready var developer_ability_toggles: VBoxContainer = %DeveloperAbilityToggles
+@onready var developer_inspection_label: Label = %DeveloperInspectionLabel
+@onready var developer_measurement_label: Label = %DeveloperMeasurementLabel
+@onready var developer_cursor_coordinate_label: Label = %DeveloperCursorCoordinateLabel
+@onready var developer_collision_legend: Label = %DeveloperCollisionLegend
+@onready var completion_fade: ColorRect = %CompletionFade
+
+var _completion_fade_tween: Tween
 
 
 func _ready() -> void:
@@ -56,6 +66,46 @@ func _unhandled_input(event: InputEvent) -> void:
 		)
 	):
 		_set_gameplay_tools_visible(not _gameplay_tools_visible)
+		get_viewport().set_input_as_handled()
+		return
+	if (
+		developer_tools_enabled
+		and not level_select.visible
+		and current_level != null
+		and (
+			event.physical_keycode == KEY_F7
+			or event.keycode == KEY_F7
+		)
+	):
+		_set_developer_collision_overlay_enabled(
+			not _developer_collision_overlay_enabled
+		)
+		get_viewport().set_input_as_handled()
+		return
+	if (
+		developer_tools_enabled
+		and not level_select.visible
+		and current_level != null
+		and (
+			event.physical_keycode == KEY_F11
+			or event.keycode == KEY_F11
+		)
+	):
+		_set_developer_inspection_enabled(not _developer_inspection_enabled)
+		get_viewport().set_input_as_handled()
+		return
+	if (
+		developer_tools_enabled
+		and not level_select.visible
+		and current_level != null
+		and (
+			event.physical_keycode == KEY_F10
+			or event.keycode == KEY_F10
+		)
+	):
+		_set_developer_measurement_grid_enabled(
+			not _developer_measurement_grid_enabled
+		)
 		get_viewport().set_input_as_handled()
 		return
 	if level_select.visible:
@@ -160,9 +210,13 @@ func _start_session(
 	level_select.visible = false
 	menu_hint.visible = true
 	completion_label.visible = false
+	_reset_completion_fade()
 	_hide_ability_tutorial()
 	_configure_developer_ability_panel(world_definition == null)
 	_set_gameplay_tools_visible(false)
+	_set_developer_inspection_enabled(false)
+	_set_developer_measurement_grid_enabled(false)
+	_set_developer_collision_overlay_enabled(false)
 
 
 func show_level_select() -> void:
@@ -170,10 +224,18 @@ func show_level_select() -> void:
 	current_level_definition = null
 	current_world_definition = null
 	_gameplay_tools_visible = false
+	_developer_inspection_enabled = false
+	_developer_measurement_grid_enabled = false
+	_developer_collision_overlay_enabled = false
 	level_select.visible = true
 	instructions.visible = false
 	menu_hint.visible = false
 	completion_label.visible = false
+	_reset_completion_fade()
+	developer_inspection_label.visible = false
+	developer_measurement_label.visible = false
+	developer_cursor_coordinate_label.visible = false
+	developer_collision_legend.visible = false
 	_hide_ability_tutorial()
 	_configure_developer_ability_panel(false)
 	if not _level_buttons.is_empty():
@@ -318,10 +380,139 @@ func _apply_gameplay_tools_visibility() -> void:
 		and _developer_ability_panel_available
 	)
 	if menu_hint.visible:
+		_update_menu_hint()
+
+
+func _set_developer_inspection_enabled(enabled: bool) -> void:
+	_developer_inspection_enabled = (
+		enabled
+		and developer_tools_enabled
+		and current_level != null
+		and not level_select.visible
+	)
+	if current_level != null:
+		current_level.set_developer_inspection_enabled(_developer_inspection_enabled)
+	developer_inspection_label.visible = _developer_inspection_enabled
+	if menu_hint.visible:
+		_update_menu_hint()
+
+
+func _set_developer_measurement_grid_enabled(enabled: bool) -> void:
+	_developer_measurement_grid_enabled = (
+		enabled
+		and developer_tools_enabled
+		and current_level != null
+		and not level_select.visible
+	)
+	if current_level != null:
+		current_level.set_developer_measurement_grid_enabled(
+			_developer_measurement_grid_enabled
+		)
+	developer_measurement_label.visible = _developer_measurement_grid_enabled
+	developer_cursor_coordinate_label.visible = _developer_measurement_grid_enabled
+	if menu_hint.visible:
+		_update_menu_hint()
+
+
+func _set_developer_collision_overlay_enabled(enabled: bool) -> void:
+	_developer_collision_overlay_enabled = (
+		enabled
+		and developer_tools_enabled
+		and current_level != null
+		and not level_select.visible
+	)
+	if current_level != null:
+		current_level.set_developer_collision_overlay_enabled(
+			_developer_collision_overlay_enabled
+		)
+	developer_collision_legend.visible = _developer_collision_overlay_enabled
+	if menu_hint.visible:
+		_update_menu_hint()
+
+
+func _process(_delta: float) -> void:
+	if not _developer_measurement_grid_enabled or current_level == null:
+		return
+	developer_measurement_label.text = (
+		"GRID 1.28 m / 0.64 m    PLAYER FEET  X %.2f    Y %.2f"
+		% [
+			current_level.player.global_position.x,
+			current_level.player.feet_world_y(),
+		]
+	)
+	_update_developer_cursor_coordinate()
+
+
+func developer_world_position_at_screen_position(screen_position: Vector2) -> Vector2:
+	if current_level == null or current_level.camera == null:
+		return Vector2.ZERO
+	var ray_origin: Vector3 = current_level.camera.project_ray_origin(screen_position)
+	var ray_direction: Vector3 = current_level.camera.project_ray_normal(screen_position)
+	if is_zero_approx(ray_direction.z):
+		return Vector2(ray_origin.x, ray_origin.y)
+	var distance_to_gameplay_plane: float = -ray_origin.z / ray_direction.z
+	var world_position: Vector3 = ray_origin + ray_direction * distance_to_gameplay_plane
+	return Vector2(world_position.x, world_position.y)
+
+
+func _update_developer_cursor_coordinate() -> void:
+	_update_developer_cursor_coordinate_at(get_viewport().get_mouse_position())
+
+
+func _update_developer_cursor_coordinate_at(mouse_position: Vector2) -> void:
+	var viewport_size := get_viewport().get_visible_rect().size
+	if not Rect2(Vector2.ZERO, viewport_size).has_point(mouse_position):
+		developer_cursor_coordinate_label.visible = false
+		return
+	developer_cursor_coordinate_label.visible = true
+	var world_position := developer_world_position_at_screen_position(mouse_position)
+	developer_cursor_coordinate_label.text = (
+		"X %.2f    Y %.2f" % [world_position.x, world_position.y]
+	)
+	developer_cursor_coordinate_label.reset_size()
+	var desired_position := mouse_position + Vector2(18.0, 20.0)
+	var maximum_position := (
+		viewport_size
+		- developer_cursor_coordinate_label.size
+		- Vector2(8.0, 8.0)
+	)
+	developer_cursor_coordinate_label.position = Vector2(
+		clampf(desired_position.x, 8.0, maxf(8.0, maximum_position.x)),
+		clampf(desired_position.y, 8.0, maxf(8.0, maximum_position.y))
+	)
+
+
+func _update_menu_hint() -> void:
+	var collision_hint := (
+		"F7: HIDE HITBOXES"
+		if _developer_collision_overlay_enabled
+		else "F7: HITBOXES"
+	)
+	var grid_hint := (
+		"F10: HIDE GRID"
+		if _developer_measurement_grid_enabled
+		else "F10: GRID"
+	)
+	if _developer_inspection_enabled:
+		menu_hint.text = (
+			"%s    %s    F11: EXIT INSPECTION    ESC: SELECT"
+			% [collision_hint, grid_hint]
+		)
+	elif not developer_tools_enabled:
 		menu_hint.text = (
 			"F1: HIDE TOOLS    ESC: LEVEL SELECT"
 			if _gameplay_tools_visible
 			else "F1: TOOLS    ESC: LEVEL SELECT"
+		)
+	elif _gameplay_tools_visible:
+		menu_hint.text = (
+			"F1: HIDE    %s    %s    F11: INSPECT    ESC: SELECT"
+			% [collision_hint, grid_hint]
+		)
+	else:
+		menu_hint.text = (
+			"F1: TOOLS    %s    %s    F11: INSPECT    ESC: SELECT"
+			% [collision_hint, grid_hint]
 		)
 
 
@@ -343,10 +534,28 @@ func _free_current_level() -> void:
 	world.remove_child(current_level)
 	current_level.free()
 	current_level = null
+	_developer_inspection_enabled = false
+	_developer_measurement_grid_enabled = false
+	_developer_collision_overlay_enabled = false
+	developer_inspection_label.visible = false
+	developer_measurement_label.visible = false
+	developer_cursor_coordinate_label.visible = false
+	developer_collision_legend.visible = false
 
 
 func _on_run_completed() -> void:
 	completion_label.visible = true
+	_reset_completion_fade()
+	completion_fade.visible = true
+	_completion_fade_tween = create_tween()
+	_completion_fade_tween.set_trans(Tween.TRANS_SINE)
+	_completion_fade_tween.set_ease(Tween.EASE_IN_OUT)
+	_completion_fade_tween.tween_property(
+		completion_fade,
+		"modulate:a",
+		1.0,
+		0.55
+	)
 	var store := _progression_store()
 	if (
 		store != null
@@ -358,6 +567,17 @@ func _on_run_completed() -> void:
 
 func _on_run_reset() -> void:
 	completion_label.visible = false
+	_reset_completion_fade()
+
+
+func _reset_completion_fade() -> void:
+	if _completion_fade_tween != null and _completion_fade_tween.is_valid():
+		_completion_fade_tween.kill()
+	_completion_fade_tween = null
+	if completion_fade == null:
+		return
+	completion_fade.modulate.a = 0.0
+	completion_fade.visible = false
 
 
 func _on_ability_unlocked(ability_id: StringName) -> void:

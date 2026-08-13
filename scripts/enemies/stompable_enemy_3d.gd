@@ -10,6 +10,8 @@ const MINIMUM_PATROL_PROGRESS_RATIO := 0.25
 
 @export_range(0.1, 10.0, 0.1) var patrol_speed := 2.0
 @export var starts_moving_right := true
+@export_range(0.0, 50.0, 0.05) var patrol_left_distance := 0.0
+@export_range(0.0, 50.0, 0.05) var patrol_right_distance := 0.0
 @export_range(1.0, 100.0, 0.5) var gravity := 38.0
 @export_range(1.0, 30.0, 0.1) var stomp_bounce_speed := 10.0
 @export_range(0.1, 3.0, 0.05) var attack_trigger_distance := 1.65
@@ -52,6 +54,7 @@ func _physics_process(delta: float) -> void:
 		return
 	if _try_start_attack():
 		return
+	_update_authored_patrol_bounds()
 	velocity.x = patrol_speed * _direction
 	velocity.z = 0.0
 	velocity.y = maxf(velocity.y - gravity * delta, -25.0)
@@ -79,6 +82,17 @@ func _physics_process(delta: float) -> void:
 	if pixel_visual != null:
 		var movement_state := "idle" if blocked_by_player or patrol_speed <= 0.0 else "walk"
 		pixel_visual.tick(delta, movement_state, _direction > 0.0)
+
+
+func _update_authored_patrol_bounds() -> void:
+	if patrol_left_distance <= 0.0 and patrol_right_distance <= 0.0:
+		return
+	var minimum_x := _initial_transform.origin.x - patrol_left_distance
+	var maximum_x := _initial_transform.origin.x + patrol_right_distance
+	if _direction < 0.0 and global_position.x <= minimum_x:
+		_direction = 1.0
+	elif _direction > 0.0 and global_position.x >= maximum_x:
+		_direction = -1.0
 
 
 func _has_floor_ahead() -> bool:
@@ -149,6 +163,27 @@ func is_defeated() -> bool:
 
 func facing_sign() -> float:
 	return _direction
+
+
+func is_attacking() -> bool:
+	return _attack_remaining > 0.0
+
+
+func developer_attack_bounds() -> Rect2:
+	var minimum_x := global_position.x
+	if _direction < 0.0:
+		minimum_x -= attack_damage_distance
+	return Rect2(
+		Vector2(minimum_x, global_position.y - attack_vertical_tolerance),
+		Vector2(attack_damage_distance, attack_vertical_tolerance * 2.0)
+	)
+
+
+func authored_patrol_bounds_x() -> Vector2:
+	return Vector2(
+		_initial_transform.origin.x - patrol_left_distance,
+		_initial_transform.origin.x + patrol_right_distance
+	)
 
 
 func play_impact_flash() -> void:

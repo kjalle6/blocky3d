@@ -40,6 +40,8 @@ func _validate() -> void:
 	assert(game_root.campaign.find_by_id(&"fundamentals") == null)
 	assert(game_root.campaign.find_by_id(&"gaps_and_spikes") == null)
 	assert(InputMap.has_action("dash"))
+	assert(InputMap.has_action("developer_fly_up"))
+	assert(InputMap.has_action("developer_fly_down"))
 	assert(developer_heading.text == "DEVELOPER TOOLS")
 	assert(animation_lab_button.text == "ANIMATION LAB")
 	assert(world_list.get_node_or_null("ArrivalShorelineSliceButton") == null)
@@ -72,14 +74,15 @@ func _validate() -> void:
 	assert(level != null, "World 1 / Level 1 must instantiate.")
 	assert(game_root.current_world_definition.world_id == &"green_zone")
 	assert(
-		is_equal_approx(level.route_extent.length(), 189.44),
-		"Level 1 must expose the current staged production review route."
+		is_equal_approx(level.route_extent.length(), 203.52),
+		"Level 1 must expose its complete production route."
 	)
 	assert(level.player.movement.ideal_jump_height() > 2.0)
 	assert(level.get_node("Platforms").get_child_count() == 15)
 	assert(level.get_node_or_null("ApproachPatrol") is StompableEnemy3D)
 	assert(level.get_node_or_null("DoubleJumpPickup") is AbilityPickup3D)
-	assert(level.get_node_or_null("Goal") is PixelGoal3D)
+	assert(level.get_node_or_null("Goal") is LevelGoal3D)
+	assert(not level.get_node("Goal") is PixelGoal3D)
 	assert(InputMap.has_action("move_left"))
 	assert(InputMap.has_action("jump"))
 	assert(InputMap.has_action("attack"))

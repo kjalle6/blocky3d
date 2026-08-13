@@ -19,6 +19,9 @@ signal ability_performed(ability_id: StringName)
 @export_range(0.0, 1.0, 0.01) var attack_impact_time := 0.13
 @export_range(0.1, 3.0, 0.05) var attack_reach := 1.25
 @export_range(0.1, 2.0, 0.05) var attack_vertical_tolerance := 0.9
+@export_category("Developer inspection")
+@export_range(1.0, 40.0, 0.5) var inspection_flight_speed := 14.0
+@export_range(1.0, 4.0, 0.25) var inspection_fast_multiplier := 2.0
 
 var horizontal_speed := 0.0
 var _coyote_remaining := 0.0
@@ -42,8 +45,13 @@ var _blocked_wall_jump_direction := 0.0
 var _dash_remaining := 0.0
 var _dash_available := false
 var _dash_direction := 1.0
+var _developer_inspection_enabled := false
+var _normal_collision_layer := 0
+var _normal_collision_mask := 0
+var _normal_hazard_contact_layer := 0
 
 @onready var pixel_visual: PixelPlayerVisual3D = get_node_or_null("PixelVisual") as PixelPlayerVisual3D
+@onready var hazard_contact: Area3D = get_node("HazardContact") as Area3D
 
 
 func _ready() -> void:
@@ -51,9 +59,15 @@ func _ready() -> void:
 	add_to_group("player_character")
 	floor_snap_length = movement.floor_snap_length
 	floor_max_angle = deg_to_rad(movement.maximum_floor_angle_degrees)
+	_normal_collision_layer = collision_layer
+	_normal_collision_mask = collision_mask
+	_normal_hazard_contact_layer = hazard_contact.collision_layer
 
 
 func _physics_process(delta: float) -> void:
+	if _developer_inspection_enabled:
+		_update_developer_inspection(delta)
+		return
 	if _dead:
 		_update_pixel_visual(delta)
 		return
@@ -166,7 +180,7 @@ func _update_jump_timers(delta: float) -> void:
 
 
 func kill(kind: StringName = DEATH_KIND_GENERIC) -> void:
-	if _dead:
+	if _dead or _developer_inspection_enabled:
 		return
 	_dead = true
 	_death_kind = kind
@@ -228,6 +242,7 @@ func reset_at(spawn_transform: Transform3D) -> void:
 	if pixel_visual != null:
 		pixel_visual.reset_feedback()
 		pixel_visual.set_state("idle", true)
+	_apply_developer_inspection_collision()
 
 
 func is_dead() -> bool:
@@ -303,11 +318,75 @@ func feet_world_y() -> float:
 	return global_position.y - 0.55
 
 
+func is_attacking() -> bool:
+	return _attack_remaining > 0.0
+
+
+func developer_melee_bounds() -> Rect2:
+	var minimum_x := global_position.x
+	if _facing_sign < 0.0:
+		minimum_x -= attack_reach
+	return Rect2(
+		Vector2(minimum_x, global_position.y - attack_vertical_tolerance),
+		Vector2(attack_reach, attack_vertical_tolerance * 2.0)
+	)
+
+
 func receive_enemy_hit(source_position: Vector3) -> void:
-	if _dead:
+	if _dead or _developer_inspection_enabled:
 		return
 	damage_received.emit(source_position)
 	kill()
+
+
+func set_developer_inspection_enabled(enabled: bool) -> void:
+	if _developer_inspection_enabled == enabled:
+		return
+	_developer_inspection_enabled = enabled
+	velocity = Vector3.ZERO
+	horizontal_speed = 0.0
+	_dash_remaining = 0.0
+	_attack_remaining = 0.0
+	_attack_hit_applied = false
+	_wall_sliding = false
+	floor_snap_length = 0.0 if enabled else movement.floor_snap_length
+	_apply_developer_inspection_collision()
+	set_physics_process(true)
+	if pixel_visual != null:
+		pixel_visual.set_state("idle", true)
+
+
+func is_developer_inspection_enabled() -> bool:
+	return _developer_inspection_enabled
+
+
+func _apply_developer_inspection_collision() -> void:
+	if not is_node_ready():
+		return
+	collision_layer = 0 if _developer_inspection_enabled else _normal_collision_layer
+	collision_mask = 0 if _developer_inspection_enabled else _normal_collision_mask
+	hazard_contact.collision_layer = (
+		0 if _developer_inspection_enabled else _normal_hazard_contact_layer
+	)
+
+
+func _update_developer_inspection(delta: float) -> void:
+	var flight_input := Vector2(
+		Input.get_axis("move_left", "move_right"),
+		Input.get_axis("developer_fly_down", "developer_fly_up")
+	)
+	if flight_input.length_squared() > 1.0:
+		flight_input = flight_input.normalized()
+	var active_speed := inspection_flight_speed
+	if Input.is_action_pressed("dash"):
+		active_speed *= inspection_fast_multiplier
+	velocity = Vector3(flight_input.x, flight_input.y, 0.0) * active_speed
+	horizontal_speed = velocity.x
+	global_position += velocity * delta
+	global_position.z = 0.0
+	if not is_zero_approx(flight_input.x):
+		_facing_sign = signf(flight_input.x)
+	_update_pixel_visual(delta)
 
 
 func play_damage_flash() -> void:

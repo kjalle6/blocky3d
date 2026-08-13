@@ -54,14 +54,26 @@ $assets = [ordered]@{
         "tilesets\green_zone\3 Objects\Other\Tree2.png"
     "props/tree_small.png" =
         "tilesets\green_zone\3 Objects\Other\Tree1.png"
+    "props/tree_tire_swing.png" =
+        "tilesets\green_zone\3 Objects\Other\Tree4.png"
     "props/bench.png" =
         "tilesets\green_zone\3 Objects\Benches\2.png"
+    "props/skate_ramp_right.png" =
+        "tilesets\green_zone\3 Objects\Other\Ramp2.png"
+    "props/skate_ramp_left.png" =
+        "tilesets\green_zone\3 Objects\Other\Ramp1.png"
     "props/bush.png" =
         "tilesets\green_zone\3 Objects\Bushes\3.png"
     "props/bush_low.png" =
         "tilesets\green_zone\3 Objects\Bushes\13.png"
     "props/bush_small.png" =
         "tilesets\green_zone\3 Objects\Bushes\16.png"
+    "props/bush_wild_left.png" =
+        "tilesets\green_zone\3 Objects\Bushes\17.png"
+    "props/bush_wild_right.png" =
+        "tilesets\green_zone\3 Objects\Bushes\18.png"
+    "props/bush_wild_full.png" =
+        "tilesets\green_zone\3 Objects\Bushes\19.png"
     "props/hedge_low_left.png" =
         "tilesets\green_zone\3 Objects\Bushes\9.png"
     "props/hedge_low_right.png" =
@@ -74,6 +86,10 @@ $assets = [ordered]@{
         "tilesets\green_zone\3 Objects\Stones\2.png"
     "props/stone_medium.png" =
         "tilesets\green_zone\3 Objects\Stones\4.png"
+    "props/stone_cluster.png" =
+        "tilesets\green_zone\3 Objects\Stones\3.png"
+    "props/stone_flat.png" =
+        "tilesets\green_zone\3 Objects\Stones\5.png"
     "props/fence.png" =
         "tilesets\green_zone\3 Objects\Fence\3.png"
     "props/garden_gate_open.png" =

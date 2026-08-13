@@ -24,6 +24,7 @@ var _smoothed_x := 0.0
 var _smoothed_vertical_offset := 0.0
 var _vertical_regions: Array[VerticalCameraRegion3D] = []
 var _active_vertical_region: VerticalCameraRegion3D
+var _developer_inspection_enabled := false
 
 
 func _ready() -> void:
@@ -36,27 +37,36 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if target == null:
 		return
-	var desired_x := clampf(
-		target.global_position.x + look_ahead,
-		minimum_center_x,
-		maximum_center_x
-	)
-	_active_vertical_region = _find_active_vertical_region()
+	var desired_x := target.global_position.x
 	var desired_vertical_offset := 0.0
-	if _active_vertical_region != null:
+	if _developer_inspection_enabled:
+		_active_vertical_region = null
+		desired_vertical_offset = target.global_position.y - target_height
+	else:
+		desired_x = clampf(
+			target.global_position.x + look_ahead,
+			minimum_center_x,
+			maximum_center_x
+		)
+		_active_vertical_region = _find_active_vertical_region()
+	if not _developer_inspection_enabled and _active_vertical_region != null:
 		desired_vertical_offset = clampf(
 			target.global_position.y
 			- _active_vertical_region.vertical_anchor_world_y(),
 			_active_vertical_region.minimum_vertical_offset,
 			_active_vertical_region.maximum_vertical_offset
 		)
-	elif vertical_follow_enabled:
+	elif not _developer_inspection_enabled and vertical_follow_enabled:
 		desired_vertical_offset = clampf(
 			target.global_position.y - vertical_anchor_y,
 			minimum_vertical_offset,
 			maximum_vertical_offset
 		)
-	if not _initialized:
+	if _developer_inspection_enabled:
+		_smoothed_x = desired_x
+		_smoothed_vertical_offset = desired_vertical_offset
+		_initialized = true
+	elif not _initialized:
 		_smoothed_x = desired_x
 		_smoothed_vertical_offset = desired_vertical_offset
 		_initialized = true
@@ -99,6 +109,15 @@ func bind_vertical_regions(regions: Array[VerticalCameraRegion3D]) -> void:
 
 func active_vertical_region() -> VerticalCameraRegion3D:
 	return _active_vertical_region
+
+
+func set_developer_inspection_enabled(enabled: bool) -> void:
+	_developer_inspection_enabled = enabled
+	snap_to_target()
+
+
+func is_developer_inspection_enabled() -> bool:
+	return _developer_inspection_enabled
 
 
 func snap_to_target() -> void:

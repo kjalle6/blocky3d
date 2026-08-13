@@ -40,7 +40,7 @@ larger cyberpunk setting.
 
 | Target level | Core arc | New capability | Status |
 | --- | --- | --- | --- |
-| 1: Arrival / Shoreline | Classic fundamentals grow into an aerial route | Double Jump | Shoreline, Green Threshold, and Thorn Garden approved; open-air Double Jump rise awaiting hands-on review |
+| 1: Arrival / Shoreline | Classic fundamentals grow into an aerial route | Double Jump | Full route authored through the flat tire-swing-tree exit; final hands-on completion pass remains |
 | 2: Overgrown Coastal Ascent | Horizontal travel turns upward, then accelerates | Wall Jump and Dash | Planned from proven prototypes |
 | 3: Green Zone Finale | Full-kit mastery, saws, enemy escalation, gun lesson, and boss | Limited firearm | Planned concept |
 
@@ -60,7 +60,16 @@ a tutorial interface:
 5. require it immediately for height and then distance;
 6. establish fair spike rhythms and a second landmark checkpoint;
 7. develop Double Jump through height, distance, and short-release timing;
-8. mix in a flow encounter, final checkpoint, spike recap, and combined finish.
+8. mix in a flow encounter and spike recap, then end on safe flat ground at a
+   tire-swing tree landmark rather than repeating the lesson.
+
+F10 provides a world-locked tile grid plus live player-feet and mouse-world X/Y
+coordinates for precise hands-on layout feedback; F11 remains the independent
+god/noclip/free-flight inspection mode. F7 independently reveals collision,
+hazard, progression-trigger, and active attack regions for fairness review.
+Entering F11 grants the loaded level's available abilities for that session;
+they remain available after inspection exits for a normal-physics test, survive
+death and `R`, never write campaign progression, and clear on level reload.
 
 The production level is being authored in reviewable slices rather than padded
 to its target runtime in one pass. Its locked opening includes the shoreline,
@@ -74,10 +83,16 @@ background layers, checkpoint, and goal placement were removed rather than
 kept as baggage. The replacement open-air rise alternates ascending and
 descending Double Jumps over a continuous thorn basin. Its last high ledge
 frames a lower landing outside the player's view: dropping straight meets a
-small permanent spike cluster positioned on the ordinary forward-fall line,
-while committing the Double Jump farther forward clears it. The temporary goal
-now sits beyond that landing. Finale material remains
-planned rather than present.
+permanent spike cluster spanning the ordinary forward-fall line, while
+committing the Double Jump farther forward clears it. Two familiar patrols add
+optional stomp, jump-over, or knife beats without changing the route: one on
+the small dip platform and one constrained to a safe lane beyond the blind
+landing. Small foliage and one grounded tree dress those platforms behind the
+gameplay plane without implying collision. Beyond the patrol lane, the landing
+simply continues as safe flat ground toward a tire-swing tree landmark. An
+invisible exit trigger in that clearing replaces the temporary chest and fades
+to completion. No new terrain trick, hazard, enemy, checkpoint, or mechanic is
+introduced.
 
 #### Current route-section contract
 
@@ -256,17 +271,43 @@ other asset may be borrowed when it fits the local composition.
     spawned trap. The landing spike always exists below the high ledge; a focused
     runtime check proves it begins outside the frame, becomes visible during the
     fall, punishes its authored drop line, and can be cleared by moving forward.
-14. Current: retain the accepted route and camera feel while human-tuning the
-    concealed cluster's horizontal placement. It is not yet dangerous enough to
-    catch the player's ordinary run-off trajectory, so its final position is not
-    locked by this checkpoint commit.
-15. Next developer-tooling task: add an explicitly toggled, development-only
-    free-flight/noclip mode. It should let the user inspect geometry, spacing,
-    camera transitions, and distant scenery quickly without changing campaign
-    progression, checkpoints, collision rules, or release play.
-16. Then: hand the tuned section to the user for difficulty, fairness, pacing,
-    readability, and composition review. Bot success proves legality only and
-    must never authorize easier geometry.
+14. Completed: tune the concealed cluster across the ordinary run-off line.
+    Human review accepts the gameplay phrase; focused checks lock its visible
+    placement, exact collision reach, hidden-to-revealed camera lesson, and
+    forward Double Jump escape.
+15. Completed: add an explicitly toggled, development-only F11 inspection mode
+    combining god mode, noclip, unclamped camera following, and direct free
+    flight. It lets the user inspect geometry, spacing, camera transitions, and
+    distant scenery without changing campaign progression or checkpoints, and
+    restores normal collision and camera rules on exit.
+16. Completed: add an independent F10 world measurement grid for normal play
+    and inspection. It exposes 1.28 m terrain cells, 0.64 m subdivisions, world
+    coordinate labels, and the player's live position so review screenshots can
+    communicate precise geometry changes.
+17. Completed: add two familiar patrol encounters and restrained environmental
+    dressing to the accepted rise. The small-platform enemy remains readable,
+    the landing enemy walks from just before the blind spike cluster to the
+    platform's right end, and every new prop remains non-colliding and behind
+    gameplay.
+18. Completed: prove the first gameplay-aware set-dressing slice described in
+    `docs/SET_DRESSING_WORKFLOW.md`. The open-air rise now owns a typed Green
+    Zone palette, three authored intent/exclusion zones, deterministic candidate
+    captures, explicit support contacts, and a focused validator. The rejected
+    tree-on-a-small-platform candidate remains preview-only; the accepted pass
+    uses irregular native bushes to vary the island silhouettes while preserving
+    the established broad-ground tree landmark. A hanging-root candidate was
+    rejected after hands-on review; clean platform undersides are now an explicit
+    project rule and validator contract.
+19. Current: hand the dressed section to the user for enemy-flow, readability,
+    and composition review. Bot success proves legality only and must never
+    authorize easier geometry or final visual taste.
+20. Next: after hands-on approval, apply the proven workflow only where another
+    reviewed stretch needs it. Keep candidate generation opt-in; do not turn it
+    into automatic whole-level clutter or scan the full asset mirror at runtime.
+21. Current: review the flat tire-swing-tree ending. It preserves the final
+    landing patrol's accepted lane, adds no new traversal, hides completion in
+    the clearing, and uses a brief application-owned fade. If its trigger timing
+    and framing pass at normal speed, accept Level 1.
 
 ### Needed before the finale
 
@@ -327,15 +368,16 @@ level. It must also:
 ## Current review gate
 
 Arrival / Shoreline is now the production campaign's Level 1. The shoreline,
-Green Threshold, and Thorn Garden form the approved authored baseline. The
-replacement open-air Double Jump rise is implemented after Thorn Garden and is
-the current human-review target; the temporary goal marks its lower landing.
+Green Threshold, Thorn Garden, open-air Double Jump rise, final landing fight,
+and flat tire-swing-tree exit form the complete authored route.
 Automation checks loading, collision support, hazards, checkpoints, reset,
-completion, camera/background coverage, the concealed-spike reveal, and visual
-regressions without tuning the route around bot skill. Human review accepts the
-new camera movement and overall route, but the concealed cluster must still move
-onto the natural run-off line. The user owns the difficulty, fairness, pacing,
-and feel verdict after playing the build. Tune reported beats in place, then
-choose the next section; do not add new systems or begin Level 2 until Level 1
-is accepted. Guns, crafting, saws, secrets, currency, lives, and new enemy
-families remain outside Level 1.
+completion, camera/background coverage, exact spike reach, the concealed-spike
+reveal, bounded patrol behavior, and visual regressions without tuning the route
+around bot skill. Human review accepts the route gameplay and concealed hazard.
+The current gate is a hands-on pass over the safe finish clearing, its invisible
+trigger, and the brief completion fade. The user owns
+the pacing, readability, composition, and feel verdict. Tune reported issues in
+place, then accept Level 1; do not append another recap section merely to add
+length and do not begin Level 2 until Level 1 is accepted.
+Guns, crafting, saws, secrets, currency, lives, and new enemy families remain
+outside Level 1.

@@ -309,7 +309,7 @@ func _validate_spikes(level: LevelSession3D) -> void:
 		var shape := collision.shape as BoxShape3D
 		assert(is_equal_approx(
 			shape.size.x,
-			spike.row_width * spike.collision_width_ratio
+			maxf(0.1, spike.row_width - spike.collision_end_inset * 2.0)
 		))
 		assert(shape.size.y <= spike.spike_height * 0.5)
 

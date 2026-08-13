@@ -6,7 +6,7 @@ const SPIKE_TEXTURE := preload("res://assets/art/shared/hazards/spike.svg")
 const SOURCE_SIZE := Vector2(24.0, 24.0)
 
 @export_range(0.6, 20.0, 0.05, "or_greater") var row_width := 2.5
-@export_range(0.5, 0.95, 0.01) var collision_width_ratio := 0.78
+@export_range(0.0, 0.5, 0.01) var collision_end_inset := 0.2
 @export_range(0.2, 1.5, 0.01) var spike_height := 0.76
 @export_range(0.1, 1.0, 0.01) var collision_height := 0.36
 
@@ -24,7 +24,11 @@ func _build_damage_shape() -> void:
 	collision.name = "DamageCollision"
 	collision.position.y = collision_height * 0.5
 	var shape := BoxShape3D.new()
-	shape.size = Vector3(row_width * collision_width_ratio, collision_height, 0.7)
+	shape.size = Vector3(
+		maxf(0.1, row_width - collision_end_inset * 2.0),
+		collision_height,
+		0.7
+	)
 	collision.shape = shape
 	add_child(collision)
 

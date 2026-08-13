@@ -1,10 +1,10 @@
-[gd_scene load_steps=45 format=3]
+[gd_scene load_steps=53 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="2_platform"]
 [ext_resource type="Resource" path="res://resources/presentation/platform_styles/shoreline_sand.tres" id="3_sand_style"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/pixel_patrol_enemy.tscn" id="4_enemy"]
-[ext_resource type="PackedScene" path="res://scenes/level/pixel_chest_goal.tscn" id="5_goal"]
+[ext_resource type="PackedScene" path="res://scenes/level/level_exit_trigger.tscn" id="5_goal"]
 [ext_resource type="PackedScene" path="res://scenes/pickups/double_jump_pickup.tscn" id="6_pickup"]
 [ext_resource type="PackedScene" path="res://scenes/level/level_checkpoint.tscn" id="7_checkpoint"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_water_strip_3d.gd" id="8_water"]
@@ -39,6 +39,13 @@
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/hedge_mid_right.png" id="46_hedge_mid_right"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/garden_gate_open.png" id="47_gate"]
 [ext_resource type="Script" path="res://scripts/camera/vertical_camera_region_3d.gd" id="48_camera_region"]
+[ext_resource type="Script" path="res://scripts/dressing/dressing_zone_3d.gd" id="49_dressing_zone"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/bush_wild_left.png" id="50_bush_wild_left"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/bush_wild_right.png" id="51_bush_wild_right"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/stone_cluster.png" id="54_stone_cluster"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/tree_tire_swing.png" id="55_tree_tire_swing"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/skate_ramp_right.png" id="56_skate_ramp_right"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/skate_ramp_left.png" id="57_skate_ramp_left"]
 
 [sub_resource type="BoxShape3D" id="Shape_kill_plane"]
 size = Vector3(230.4, 1, 8)
@@ -65,7 +72,7 @@ transition_anchor_path = NodePath("../BackgroundTransitionAnchor")
 
 [node name="RouteExtent" parent="." index="2"]
 route_start_x = -5.12
-route_end_x = 184.32
+route_end_x = 198.4
 
 [node name="OpeningGroundCollision" type="StaticBody3D" parent="." index="3"]
 position = Vector3(7.04, -1.28, 0)
@@ -159,9 +166,9 @@ script = ExtResource("2_platform")
 size = Vector3(3.84, 1.28, 2)
 
 [node name="AerialLanding" type="StaticBody3D" parent="Platforms" index="16"]
-position = Vector3(171.52, -1.28, 0)
+position = Vector3(181.76, -1.28, 0)
 script = ExtResource("2_platform")
-size = Vector3(25.6, 3.84, 2)
+size = Vector3(46.08, 3.84, 2)
 
 [node name="TransitionTalus" type="Node3D" parent="Props" index="0"]
 
@@ -300,6 +307,28 @@ pixel_size = 0.04
 texture = ExtResource("32_tree_small")
 shaded = false
 
+[node name="GardenExitSkateRamp" type="Sprite3D" parent="Props" index="47"]
+position = Vector3(124.84, 1.6, 0.92)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("56_skate_ramp_right")
+shaded = false
+metadata/dressing_asset_id = &"skate_ramp_right"
+metadata/support_y = 0.64
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"ThornGardenExit"
+
+[node name="GardenExitSkateRampLeft" type="Sprite3D" parent="Props" index="48"]
+position = Vector3(121.16, 1.6, 0.92)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("57_skate_ramp_left")
+shaded = false
+metadata/dressing_asset_id = &"skate_ramp_left"
+metadata/support_y = 0.64
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"ThornGardenExit"
+
 [node name="ThornWallGrass" type="Sprite3D" parent="Props" index="12"]
 position = Vector3(104.3, 3.28, 0.98)
 texture_filter = 0
@@ -417,47 +446,224 @@ flip_h = true
 shaded = false
 render_priority = 12
 
-[node name="AerialRiseGrass" type="Sprite3D" parent="Props" index="29"]
-position = Vector3(132.5, 4, 0.98)
+[node name="AerialDressingZones" type="Node3D" parent="Props" index="29"]
+
+[node name="TakeoffCluster" type="Node3D" parent="Props/AerialDressingZones" index="0"]
+position = Vector3(131.8, 5, 0)
+script = ExtResource("49_dressing_zone")
+zone_id = &"arrival_aerial_takeoff"
+intent = 1
+density = 0.35
+deterministic_seed = 1318
+size = Vector2(4.8, 3.2)
+protected_rects = Array[Rect2]([Rect2(131.62, 3.82, 1, 2)])
+
+[node name="WildMidRise" type="Node3D" parent="Props/AerialDressingZones" index="1"]
+position = Vector3(151, 6.2, 0)
+script = ExtResource("49_dressing_zone")
+zone_id = &"arrival_aerial_mid_rise"
+intent = 3
+density = 0.55
+deterministic_seed = 1510
+size = Vector2(22.8, 7.2)
+protected_rects = Array[Rect2]([Rect2(141.19, 6.38, 1, 2), Rect2(150.98, 4.46, 1, 2), Rect2(159.77, 7.66, 1, 2), Rect2(149, 4.46, 4.1, 1.9)])
+
+[node name="LandingLandmark" type="Node3D" parent="Props/AerialDressingZones" index="2"]
+position = Vector3(175.8, 2.1, 0)
+script = ExtResource("49_dressing_zone")
+zone_id = &"arrival_aerial_landing"
+intent = 0
+density = 0.4
+deterministic_seed = 1758
+size = Vector2(16.8, 3.2)
+protected_rects = Array[Rect2]([Rect2(171.26, 0.62, 1, 2), Rect2(167.75, 0.62, 16, 1.9)])
+
+[node name="AerialRiseBush" type="Sprite3D" parent="Props" index="30"]
+position = Vector3(131.08, 4.34, 0.96)
 texture_filter = 0
 pixel_size = 0.04
-texture = ExtResource("35_grass_sparse")
+texture = ExtResource("50_bush_wild_left")
 shaded = false
+metadata/dressing_asset_id = &"bush_wild_left"
+metadata/support_y = 3.84
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"AerialRise"
 
-[node name="AerialCrownStone" type="Sprite3D" parent="Props" index="30"]
-position = Vector3(142.72, 6.66, 0.94)
-texture_filter = 0
-pixel_size = 0.04
-texture = ExtResource("42_stone_small")
-shaded = false
-
-[node name="AerialDipBush" type="Sprite3D" parent="Props" index="31"]
-position = Vector3(151.6, 4.68, 0.96)
-texture_filter = 0
-pixel_size = 0.04
-texture = ExtResource("34_bush_small")
-shaded = false
-
-[node name="AerialPeakGrass" type="Sprite3D" parent="Props" index="32"]
-position = Vector3(160.6, 7.82, 0.98)
-texture_filter = 0
-pixel_size = 0.04
-texture = ExtResource("36_grass_thin")
-shaded = false
-
-[node name="AerialLandingBush" type="Sprite3D" parent="Props" index="33"]
-position = Vector3(176.0, 0.84, 0.96)
-texture_filter = 0
-pixel_size = 0.04
-texture = ExtResource("34_bush_small")
-shaded = false
-
-[node name="AerialLandingGrass" type="Sprite3D" parent="Props" index="34"]
-position = Vector3(180.0, 0.72, 0.98)
+[node name="AerialRiseGrass" type="Sprite3D" parent="Props" index="31"]
+position = Vector3(133.2, 3.94, 0.96)
 texture_filter = 0
 pixel_size = 0.04
 texture = ExtResource("41_grass_small")
 shaded = false
+metadata/dressing_asset_id = &"grass_small"
+metadata/support_y = 3.84
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"AerialRise"
+
+[node name="AerialCrownGrass" type="Sprite3D" parent="Props" index="32"]
+position = Vector3(140.55, 6.5, 0.96)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("41_grass_small")
+shaded = false
+metadata/dressing_asset_id = &"grass_small"
+metadata/support_y = 6.4
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"AerialCrown"
+
+[node name="AerialCrownBush" type="Sprite3D" parent="Props" index="33"]
+position = Vector3(142.8, 6.88, 0.96)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("51_bush_wild_right")
+shaded = false
+metadata/dressing_asset_id = &"bush_wild_right"
+metadata/support_y = 6.4
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"AerialCrown"
+
+[node name="AerialDipBush" type="Sprite3D" parent="Props" index="34"]
+position = Vector3(150.08, 4.82, 0.96)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("33_bush_low")
+shaded = false
+metadata/dressing_asset_id = &"bush_low"
+metadata/support_y = 4.48
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"AerialDip"
+
+[node name="AerialDipGrass" type="Sprite3D" parent="Props" index="35"]
+position = Vector3(152.6, 4.64, 0.96)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("35_grass_sparse")
+shaded = false
+metadata/dressing_asset_id = &"grass_sparse"
+metadata/support_y = 4.48
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"AerialDip"
+
+[node name="AerialPeakGrass" type="Sprite3D" parent="Props" index="36"]
+position = Vector3(158.68, 7.78, 0.96)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("41_grass_small")
+shaded = false
+metadata/dressing_asset_id = &"grass_small"
+metadata/support_y = 7.68
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"AerialPeak"
+
+[node name="AerialPeakBush" type="Sprite3D" parent="Props" index="37"]
+position = Vector3(161.25, 7.88, 0.96)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("34_bush_small")
+shaded = false
+metadata/dressing_asset_id = &"bush_small"
+metadata/support_y = 7.68
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"AerialPeak"
+
+[node name="AerialLandingBush" type="Sprite3D" parent="Props" index="38"]
+position = Vector3(168.75, 0.98, 0.96)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("33_bush_low")
+shaded = false
+metadata/dressing_asset_id = &"bush_low"
+metadata/support_y = 0.64
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"AerialLanding"
+
+[node name="AerialLandingTree" type="Sprite3D" parent="Props" index="39"]
+position = Vector3(173.36, 2.68, 0.92)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("32_tree_small")
+shaded = false
+metadata/dressing_asset_id = &"tree_small"
+metadata/support_y = 0.64
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"AerialLanding"
+
+[node name="AerialLandingStone" type="Sprite3D" parent="Props" index="40"]
+position = Vector3(175.6, 0.96, 0.96)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("54_stone_cluster")
+shaded = false
+metadata/dressing_asset_id = &"stone_cluster"
+metadata/support_y = 0.64
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"AerialLanding"
+
+[node name="AerialLandingGrass" type="Sprite3D" parent="Props" index="41"]
+position = Vector3(179.6, 0.78, 0.96)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("36_grass_thin")
+shaded = false
+metadata/dressing_asset_id = &"grass_thin"
+metadata/support_y = 0.64
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"AerialLanding"
+
+[node name="AerialExitApproachGrass" type="Sprite3D" parent="Props" index="42"]
+position = Vector3(185.4, 0.78, 0.96)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("36_grass_thin")
+shaded = false
+metadata/dressing_asset_id = &"grass_thin"
+metadata/support_y = 0.64
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"AerialLanding"
+
+[node name="AerialExitApproachStone" type="Sprite3D" parent="Props" index="43"]
+position = Vector3(187.4, 0.98, 0.96)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("37_stone_medium")
+shaded = false
+metadata/dressing_asset_id = &"stone_medium"
+metadata/support_y = 0.64
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"AerialLanding"
+
+[node name="AerialExitTrailBush" type="Sprite3D" parent="Props" index="44"]
+position = Vector3(190.7, 1.12, 0.94)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("51_bush_wild_right")
+shaded = false
+metadata/dressing_asset_id = &"bush_wild_right"
+metadata/support_y = 0.64
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"AerialLanding"
+
+[node name="AerialExitTrailGrass" type="Sprite3D" parent="Props" index="45"]
+position = Vector3(191.6, 0.8, 0.96)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("35_grass_sparse")
+shaded = false
+metadata/dressing_asset_id = &"grass_sparse"
+metadata/support_y = 0.64
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"AerialLanding"
+
+[node name="AerialExitTireSwingTree" type="Sprite3D" parent="Props" index="46"]
+position = Vector3(195.2, 4.44, 0.92)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("55_tree_tire_swing")
+shaded = false
+metadata/dressing_asset_id = &"tree_tire_swing"
+metadata/support_y = 0.64
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"AerialLanding"
 
 [node name="ShoreWater" type="Node3D" parent="Hazards" index="0"]
 position = Vector3(-6.4, 0, 0)
@@ -491,8 +697,8 @@ position = Vector3(142.72, -2.4, 0)
 row_width = 32.0
 
 [node name="BlindLandingSpikes" parent="Hazards" index="6" instance=ExtResource("39_spikes")]
-position = Vector3(164.26667, 0.64, 0)
-row_width = 2.56
+position = Vector3(163.28, 0.64, 0)
+row_width = 8.272
 
 [node name="PickupCheckpoint" parent="Checkpoints" index="0" instance=ExtResource("7_checkpoint")]
 position = Vector3(36.2, 0.64, 0)
@@ -511,7 +717,7 @@ position = Vector3(1.8, 0.7, 0)
 [node name="GameplayCamera" parent="." index="10"]
 camera_height = 3.98
 target_height = 3.98
-maximum_center_x = 172.8
+maximum_center_x = 186.88
 
 [node name="KillPlane" parent="." index="11"]
 position = Vector3(90.56, -4.34, 0)
@@ -535,8 +741,20 @@ position = Vector3(102.8, 3.58, 0)
 patrol_speed = 1.7
 starts_moving_right = false
 
+[node name="AerialDipPatrol" parent="." index="16" instance=ExtResource("4_enemy")]
+position = Vector3(152.24, 4.86, 0)
+patrol_speed = 1.7
+starts_moving_right = false
+
+[node name="AerialLandingPatrol" parent="." index="17" instance=ExtResource("4_enemy")]
+position = Vector3(178.4, 1.06, 0)
+patrol_speed = 1.7
+patrol_left_distance = 10.5
+patrol_right_distance = 5.1
+starts_moving_right = false
+
 [node name="Goal" parent="." index="25" instance=ExtResource("5_goal")]
-position = Vector3(181.76, 0.64, 0)
+position = Vector3(194.6, 0.64, 0)
 
 [node name="WaterDeathSplash" type="Node3D" parent="." index="26"]
 script = ExtResource("23_water_splash_script")
