@@ -117,35 +117,9 @@ func _run() -> void:
 	)
 	await _capture_at(
 		level,
-		"arrival_slice_12_canopy_root",
-		Vector3(132.48, 1.98, 0)
+		"arrival_slice_12_temporary_endpoint",
+		Vector3(123.0, 1.34, 0)
 	)
-	await _capture_at(
-		level,
-		"arrival_slice_13_canopy_height",
-		Vector3(141.44, 5.18, 0)
-	)
-	await _capture_at(
-		level,
-		"arrival_slice_14_canopy_recovery",
-		Vector3(149.4, 3.9, 0)
-	)
-	await _capture_at(
-		level,
-		"arrival_slice_15_canopy_timing",
-		Vector3(159.36, 7.1, 0)
-	)
-	await _capture_at(
-		level,
-		"arrival_slice_16_canopy_crown",
-		Vector3(168.0, 6.46, 0)
-	)
-	await _capture_at(
-		level,
-		"arrival_slice_17_right_clamp",
-		Vector3(170.88, 6.46, 0)
-	)
-	await _capture_background_only(level, "arrival_background_04_right_clamp")
 	root.remove_child(game_root)
 	game_root.free()
 	await process_frame

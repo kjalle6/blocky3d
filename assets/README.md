@@ -1,22 +1,28 @@
 # Runtime assets
 
-This directory contains only assets imported for the running Godot game.
-Complete downloaded packs, editable sources, and unused alternatives remain
-outside the repository at:
+Complete downloaded packs and editable sources remain outside the repository
+at:
 
 `D:\GodotProjects\blocky3dassets`
 
-The opening-world pixel set is curated beneath `assets/art/green_zone`. It is a
-shared theme and character kit rather than a level-owned folder. Its manifest
-records source-relative paths and hashes; supplied license notes are stored
-beside it.
+Runtime-ready visual files are mirrored beneath `assets/library` so Codex,
+Godot's filesystem browser, and other tools can search and audit the complete
+owned collection during level authoring. Run
+`tools/sync_visual_asset_library.ps1` to refresh it. Files remain unmodified
+and retain their source-pack structure. Selected production files are promoted
+into `assets/art`.
 
-Before adding an asset:
+Approved and transformed production art belongs beneath `assets/art`. The
+opening-world pixel set is curated beneath `assets/art/green_zone`; its
+manifest records source-relative paths and hashes, and supplied license notes
+are stored beside it.
+
+Before promoting a library asset into production:
 
 1. confirm its source and license;
 2. choose a clear runtime role;
 3. normalize pixel filtering, scale, pivot, and transparent padding;
-4. import only the required files;
+4. place any approved derivative beneath `assets/art`;
 5. keep gameplay collision independently authored;
 6. update the manifest and license notes.
 

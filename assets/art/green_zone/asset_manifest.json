@@ -79,10 +79,6 @@
                                  "source":  "tilesets/green_zone/3 Objects/Other/Tree1.png",
                                  "sha256":  "1cd7df5860c34b0b8e8c55ededc09df9fa02ddb7485c5b3415b55f4b682deaee"
                              },
-    "props/tree_canopy.png":  {
-                                  "source":  "tilesets/green_zone/3 Objects/Other/Tree3.png",
-                                  "sha256":  "65e8cc8abaf6da4bd4736632f9bf54a959102d7c7bfc9c0a744582b0276c5091"
-                              },
     "props/bench.png":  {
                             "source":  "tilesets/green_zone/3 Objects/Benches/2.png",
                             "sha256":  "53afcf793ccc9fbdd27b29713dc534f5f6212b78efacf8d5d5028d9a768da60e"
@@ -99,22 +95,6 @@
                                  "source":  "tilesets/green_zone/3 Objects/Bushes/16.png",
                                  "sha256":  "2fa9323569da74e59191bab4f626a73ca5ec3c3f33da65463bc790a217b7ee3a"
                              },
-    "props/canopy_shrub_wide.png":  {
-                                        "source":  "tilesets/green_zone/3 Objects/Bushes/17.png",
-                                        "sha256":  "014d04606380e16d740cc876db279a617f9cdb1cff9dc20aec08edaf61f27fde"
-                                    },
-    "props/canopy_shrub_slope.png":  {
-                                         "source":  "tilesets/green_zone/3 Objects/Bushes/18.png",
-                                         "sha256":  "f40d3b5cee1d342b0a48a60f579a30ab179bb4e3bd313986037d5e27e6ceac5c"
-                                     },
-    "props/canopy_shrub_mid.png":  {
-                                       "source":  "tilesets/green_zone/3 Objects/Bushes/19.png",
-                                       "sha256":  "6c426f62d27d51bc604d28fc83d9645b92a48e6538f43c722ddac64dc6e3ead9"
-                                   },
-    "props/canopy_shrub_small.png":  {
-                                         "source":  "tilesets/green_zone/3 Objects/Bushes/20.png",
-                                         "sha256":  "40ada78c1d01fa20dcdb3255f6a9b5974583cbdf7069c371bc1b25b388371c01"
-                                     },
     "props/hedge_low_left.png":  {
                                      "source":  "tilesets/green_zone/3 Objects/Bushes/9.png",
                                      "sha256":  "7cf965400daa695d0e4d1999867a5ef210149f577dfab154f43ab91f01da056e"
@@ -228,11 +208,11 @@
                                    "sha256":  "36c48f6c8c1af8add7edcae2925dc421672c182c3ae7923e1f38006ec9cafa67"
                                },
     "background/clouds/broad.png":  {
-                                        "source":  "visual_addons/clouds/PNG/Clouds_white/Shape2/cloud_shape2_3.png",
+                                        "source":  "environment/sky/clouds/PNG/Clouds_white/Shape2/cloud_shape2_3.png",
                                         "sha256":  "0a2a97b3cfd1edd024e0ee25d0a6c64e55f11a74d0f9518fb6b888816777e663"
                                     },
     "background/clouds/puff.png":  {
-                                       "source":  "visual_addons/clouds/PNG/Clouds_white/Shape3/cloud_shape3_4.png",
+                                       "source":  "environment/sky/clouds/PNG/Clouds_white/Shape3/cloud_shape3_4.png",
                                        "sha256":  "cbfcbf7ad8205de2eb00641d44a95725e4676879485364880fa55e42ecb253c6"
                                    },
     "shoreline/tiles/top_left.png":  {
@@ -296,15 +276,15 @@
                                             "sha256":  "4e67baaaf744c025d48dae38f62ffb05804eca4ec4f6e34c3d779d2040e5e20b"
                                         },
     "shoreline/effects/water_death_splash.png":  {
-                                                     "source":  "visual_addons/effects/1 Water splashes/48x/1.png",
+                                                     "source":  "vfx/effects/1 Water splashes/48x/1.png",
                                                      "sha256":  "21d38db0f4ea50c55f9b6556d83103ef5ee4ccb28a71bf321cad1407bc70c198"
                                                  },
     "shoreline/effects/wave_start.png":  {
-                                             "source":  "visual_addons/effects/3 Waves/1Start.png",
+                                             "source":  "vfx/effects/3 Waves/1Start.png",
                                              "sha256":  "fb53e126663313ccd98c18747ffe5fbbecb21fc7006561526149cc7ee7b46eb9"
                                          },
     "shoreline/effects/shore_foam.png":  {
-                                             "source":  "visual_addons/effects/1 Water splashes/48x/2.png",
+                                             "source":  "vfx/effects/1 Water splashes/48x/2.png",
                                              "sha256":  "6533a6a00dd6bb4c9d25c6544cc9a985eaa2ee2f71be100d8c9e1c7b6f1972f6"
                                          },
     "shoreline/background/layer_1.png":  {
@@ -352,23 +332,23 @@
                                               "sha256":  "53cad88a1a3ebe7732d5559c30e1f13d5e9b7608b054a62a48882a87de19b5fd"
                                           },
     "shoreline/props/transition_outcrop_tall.png":  {
-                                                        "source":  "potential_rocks/PNG/middle_lane_rocks1/middle_lane_rock1_1.png",
+                                                        "source":  "environment/rocks/PNG/middle_lane_rocks1/middle_lane_rock1_1.png",
                                                         "sha256":  "ebf2153ed776b00473224b9e6661c968eaea9a2bb17c0a7eaa4a3e143398cf38"
                                                     },
     "shoreline/props/transition_outcrop_broad.png":  {
-                                                         "source":  "potential_rocks/PNG/middle_lane_rocks1/middle_lane_rock1_2.png",
+                                                         "source":  "environment/rocks/PNG/middle_lane_rocks1/middle_lane_rock1_2.png",
                                                          "sha256":  "23904f47f33c4253d96dd6a6dab4c6759165fe9805fefdb40d6f3e66a624511d"
                                                      },
     "shoreline/props/transition_outcrop.png":  {
-                                                   "source":  "potential_rocks/PNG/middle_lane_rocks1/middle_lane_rock1_3.png",
+                                                   "source":  "environment/rocks/PNG/middle_lane_rocks1/middle_lane_rock1_3.png",
                                                    "sha256":  "54dc99d70adf934e1fea508638561682cd50b98bb1d717f777407ac5ed0f292d"
                                                },
     "shoreline/props/transition_outcrop_medium.png":  {
-                                                          "source":  "potential_rocks/PNG/middle_lane_rocks1/middle_lane_rock1_4.png",
+                                                          "source":  "environment/rocks/PNG/middle_lane_rocks1/middle_lane_rock1_4.png",
                                                           "sha256":  "b4d990c95cbeaea001f53beaaba51a74614c596811989a6ed084afb68e7315ea"
                                                       },
     "shoreline/props/transition_outcrop_small.png":  {
-                                                         "source":  "potential_rocks/PNG/middle_lane_rocks1/middle_lane_rock1_5.png",
+                                                         "source":  "environment/rocks/PNG/middle_lane_rocks1/middle_lane_rock1_5.png",
                                                          "sha256":  "49787b63b79f0707f619dbb3f86cc7fdd4bf670332597efe1285aadd3ee7026f"
                                                      },
     "props/tree_grounded.png":  {
@@ -381,11 +361,6 @@
                                           "transform":  "Removed the final all-black pixel row for grounded rendering.",
                                           "sha256":  "6fac3fd64544345e104db59d53c048a4948ca56bc9c01dd1b124ec7f772ea3fa"
                                       },
-    "props/tree_canopy_grounded.png":  {
-                                           "source":  "tilesets/green_zone/3 Objects/Other/Tree3.png",
-                                           "transform":  "Removed the final all-black pixel row for grounded rendering.",
-                                           "sha256":  "ae056fe36f4a3f58042b2fb12172449281f1c66fd974a782a00068d252439a22"
-                                       },
     "shoreline/tiles/transition_top_0.png":  {
                                                  "sources":  [
                                                                  "tilesets/beach_zone/1 Tiles/SandTile_02.png",

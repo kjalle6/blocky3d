@@ -38,10 +38,9 @@ func _run() -> void:
 	assert(background.has_node("GeneratedLayers"))
 	arrival.player.set_physics_process(false)
 	_set_camera_center(arrival, camera.minimum_center_x)
-	var cloud_world_phases := [
-		_layer_world_phase(background, 0),
-		_layer_world_phase(background, 1),
-	]
+	var cloud_world_phases := []
+	for cloud_index in 2:
+		cloud_world_phases.append(_layer_world_phase(background, cloud_index))
 	var stable_ids := _copy_instance_ids(background)
 	for center_x in [
 		camera.minimum_center_x,
@@ -151,7 +150,16 @@ func _validate_profile_and_imports(profile: PixelBackgroundProfile) -> void:
 	assert(is_equal_approx(profile.pixel_size, 0.04))
 	assert(profile.panel_size_world().is_equal_approx(Vector2(23.04, 12.96)))
 	assert(profile.layers.size() == 3)
-	var expected_sizes := [Vector2i(144, 33), Vector2i(72, 51), Vector2i(576, 324)]
+	var expected_sizes := [
+		Vector2i(144, 33),
+		Vector2i(72, 51),
+		Vector2i(576, 324),
+	]
+	var expected_vertical_policies := [
+		PixelBackgroundLayerProfile.VerticalPolicy.SCREEN_LOCKED,
+		PixelBackgroundLayerProfile.VerticalPolicy.SCREEN_LOCKED,
+		PixelBackgroundLayerProfile.VerticalPolicy.SCREEN_LOCKED,
+	]
 	var imported_paths := PackedStringArray()
 	for layer_index in profile.layers.size():
 		var layer := profile.layers[layer_index]
@@ -164,20 +172,20 @@ func _validate_profile_and_imports(profile: PixelBackgroundProfile) -> void:
 			layer.horizontal_policy
 			== (
 				PixelBackgroundLayerProfile.HorizontalPolicy.WORLD_LOCKED
-				if layer_index < 2
-				else PixelBackgroundLayerProfile.HorizontalPolicy.PARALLAX
+					if layer_index < 2
+					else PixelBackgroundLayerProfile.HorizontalPolicy.PARALLAX
 			)
 		)
-		assert(
-			layer.vertical_policy
-			== PixelBackgroundLayerProfile.VerticalPolicy.SCREEN_LOCKED
-		)
+		assert(layer.vertical_policy == expected_vertical_policies[layer_index])
 		assert(
 			layer.horizontal_repeat
 			== PixelBackgroundLayerProfile.HorizontalRepeat.MIRROR
 		)
-		if layer.texture.resource_path not in imported_paths:
-			imported_paths.append(layer.texture.resource_path)
+		var source_texture := layer.texture
+		if source_texture is AtlasTexture:
+			source_texture = (source_texture as AtlasTexture).atlas
+		if source_texture.resource_path not in imported_paths:
+			imported_paths.append(source_texture.resource_path)
 	for texture_path in imported_paths:
 		var import_text := FileAccess.get_file_as_string(texture_path + ".import")
 		assert("compress/mode=0" in import_text)
@@ -195,12 +203,12 @@ func _validate_transition_anchor(level: LevelSession3D) -> void:
 		== NodePath("../BackgroundTransitionAnchor")
 	)
 	assert(is_equal_approx(anchor.global_position.x, 14.08))
-	var expected_offsets := [
-		Vector2(3.92, 19.92),
-		Vector2(15.92, 33.92),
-		Vector2(-2.08, 12.92),
-	]
-	for layer_index in background.profile.layers.size():
+	var expected_offsets := {
+		0: Vector2(3.92, 19.92),
+		1: Vector2(15.92, 33.92),
+		2: Vector2(-2.08, 12.92),
+	}
+	for layer_index in expected_offsets:
 		var layer := background.profile.layers[layer_index]
 		assert(layer.uses_transition_anchor())
 		var actual_offsets := (
@@ -228,7 +236,9 @@ func _validate_transition_anchor(level: LevelSession3D) -> void:
 	for layer_index in background.runtime_layer_count():
 		var expected_opacity := background.profile.layers[layer_index].opacity_at(
 			camera.global_position.x,
-			anchor.global_position.x
+			anchor.global_position.x,
+			camera.global_position.y,
+			0.0
 		)
 		var actual_opacity := (
 			background.runtime_copies(layer_index)[0].modulate.a

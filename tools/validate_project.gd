@@ -49,17 +49,14 @@ func _validate() -> void:
 	menu_up.physical_keycode = KEY_W
 	menu_up.pressed = true
 	game_root._unhandled_input(menu_up)
-	assert(
-		animation_lab_button.has_focus(),
-		"W should wrap selection from Level 1 to Animation Lab."
-	)
+	assert(animation_lab_button.has_focus(), "W should wrap Level 1 to Animation Lab.")
 	var menu_down := InputEventKey.new()
 	menu_down.physical_keycode = KEY_S
 	menu_down.pressed = true
 	game_root._unhandled_input(menu_down)
 	assert(
 		level_01_button.has_focus(),
-		"S should wrap selection from Animation Lab to Level 1."
+		"S should wrap selection from the final developer lab to Level 1."
 	)
 	var menu_enter := InputEventKey.new()
 	menu_enter.physical_keycode = KEY_ENTER
@@ -75,11 +72,11 @@ func _validate() -> void:
 	assert(level != null, "World 1 / Level 1 must instantiate.")
 	assert(game_root.current_world_definition.world_id == &"green_zone")
 	assert(
-		is_equal_approx(level.route_extent.length(), 179.2),
+		is_equal_approx(level.route_extent.length(), 131.84),
 		"Level 1 must expose the current staged production review route."
 	)
 	assert(level.player.movement.ideal_jump_height() > 2.0)
-	assert(level.get_node("Platforms").get_child_count() == 15)
+	assert(level.get_node("Platforms").get_child_count() == 10)
 	assert(level.get_node_or_null("ApproachPatrol") is StompableEnemy3D)
 	assert(level.get_node_or_null("DoubleJumpPickup") is AbilityPickup3D)
 	assert(level.get_node_or_null("Goal") is PixelGoal3D)

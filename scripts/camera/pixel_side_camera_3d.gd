@@ -22,6 +22,8 @@ extends Camera3D
 var _initialized := false
 var _smoothed_x := 0.0
 var _smoothed_vertical_offset := 0.0
+var _vertical_regions: Array[VerticalCameraRegion3D] = []
+var _active_vertical_region: VerticalCameraRegion3D
 
 
 func _ready() -> void:
@@ -39,8 +41,15 @@ func _process(delta: float) -> void:
 		minimum_center_x,
 		maximum_center_x
 	)
+	_active_vertical_region = _find_active_vertical_region()
 	var desired_vertical_offset := 0.0
-	if vertical_follow_enabled:
+	if _active_vertical_region != null:
+		desired_vertical_offset = clampf(
+			target.global_position.y - _active_vertical_region.vertical_anchor_y,
+			_active_vertical_region.minimum_vertical_offset,
+			_active_vertical_region.maximum_vertical_offset
+		)
+	elif vertical_follow_enabled:
 		desired_vertical_offset = clampf(
 			target.global_position.y - vertical_anchor_y,
 			minimum_vertical_offset,
@@ -75,6 +84,22 @@ func _process(delta: float) -> void:
 	)
 
 
+func bind_vertical_regions(regions: Array[VerticalCameraRegion3D]) -> void:
+	_vertical_regions = regions.duplicate()
+	for region in _vertical_regions:
+		assert(region != null)
+		var errors := region.validation_errors()
+		assert(
+			errors.is_empty(),
+			"%s has invalid vertical camera settings:\n%s"
+			% [region.name, "\n".join(errors)]
+		)
+
+
+func active_vertical_region() -> VerticalCameraRegion3D:
+	return _active_vertical_region
+
+
 func snap_to_target() -> void:
 	_initialized = false
 	_process(0.0)
@@ -103,3 +128,13 @@ func snap_world_y(world_y: float) -> float:
 	if pixel_world_size <= 0.0:
 		return world_y
 	return snappedf(world_y, pixel_world_size)
+
+
+func _find_active_vertical_region() -> VerticalCameraRegion3D:
+	var best_region: VerticalCameraRegion3D
+	for region in _vertical_regions:
+		if not region.contains_world_position(target.global_position):
+			continue
+		if best_region == null or region.priority > best_region.priority:
+			best_region = region
+	return best_region

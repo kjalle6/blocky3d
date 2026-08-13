@@ -46,9 +46,21 @@ enum HorizontalRepeat {
 @export var fade_out_enabled := false
 @export var fade_out_start_offset_x := 0.0
 @export var fade_out_end_offset_x := 0.0
+@export_category("Camera-height visibility")
+@export var height_fade_in_enabled := false
+@export var height_fade_in_start_offset_y := 0.0
+@export var height_fade_in_end_offset_y := 0.0
+@export var height_fade_out_enabled := false
+@export var height_fade_out_start_offset_y := 0.0
+@export var height_fade_out_end_offset_y := 0.0
 
 
-func opacity_at(camera_x: float, transition_anchor_x: float) -> float:
+func opacity_at(
+	camera_x: float,
+	transition_anchor_x: float,
+	camera_y := 0.0,
+	height_anchor_y := 0.0
+) -> float:
 	var opacity := tint.a
 	if fade_in_enabled:
 		opacity *= smoothstep(
@@ -62,11 +74,27 @@ func opacity_at(camera_x: float, transition_anchor_x: float) -> float:
 			transition_anchor_x + fade_out_end_offset_x,
 			camera_x
 		)
+	if height_fade_in_enabled:
+		opacity *= smoothstep(
+			height_anchor_y + height_fade_in_start_offset_y,
+			height_anchor_y + height_fade_in_end_offset_y,
+			camera_y
+		)
+	if height_fade_out_enabled:
+		opacity *= 1.0 - smoothstep(
+			height_anchor_y + height_fade_out_start_offset_y,
+			height_anchor_y + height_fade_out_end_offset_y,
+			camera_y
+		)
 	return clampf(opacity, 0.0, 1.0)
 
 
 func uses_transition_anchor() -> bool:
 	return fade_in_enabled or fade_out_enabled
+
+
+func uses_height_anchor() -> bool:
+	return height_fade_in_enabled or height_fade_out_enabled
 
 
 func repeat_step_pixels() -> float:
@@ -91,6 +119,16 @@ func validation_errors() -> PackedStringArray:
 		errors.append("Fade-in end must be after fade-in start.")
 	if fade_out_enabled and fade_out_end_offset_x <= fade_out_start_offset_x:
 		errors.append("Fade-out end must be after fade-out start.")
+	if (
+		height_fade_in_enabled
+		and height_fade_in_end_offset_y <= height_fade_in_start_offset_y
+	):
+		errors.append("Height fade-in end must be above its start.")
+	if (
+		height_fade_out_enabled
+		and height_fade_out_end_offset_y <= height_fade_out_start_offset_y
+	):
+		errors.append("Height fade-out end must be above its start.")
 	if texture != null and repeat_step_pixels() <= 0.0:
 		errors.append("Background repeat spacing must be positive.")
 	if cover_viewport_width and texture != null and (

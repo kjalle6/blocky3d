@@ -79,43 +79,6 @@ const CROSSINGS := [
 		"launch_x": 105.7,
 		"second_x": -1.0,
 	},
-	{
-		"name": "Canopy root",
-		"from": ^"Platforms/ThornGardenExit",
-		"to": ^"Platforms/CanopyRoot",
-		"launch_x": 125.2,
-		"second_x": -1.0,
-	},
-	{
-		"name": "Canopy height proof",
-		"from": ^"Platforms/CanopyRoot",
-		"to": ^"Platforms/CanopyFork",
-		"launch_x": 133.8,
-		"second_x": 136.2,
-		"landing_brake_x": 141.0,
-	},
-	{
-		"name": "Canopy recovery",
-		"from": ^"Platforms/CanopyFork",
-		"to": ^"Platforms/CanopyRest",
-		"launch_x": 142.5,
-		"second_x": -1.0,
-	},
-	{
-		"name": "Canopy timing perch",
-		"from": ^"Platforms/CanopyRest",
-		"to": ^"Platforms/CanopyNeedle",
-		"launch_x": 152.5,
-		"second_x": 155.0,
-		"landing_brake_x": 159.0,
-	},
-	{
-		"name": "Canopy crown",
-		"from": ^"Platforms/CanopyNeedle",
-		"to": ^"Platforms/CanopyCrown",
-		"launch_x": 160.0,
-		"second_x": -1.0,
-	},
 ]
 
 
@@ -197,14 +160,19 @@ func _run() -> void:
 			var crossing: Dictionary = CROSSINGS[crossing_index]
 			var source := level.get_node(crossing.from) as PixelPlatform3D
 			var target := level.get_node(crossing.to) as PixelPlatform3D
+			var direction := float(crossing.get("direction", 1.0))
 			stage_frames += 1
 			match phase:
 				&"approach":
-					_set_horizontal_input(1.0)
+					_set_horizontal_input(direction)
 					if (
 						player.is_on_floor()
 						and _is_on_platform(player, source)
-						and player.global_position.x >= float(crossing.launch_x)
+						and _reached_x(
+							player.global_position.x,
+							float(crossing.launch_x),
+							direction
+						)
 					):
 						Input.action_press("jump")
 						jump_held = true
@@ -215,12 +183,15 @@ func _run() -> void:
 						stage_frames = 0
 
 				&"crossing":
-					var landing_brake_x := float(crossing.get(
-						"landing_brake_x", INF
-					))
-					_set_horizontal_input(
-						0.0 if player.global_position.x >= landing_brake_x else 1.0
+					var should_brake := (
+						crossing.has("landing_brake_x")
+						and _reached_x(
+							player.global_position.x,
+							float(crossing.landing_brake_x),
+							direction
+						)
 					)
+					_set_horizontal_input(0.0 if should_brake else direction)
 					saw_airborne = saw_airborne or not player.is_on_floor()
 					if (
 						float(crossing.second_x) >= 0.0
@@ -228,7 +199,11 @@ func _run() -> void:
 						and not jump_held
 						and not jump_released_this_frame
 						and not player.is_on_floor()
-						and player.global_position.x >= float(crossing.second_x)
+						and _reached_x(
+							player.global_position.x,
+							float(crossing.second_x),
+							direction
+						)
 					):
 						Input.action_press("jump")
 						jump_held = true
@@ -277,7 +252,7 @@ func _run() -> void:
 	assert(pickup_checkpoint.is_activated())
 	assert(exit_checkpoint.is_activated())
 	assert(level.active_checkpoint_index() == 3)
-	assert(double_jump_count[0] >= 5)
+	assert(double_jump_count[0] >= 3)
 	assert(wrong_ability_count[0] == 0)
 	assert(death_count[0] == 0)
 
@@ -333,6 +308,10 @@ func _set_horizontal_input(direction: float) -> void:
 	else:
 		Input.action_release("move_left")
 		Input.action_release("move_right")
+
+
+func _reached_x(current_x: float, target_x: float, direction: float) -> bool:
+	return current_x >= target_x if direction > 0.0 else current_x <= target_x
 
 
 func _release_inputs() -> void:

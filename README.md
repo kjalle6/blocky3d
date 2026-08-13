@@ -17,9 +17,8 @@ remain read-only design references.
 
 - Arrival / Shoreline is the first production campaign level. Its reviewed
   shoreline now leads into the first production passes of Green Threshold and
-  Thorn Garden. The current Canopy Ascent geometry is a technically traversable
-  composition draft, not approved content; its replacement is the active
-  milestone
+  Thorn Garden. The rejected stitched-tree ascent has been removed; the current
+  temporary finish marks a clean construction boundary at the garden exit
 - Six earlier Green Zone prototype levels remain in a separate regression
   catalog to validate Fundamentals, Gaps & Spikes, Double Jump, Wall Jump,
   Dash, and full-kit movement
@@ -29,8 +28,9 @@ remain read-only design references.
   remains the only development-tool entry
 - A reusable profile-driven pixel-background rig provides native-scale,
   seam-safe horizontal coverage, authored coastal-to-green transitions, and
-  stable framing during vertical camera travel. Canopy Ascent will extend this
-  with scene-authored vertical camera regions and height-aware layered parallax
+  stable framing during vertical camera travel. Dormant scene-authored vertical
+  regions and height-aware opacity controls are available when an approved
+  upward route actually needs them
 - The intended finale adds moving saws, a limited firearm lesson, and a simple
   first boss while keeping melee viable
 - Typed world catalog and world-grouped mouse or `W`/`S` + `Enter` level
@@ -40,9 +40,9 @@ remain read-only design references.
 - Development mode starts every level from its fresh level-defined entry state,
   then retains session abilities through death and `R`
 - 1920x1080 presentation baseline
-- Next milestone: rebuild Canopy Ascent as a substantially longer, primarily
-  vertical climb through continuous layered tree masses, then review its low,
-  middle, and high compositions at normal speed
+- Next milestone: use the complete imported visual library to author one
+  coherent upward Double Jump phrase after Thorn Garden, without committing to
+  a giant-tree visual gimmick before the available assets prove the idea
 
 The three living design documents are:
 
@@ -74,8 +74,14 @@ and architecture are not copied blindly.
 ## Assets
 
 The complete downloaded packs stay outside this repository at
-`D:\GodotProjects\blocky3dassets`. Refresh the curated green-zone runtime set
-with:
+`D:\GodotProjects\blocky3dassets`. Mirror all runtime-ready visual files into
+the project's searchable source-art catalog with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\tools\sync_visual_asset_library.ps1
+```
+
+Refresh the curated green-zone production set with:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\tools\prepare_green_zone_assets.ps1
@@ -84,11 +90,10 @@ powershell -ExecutionPolicy Bypass -File .\tools\prepare_green_zone_assets.ps1
 ## Validate
 
 Use the guarded runner rather than launching Godot directly. It preserves the
-running editor/game by default and uses the normal Compatibility renderer. Do
-not use `--headless`: Godot 4.6.3 Mono produces native access-violation dialogs
-with headless project scripts on this machine, while the same validators pass
-normally without that flag. Pass `-CloseRunningGodot` only when a particular
-automation run genuinely requires exclusive access.
+running editor/game by default and uses the standard non-.NET Godot 4.6.3 build
+with the normal Compatibility renderer. Do not use `--headless`. Pass
+`-CloseRunningGodot` only when a particular automation run genuinely requires
+exclusive access.
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Script res://tools/validate_project.gd
@@ -98,6 +103,16 @@ powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Script res:
 
 Pass any other `res://tools/validate_*.gd` script through the same runner.
 
+The runner's `-EditorImport` mode uses Godot's dedicated `--import` command and
+waits on the real editor executable, not only its console launcher. Every mode
+uses the real process exit code, a per-run log, and an exclusive automation
+lock. Do not substitute `--editor --quit`; it can exit while import workers are
+still active. The complete source-art catalog under `assets/library` is
+available in Godot for searching and auditioning; only selected production
+files are referenced from scenes and promoted into `assets/art`. Bulk asset
+activity is not treated as the proven cause or cure for the outstanding native
+automation crash.
+
 Generate graphical review captures with:
 
 ```powershell
@@ -105,5 +120,15 @@ powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Visual -Scr
 powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Visual -Script res://tools/capture_animation_lab.gd
 powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Visual -Script res://tools/capture_arrival_shoreline_slice.gd
 ```
+
+The runner gives automation its own writable Windows profile at
+`build/godot_automation_profile`. Godot's editor cache and `user://` therefore
+stay inside the ignored build directory during validators and captures instead
+of touching the interactive editor profile or the player's campaign save. The
+runner checks both its Roaming and Local profile roots before every launch. It
+uses the standard build because this project contains no C# and the Mono build
+repeatedly crashed inside CoreCLR. Use
+`res://tools/validate_automation_environment.gd` to verify the isolated profile
+and non-.NET engine contracts.
 
 Pass any other `res://tools/capture_*.gd` script through the same runner.

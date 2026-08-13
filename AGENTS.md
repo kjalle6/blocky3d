@@ -1,14 +1,19 @@
 # Godot automation safety
 
-This Windows machine repeatedly produces native Godot 4.6.3 Mono access-
-violation dialogs when project scripts are launched with `--headless`. The
-same validators pass through the normal Compatibility renderer.
+This Windows machine has repeatedly produced native Godot 4.6.3 access-
+violation dialogs during automation. Earlier Mono incidents faulted in
+CoreCLR; the standard non-.NET build has also faulted during later automation.
+The shared root cause is not yet proven. The project contains no C# code, so
+automation still uses the smaller standard build through Compatibility.
 
 - Never launch either Godot executable directly for validation or captures.
 - Always use `tools/run_godot_tool.ps1`.
+- Keep the runner on the standard non-.NET executable; do not override it with
+  the Mono build.
 - Never pass `--headless`, even for validators.
-- Preserve running Godot editor/game processes by default. The crash was proven
-  to be caused by `--headless`, not merely by concurrent Godot processes.
+- Preserve running Godot editor/game processes by default. `--headless` was an
+  early repeatable trigger, but neither it nor concurrent processes is accepted
+  as the sole root cause without a crash dump.
 - The user has explicitly authorized closing Godot without pausing to ask when
   exclusive access is genuinely needed. In that case pass `-CloseRunningGodot`;
   it closes only processes whose names begin with `Godot`, gracefully first and
@@ -19,6 +24,19 @@ same validators pass through the normal Compatibility renderer.
 - After renaming a `class_name` script or its file, refresh Godot's generated
   class cache with the runner's `-EditorImport` switch before validation. Add
   `-CloseRunningGodot` when an open editor still holds the old class registry.
+- `-EditorImport` must continue to use Godot's dedicated `--import` mode. Never
+  implement it as `--editor --quit`; that exits on the first iteration while
+  import workers may still be active and emitted unfinished-thread warnings in
+  the same sessions as native access violations.
+- Keep every runner mode supervising the real non-console Godot executable
+  with `Start-Process -Wait`; the Windows console launcher alone cannot be
+  trusted to surface a delayed process crash. Keep the runner's exclusive
+  automation lock so two tool instances cannot overlap.
+- The complete source-art catalog under `assets/library` is intentionally
+  visible to Godot for searching and auditioning. Promote selected production
+  assets into `assets/art`; do not mistake catalog availability for permission
+  to make every pack a runtime dependency. Asset import volume is not accepted
+  as the root cause of the unresolved native automation crash.
 
 Canonical examples:
 

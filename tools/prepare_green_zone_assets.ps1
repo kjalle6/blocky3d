@@ -54,8 +54,6 @@ $assets = [ordered]@{
         "tilesets\green_zone\3 Objects\Other\Tree2.png"
     "props/tree_small.png" =
         "tilesets\green_zone\3 Objects\Other\Tree1.png"
-    "props/tree_canopy.png" =
-        "tilesets\green_zone\3 Objects\Other\Tree3.png"
     "props/bench.png" =
         "tilesets\green_zone\3 Objects\Benches\2.png"
     "props/bush.png" =
@@ -64,14 +62,6 @@ $assets = [ordered]@{
         "tilesets\green_zone\3 Objects\Bushes\13.png"
     "props/bush_small.png" =
         "tilesets\green_zone\3 Objects\Bushes\16.png"
-    "props/canopy_shrub_wide.png" =
-        "tilesets\green_zone\3 Objects\Bushes\17.png"
-    "props/canopy_shrub_slope.png" =
-        "tilesets\green_zone\3 Objects\Bushes\18.png"
-    "props/canopy_shrub_mid.png" =
-        "tilesets\green_zone\3 Objects\Bushes\19.png"
-    "props/canopy_shrub_small.png" =
-        "tilesets\green_zone\3 Objects\Bushes\20.png"
     "props/hedge_low_left.png" =
         "tilesets\green_zone\3 Objects\Bushes\9.png"
     "props/hedge_low_right.png" =
@@ -129,9 +119,9 @@ $assets = [ordered]@{
     "background/layer_5.png" =
         "tilesets\green_zone\2 Background\Day\5.png"
     "background/clouds/broad.png" =
-        "visual_addons\clouds\PNG\Clouds_white\Shape2\cloud_shape2_3.png"
+        "environment\sky\clouds\PNG\Clouds_white\Shape2\cloud_shape2_3.png"
     "background/clouds/puff.png" =
-        "visual_addons\clouds\PNG\Clouds_white\Shape3\cloud_shape3_4.png"
+        "environment\sky\clouds\PNG\Clouds_white\Shape3\cloud_shape3_4.png"
     "shoreline/tiles/top_left.png" =
         "tilesets\beach_zone\1 Tiles\SandTile_01.png"
     "shoreline/tiles/top.png" =
@@ -163,11 +153,11 @@ $assets = [ordered]@{
     "shoreline/water/water_tiles.png" =
         "tilesets\beach_zone\1 Tiles\WaterTiles.png"
     "shoreline/effects/water_death_splash.png" =
-        "visual_addons\effects\1 Water splashes\48x\1.png"
+        "vfx\effects\1 Water splashes\48x\1.png"
     "shoreline/effects/wave_start.png" =
-        "visual_addons\effects\3 Waves\1Start.png"
+        "vfx\effects\3 Waves\1Start.png"
     "shoreline/effects/shore_foam.png" =
-        "visual_addons\effects\1 Water splashes\48x\2.png"
+        "vfx\effects\1 Water splashes\48x\2.png"
     "shoreline/background/layer_1.png" =
         "tilesets\beach_zone\3 Background\Day\1.png"
     "shoreline/background/layer_2.png" =
@@ -191,15 +181,15 @@ $assets = [ordered]@{
     "props/transition_pebble_green.png" =
         "tilesets\green_zone\3 Objects\Stones\1.png"
     "shoreline/props/transition_outcrop_tall.png" =
-        "potential_rocks\PNG\middle_lane_rocks1\middle_lane_rock1_1.png"
+        "environment\rocks\PNG\middle_lane_rocks1\middle_lane_rock1_1.png"
     "shoreline/props/transition_outcrop_broad.png" =
-        "potential_rocks\PNG\middle_lane_rocks1\middle_lane_rock1_2.png"
+        "environment\rocks\PNG\middle_lane_rocks1\middle_lane_rock1_2.png"
     "shoreline/props/transition_outcrop.png" =
-        "potential_rocks\PNG\middle_lane_rocks1\middle_lane_rock1_3.png"
+        "environment\rocks\PNG\middle_lane_rocks1\middle_lane_rock1_3.png"
     "shoreline/props/transition_outcrop_medium.png" =
-        "potential_rocks\PNG\middle_lane_rocks1\middle_lane_rock1_4.png"
+        "environment\rocks\PNG\middle_lane_rocks1\middle_lane_rock1_4.png"
     "shoreline/props/transition_outcrop_small.png" =
-        "potential_rocks\PNG\middle_lane_rocks1\middle_lane_rock1_5.png"
+        "environment\rocks\PNG\middle_lane_rocks1\middle_lane_rock1_5.png"
 }
 
 $licenses = [ordered]@{
@@ -216,11 +206,15 @@ $licenses = [ordered]@{
     "licenses/beach_zone_tileset.txt" =
         "tilesets\beach_zone\license.txt"
     "licenses/water_effects.txt" =
-        "visual_addons\effects\license.txt"
+        "vfx\effects\license.txt"
     "licenses/rocks.txt" =
-        "potential_rocks\License.txt"
+        "environment\rocks\License.txt"
     "licenses/clouds.txt" =
-        "visual_addons\clouds\License.txt"
+        "environment\sky\clouds\License.txt"
+    "licenses/tree_branch_pack.txt" =
+        "environment\vegetation\trees\License.txt"
+    "licenses/forest_background_pack.txt" =
+        "backgrounds\forests_and_trees\license.txt"
 }
 
 $manifest = [ordered]@{}
@@ -243,6 +237,59 @@ foreach ($entry in $assets.GetEnumerator()) {
 }
 
 Add-Type -AssemblyName System.Drawing
+
+function New-SolidPixelSilhouette {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$SourcePath,
+        [Parameter(Mandatory = $true)]
+        [string]$DestinationPath,
+        [Parameter(Mandatory = $true)]
+        [System.Drawing.Color]$Color
+    )
+
+    $source = [System.Drawing.Bitmap]::FromFile($SourcePath)
+    try {
+        $mapped = [System.Drawing.Bitmap]::new(
+            $source.Width,
+            $source.Height,
+            [System.Drawing.Imaging.PixelFormat]::Format32bppArgb
+        )
+        try {
+            for ($y = 0; $y -lt $source.Height; $y++) {
+                for ($x = 0; $x -lt $source.Width; $x++) {
+                    $sourceColor = $source.GetPixel($x, $y)
+                    $mapped.SetPixel(
+                        $x,
+                        $y,
+                        $(
+                            if ($sourceColor.A -eq 0) {
+                                [System.Drawing.Color]::Transparent
+                            }
+                            else {
+                                [System.Drawing.Color]::FromArgb(
+                                    $sourceColor.A,
+                                    $Color.R,
+                                    $Color.G,
+                                    $Color.B
+                                )
+                            }
+                        )
+                    )
+                }
+            }
+            New-Item -ItemType Directory -Path (
+                Split-Path -Parent $DestinationPath
+            ) -Force | Out-Null
+            $mapped.Save(
+                $DestinationPath,
+                [System.Drawing.Imaging.ImageFormat]::Png
+            )
+        }
+        finally { $mapped.Dispose() }
+    }
+    finally { $source.Dispose() }
+}
 
 function New-GroundedTree {
     param(
@@ -427,8 +474,7 @@ function New-PixelTerrainTransitionTriplet {
 
 foreach ($tree in @(
     @{ source = "props/tree.png"; destination = "props/tree_grounded.png" },
-    @{ source = "props/tree_small.png"; destination = "props/tree_small_grounded.png" },
-    @{ source = "props/tree_canopy.png"; destination = "props/tree_canopy_grounded.png" }
+    @{ source = "props/tree_small.png"; destination = "props/tree_small_grounded.png" }
 )) {
     $treeSourcePath = Join-Path $OutputRoot $tree.source
     $treeGroundedPath = Join-Path $OutputRoot $tree.destination

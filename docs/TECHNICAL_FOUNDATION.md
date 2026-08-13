@@ -91,8 +91,8 @@ screen Y at every gameplay and background depth. Levels may override framing,
 bounds, and opt-in vertical follow. Camera pitch is an authored exception and
 requires projection and visual regression checks.
 
-The Canopy milestone will add scene-authored vertical framing regions rather
-than enabling vertical follow for an entire mixed horizontal/vertical level.
+Scene-authored vertical framing regions are available rather than enabling
+vertical follow for an entire mixed horizontal/vertical level.
 A region declares when vertical tracking becomes active and the permitted
 offset range; leaving or restarting restores deterministic framing. This keeps
 ordinary jumps in the approved shoreline, threshold, and garden sections from
@@ -108,8 +108,8 @@ sprite pool. Checkpoints, death, manual restart, and direct camera teleports
 therefore reproduce the same phase; restart snapping must not recapture the
 reference.
 
-Camera-height opacity windows are the next deliberate extension to this typed
-profile. They will be expressed relative to a named scene-owned height anchor,
+Camera-height opacity windows are an opt-in extension to this typed profile.
+They are expressed relative to a named scene-owned height anchor,
 just as Arrival's horizontal fades are tied to its shoreline transition anchor.
 The rig evaluates rendered camera Y rather than raw player Y, preventing a
 single jump from flashing a new background band into view. Existing profiles
@@ -138,12 +138,12 @@ private background sprites or level-specific movement scripts. Individual
 level scenes otherwise contain only authored route content and intentional
 overrides.
 
-Canopy Ascent is the first consumer of these additions. Its background is a
-continuous composition of fixed-scale layers: distant forest, midground trunks
-and crowns, optional near edge foliage, and a higher cloud band. Depth,
-parallax, intentional viewport cropping, and camera-height fades create the
-sense of moving up and closer through the trees. Runtime scaling of individual
-trees is specifically excluded because it reads as zooming rather than travel.
+No production section currently consumes the vertical-region or height-window
+extensions. They remain dormant reusable capabilities after the rejected
+stitched-tree experiment was removed. A future approved climb may use fixed-
+scale depth, parallax, deliberate viewport cropping, and camera-height fades;
+runtime scaling of scenery remains excluded because it reads as zooming rather
+than travel.
 
 ## Engineering rules
 
@@ -320,13 +320,17 @@ contracts; no mechanic branches on a world number.
 
 ## Asset pipeline
 
-The complete downloaded packs remain outside the repository at
-`D:\GodotProjects\blocky3dassets`. Only the curated runtime subset belongs in
-the game repository.
+The complete downloaded packs and editable source documents remain outside the
+repository at `D:\GodotProjects\blocky3dassets`. Runtime-ready visual files are
+mirrored without modification beneath `assets/library` so the full owned
+collection is searchable in Godot and by filesystem tooling during level
+authoring. Approved or transformed production assets remain curated beneath
+`assets/art`; the library is an audition catalog, not permission to reference
+every downloaded pack from runtime scenes.
 
 - Record source-relative paths, hashes, and supplied licenses.
-- Keep original archives, PSD files, coupons, and unused pack contents outside
-  the runtime tree.
+- Keep original archives, PSD files, coupons, audio, and unsupported source
+  documents outside the visual library mirror.
 - Use nearest-neighbor filtering and consistent sprite scale for pixel art.
 - Establish ground contact, pivots, frame dimensions, and transparent padding
   before placing scenery.
@@ -459,11 +463,12 @@ Dash, and fresh level-defined development entry mode are established.
 The public title is TBD and `blocky3d` remains the internal codename. Arrival /
 Shoreline is now the first production campaign level. Its locked shoreline and
 first Green Threshold/Thorn Garden expansion form the authored baseline. The
-current five-landing Canopy Ascent draft is technically traversable but rejected
-as a composition and is preserved only as the pre-rebuild checkpoint. The next
-milestone replaces it with a substantially longer upward route and adds the
-minimum reusable vertical camera-region and camera-height layered-parallax
-contracts it genuinely requires. Structural, visual, and regression automation
+rejected stitched-tree ascent was removed completely from the production scene;
+the temporary finish now marks the clean garden endpoint. The next milestone
+auditions the full imported visual library while authoring a coherent upward
+Double Jump phrase. Reusable vertical camera-region and camera-height fade
+contracts already exist but stay dormant until approved geometry needs them.
+Structural, visual, and regression automation
 owns technical confidence; hands-on human review remains the gate for
 difficulty, fairness, pacing, and feel. Firearms, saws, bosses, Combat Lab, and
 the curated cyberpunk UI theme follow only when their corresponding campaign

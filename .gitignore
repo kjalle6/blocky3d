@@ -2,8 +2,10 @@
 .godot/
 .mono/
 
-# Local exports and builds
-build/
+# Local exports and builds. Keep the marker that tells Godot not to import
+# generated captures, automation profiles, and other build artifacts.
+build/*
+!build/.gdignore
 exports/
 
 # Unreviewed asset-pack scouting shelf

@@ -7,6 +7,8 @@ param(
 
     [switch]$EditorImport,
 
+    [switch]$Game,
+
     [switch]$CloseRunningGodot,
 
     [ValidateRange(320, 7680)]
@@ -16,8 +18,8 @@ param(
     [int]$Height = 1080,
 
     [string]$GodotExecutable = (
-        'D:\GodotTools\Godot_v4.6.3-stable_mono_win64\' +
-        'Godot_v4.6.3-stable_mono_win64_console.exe'
+        'D:\GodotTools\Godot_v4.6.3-stable_win64\' +
+        'Godot_v4.6.3-stable_win64.exe'
     )
 )
 
@@ -27,14 +29,94 @@ if ($EditorImport) {
     if (-not [string]::IsNullOrWhiteSpace($Script)) {
         throw '-EditorImport cannot be combined with -Script.'
     }
+    if ($Game) {
+        throw '-EditorImport cannot be combined with -Game.'
+    }
     if ($Visual) {
         throw '-EditorImport cannot be combined with -Visual.'
     }
+} elseif ($Game) {
+    if (-not [string]::IsNullOrWhiteSpace($Script)) {
+        throw '-Game cannot be combined with -Script.'
+    }
 } elseif ([string]::IsNullOrWhiteSpace($Script)) {
-    throw '-Script is required unless -EditorImport is used.'
+    throw '-Script is required unless -EditorImport or -Game is used.'
 }
 
 $projectRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
+$automationProfileRoot = Join-Path $projectRoot 'build\godot_automation_profile'
+$automationRoamingRoot = Join-Path $automationProfileRoot 'Roaming'
+$automationLocalRoot = Join-Path $automationProfileRoot 'Local'
+$pathSeparators = [char[]]@(
+    [System.IO.Path]::DirectorySeparatorChar,
+    [System.IO.Path]::AltDirectorySeparatorChar
+)
+$projectPrefix = $projectRoot.TrimEnd($pathSeparators) + `
+    [System.IO.Path]::DirectorySeparatorChar
+$resolvedAutomationProfile = [System.IO.Path]::GetFullPath(
+    $automationProfileRoot
+)
+if (-not $resolvedAutomationProfile.StartsWith(
+        $projectPrefix,
+        [System.StringComparison]::OrdinalIgnoreCase
+)) {
+    throw "Refusing to place the Godot automation profile outside the project: $resolvedAutomationProfile"
+}
+
+# Codex automation runs in a restricted process that cannot write to the
+# interactive Windows profile. Godot normally places editor caches and
+# `user://` below APPDATA/LOCALAPPDATA; denied writes there have produced both
+# clear editor errors and keep automation away from the interactive profile.
+# Give only the wrapper process a project-local, gitignored profile instead.
+# The normal editor is unaffected, and validators cannot touch the player's
+# real campaign save.
+foreach ($directory in @($automationRoamingRoot, $automationLocalRoot)) {
+    New-Item -ItemType Directory -Path $directory -Force | Out-Null
+}
+
+# Prevent two Codex/tool launches from writing the same project cache and
+# automation profile concurrently. This does not close or alter the user's
+# interactive editor; -CloseRunningGodot remains the explicit exclusive mode.
+$automationLockPath = Join-Path $projectRoot 'build\godot_tool.lock'
+$automationLock = $null
+try {
+    $automationLock = [System.IO.File]::Open(
+        $automationLockPath,
+        [System.IO.FileMode]::OpenOrCreate,
+        [System.IO.FileAccess]::ReadWrite,
+        [System.IO.FileShare]::None
+    )
+} catch {
+    throw (
+        'Another Godot automation run already owns {0}. Wait for it to finish before launching another.' -f `
+            $automationLockPath
+    )
+}
+
+$writeProbePaths = @(
+    (Join-Path $automationRoamingRoot ".write_probe_$PID"),
+    (Join-Path $automationLocalRoot ".write_probe_$PID")
+)
+foreach ($writeProbePath in $writeProbePaths) {
+    try {
+        [System.IO.File]::WriteAllText(
+            $writeProbePath,
+            'godot-automation-profile'
+        )
+    } catch {
+        throw (
+            'Godot automation profile is not writable: {0}{1}{2}' -f `
+                (Split-Path -Parent $writeProbePath),
+                [Environment]::NewLine,
+                $_.Exception.Message
+        )
+    } finally {
+        if (Test-Path -LiteralPath $writeProbePath -PathType Leaf) {
+            Remove-Item -LiteralPath $writeProbePath -Force
+        }
+    }
+}
+
 $activeGodot = @(
     Get-Process -ErrorAction SilentlyContinue |
         Where-Object { $_.ProcessName -like 'Godot*' }
@@ -102,15 +184,20 @@ if (-not (Test-Path -LiteralPath $GodotExecutable -PathType Leaf)) {
     exit 3
 }
 
-# Do not add --headless here. Godot 4.6.3 Mono reliably raises a native access
-# violation in headless project-script runs on this machine, while the same
-# scripts pass through the normal Compatibility renderer.
+# Do not add --headless here. The standard non-.NET build avoids the CoreCLR
+# process seen in earlier Mono failures, while the normal Compatibility
+# renderer remains the least disruptive project-script path tested here.
 $arguments = @('--path', $projectRoot)
 if ($EditorImport) {
-    # A normal-renderer editor pass refreshes Godot's generated global class
-    # cache after class_name scripts are renamed. Project-script mode alone
-    # intentionally skips that editor filesystem scan.
-    $arguments += @('--editor', '--quit')
+    # `--import` is Godot's dedicated editor import mode: it waits for pending
+    # resources to finish before quitting. Do not replace it with
+    # `--editor --quit`; `--quit` exits after the first iteration and previously
+    # destroyed active import threads, producing a native access violation.
+    $arguments += '--import'
+} elseif ($Game) {
+    if ($Visual) {
+        $arguments += @('--resolution', ('{0}x{1}' -f $Width, $Height))
+    }
 } else {
     if ($Visual) {
         $arguments += @('--resolution', ('{0}x{1}' -f $Width, $Height))
@@ -118,5 +205,52 @@ if ($EditorImport) {
     $arguments += @('--script', $Script)
 }
 
-& $GodotExecutable @arguments
-exit $LASTEXITCODE
+$logDirectory = Join-Path $projectRoot 'build\godot_tool_logs'
+New-Item -ItemType Directory -Path $logDirectory -Force | Out-Null
+$modeLabel = if ($EditorImport) {
+    'editor_import'
+} elseif ($Game) {
+    'game'
+} elseif ($Visual) {
+    'visual'
+} else {
+    'script'
+}
+$logPath = Join-Path $logDirectory (
+    '{0}_{1:yyyyMMdd_HHmmss}_{2}.log' -f $modeLabel, (Get-Date), $PID
+)
+$arguments += @('--log-file', $logPath)
+
+$previousAppData = $env:APPDATA
+$previousLocalAppData = $env:LOCALAPPDATA
+$exitCode = 1
+try {
+    $env:APPDATA = $automationRoamingRoot
+    $env:LOCALAPPDATA = $automationLocalRoot
+    # The Windows *_console.exe is a small launcher for the real executable.
+    # Invoke the real process directly and wait for it so a delayed native
+    # failure cannot be hidden behind a successful launcher exit code.
+    $godotProcess = Start-Process `
+        -FilePath $GodotExecutable `
+        -ArgumentList $arguments `
+        -PassThru `
+        -Wait
+    $exitCode = $godotProcess.ExitCode
+    if ((-not $Game -or $exitCode -ne 0) -and (
+            Test-Path -LiteralPath $logPath -PathType Leaf
+        )) {
+        Get-Content -LiteralPath $logPath
+    }
+    if ($exitCode -ne 0) {
+        [Console]::Error.WriteLine(
+            "Godot $modeLabel failed with exit code $exitCode. Log: $logPath"
+        )
+    }
+} finally {
+    $env:APPDATA = $previousAppData
+    $env:LOCALAPPDATA = $previousLocalAppData
+    if ($null -ne $automationLock) {
+        $automationLock.Dispose()
+    }
+}
+exit $exitCode

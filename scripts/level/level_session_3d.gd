@@ -56,6 +56,10 @@ func _ready() -> void:
 	_active_respawn_transform = _initial_spawn_transform
 	_apply_ability_policy()
 	camera.target = player
+	var vertical_regions: Array[VerticalCameraRegion3D] = []
+	for node in find_children("*", "VerticalCameraRegion3D", true, false):
+		vertical_regions.append(node as VerticalCameraRegion3D)
+	camera.bind_vertical_regions(vertical_regions)
 	if background != null:
 		background.bind_camera(camera)
 	player.died.connect(_on_player_died)

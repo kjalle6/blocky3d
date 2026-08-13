@@ -40,7 +40,7 @@ larger cyberpunk setting.
 
 | Target level | Core arc | New capability | Status |
 | --- | --- | --- | --- |
-| 1: Arrival / Shoreline | Classic fundamentals grow into an aerial route | Double Jump | Shoreline, Green Threshold, and Thorn Garden authored; the technically traversable Canopy draft was rejected visually and is the active rebuild milestone |
+| 1: Arrival / Shoreline | Classic fundamentals grow into an aerial route | Double Jump | Shoreline, Green Threshold, and Thorn Garden authored; rejected tree-as-level experiment removed before the next route section |
 | 2: Overgrown Coastal Ascent | Horizontal travel turns upward, then accelerates | Wall Jump and Dash | Planned from proven prototypes |
 | 3: Green Zone Finale | Full-kit mastery, saws, enemy escalation, gun lesson, and boss | Limited firearm | Planned concept |
 
@@ -68,43 +68,34 @@ one ordinary traversal beat, and one patrol encounter. Green Threshold adds a
 short readable thorn row, protects the Double Jump unlock, then asks for an
 immediate height proof and a landing encounter. Thorn Garden develops that
 ability through two sunken lethal beds, raised recovery terrain, an enemy perch,
-and a committed descent to a landmark checkpoint. The first Canopy Ascent draft
-adds five technically legal landings, but hands-on review rejected its mostly
-horizontal floating-block composition and complete trees placed on individual
-islands. It remains only as a disposable implementation checkpoint while the
-section is rebuilt. Ravine, grove, and finale material remain planned rather
-than present.
+and a committed descent to a landmark checkpoint. A later stitched-tree ascent
+was technically traversable but visually incoherent, so its geometry, scenery,
+background layers, checkpoint, and goal placement were removed rather than
+kept as baggage. The current temporary goal sits on the Thorn Garden exit.
+Ravine, grove, and finale material remain planned rather than present.
 
-#### Canopy Ascent rebuild contract
+#### Next route-section contract
 
-Canopy Ascent is the first real vertical-presentation milestone, not another
-short platform phrase:
+The next section keeps the useful gameplay intention without committing the
+level to a giant-tree visual gimmick:
 
-1. Begin at the Thorn Garden exit without changing any earlier route geometry,
-   checkpoint behavior, camera composition, or background timing.
-2. Replace the current five-landing draft with an upward-dominant climb. Small
-   horizontal switchbacks may shape jumps, but progress must visibly be more
-   vertical than horizontal for a sustained section.
-3. At minimum, exceed twice the rejected draft's meaningful traversal length
-   and twice its vertical gain. This is a floor, not permission to pad the route
-   with a repeated staircase; every landing must change timing, correction,
-   recovery, or route reading.
-4. Remove the pattern of complete tree sprites standing on floating terrain.
-   Compose trunks, branches, and crowns as continuous multi-depth forest masses
-   behind the route. Large forms may begin below or beyond the viewport and be
-   deliberately cropped so the camera reveals progressively more treetop as it
-   climbs.
-5. Activate vertical camera follow through a scene-authored Canopy region. A
-   jump before that region must not disturb the approved horizontal framing.
-6. Drive canopy presentation from sustained rendered camera height, not raw
-   player Y. Distant forest, midground trunks, nearer foliage, and the eventual
-   upper cloud band receive explicit depth, parallax, and height windows. Do not
-   fake approach by scaling one tree during play.
-7. Treat foreground foliage as optional edge framing. It must never obscure a
-   player, enemy, landing, hazard, or implied collision surface.
-8. Review deterministic low-, middle-, and high-ascent captures before adding
-   combat or further route sections. Automated traversal proves legality only;
-   the user judges difficulty, pacing, and whether the climb reads as one place.
+1. Begin at the Thorn Garden exit without changing any approved earlier route
+   geometry, checkpoint behavior, camera composition, or background timing.
+2. Turn progress upward for a sustained section, using Double Jump through
+   changing timing, correction, recovery, and route-reading demands rather than
+   a repeated platform staircase.
+3. Build the route from environmental forms available in the imported asset
+   library. Select the visual idea after auditioning actual assets; do not force
+   unrelated tree sprites into a single fake structure.
+4. Add only the vertical camera and height-aware background behavior the chosen
+   route genuinely needs. Ordinary jumps before the section must not disturb
+   the approved horizontal framing.
+5. Keep decoration behind readable gameplay unless a deliberately foregrounded
+   object has been proven not to hide the player, enemies, hazards, or implied
+   collision.
+6. Author a short, coherent gameplay phrase first, capture it at the relevant
+   elevations, then let human playtesting decide whether it deserves extension.
+   Automated traversal proves legality only and never determines difficulty.
 
 The opening uses shoreline sand and water against the Green Zone background,
 then joins directly into existing Green Zone terrain. Grounded land uses the
@@ -243,14 +234,15 @@ other asset may be borrowed when it fits the local composition.
    anchor at the shoreline/Green Zone seam. Express the forest and cloud fade
    windows as offsets from that anchor, and validate that moving the anchor
    keeps presentation synchronized with the motivating terrain.
-10. In progress: rebuild the rejected Canopy draft to the contract above. The
-    present geometry is a commit-safe technical scaffold, not approved content.
-11. Next: add the minimum reusable scene-authored vertical camera-region and
-    camera-height background-transition contracts required by that rebuild.
-12. Then: capture and inspect the ascent at low, middle, and high elevations,
-    run structural and real-input validation, and hand the complete section to
-    the user for difficulty, fairness, pacing, readability, and composition
-    review. Bot failure alone must never authorize easier geometry.
+10. Completed: remove the rejected stitched-tree ascent completely and return
+    the production scene to the approved Thorn Garden endpoint.
+11. Next: use the imported visual library to design one coherent upward gameplay
+    phrase without preselecting a giant tree, cliff, or other visual gimmick.
+12. Then: add only the reusable vertical camera/background behavior that phrase
+    requires, capture it at its meaningful elevations, run structural and
+    real-input validation, and hand it to the user for difficulty, fairness,
+    pacing, readability, and composition review. Bot failure alone must never
+    authorize easier geometry.
 
 ### Needed before the finale
 
@@ -311,12 +303,11 @@ level. It must also:
 ## Current review gate
 
 Arrival / Shoreline is now the production campaign's Level 1. The shoreline,
-Green Threshold, and Thorn Garden form the current authored baseline. The first
-Canopy Ascent attempt is technically validated but visually rejected and must
-be replaced according to the rebuild contract; it is not an approved review
-slice. Automation checks loading, collision support, hazards, checkpoints,
-reset, completion, camera/background coverage, and visual regressions without
-tuning the route around bot skill.
+Green Threshold, and Thorn Garden form the current authored baseline. The
+rejected stitched-tree ascent has been removed; the temporary goal on the Thorn
+Garden exit marks the clean construction boundary. Automation checks loading,
+collision support, hazards, checkpoints, reset, completion, camera/background
+coverage, and visual regressions without tuning the route around bot skill.
 The user owns the difficulty, fairness, pacing, and feel verdict after playing
 the build. Tune reported beats in place, then choose the next section; do not
 add new systems or begin Level 2 until Level 1 is accepted. Guns, crafting,
