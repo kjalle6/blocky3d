@@ -83,11 +83,11 @@ a tile (0.64 m), sparse axis labels report world coordinates, and a compact HUD
 shows the player's live `X / Y`. The grid recycles around the camera but remains
 anchored to world zero, allowing screenshot feedback to name exact distances.
 
-The next highest-value developer overlay is collision/hitbox visualization,
-because fair platform, spike, player, and combat geometry is a core feel rule.
-Useful later candidates are a mouse world-coordinate probe, checkpoint warping,
-a freeze-world toggle for moving hazards and enemies, and coordinate-stamped
-review captures. These remain backlog ideas rather than bundled F10/F11 scope.
+Collision/hitbox visualization and the mouse world-coordinate probe are now
+implemented. Useful later candidates are checkpoint warping and a freeze-world
+toggle for moving hazards and enemies. Coordinate-stamped review captures are
+already possible through the paired diagnostic capture workflow; add further
+tools only when a real authoring problem justifies them.
 The room provides clear surfaces for triggering and inspecting idle, run,
 jump, Double Jump, wall contact, attack, landing, and transition timing
 without level hazards or scenery. It is an animation lab, not a mechanic
@@ -345,12 +345,12 @@ use this to test later abilities independently. The replacement campaign levels
 will use the same contract while introducing more than one ability within a
 substantial level where appropriate.
 
-The production `CampaignCatalog` currently contains Arrival / Shoreline as the
-first Green Zone level. The six validated prototypes live in a separate
-regression catalog, keeping their tests available without presenting them as
-campaign content. The target campaign structure remains approximately three
-re-authored levels: Arrival / Shoreline, Overgrown Coastal Ascent, and Green
-Zone Finale.
+The production `CampaignCatalog` currently contains the completed Arrival /
+Shoreline as the first Green Zone level. The six validated prototypes live in
+a separate regression catalog, keeping their tests available without
+presenting them as campaign content. The target campaign structure remains
+approximately three re-authored levels: Arrival / Shoreline, Overgrown Coastal
+Ascent, and Green Zone Finale.
 Missing future levels are not represented by fake scenes or disabled
 placeholder buttons. Development mode keeps all authored levels selectable.
 Production prerequisite/locking presentation is added only when campaign flow
@@ -393,6 +393,14 @@ every downloaded pack from runtime scenes.
 The shared green-zone runtime set is refreshed through
 `tools/prepare_green_zone_assets.ps1`; its manifest and license notes live
 beneath `assets/art/green_zone`.
+
+Reviewed dressing assets are registered in typed `DressingPalette` resources.
+Scene-authored `DressingZone3D` nodes describe intent and exclusions, while
+accepted candidates are baked as ordinary named nodes with explicit bottom
+contact, support-platform, depth, and collision-free contracts. Candidate
+generation remains a preview tool rather than a runtime decorator. Arrival's
+palette now includes its accepted foliage, stones, trees, tire-swing landmark,
+and both native skate-ramp orientations.
 
 Background textures are imported losslessly with mipmaps disabled and rendered
 nearest-filtered. A world or zone profile is reusable theme data; camera-X fades
@@ -473,7 +481,16 @@ Every lasting system receives focused validation. The current suite covers:
 - production Arrival / Shoreline's catalog identity, typed sand style,
   synchronized animated water, collision-free travelling shore wave, grounded
   scenery, session-local Double Jump pickup, checkpoint/reset policy, Green
-  Threshold and Thorn Garden geometry, and focused real-input completion.
+  Threshold and Thorn Garden geometry, open-air rise, concealed-spike reveal,
+  bounded patrol lanes, typed dressing palette, half-pipe support/depth rules,
+  tire-swing-tree finish, invisible completion trigger, and focused real-input
+  completion;
+- development F7 collision overlays, F10 measurement grid and player-feet /
+  cursor coordinates, and F11 inspection-mode isolation, ability policy,
+  collision restoration, and camera behavior;
+- Arrival dressing definition integrity, authored support contact, clean
+  platform undersides, non-collision, gameplay-plane separation, and paired
+  clean/diagnostic visual captures.
 
 Graphical capture scripts render deterministic 1920x1080 review positions for
 all current levels. Visual changes are inspected in the running game;
@@ -496,7 +513,7 @@ Before committing a gameplay milestone:
 4. Play the complete route at normal speed.
 5. Confirm `git diff --check` and review the staged file set.
 
-## Current baseline - 10 August 2026
+## Current baseline - 13 August 2026
 
 Prototype Levels 1-6 are protected in the regression catalog. New abilities
 and systems must not silently change their proven movement, collision, enemy,
@@ -508,15 +525,19 @@ pickup actors, non-pausing ability tutorials, Wall Jump, opt-in vertical camera
 framing, flat cross-depth camera projection, the typed reusable background rig,
 Dash, and fresh level-defined development entry mode are established.
 The public title is TBD and `blocky3d` remains the internal codename. Arrival /
-Shoreline is now the first production campaign level. Its locked shoreline and
-first Green Threshold/Thorn Garden expansion form the authored baseline. The
-rejected stitched-tree ascent was removed completely from the production scene;
-the temporary finish now marks the clean garden endpoint. The next milestone
-auditions the full imported visual library while authoring a coherent upward
-Double Jump phrase. Reusable vertical camera-region and camera-height fade
-contracts already exist but stay dormant until approved geometry needs them.
-Structural, visual, and regression automation
-owns technical confidence; hands-on human review remains the gate for
-difficulty, fairness, pacing, and feel. Firearms, saws, bosses, Combat Lab, and
-the curated cyberpunk UI theme follow only when their corresponding campaign
-milestone requires them.
+Shoreline is the completed first production campaign level, locked at commit
+`59a034b`. Its shoreline, Green Threshold, Thorn Garden, open-air Double Jump
+rise, concealed-spike lesson, patrol flow, typed set dressing, skate half-pipe,
+and tire-swing-tree finish form the authored baseline. The rejected
+stitched-tree and folded-corridor experiments remain removed rather than hidden
+as production baggage.
+
+The next milestone is Overgrown Coastal Ascent pre-production: reconcile the
+proven Wall Jump and Dash contracts, audit suitable coastal/green presentation,
+and approve the route and camera plan before authoring production geometry.
+Reusable vertical camera regions and height-aware background fades already
+exist but stay opt-in until that approved route needs them. Structural, visual,
+and regression automation owns technical confidence; hands-on human review
+remains the gate for difficulty, fairness, pacing, and feel. Firearms, saws,
+bosses, Combat Lab, and the curated cyberpunk UI theme follow only when their
+corresponding campaign milestone requires them.

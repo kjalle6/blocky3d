@@ -12,7 +12,7 @@ in a deliberately authored background layer.
 ## Evidence from the current Arrival route
 
 The real-input traversal writes `build/diagnostics/arrival_route_trace.json`.
-The current approved route completes in 1,460 physics frames. Its two longest
+The current approved route completes in 1,559 physics frames. Its two longest
 attention beats are the open-air dip (117 frames) and blind forward descent
 (96 frames), so those screens need the clearest silhouettes. The trace records
 landing position, crossing duration, and Double Jump use for every authored
@@ -25,15 +25,17 @@ contact sheet, while `tools/build_asset_contact_sheet.ps1` does the same for
 asset families. Together they expose repetition and empty compositions without
 requiring scenery to be placed first.
 
-The current route sheet shows a clear shift in density:
+The route sheet originally showed a clear shift in density:
 
 - Shoreline and the biome seam have a strong landmark and coherent material
   story.
 - Green Threshold and Thorn Garden establish a garden vocabulary through trees,
   hedges, gates, stones, and a bench.
-- The open-air Double Jump rise becomes mostly grass tufts on isolated rectangles.
-  It needs more depth and environmental continuity, but its platform tops,
-  enemy lanes, landing zones, and concealed-spike reveal must remain clean.
+- The open-air Double Jump rise initially became mostly grass tufts on isolated
+  rectangles. The accepted authored pass now uses irregular rear bushes, a
+  grounded broad-platform tree, low stones and grasses, and a restrained
+  takeoff/exit landmark vocabulary while keeping platform tops, enemy lanes,
+  landing zones, and the concealed-spike reveal clean.
 
 ## Source palette audit
 
@@ -129,9 +131,10 @@ The tester judges only route legality, timing, and repeatability. It does not
 approve visual taste. Clean captures, diagnostic captures, full-route contact
 sheets, and hands-on player review are separate required evidence.
 
-## First implementation slice
+## First implementation slice - completed
 
-Prove the workflow only on the accepted open-air rise, not the entire level:
+The workflow was first proved only on the accepted open-air rise, not the
+entire level:
 
 1. Curate roughly twelve native Green Zone definitions: several bushes/hedges,
    grasses, three stone sizes, the small tree, and one larger rear tree.
@@ -142,7 +145,24 @@ Prove the workflow only on the accepted open-air rise, not the entire level:
 4. Generate three deterministic previews and compare them on one contact sheet.
 5. Accept and bake one arrangement only after hands-on visual review.
 
-Do not begin with fountains, skate ramps, garbage cans, large exotic trees, or
-cross-zone props. They may become strong local storytelling later, but adding
-them now would invent a new place rather than enrich the established open-air
-Green Zone.
+The initial candidate pass deliberately excluded fountains, skate ramps,
+garbage cans, large exotic trees, and cross-zone props while the rise's visual
+language was being proven. After that language and gameplay were accepted, the
+native Green Zone ramp pair earned one specific use: a non-colliding half-pipe
+on the broad final Thorn Garden platform, with its right lip flush to the first
+aerial jump. This is a reviewed exception, not permission to scatter urban
+props automatically. The tire-swing tree likewise belongs only to the safe
+finish clearing.
+
+The accepted slice established these lasting rules:
+
+- candidate generation is opt-in and preview-only;
+- accepted arrangements are baked as named scene nodes;
+- every prop declares a curated asset ID, support surface, bottom anchor, and
+  gameplay-behind depth;
+- platform undersides remain clean;
+- large props require a local compositional reason and human approval;
+- clean captures judge the actual presentation, diagnostic captures prove
+  support, collision separation, and spacing;
+- dressing may suggest motion or place, but it never changes a jump unless the
+  gameplay design separately approves that collision.

@@ -40,8 +40,8 @@ larger cyberpunk setting.
 
 | Target level | Core arc | New capability | Status |
 | --- | --- | --- | --- |
-| 1: Arrival / Shoreline | Classic fundamentals grow into an aerial route | Double Jump | Full route authored through the flat tire-swing-tree exit; final hands-on completion pass remains |
-| 2: Overgrown Coastal Ascent | Horizontal travel turns upward, then accelerates | Wall Jump and Dash | Planned from proven prototypes |
+| 1: Arrival / Shoreline | Classic fundamentals grow into an aerial route | Double Jump | Complete and accepted; production baseline locked at commit `59a034b` |
+| 2: Overgrown Coastal Ascent | Horizontal travel turns upward, then accelerates | Wall Jump and Dash | Next milestone; pre-production plan and asset audit required before geometry |
 | 3: Green Zone Finale | Full-kit mastery, saws, enemy escalation, gun lesson, and boss | Limited firearm | Planned concept |
 
 These are working titles. A level should be long enough to develop several
@@ -71,8 +71,8 @@ Entering F11 grants the loaded level's available abilities for that session;
 they remain available after inspection exits for a normal-physics test, survive
 death and `R`, never write campaign progression, and clear on level reload.
 
-The production level is being authored in reviewable slices rather than padded
-to its target runtime in one pass. Its locked opening includes the shoreline,
+The production level was authored in reviewable slices rather than padded to
+its target runtime in one pass. Its locked opening includes the shoreline,
 one ordinary traversal beat, and one patrol encounter. Green Threshold adds a
 short readable thorn row, protects the Double Jump unlock, then asks for an
 immediate height proof and a landing encounter. Thorn Garden develops that
@@ -92,11 +92,14 @@ gameplay plane without implying collision. Beyond the patrol lane, the landing
 simply continues as safe flat ground toward a tire-swing tree landmark. An
 invisible exit trigger in that clearing replaces the temporary chest and fades
 to completion. No new terrain trick, hazard, enemy, checkpoint, or mechanic is
-introduced.
+introduced. A reviewed, non-colliding skate half-pipe fills the final Thorn
+Garden takeoff platform: its right lip ends at the terrain edge and points
+toward the first aerial landing, while its matching left side turns the prop
+into a coherent local landmark rather than a disconnected ramp.
 
-#### Current route-section contract
+#### Authored route-section contract
 
-The current review section develops the ability Level 1 actually owns without
+The authored rise develops the ability Level 1 actually owns without
 importing Level 2's spatial language:
 
 1. Begin at the Thorn Garden exit without changing any approved earlier route
@@ -233,7 +236,7 @@ other asset may be borrowed when it fits the local composition.
 
 ## System roadmap
 
-### Needed for new Level 1
+### Completed for Level 1
 
 1. Completed: promote Arrival / Shoreline into the production campaign while
    preserving all six prototypes in a separate regression catalog.
@@ -298,16 +301,41 @@ other asset may be borrowed when it fits the local composition.
     the established broad-ground tree landmark. A hanging-root candidate was
     rejected after hands-on review; clean platform undersides are now an explicit
     project rule and validator contract.
-19. Current: hand the dressed section to the user for enemy-flow, readability,
-    and composition review. Bot success proves legality only and must never
+19. Completed: hands-on enemy-flow, readability, and composition review of the
+    dressed rise. Bot success remains legality evidence only and did not
     authorize easier geometry or final visual taste.
-20. Next: after hands-on approval, apply the proven workflow only where another
-    reviewed stretch needs it. Keep candidate generation opt-in; do not turn it
-    into automatic whole-level clutter or scan the full asset mirror at runtime.
-21. Current: review the flat tire-swing-tree ending. It preserves the final
-    landing patrol's accepted lane, adds no new traversal, hides completion in
-    the clearing, and uses a brief application-owned fade. If its trigger timing
-    and framing pass at normal speed, accept Level 1.
+20. Completed: keep candidate generation opt-in and bake only accepted props as
+    named scene nodes. The workflow is reusable, but it is not an automatic
+    whole-level clutter pass and never scans the full asset mirror at runtime.
+21. Completed: replace the temporary finish with a flat tire-swing-tree
+    clearing, invisible completion trigger, and brief application-owned fade.
+    Hands-on review accepted its trigger timing, framing, and restrained role.
+22. Completed: curate and place the matching Green Zone skate-ramp pair as a
+    non-colliding half-pipe on the final Thorn Garden platform. Its right lip is
+    flush with the jump edge, visually motivating the first aerial crossing;
+    clean and diagnostic captures plus support validation lock its placement.
+
+### Next production milestone: Level 2 pre-production
+
+Do not extend Level 1 or begin decorating a guessed Level 2 route. Prepare
+Overgrown Coastal Ascent in this order:
+
+1. Extract the lasting Wall Jump and Dash contracts, useful route beats, and
+   known exploits from protected prototypes 4 and 5 and the legacy idea bank.
+2. State the level's teaching arc before drawing geometry: familiar opening,
+   immediate safe Wall Jump lesson, horizontal recovery, increasingly offset
+   climbs, immediate Dash lesson, and a combined movement payoff.
+3. Audit the imported coastal, Green Zone, rock, bridge/ruin, and background
+   families at player scale. Choose a coherent local vocabulary and reject art
+   that implies collision or a biome change the route does not support.
+4. Draw and review a route mock-up with approximate world-grid measurements,
+   checkpoint beats, camera regions, enemy lanes, and recovery spaces. Vertical
+   travel must feel like open-air ascent rather than an indoor folded corridor.
+5. Identify any genuinely missing reusable system. Prove that system in an
+   isolated disposable scene before production geometry depends on it.
+6. Only after the route and visual plan are approved, author the first short
+   gameplay slice, validate legality, capture it clean and diagnostic, and hand
+   difficulty and feel back to human playtesting.
 
 ### Needed before the finale
 
@@ -365,19 +393,22 @@ level. It must also:
 - preserve earlier level behavior when unavailable;
 - receive focused runtime validation and hands-on feel testing.
 
-## Current review gate
+## Current milestone
 
 Arrival / Shoreline is now the production campaign's Level 1. The shoreline,
 Green Threshold, Thorn Garden, open-air Double Jump rise, final landing fight,
-and flat tire-swing-tree exit form the complete authored route.
+skate-half-pipe takeoff, and flat tire-swing-tree exit form the complete and
+accepted authored route.
 Automation checks loading, collision support, hazards, checkpoints, reset,
 completion, camera/background coverage, exact spike reach, the concealed-spike
 reveal, bounded patrol behavior, and visual regressions without tuning the route
 around bot skill. Human review accepts the route gameplay and concealed hazard.
-The current gate is a hands-on pass over the safe finish clearing, its invisible
-trigger, and the brief completion fade. The user owns
-the pacing, readability, composition, and feel verdict. Tune reported issues in
-place, then accept Level 1; do not append another recap section merely to add
-length and do not begin Level 2 until Level 1 is accepted.
+Human review also accepts the finish clearing, completion fade, environmental
+dressing, and half-pipe composition. Commit `59a034b` is the Level 1 baseline.
+
+The active gate is Level 2 pre-production: reconcile the Wall Jump and Dash
+prototypes with an open-air coastal ascent, audit the appropriate asset
+families, and approve the route plan before building it. Do not reopen Level 1
+unless a regression or deliberate later polish pass requires it.
 Guns, crafting, saws, secrets, currency, lives, and new enemy families remain
 outside Level 1.

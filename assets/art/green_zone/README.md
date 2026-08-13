@@ -9,5 +9,12 @@ Run `tools/prepare_green_zone_assets.ps1` to refresh these files. The generated
 `asset_manifest.json` records the source-relative path and SHA-256 digest for
 every imported file.
 
+Reviewed scenery is registered in
+`resources/dressing/arrival_green_zone_palette.tres`. The palette is an
+approved authoring vocabulary, not a random runtime pool: levels still place
+accepted props deliberately, declare their support contact, and keep gameplay
+collision separate from the artwork. The reusable workflow and visual rules
+live in `docs/SET_DRESSING_WORKFLOW.md`.
+
 The artwork is used under the licenses supplied with its original packs. Do
 not redistribute this folder as a standalone asset pack.

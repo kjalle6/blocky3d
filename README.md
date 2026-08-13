@@ -15,10 +15,11 @@ remain read-only design references.
 
 ## Current state
 
-- Arrival / Shoreline is the first production campaign level. Its reviewed
-  shoreline now leads into the first production passes of Green Threshold and
-  Thorn Garden. The rejected stitched-tree ascent has been removed; the current
-  temporary finish marks a clean construction boundary at the garden exit
+- Arrival / Shoreline is the first completed production campaign level. Its
+  route runs from the animated shoreline through Green Threshold, Thorn Garden,
+  and an open-air Double Jump rise to a safe tire-swing-tree clearing. The
+  completion trigger and fade are final Level 1 behavior rather than a temporary
+  construction boundary
 - Six earlier Green Zone prototype levels remain in a separate regression
   catalog to validate Fundamentals, Gaps & Spikes, Double Jump, Wall Jump,
   Dash, and full-kit movement
@@ -39,18 +40,29 @@ remain read-only design references.
   immediate ability toggles, and no campaign/save effects
 - Development mode starts every level from its fresh level-defined entry state,
   then retains session abilities through death and `R`
+- Development review tools expose independent F7 collision/hitbox overlays, an
+  F10 world grid with live player-feet and cursor coordinates, and an F11
+  god/noclip/free-flight inspection mode that grants the loaded level's
+  available abilities for the current session
+- Arrival has a curated, typed Green Zone dressing palette and paired clean /
+  diagnostic capture workflow. Its accepted landmarks include the biome-seam
+  outcrop, garden gates and hedges, the non-colliding skate half-pipe at the
+  aerial takeoff, and the tire-swing-tree finish clearing
 - 1920x1080 presentation baseline
-- Next milestone: use the complete imported visual library to author one
-  coherent upward Double Jump phrase after Thorn Garden, without committing to
-  a giant-tree visual gimmick before the available assets prove the idea
+- Next milestone: pre-produce Overgrown Coastal Ascent by extracting the useful
+  Wall Jump and Dash contracts from prototypes 4 and 5, auditing suitable
+  coastal/green assets at player scale, and approving a route-and-visual plan
+  before production geometry is authored
 
-The three living design documents are:
+The living design and authoring documents are:
 
 - [`docs/GAME_DIRECTION.md`](docs/GAME_DIRECTION.md) — what the game is
 - [`docs/LEVEL_ROADMAP.md`](docs/LEVEL_ROADMAP.md) — the eleven legacy ideas,
   revised campaign spine, and next level
 - [`docs/TECHNICAL_FOUNDATION.md`](docs/TECHNICAL_FOUNDATION.md) — architecture,
   gameplay contracts, asset pipeline, and validation
+- [`docs/SET_DRESSING_WORKFLOW.md`](docs/SET_DRESSING_WORKFLOW.md) — curated
+  scenery, gameplay exclusions, visual review, and accepted-placement rules
 
 ## Controls
 
