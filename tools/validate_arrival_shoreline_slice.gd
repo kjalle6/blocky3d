@@ -1,6 +1,7 @@
 extends SceneTree
 ## Structural, presentation, and isolated-session contract for the current
-## production review slice: Shoreline, Green Threshold, and Thorn Garden.
+## production review slice: Shoreline, Green Threshold, Thorn Garden, and the
+## open-air Double Jump rise.
 ##
 ## This validator proves that the authored route is technically coherent. It
 ## deliberately does not decide whether a jump is fun or appropriately hard;
@@ -40,13 +41,13 @@ func _run() -> void:
 	assert(level != null)
 	assert(game_root.current_world_definition.world_id == &"green_zone")
 	assert(game_root.current_level_definition == definition)
-	assert(is_equal_approx(level.route_extent.length(), 131.84))
-	assert(is_equal_approx(level.camera.maximum_center_x, 115.2))
+	assert(is_equal_approx(level.route_extent.length(), 189.44))
+	assert(is_equal_approx(level.camera.maximum_center_x, 172.8))
 	assert(is_equal_approx(level.camera.camera_height, 3.98))
 	assert(is_equal_approx(level.camera.target_height, 3.98))
 	assert(not level.camera.vertical_follow_enabled)
 	assert(is_zero_approx(level.camera.rotation.x))
-	assert(level.get_node("Platforms").get_child_count() == 10)
+	assert(level.get_node("Platforms").get_child_count() == 15)
 	assert(level.get_node("Checkpoints").get_child_count() == 2)
 	assert(_scoped_group_count(level, &"melee_target") == 3)
 	assert(_scoped_group_count(level, &"level_goal") == 1)
@@ -57,7 +58,7 @@ func _run() -> void:
 	await _validate_water(level)
 	await _validate_session(game_root, level, definition)
 
-	print("Arrival / Shoreline, Green Threshold, and Thorn Garden validation passed.")
+	print("Arrival / Shoreline through the open-air Double Jump rise validation passed.")
 	root.remove_child(game_root)
 	game_root.free()
 	await process_frame
@@ -94,6 +95,11 @@ func _validate_geometry(level: LevelSession3D) -> void:
 	var terrace := _platform(level, "ThornTerrace")
 	var wall := _platform(level, "ThornWall")
 	var garden_exit := _platform(level, "ThornGardenExit")
+	var aerial_rise := _platform(level, "AerialRise")
+	var aerial_crown := _platform(level, "AerialCrown")
+	var aerial_dip := _platform(level, "AerialDip")
+	var aerial_peak := _platform(level, "AerialPeak")
+	var aerial_landing := _platform(level, "AerialLanding")
 
 	# The approved shoreline and its biome seam stay untouched.
 	_assert_platform(sand, Vector3(5.12, -1.28, 0), Vector3(10.24, 2.56, 2))
@@ -140,6 +146,35 @@ func _validate_geometry(level: LevelSession3D) -> void:
 	assert(is_equal_approx(_gap(wall, garden_exit), 4.48))
 	assert(_top(terrace) > _top(garden_entry))
 	assert(_top(wall) > _top(terrace))
+
+	# The new phrase stays outside and develops Double Jump over one continuous
+	# visible thorn floor. Its alternating silhouette rises, dips, rises again,
+	# then asks the player to carry the final descent forward.
+	_assert_platform(
+		aerial_rise, Vector3(131.84, 3.2, 0), Vector3(3.84, 1.28, 2)
+	)
+	_assert_platform(
+		aerial_crown, Vector3(142.08, 5.76, 0), Vector3(3.84, 1.28, 2)
+	)
+	_assert_platform(
+		aerial_dip, Vector3(151.04, 3.84, 0), Vector3(3.84, 1.28, 2)
+	)
+	_assert_platform(
+		aerial_peak, Vector3(160, 7.04, 0), Vector3(3.84, 1.28, 2)
+	)
+	_assert_platform(
+		aerial_landing, Vector3(171.52, -1.28, 0), Vector3(25.6, 3.84, 2)
+	)
+	assert(is_equal_approx(_gap(garden_exit, aerial_rise), 3.2))
+	assert(is_equal_approx(_gap(aerial_rise, aerial_crown), 6.4))
+	assert(is_equal_approx(_gap(aerial_crown, aerial_dip), 5.12))
+	assert(is_equal_approx(_gap(aerial_dip, aerial_peak), 5.12))
+	assert(_left(aerial_landing) < aerial_peak.global_position.x)
+	assert(_right(aerial_landing) > _right(aerial_peak))
+	assert(_top(aerial_rise) < _top(aerial_crown))
+	assert(_top(aerial_dip) < _top(aerial_crown))
+	assert(_top(aerial_peak) > _top(aerial_crown))
+	assert(_top(aerial_landing) < _top(aerial_dip))
 
 	var spike_contracts := [["ThresholdSpikes", threshold_run, 1.8]]
 	for contract in spike_contracts:
@@ -190,6 +225,60 @@ func _validate_geometry(level: LevelSession3D) -> void:
 		and level.get_node_or_null("Platforms/ThornPocket") == null,
 		"Long thorn beds must be open spike pits, not decorated platforms."
 	)
+	var aerial_basin := level.get_node(
+		"Hazards/AerialBasinSpikes"
+	) as PixelSpikeRow3D
+	var blind_landing := level.get_node(
+		"Hazards/BlindLandingSpikes"
+	) as PixelSpikeRow3D
+	assert(aerial_basin != null and blind_landing != null)
+	assert(is_equal_approx(aerial_basin.global_position.y, -2.4))
+	assert(is_equal_approx(aerial_basin.row_width, 32.0))
+	assert(is_equal_approx(
+		aerial_basin.global_position.x - aerial_basin.row_width * 0.5,
+		_right(garden_exit)
+	))
+	assert(is_equal_approx(
+		aerial_basin.global_position.x + aerial_basin.row_width * 0.5,
+		_left(aerial_landing)
+	))
+	assert(is_equal_approx(blind_landing.global_position.y, _top(aerial_landing)))
+	assert(is_equal_approx(blind_landing.row_width, 2.56))
+	var blind_spike_pitch := blind_landing.row_width / 3.0
+	assert(absf(
+		blind_landing.global_position.x
+		- (162.56 + blind_spike_pitch * 2.0)
+	) < 0.001)
+	assert(blind_landing.global_position.x + blind_landing.row_width * 0.5 < _right(aerial_landing))
+	var blind_drop_x := 164.0
+	assert(
+		blind_landing.global_position.x - blind_landing.row_width * 0.5
+		<= blind_drop_x
+		and blind_landing.global_position.x + blind_landing.row_width * 0.5
+		>= blind_drop_x,
+		"An ordinary forward drop beyond the final high platform must meet the concealed spikes."
+	)
+
+	var camera_region := level.get_node(
+		"DoubleJumpRiseCameraRegion"
+	) as VerticalCameraRegion3D
+	assert(camera_region != null)
+	assert(camera_region.validation_errors().is_empty())
+	assert(camera_region.contains_world_position(Vector3(120.0, 1.19, 0.0)))
+	assert(camera_region.contains_world_position(Vector3(160.0, 8.23, 0.0)))
+	assert(is_equal_approx(camera_region.maximum_vertical_offset, 7.04))
+	var peak_camera_bottom: float = (
+		level.camera.camera_height
+		+ camera_region.maximum_vertical_offset
+		- level.camera.size * 0.5
+	)
+	var blind_spike_tip: float = (
+		blind_landing.global_position.y + blind_landing.spike_height
+	)
+	assert(
+		blind_spike_tip < peak_camera_bottom,
+		"The final spike must exist normally but sit below the peak composition."
+	)
 
 	var enemy_contracts := [
 		["ApproachPatrol", approach, 1.7],
@@ -223,9 +312,9 @@ func _validate_geometry(level: LevelSession3D) -> void:
 	assert(is_equal_approx(exit_checkpoint.global_position.y, _top(garden_exit)))
 	var goal := level.get_node("Goal") as Node3D
 	assert(goal.global_position.x > exit_checkpoint.global_position.x)
-	assert(goal.global_position.x > _left(garden_exit))
-	assert(goal.global_position.x < _right(garden_exit))
-	assert(is_equal_approx(goal.global_position.y, _top(garden_exit)))
+	assert(goal.global_position.x > _left(aerial_landing))
+	assert(goal.global_position.x < _right(aerial_landing))
+	assert(is_equal_approx(goal.global_position.y, _top(aerial_landing)))
 
 	var kill_plane := level.get_node("KillPlane") as Area3D
 	var kill_shape := kill_plane.get_node("Collision") as CollisionShape3D
@@ -279,6 +368,12 @@ func _validate_presentation(level: LevelSession3D) -> void:
 		"GardenExitBench": _top(_platform(level, "ThornGardenExit")),
 		"GardenExitTree": _top(_platform(level, "ThornGardenExit")),
 		"GardenExitGrass": _top(_platform(level, "ThornGardenExit")),
+		"AerialRiseGrass": _top(_platform(level, "AerialRise")),
+		"AerialCrownStone": _top(_platform(level, "AerialCrown")),
+		"AerialDipBush": _top(_platform(level, "AerialDip")),
+		"AerialPeakGrass": _top(_platform(level, "AerialPeak")),
+		"AerialLandingBush": _top(_platform(level, "AerialLanding")),
+		"AerialLandingGrass": _top(_platform(level, "AerialLanding")),
 	}
 	for prop_name in support_contracts:
 		var prop := level.get_node("Props/%s" % prop_name) as Sprite3D

@@ -40,7 +40,7 @@ larger cyberpunk setting.
 
 | Target level | Core arc | New capability | Status |
 | --- | --- | --- | --- |
-| 1: Arrival / Shoreline | Classic fundamentals grow into an aerial route | Double Jump | Shoreline, Green Threshold, and Thorn Garden authored; rejected tree-as-level experiment removed before the next route section |
+| 1: Arrival / Shoreline | Classic fundamentals grow into an aerial route | Double Jump | Shoreline, Green Threshold, and Thorn Garden approved; open-air Double Jump rise awaiting hands-on review |
 | 2: Overgrown Coastal Ascent | Horizontal travel turns upward, then accelerates | Wall Jump and Dash | Planned from proven prototypes |
 | 3: Green Zone Finale | Full-kit mastery, saws, enemy escalation, gun lesson, and boss | Limited firearm | Planned concept |
 
@@ -71,29 +71,38 @@ ability through two sunken lethal beds, raised recovery terrain, an enemy perch,
 and a committed descent to a landmark checkpoint. A later stitched-tree ascent
 was technically traversable but visually incoherent, so its geometry, scenery,
 background layers, checkpoint, and goal placement were removed rather than
-kept as baggage. The current temporary goal sits on the Thorn Garden exit.
-Ravine, grove, and finale material remain planned rather than present.
+kept as baggage. The replacement open-air rise alternates ascending and
+descending Double Jumps over a continuous thorn basin. Its last high ledge
+frames a lower landing outside the player's view: dropping straight meets a
+small permanent spike cluster positioned on the ordinary forward-fall line,
+while committing the Double Jump farther forward clears it. The temporary goal
+now sits beyond that landing. Finale material remains
+planned rather than present.
 
-#### Next route-section contract
+#### Current route-section contract
 
-The next section keeps the useful gameplay intention without committing the
-level to a giant-tree visual gimmick:
+The current review section develops the ability Level 1 actually owns without
+importing Level 2's spatial language:
 
 1. Begin at the Thorn Garden exit without changing any approved earlier route
    geometry, checkpoint behavior, camera composition, or background timing.
-2. Turn progress upward for a sustained section, using Double Jump through
-   changing timing, correction, recovery, and route-reading demands rather than
-   a repeated platform staircase.
-3. Build the route from environmental forms available in the imported asset
-   library. Select the visual idea after auditioning actual assets; do not force
-   unrelated tree sprites into a single fake structure.
-4. Add only the vertical camera and height-aware background behavior the chosen
-   route genuinely needs. Ordinary jumps before the section must not disturb
-   the approved horizontal framing.
-5. Keep decoration behind readable gameplay unless a deliberately foregrounded
+2. Continue through open-air Green Zone terrain. A short ladder-like rise may
+   vary the silhouette, but Level 1 does not introduce Wall Jump and does not
+   suddenly become a shaft, corridor, folded return route, or indoor puzzle.
+3. Develop Double Jump through a small number of distinct height, distance,
+   correction, recovery, and route-reading beats rather than a repeated
+   platform staircase.
+4. Build each beat from environmental forms already available in the imported
+   Green Zone library, auditioning the actual art before committing geometry.
+   Use props and structures because they belong in the place, not because the
+   engine can support them.
+5. Keep the established horizontal camera framing unless a modest open-air rise
+   genuinely needs the already-proven opt-in vertical camera region. Sustained
+   shafts and Wall Jump camera work belong to Level 2.
+6. Keep decoration behind readable gameplay unless a deliberately foregrounded
    object has been proven not to hide the player, enemies, hazards, or implied
    collision.
-6. Author a short, coherent gameplay phrase first, capture it at the relevant
+7. Author a short, coherent gameplay phrase first, capture it at the relevant
    elevations, then let human playtesting decide whether it deserves extension.
    Automated traversal proves legality only and never determines difficulty.
 
@@ -236,13 +245,28 @@ other asset may be borrowed when it fits the local composition.
    keeps presentation synchronized with the motivating terrain.
 10. Completed: remove the rejected stitched-tree ascent completely and return
     the production scene to the approved Thorn Garden endpoint.
-11. Next: use the imported visual library to design one coherent upward gameplay
-    phrase without preselecting a giant tree, cliff, or other visual gimmick.
-12. Then: add only the reusable vertical camera/background behavior that phrase
-    requires, capture it at its meaningful elevations, run structural and
-    real-input validation, and hand it to the user for difficulty, fairness,
-    pacing, readability, and composition review. Bot failure alone must never
-    authorize easier geometry.
+11. Completed: prove an opt-in vertical camera region and a folded dual-route
+    greybox in isolation. Human review confirmed the camera tool works but the
+    corridor/fold language belongs to later indoor or Level 2 material, so the
+    disposable route proof was removed instead of being forced into Level 1.
+12. Completed: author one coherent open-air Double Jump phrase after Thorn
+    Garden, with alternating elevations, a continuous thorn basin, and no Wall
+    Jump, shaft, corridor fold, or return-route language.
+13. Completed: make the final descent a camera-framing lesson rather than a
+    spawned trap. The landing spike always exists below the high ledge; a focused
+    runtime check proves it begins outside the frame, becomes visible during the
+    fall, punishes its authored drop line, and can be cleared by moving forward.
+14. Current: retain the accepted route and camera feel while human-tuning the
+    concealed cluster's horizontal placement. It is not yet dangerous enough to
+    catch the player's ordinary run-off trajectory, so its final position is not
+    locked by this checkpoint commit.
+15. Next developer-tooling task: add an explicitly toggled, development-only
+    free-flight/noclip mode. It should let the user inspect geometry, spacing,
+    camera transitions, and distant scenery quickly without changing campaign
+    progression, checkpoints, collision rules, or release play.
+16. Then: hand the tuned section to the user for difficulty, fairness, pacing,
+    readability, and composition review. Bot success proves legality only and
+    must never authorize easier geometry.
 
 ### Needed before the finale
 
@@ -303,12 +327,15 @@ level. It must also:
 ## Current review gate
 
 Arrival / Shoreline is now the production campaign's Level 1. The shoreline,
-Green Threshold, and Thorn Garden form the current authored baseline. The
-rejected stitched-tree ascent has been removed; the temporary goal on the Thorn
-Garden exit marks the clean construction boundary. Automation checks loading,
-collision support, hazards, checkpoints, reset, completion, camera/background
-coverage, and visual regressions without tuning the route around bot skill.
-The user owns the difficulty, fairness, pacing, and feel verdict after playing
-the build. Tune reported beats in place, then choose the next section; do not
-add new systems or begin Level 2 until Level 1 is accepted. Guns, crafting,
-saws, secrets, currency, lives, and new enemy families remain outside Level 1.
+Green Threshold, and Thorn Garden form the approved authored baseline. The
+replacement open-air Double Jump rise is implemented after Thorn Garden and is
+the current human-review target; the temporary goal marks its lower landing.
+Automation checks loading, collision support, hazards, checkpoints, reset,
+completion, camera/background coverage, the concealed-spike reveal, and visual
+regressions without tuning the route around bot skill. Human review accepts the
+new camera movement and overall route, but the concealed cluster must still move
+onto the natural run-off line. The user owns the difficulty, fairness, pacing,
+and feel verdict after playing the build. Tune reported beats in place, then
+choose the next section; do not add new systems or begin Level 2 until Level 1
+is accepted. Guns, crafting, saws, secrets, currency, lives, and new enemy
+families remain outside Level 1.

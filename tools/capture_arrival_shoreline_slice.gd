@@ -120,6 +120,31 @@ func _run() -> void:
 		"arrival_slice_12_temporary_endpoint",
 		Vector3(123.0, 1.34, 0)
 	)
+	await _capture_at(
+		level,
+		"arrival_slice_13_double_jump_rise",
+		Vector3(131.84, 4.54, 0)
+	)
+	await _capture_at(
+		level,
+		"arrival_slice_14_double_jump_dip",
+		Vector3(151.04, 5.18, 0)
+	)
+	await _capture_at(
+		level,
+		"arrival_slice_15_blind_descent_launch",
+		Vector3(160.0, 8.38, 0)
+	)
+	await _capture_at(
+		level,
+		"arrival_slice_16_blind_descent_reveal",
+		Vector3(166.0, 4.0, 0)
+	)
+	await _capture_at(
+		level,
+		"arrival_slice_17_aerial_landing",
+		Vector3(171.0, 1.34, 0)
+	)
 	root.remove_child(game_root)
 	game_root.free()
 	await process_frame

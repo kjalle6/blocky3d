@@ -79,6 +79,46 @@ const CROSSINGS := [
 		"launch_x": 105.7,
 		"second_x": -1.0,
 	},
+	{
+		"name": "open-air rise",
+		"from": ^"Platforms/ThornGardenExit",
+		"to": ^"Platforms/AerialRise",
+		"launch_x": 124.6,
+		"second_x": 127.0,
+		"landing_brake_x": 131.4,
+	},
+	{
+		"name": "open-air crown",
+		"from": ^"Platforms/AerialRise",
+		"to": ^"Platforms/AerialCrown",
+		"launch_x": 132.9,
+		"second_x": 135.8,
+		"landing_brake_x": 141.6,
+	},
+	{
+		"name": "open-air dip",
+		"from": ^"Platforms/AerialCrown",
+		"to": ^"Platforms/AerialDip",
+		"launch_x": 143.2,
+		"second_x": 146.2,
+		"landing_brake_x": 150.6,
+	},
+	{
+		"name": "open-air peak",
+		"from": ^"Platforms/AerialDip",
+		"to": ^"Platforms/AerialPeak",
+		"launch_x": 152.1,
+		"second_x": 155.0,
+		"landing_brake_x": 159.6,
+	},
+	{
+		"name": "blind forward descent",
+		"from": ^"Platforms/AerialPeak",
+		"to": ^"Platforms/AerialLanding",
+		"launch_x": 161.0,
+		"second_x": 164.4,
+		"landing_brake_x": 171.0,
+	},
 ]
 
 

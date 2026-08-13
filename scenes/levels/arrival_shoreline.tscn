@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3]
+[gd_scene load_steps=45 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="2_platform"]
@@ -38,9 +38,10 @@
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/hedge_mid_left.png" id="45_hedge_mid_left"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/hedge_mid_right.png" id="46_hedge_mid_right"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/garden_gate_open.png" id="47_gate"]
+[ext_resource type="Script" path="res://scripts/camera/vertical_camera_region_3d.gd" id="48_camera_region"]
 
 [sub_resource type="BoxShape3D" id="Shape_kill_plane"]
-size = Vector3(184.32, 1, 8)
+size = Vector3(230.4, 1, 8)
 
 [sub_resource type="BoxShape3D" id="Shape_shore_water"]
 size = Vector3(12.8, 5, 8)
@@ -64,7 +65,7 @@ transition_anchor_path = NodePath("../BackgroundTransitionAnchor")
 
 [node name="RouteExtent" parent="." index="2"]
 route_start_x = -5.12
-route_end_x = 126.72
+route_end_x = 184.32
 
 [node name="OpeningGroundCollision" type="StaticBody3D" parent="." index="3"]
 position = Vector3(7.04, -1.28, 0)
@@ -136,6 +137,31 @@ size = Vector3(7.68, 3.84, 2)
 position = Vector3(119.04, -1.28, 0)
 script = ExtResource("2_platform")
 size = Vector3(15.36, 3.84, 2)
+
+[node name="AerialRise" type="StaticBody3D" parent="Platforms" index="12"]
+position = Vector3(131.84, 3.2, 0)
+script = ExtResource("2_platform")
+size = Vector3(3.84, 1.28, 2)
+
+[node name="AerialCrown" type="StaticBody3D" parent="Platforms" index="13"]
+position = Vector3(142.08, 5.76, 0)
+script = ExtResource("2_platform")
+size = Vector3(3.84, 1.28, 2)
+
+[node name="AerialDip" type="StaticBody3D" parent="Platforms" index="14"]
+position = Vector3(151.04, 3.84, 0)
+script = ExtResource("2_platform")
+size = Vector3(3.84, 1.28, 2)
+
+[node name="AerialPeak" type="StaticBody3D" parent="Platforms" index="15"]
+position = Vector3(160, 7.04, 0)
+script = ExtResource("2_platform")
+size = Vector3(3.84, 1.28, 2)
+
+[node name="AerialLanding" type="StaticBody3D" parent="Platforms" index="16"]
+position = Vector3(171.52, -1.28, 0)
+script = ExtResource("2_platform")
+size = Vector3(25.6, 3.84, 2)
 
 [node name="TransitionTalus" type="Node3D" parent="Props" index="0"]
 
@@ -391,6 +417,48 @@ flip_h = true
 shaded = false
 render_priority = 12
 
+[node name="AerialRiseGrass" type="Sprite3D" parent="Props" index="29"]
+position = Vector3(132.5, 4, 0.98)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("35_grass_sparse")
+shaded = false
+
+[node name="AerialCrownStone" type="Sprite3D" parent="Props" index="30"]
+position = Vector3(142.72, 6.66, 0.94)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("42_stone_small")
+shaded = false
+
+[node name="AerialDipBush" type="Sprite3D" parent="Props" index="31"]
+position = Vector3(151.6, 4.68, 0.96)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("34_bush_small")
+shaded = false
+
+[node name="AerialPeakGrass" type="Sprite3D" parent="Props" index="32"]
+position = Vector3(160.6, 7.82, 0.98)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("36_grass_thin")
+shaded = false
+
+[node name="AerialLandingBush" type="Sprite3D" parent="Props" index="33"]
+position = Vector3(176.0, 0.84, 0.96)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("34_bush_small")
+shaded = false
+
+[node name="AerialLandingGrass" type="Sprite3D" parent="Props" index="34"]
+position = Vector3(180.0, 0.72, 0.98)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("41_grass_small")
+shaded = false
+
 [node name="ShoreWater" type="Node3D" parent="Hazards" index="0"]
 position = Vector3(-6.4, 0, 0)
 script = ExtResource("8_water")
@@ -418,6 +486,14 @@ row_width = 6.2
 position = Vector3(96.64, -2.4, 0)
 row_width = 4.0
 
+[node name="AerialBasinSpikes" parent="Hazards" index="5" instance=ExtResource("39_spikes")]
+position = Vector3(142.72, -2.4, 0)
+row_width = 32.0
+
+[node name="BlindLandingSpikes" parent="Hazards" index="6" instance=ExtResource("39_spikes")]
+position = Vector3(164.26667, 0.64, 0)
+row_width = 2.56
+
 [node name="PickupCheckpoint" parent="Checkpoints" index="0" instance=ExtResource("7_checkpoint")]
 position = Vector3(36.2, 0.64, 0)
 route_index = 2
@@ -435,10 +511,10 @@ position = Vector3(1.8, 0.7, 0)
 [node name="GameplayCamera" parent="." index="10"]
 camera_height = 3.98
 target_height = 3.98
-maximum_center_x = 115.2
+maximum_center_x = 172.8
 
 [node name="KillPlane" parent="." index="11"]
-position = Vector3(84.48, -4.34, 0)
+position = Vector3(90.56, -4.34, 0)
 
 [node name="Collision" parent="KillPlane" index="0"]
 shape = SubResource("Shape_kill_plane")
@@ -460,7 +536,7 @@ patrol_speed = 1.7
 starts_moving_right = false
 
 [node name="Goal" parent="." index="25" instance=ExtResource("5_goal")]
-position = Vector3(123.52, 0.64, 0)
+position = Vector3(181.76, 0.64, 0)
 
 [node name="WaterDeathSplash" type="Node3D" parent="." index="26"]
 script = ExtResource("23_water_splash_script")
@@ -482,5 +558,14 @@ foam_texture = ExtResource("24_shore_foam")
 crest_offsets_x = PackedFloat32Array(2, 4, 5.7)
 crest_delays = PackedFloat32Array(0, 2.1, 4)
 crest_submerged_depths = PackedFloat32Array(0.4, 0.35, 0.3)
+
+[node name="DoubleJumpRiseCameraRegion" type="Node3D" parent="." index="28"]
+position = Vector3(151.04, 0, 0)
+script = ExtResource("48_camera_region")
+size = Vector2(70.4, 32)
+vertical_anchor_y = 1.19
+minimum_vertical_offset = 0.0
+maximum_vertical_offset = 7.04
+priority = 10
 
 [editable path="Player"]

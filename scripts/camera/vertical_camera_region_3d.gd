@@ -19,6 +19,10 @@ func contains_world_position(world_position: Vector3) -> bool:
 	)
 
 
+func vertical_anchor_world_y() -> float:
+	return global_position.y + vertical_anchor_y
+
+
 func validation_errors() -> PackedStringArray:
 	var errors := PackedStringArray()
 	if size.x <= 0.0 or size.y <= 0.0:

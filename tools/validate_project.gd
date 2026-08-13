@@ -72,11 +72,11 @@ func _validate() -> void:
 	assert(level != null, "World 1 / Level 1 must instantiate.")
 	assert(game_root.current_world_definition.world_id == &"green_zone")
 	assert(
-		is_equal_approx(level.route_extent.length(), 131.84),
+		is_equal_approx(level.route_extent.length(), 189.44),
 		"Level 1 must expose the current staged production review route."
 	)
 	assert(level.player.movement.ideal_jump_height() > 2.0)
-	assert(level.get_node("Platforms").get_child_count() == 10)
+	assert(level.get_node("Platforms").get_child_count() == 15)
 	assert(level.get_node_or_null("ApproachPatrol") is StompableEnemy3D)
 	assert(level.get_node_or_null("DoubleJumpPickup") is AbilityPickup3D)
 	assert(level.get_node_or_null("Goal") is PixelGoal3D)

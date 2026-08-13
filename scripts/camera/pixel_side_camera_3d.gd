@@ -45,7 +45,8 @@ func _process(delta: float) -> void:
 	var desired_vertical_offset := 0.0
 	if _active_vertical_region != null:
 		desired_vertical_offset = clampf(
-			target.global_position.y - _active_vertical_region.vertical_anchor_y,
+			target.global_position.y
+			- _active_vertical_region.vertical_anchor_world_y(),
 			_active_vertical_region.minimum_vertical_offset,
 			_active_vertical_region.maximum_vertical_offset
 		)
