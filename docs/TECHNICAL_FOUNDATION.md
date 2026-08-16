@@ -27,6 +27,7 @@ scene tree is three-dimensional.
 | Application flow | `GameRoot`: active world container, interface container, and catalog-driven level selector |
 | Campaign content | `CampaignCatalog`, typed `WorldDefinition`, and typed `LevelDefinition` resources; no level-number behavior branches |
 | Level run state | `LevelSession3D`: player wiring, death, checkpoint respawn, full restart, and completion |
+| Level thresholds | `LevelTransition3D`: a doorway that hands the run to another level. `GameRoot` fades out, swaps the scene behind the black, and fades back in. Not a goal: a goal ends a run and records progress, a threshold continues a journey into a separately authored space |
 | Locomotion | `PlayerCharacter` plus typed `PlayerMovementConfig` tuning |
 | Route extent | `RouteExtent3D`: metadata describing the authored start and end of a level's route. Movement is plain +X; nothing projects onto a path |
 | Camera | `PixelSideCamera3D`, independent from player movement ownership |
@@ -203,6 +204,24 @@ than travel.
 - Movement and collision contracts do not silently change when art changes.
 - Readable geometry enforces routes; invisible barriers are reserved for clear
   world boundaries.
+
+## Pixel-art invariants
+
+Two rules govern every sprite in a level scene. Both have already been broken
+once each, and both times the symptom looked like something else.
+
+- **Every sprite renders at `PixelPlatform3D.TILE_PIXEL_SIZE` (0.04 m).** A
+  sprite on any other scale re-rounds its pixels independently as the camera
+  pans, so it visibly jitters against its neighbours. Source art that is an
+  exact integer upscale is downscaled to native resolution rather than shrunk
+  at display time. `PixelBackgroundProfile` validates this for backgrounds;
+  props have no equivalent guard, so it is enforced by review.
+- **`render_priority = 0` is the terrain line.** Terrain faces carry the default
+  priority, so anything that should look bedded into the ground is negative and
+  anything sitting on top of it is positive. Props that overlap each other are
+  given explicit unique priorities rather than relying on depth to break ties,
+  because equal-depth sprites fall back to distance sorting and can swap order
+  as the camera moves.
 
 ## Gameplay collision
 

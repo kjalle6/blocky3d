@@ -138,6 +138,14 @@ $assets = [ordered]@{
         "environment\sky\clouds\PNG\Clouds_white\Shape2\cloud_shape2_3.png"
     "background/clouds/puff.png" =
         "environment\sky\clouds\PNG\Clouds_white\Shape3\cloud_shape3_4.png"
+    "background/dusk/layer_1.png" =
+        "backgrounds\forests_and_trees\2\1.png"
+    "background/dusk/layer_2.png" =
+        "backgrounds\forests_and_trees\2\2.png"
+    "background/dusk/layer_3.png" =
+        "backgrounds\forests_and_trees\2\3.png"
+    "licenses/forests_and_trees.txt" =
+        "backgrounds\forests_and_trees\license.txt"
     "shoreline/tiles/top_left.png" =
         "tilesets\beach_zone\1 Tiles\SandTile_01.png"
     "shoreline/tiles/top.png" =

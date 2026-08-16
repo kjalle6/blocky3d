@@ -247,6 +247,22 @@
                                        "source":  "environment/sky/clouds/PNG/Clouds_white/Shape3/cloud_shape3_4.png",
                                        "sha256":  "cbfcbf7ad8205de2eb00641d44a95725e4676879485364880fa55e42ecb253c6"
                                    },
+    "background/dusk/layer_1.png":  {
+                                        "source":  "backgrounds/forests_and_trees/2/1.png",
+                                        "sha256":  "373e74883972df223652af92d93abd5f44c331911b45a067afb47d9ca9b6a27e"
+                                    },
+    "background/dusk/layer_2.png":  {
+                                        "source":  "backgrounds/forests_and_trees/2/2.png",
+                                        "sha256":  "07df245e731aeae6124271aa0f6492150680d69dabceeb6aca704ff5a51d6d38"
+                                    },
+    "background/dusk/layer_3.png":  {
+                                        "source":  "backgrounds/forests_and_trees/2/3.png",
+                                        "sha256":  "85abbcea00d46bde34d1d2cad3ecef5bd2aa36c17e97fa795c453464edecaae2"
+                                    },
+    "licenses/forests_and_trees.txt":  {
+                                           "source":  "backgrounds/forests_and_trees/license.txt",
+                                           "sha256":  "0c0f673571adbb935c734ac17fbc6e51fb4368a225b915aa25031712b03960d4"
+                                       },
     "shoreline/tiles/top_left.png":  {
                                          "source":  "tilesets/beach_zone/1 Tiles/SandTile_01.png",
                                          "sha256":  "2c64b269f687bf8f2d936f3ac41e149a04ce0767739e979df046e94175b42215"

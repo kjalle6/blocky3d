@@ -172,6 +172,26 @@ interior is attractive because walls, ceilings, shafts, and controlled
 sightlines give Wall Jump and Dash geometry a natural visual cause; it is not
 permission to assemble a room from unrelated props or collision patches.
 
+The approach and the interior are two scenes joined by a fade, not one
+continuous space. Running into the cave mouth triggers a `LevelTransition3D`,
+the screen fades to black, the interior scene loads behind it, and the fade
+lifts. This is a decision rather than a convenience:
+
+- the outdoor approach is deliberately unfailable, so Level 2's real run and all
+  of its respawns begin at the cave mouth;
+- the player arrives straight out of Level 1 still running, so the approach is a
+  bridge rather than an opening beat;
+- the black screen doubles as a time skip, which is what licenses the approach
+  being late in the day when Level 1 ended in daylight;
+- joining the outdoor platform grammar to the enclosed interior grid along a
+  visible seam was tried and rejected. It produced a flat cliff face and leaked
+  the outdoor sky through the interior chambers. A doorway costs nothing and
+  reuses cleanly for any later door, tunnel, or building.
+
+`scenes/dev/cave_transition_lab.tscn` owns this handoff and its dressing. The
+approach uses the `green_zone_dusk` background; the interior keeps its own dark
+environment, which is now simply correct rather than something to fight.
+
 The intended teaching arc remains:
 
 1. one familiar opening jump confirms ordinary control;

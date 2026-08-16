@@ -194,6 +194,7 @@ func _start_session(
 	current_level.configure(definition, session_store, initial_session_abilities)
 	world.add_child(current_level)
 	current_level.run_completed.connect(_on_run_completed)
+	current_level.transition_requested.connect(_on_transition_requested)
 	current_level.run_reset.connect(_on_run_reset)
 	current_level.ability_unlocked.connect(_on_ability_unlocked)
 	var session_heading := definition.heading()
@@ -567,6 +568,45 @@ func _on_run_completed() -> void:
 
 func _on_run_reset() -> void:
 	completion_label.visible = false
+	_reset_completion_fade()
+
+
+## Running into a threshold fades out, swaps the scene behind the black, and
+## fades back in. The player never sees two terrain grammars meet, which is the
+## whole reason a doorway is a fade rather than a seam.
+func _on_transition_requested(target: LevelDefinition) -> void:
+	if target == null:
+		return
+	await _fade_to_black(0.45)
+	if target in _ordered_developer_definitions():
+		load_developer_level(target)
+	else:
+		load_level(target.level_id)
+	await _fade_from_black(0.45)
+
+
+func _fade_to_black(duration: float) -> void:
+	_reset_completion_fade()
+	completion_fade.visible = true
+	completion_fade.modulate.a = 0.0
+	_completion_fade_tween = create_tween()
+	_completion_fade_tween.set_trans(Tween.TRANS_SINE)
+	_completion_fade_tween.set_ease(Tween.EASE_IN_OUT)
+	_completion_fade_tween.tween_property(completion_fade, "modulate:a", 1.0, duration)
+	await _completion_fade_tween.finished
+
+
+## Held opaque across the load, then lifted, so the new scene never pops in.
+func _fade_from_black(duration: float) -> void:
+	if _completion_fade_tween != null and _completion_fade_tween.is_valid():
+		_completion_fade_tween.kill()
+	completion_fade.visible = true
+	completion_fade.modulate.a = 1.0
+	_completion_fade_tween = create_tween()
+	_completion_fade_tween.set_trans(Tween.TRANS_SINE)
+	_completion_fade_tween.set_ease(Tween.EASE_IN_OUT)
+	_completion_fade_tween.tween_property(completion_fade, "modulate:a", 0.0, duration)
+	await _completion_fade_tween.finished
 	_reset_completion_fade()
 
 

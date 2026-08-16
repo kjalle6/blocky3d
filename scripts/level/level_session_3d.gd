@@ -4,6 +4,7 @@ extends Node3D
 ## session owns run reset/completion, while gameplay behavior stays on entities.
 
 signal run_completed
+signal transition_requested(target: LevelDefinition)
 signal run_reset
 signal checkpoint_changed(route_index: int)
 signal ability_unlocked(ability_id: StringName)
@@ -72,6 +73,9 @@ func _ready() -> void:
 	for node in get_tree().get_nodes_in_group("melee_target"):
 		if combat_feedback != null and is_ancestor_of(node) and node is StompableEnemy3D:
 			combat_feedback.bind_enemy(node as StompableEnemy3D)
+	for node in get_tree().get_nodes_in_group("level_transition"):
+		if is_ancestor_of(node) and node.has_signal("entered"):
+			node.entered.connect(_on_transition_entered)
 	for node in get_tree().get_nodes_in_group("level_goal"):
 		if is_ancestor_of(node) and node.has_signal("reached"):
 			node.reached.connect(_on_goal_reached)
@@ -119,6 +123,16 @@ func _on_goal_reached(body: PlayerCharacter) -> void:
 	_completed = true
 	player.stop_for_completion()
 	run_completed.emit()
+
+
+## A threshold hands the run to another scene. The player is stopped exactly as
+## a goal stops it, so nothing keeps simulating behind the fade.
+func _on_transition_entered(target: LevelDefinition) -> void:
+	if _completed or target == null:
+		return
+	_completed = true
+	player.stop_for_completion()
+	transition_requested.emit(target)
 
 
 func _on_checkpoint_activated(checkpoint: LevelCheckpoint3D) -> void:
