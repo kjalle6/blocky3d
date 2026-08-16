@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="LevelDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/campaign/level_definition.gd" id="1_definition"]
+[ext_resource type="PackedScene" path="res://scenes/dev/enclosed_terrain_lab.tscn" id="2_scene"]
+
+[resource]
+script = ExtResource("1_definition")
+level_id = &"dev_enclosed_terrain_lab"
+display_number = 2
+title = "Enclosed Terrain Lab"
+lesson = "A construction proof for a long enclosed approach, connected cave terrain, wall jumping, and an upper dash corridor."
+scene = ExtResource("2_scene")
+available_abilities = Array[StringName]([&"double_jump", &"wall_jump", &"dash"])
+assumed_owned_abilities = Array[StringName]([&"double_jump", &"wall_jump", &"dash"])

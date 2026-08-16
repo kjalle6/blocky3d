@@ -1,0 +1,56 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_interior_terrain_3d.gd" id="2_terrain"]
+[ext_resource type="Resource" path="res://resources/presentation/interior_styles/rock_underworks.tres" id="3_style"]
+
+[sub_resource type="Environment" id="Environment_underworks"]
+background_mode = 1
+background_color = Color(0.035, 0.045, 0.065, 1)
+ambient_light_source = 3
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.0
+
+[sub_resource type="BoxShape3D" id="Shape_kill_plane"]
+size = Vector3(64, 1, 8)
+
+[node name="EnclosedTerrainLab" instance=ExtResource("1_base")]
+
+[node name="WorldEnvironment" parent="." index="1"]
+environment = SubResource("Environment_underworks")
+
+[node name="RouteExtent" parent="." index="2"]
+route_start_x = 0.0
+route_end_x = 58.88
+
+[node name="Background" parent="." index="3"]
+visible = false
+
+[node name="RockShell" type="StaticBody3D" parent="Platforms" index="0"]
+position = Vector3(0, -2.56, 0)
+script = ExtResource("2_terrain")
+solid_rows = PackedStringArray("##############################################", "##############################################", "##############################################", "##############################################", "#########################...................##", "#########################...................##", "#########################...................##", "#########################...................##", "#########################...##################", "#########################...##################", "#########################...##################", "#########################...##################", "#########################...##################", "#########################...##################", "##.....................##...##################", "##.....................##...##################", "##..........................##################", "##..........................##################", "##############################################", "##############################################")
+style = ExtResource("3_style")
+
+[node name="SpawnPoint" parent="." index="8"]
+position = Vector3(4.48, 0.7, 0)
+
+[node name="Player" parent="." index="9"]
+position = Vector3(4.48, 0.7, 0)
+
+[node name="GameplayCamera" parent="." index="10"]
+look_ahead = 2.0
+minimum_center_x = 6.47
+maximum_center_x = 52.41
+vertical_follow_enabled = true
+vertical_anchor_y = 0.7
+minimum_vertical_offset = 0.0
+maximum_vertical_offset = 12.8
+
+[node name="KillPlane" parent="." index="11"]
+position = Vector3(29.44, -6, 0)
+
+[node name="Collision" parent="KillPlane" index="0"]
+shape = SubResource("Shape_kill_plane")
+
+[editable path="Player"]

@@ -532,12 +532,18 @@ and tire-swing-tree finish form the authored baseline. The rejected
 stitched-tree and folded-corridor experiments remain removed rather than hidden
 as production baggage.
 
-The next milestone is Overgrown Coastal Ascent pre-production: reconcile the
-proven Wall Jump and Dash contracts, audit suitable coastal/green presentation,
-and approve the route and camera plan before authoring production geometry.
-Reusable vertical camera regions and height-aware background fades already
-exist but stay opt-in until that approved route needs them. Structural, visual,
-and regression automation owns technical confidence; hands-on human review
-remains the gate for difficulty, fairness, pacing, and feel. Firearms, saws,
-bosses, Combat Lab, and the curated cyberpunk UI theme follow only when their
-corresponding campaign milestone requires them.
+The next milestone is Overgrown Coastal Ascent pre-production. Its current
+attempt moves from a brief Green Zone approach into a substantial enclosed
+cavern, mine, tunnel, or collapsed underworks, but that direction is not locked.
+Before route geometry, an isolated disposable lab must prove a reusable
+grid-driven interior terrain component whose connected floor, wall, ceiling,
+and corner art derives consolidated collision from the same solid-cell source.
+The lab validates enclosed camera travel and existing Wall Jump/Dash contact
+without pretending to be a miniature campaign level or final Dash-spacing
+test. Failure returns the project to system or visual-direction review rather
+than hand-placed patches. Reusable vertical camera regions and height-aware
+background fades already exist but stay opt-in until an approved route needs
+them. Structural, visual, and regression automation owns technical confidence;
+hands-on human review remains the gate for presentation, difficulty, fairness,
+pacing, and feel. Firearms, saws, bosses, Combat Lab, and the curated cyberpunk
+UI theme follow only when their corresponding campaign milestone requires them.

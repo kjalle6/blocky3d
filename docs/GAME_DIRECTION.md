@@ -170,8 +170,11 @@ three re-authored levels:
 
 1. **Arrival / Shoreline** establishes running, jumping, gaps, spikes, enemies,
    stomping, knife combat, and fast restart, then introduces Double Jump.
-2. **Overgrown Coastal Ascent** turns the route upward and introduces Wall Jump
-   and Dash through increasingly connected movement.
+2. **Overgrown Coastal Ascent** currently attempts a brief Green Zone approach
+   into an enclosed cavern, mine, tunnel, or collapsed underworks. Its interior
+   introduces Wall Jump and Dash through increasingly connected movement. This
+   presentation remains provisional until an isolated terrain-and-collision
+   lab proves the available art can form a coherent enclosed space.
 3. **Green Zone Finale** tests the complete movement kit, introduces moving
    saws and a small escalation of the enemy roster, then teaches a limited gun
    before a simple first boss.

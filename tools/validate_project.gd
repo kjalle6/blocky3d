@@ -25,6 +25,10 @@ func _validate() -> void:
 	var level_01_button := world_list.get_node("World01Level01Button") as Button
 	var developer_heading := world_list.get_node("DeveloperToolsHeading") as Label
 	var animation_lab_button := world_list.get_node("AnimationLabButton") as Button
+	var enclosed_lab_button := world_list.get_node(
+		"EnclosedTerrainLabButton"
+	) as Button
+	var level_2_wip_button := world_list.get_node("Level2WipButton") as Button
 
 	assert(game_root.campaign is CampaignCatalog, "GameRoot requires typed campaign data.")
 	assert(game_root.campaign.validation_errors().is_empty(), "Campaign data must validate.")
@@ -44,6 +48,8 @@ func _validate() -> void:
 	assert(InputMap.has_action("developer_fly_down"))
 	assert(developer_heading.text == "DEVELOPER TOOLS")
 	assert(animation_lab_button.text == "ANIMATION LAB")
+	assert(enclosed_lab_button.text == "ENCLOSED TERRAIN LAB")
+	assert(level_2_wip_button.text == "LEVEL 2 WIP")
 	assert(world_list.get_node_or_null("ArrivalShorelineSliceButton") == null)
 	assert(level_01_button.has_focus(), "The selector should initially focus Level 1.")
 
@@ -51,7 +57,10 @@ func _validate() -> void:
 	menu_up.physical_keycode = KEY_W
 	menu_up.pressed = true
 	game_root._unhandled_input(menu_up)
-	assert(animation_lab_button.has_focus(), "W should wrap Level 1 to Animation Lab.")
+	assert(
+		level_2_wip_button.has_focus(),
+		"W should wrap Level 1 to the final developer level."
+	)
 	var menu_down := InputEventKey.new()
 	menu_down.physical_keycode = KEY_S
 	menu_down.pressed = true
@@ -90,6 +99,12 @@ func _validate() -> void:
 		FileAccess.file_exists("res://assets/art/green_zone/asset_manifest.json"),
 		"The curated Green Zone asset manifest must exist."
 	)
+
+	game_root.show_level_select()
+	level_2_wip_button.pressed.emit()
+	await process_frame
+	assert(game_root.current_level_definition.level_id == &"dev_level_2_wip")
+	assert(game_root.current_level.name == "DeveloperLevel2Wip")
 
 	print("Project and production World 1 / Level 1 campaign validation passed.")
 	quit(0)

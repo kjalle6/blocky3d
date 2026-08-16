@@ -41,7 +41,7 @@ larger cyberpunk setting.
 | Target level | Core arc | New capability | Status |
 | --- | --- | --- | --- |
 | 1: Arrival / Shoreline | Classic fundamentals grow into an aerial route | Double Jump | Complete and accepted; production baseline locked at commit `59a034b` |
-| 2: Overgrown Coastal Ascent | Horizontal travel turns upward, then accelerates | Wall Jump and Dash | Next milestone; pre-production plan and asset audit required before geometry |
+| 2: Overgrown Coastal Ascent | A brief Green Zone approach gives way to a candidate enclosed cavern / underworks route | Wall Jump and Dash | Next milestone; enclosed-terrain proof required before route geometry |
 | 3: Green Zone Finale | Full-kit mastery, saws, enemy escalation, gun lesson, and boss | Limited firearm | Planned concept |
 
 These are working titles. A level should be long enough to develop several
@@ -164,20 +164,50 @@ that contract explicitly rather than changing the shared default.
 
 ### Level 2: Overgrown Coastal Ascent
 
-Level 2 develops movement rather than waiting half a level to use its unlocks:
+The current Level 2 attempt begins with a brief Green Zone approach, then sends
+the player into a cave, mine, tunnel, or collapsed maintenance underworks where
+the substantial route takes place. The exact fiction and final title remain
+provisional until the existing art can produce a coherent enclosed space. The
+interior is attractive because walls, ceilings, shafts, and controlled
+sightlines give Wall Jump and Dash geometry a natural visual cause; it is not
+permission to assemble a room from unrelated props or collision patches.
+
+The intended teaching arc remains:
 
 1. one familiar opening jump confirms ordinary control;
-2. Wall Jump is introduced and immediately required in a safe shaft;
-3. horizontal breathers and recovery landings vary the vertical rhythm;
-4. increasingly offset shafts combine Wall Jump with saved Double Jump;
-5. Dash is introduced and immediately opens a crossing ordinary jumps cannot;
-6. the final sections combine walls, open void, Dash gaps, and flow encounters.
+2. the player enters the enclosed route before the main lesson begins;
+3. Wall Jump is introduced and immediately required in a safe shaft;
+4. chambers, horizontal breathers, and recovery landings vary the vertical
+   rhythm;
+5. increasingly offset shafts combine Wall Jump with saved Double Jump;
+6. Dash is introduced and immediately opens a crossing ordinary jumps cannot;
+7. the final sections combine enclosed walls, purposeful Dash runways, vertical
+   transfers, and flow encounters.
 
-Floating playable surfaces do not sit over hidden or unnecessary safety ground.
-Water, rocks, retaining structures, bridge or ruin elements, and restrained
-borrowed assets may support an overgrown coastal ascent without forcing a
-literal cliff. Every background prop remains visually grounded and clear of
-combat silhouettes.
+The asset audit found useful ingredients rather than a ready-made pure-cave
+kit: a connected brown rock terrain sheet, matching cave-rock and stalagmite
+families, and complete factory, industrial, and power-station interior
+vocabularies. The current visual candidate is therefore a natural cavern or
+mine that gradually reveals restrained buried infrastructure. The incompatible
+smooth/vector cave background is rejected. Props may dress or explain the
+space, but they never hold its visual shell or collision together.
+
+Before production route work, prove an entirely enclosed interior in a small
+disposable lab scene. The lab starts underground and contains a connected
+floor, ceiling, side walls, inside and outside corners, a low passage, a short
+Wall Jump shaft, and an ordinary upper corridor. It is a construction and
+collision proof, not a miniature Level 2 and not a Dash-spacing test. It has no
+outdoor approach, enemies, pickups, checkpoints, or campaign progression.
+
+The healthy implementation target is a reusable grid-driven interior terrain
+component: solid/empty cells select the required floor, wall, ceiling, and
+corner art, while adjacent cells generate consolidated collision rectangles.
+Begin with only the tile roles the lab needs rather than hand-placing art or
+overengineering the full source atlas. Validate ceiling contact, both wall
+directions, corner snagging, wall impact during Dash, camera travel, visual
+continuity, and 1920x1080 presentation. If the proof cannot make collision and
+art agree cleanly, stop and revise the system or visual direction; do not bury
+the failure under cave rocks and machinery.
 
 ### Level 3: Green Zone Finale
 
@@ -323,17 +353,24 @@ Overgrown Coastal Ascent in this order:
 1. Extract the lasting Wall Jump and Dash contracts, useful route beats, and
    known exploits from protected prototypes 4 and 5 and the legacy idea bank.
 2. State the level's teaching arc before drawing geometry: familiar opening,
-   immediate safe Wall Jump lesson, horizontal recovery, increasingly offset
-   climbs, immediate Dash lesson, and a combined movement payoff.
-3. Audit the imported coastal, Green Zone, rock, bridge/ruin, and background
-   families at player scale. Choose a coherent local vocabulary and reject art
-   that implies collision or a biome change the route does not support.
-4. Draw and review a route mock-up with approximate world-grid measurements,
-   checkpoint beats, camera regions, enemy lanes, and recovery spaces. Vertical
-   travel must feel like open-air ascent rather than an indoor folded corridor.
-5. Identify any genuinely missing reusable system. Prove that system in an
-   isolated disposable scene before production geometry depends on it.
-6. Only after the route and visual plan are approved, author the first short
+   brief exterior threshold, immediate safe Wall Jump lesson inside, recovery
+   chambers, increasingly offset climbs, immediate Dash lesson, purposeful
+   Dash runways, and a combined movement payoff.
+3. Completed asset-audit conclusion: the library can audition a rocky
+   cave/mine with restrained buried infrastructure, but it does not contain a
+   ready-made coherent pure-cave kit. Cave rocks and machinery are dressing,
+   not substitutes for connected interior terrain.
+4. Build the isolated enclosed-terrain lab described above. Keep it outside the
+   campaign and prove the smallest reusable grid, visual, collision, camera,
+   and capture contracts before drawing the production route.
+5. Review the lab visually and by hand. Treat the enclosed Level 2 direction as
+   accepted only if the room reads as one continuous interior and movement is
+   clean against floors, ceilings, walls, and corners.
+6. After that gate passes, draw and review the actual route mock-up with
+   approximate world-grid measurements, checkpoint beats, camera regions,
+   enemy lanes, recovery spaces, and Dash distances. The brief exterior
+   approach and substantial enclosed route must read as one deliberate level.
+7. Only after the route and visual plan are approved, author the first short
    gameplay slice, validate legality, capture it clean and diagnostic, and hand
    difficulty and feel back to human playtesting.
 
@@ -406,9 +443,12 @@ around bot skill. Human review accepts the route gameplay and concealed hazard.
 Human review also accepts the finish clearing, completion fade, environmental
 dressing, and half-pipe composition. Commit `59a034b` is the Level 1 baseline.
 
-The active gate is Level 2 pre-production: reconcile the Wall Jump and Dash
-prototypes with an open-air coastal ascent, audit the appropriate asset
-families, and approve the route plan before building it. Do not reopen Level 1
-unless a regression or deliberate later polish pass requires it.
+The active gate is Level 2 pre-production. The current attempt is a brief Green
+Zone approach leading into a substantial enclosed cavern, mine, tunnel, or
+collapsed underworks route. Before committing production geometry, build and
+review the isolated enclosed-terrain lab; only a successful connected-art,
+collision, camera, and movement proof authorizes the actual route mock-up. Do
+not reopen Level 1 unless a regression or deliberate later polish pass requires
+it.
 Guns, crafting, saws, secrets, currency, lives, and new enemy families remain
 outside Level 1.

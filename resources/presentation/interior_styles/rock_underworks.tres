@@ -1,0 +1,38 @@
+[gd_resource type="Resource" script_class="PixelInteriorTerrainStyle" load_steps=18 format=3]
+
+[ext_resource type="Script" path="res://scripts/presentation/pixel_interior_terrain_style.gd" id="1_style"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/terrain/top_left.png" id="2_top_left"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/terrain/top.png" id="3_top"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/terrain/top_right.png" id="4_top_right"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/terrain/left.png" id="5_left"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/terrain/fill.png" id="6_fill"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/terrain/right.png" id="7_right"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/terrain/bottom_left.png" id="8_bottom_left"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/terrain/bottom.png" id="9_bottom"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/terrain/bottom_right.png" id="10_bottom_right"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/terrain/top_variant.png" id="11_top_variant"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/terrain/fill_detail.png" id="12_fill_detail"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/terrain/bottom_variant.png" id="13_bottom_variant"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/terrain/inner_top_left.png" id="14_inner_top_left"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/terrain/inner_top_right.png" id="15_inner_top_right"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/terrain/inner_bottom_left.png" id="16_inner_bottom_left"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/terrain/inner_bottom_right.png" id="17_inner_bottom_right"]
+
+[resource]
+script = ExtResource("1_style")
+top_left = ExtResource("2_top_left")
+top = ExtResource("3_top")
+top_right = ExtResource("4_top_right")
+left = ExtResource("5_left")
+fill = ExtResource("6_fill")
+right = ExtResource("7_right")
+bottom_left = ExtResource("8_bottom_left")
+bottom = ExtResource("9_bottom")
+bottom_right = ExtResource("10_bottom_right")
+inner_top_left = ExtResource("14_inner_top_left")
+inner_top_right = ExtResource("15_inner_top_right")
+inner_bottom_left = ExtResource("16_inner_bottom_left")
+inner_bottom_right = ExtResource("17_inner_bottom_right")
+top_variants = Array[Texture2D]([ExtResource("11_top_variant")])
+fill_variants = Array[Texture2D]([ExtResource("12_fill_detail")])
+bottom_variants = Array[Texture2D]([ExtResource("13_bottom_variant")])

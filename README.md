@@ -49,10 +49,11 @@ remain read-only design references.
   outcrop, garden gates and hedges, the non-colliding skate half-pipe at the
   aerial takeoff, and the tire-swing-tree finish clearing
 - 1920x1080 presentation baseline
-- Next milestone: pre-produce Overgrown Coastal Ascent by extracting the useful
-  Wall Jump and Dash contracts from prototypes 4 and 5, auditing suitable
-  coastal/green assets at player scale, and approving a route-and-visual plan
-  before production geometry is authored
+- Next milestone: pre-produce Overgrown Coastal Ascent as a current enclosed
+  Level 2 attempt. First prove a grid-driven cave/mine/underworks interior in a
+  disposable lab with connected floor, wall, ceiling, corner, collision,
+  camera, and capture contracts. Only a successful hands-on review advances to
+  the actual Wall Jump and Dash route plan
 
 The living design and authoring documents are:
 

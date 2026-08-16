@@ -1,0 +1,8 @@
+Asset: cave_entrance_green_zone.png
+Source: https://pixie.haus/pixelart/368182/ancient-cave-entrance-dark-mystery-game-asset
+Terms: https://pixie.haus/terms_of_use
+
+AI-generated 128x128 public-gallery asset downloaded as an exact 4x
+nearest-neighbour PNG. Pixie Haus permits collected gallery assets to be used
+in personal and commercial projects. No named SPDX or Creative Commons license
+was supplied with this asset.
