@@ -5,6 +5,8 @@ param(
 
     [switch]$Visual,
 
+    [switch]$Headless,
+
     [switch]$EditorImport,
 
     [switch]$Game,
@@ -41,6 +43,23 @@ if ($EditorImport) {
     }
 } elseif ([string]::IsNullOrWhiteSpace($Script)) {
     throw '-Script is required unless -EditorImport or -Game is used.'
+}
+
+if ($Headless) {
+    # Opt-in only, and deliberately narrow. Headless was an early repeatable
+    # trigger for this machine's native access violations; the root cause was
+    # never proven, so it stays off by default and every headless run is
+    # labelled in the log name. If native faults reappear, drop -Headless
+    # first and see whether they stop.
+    if ($EditorImport) {
+        throw '-Headless cannot be combined with -EditorImport; --import has its own mode.'
+    }
+    if ($Game) {
+        throw '-Headless cannot be combined with -Game; the game needs a window.'
+    }
+    if ($Visual) {
+        throw '-Headless cannot be combined with -Visual; capture scripts must render.'
+    }
 }
 
 $projectRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
@@ -184,10 +203,14 @@ if (-not (Test-Path -LiteralPath $GodotExecutable -PathType Leaf)) {
     exit 3
 }
 
-# Do not add --headless here. The standard non-.NET build avoids the CoreCLR
-# process seen in earlier Mono failures, while the normal Compatibility
-# renderer remains the least disruptive project-script path tested here.
+# --headless is added only when explicitly requested. The standard non-.NET
+# build avoids the CoreCLR process seen in earlier Mono failures, while the
+# normal Compatibility renderer remains the least disruptive project-script
+# path tested here.
 $arguments = @('--path', $projectRoot)
+if ($Headless) {
+    $arguments += '--headless'
+}
 if ($EditorImport) {
     # `--import` is Godot's dedicated editor import mode: it waits for pending
     # resources to finish before quitting. Do not replace it with
@@ -213,6 +236,8 @@ $modeLabel = if ($EditorImport) {
     'game'
 } elseif ($Visual) {
     'visual'
+} elseif ($Headless) {
+    'script_headless'
 } else {
     'script'
 }
