@@ -17,7 +17,6 @@ const CHECKED_LEVELS: Array[StringName] = [
 	&"arrival_shoreline",
 ]
 const CHECKED_DEVELOPER_LEVELS: Array[StringName] = [
-	&"dev_cave_transition_lab",
 	&"dev_enclosed_terrain_lab",
 	&"dev_level_2_wip",
 	&"dev_animation_lab",

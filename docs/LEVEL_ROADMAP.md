@@ -168,7 +168,7 @@ lifts. This is a decision rather than a convenience:
   the outdoor sky through the interior chambers. A doorway costs nothing and
   reuses cleanly for any later door, tunnel, or building.
 
-`scenes/dev/cave_transition_lab.tscn` owns this handoff and its dressing. The
+`scenes/dev/level_2_wip.tscn` owns this handoff and its dressing. The
 approach uses the `green_zone_dusk` background; the interior keeps its own dark
 environment, which is now simply correct rather than something to fight.
 
@@ -382,7 +382,7 @@ dressing, and half-pipe composition. Commit `59a034b` is the Level 1 baseline.
 
 The active gate is Level 2 pre-production. The Green Zone approach, its dressed
 cave threshold, and the fade that hands the run to the enclosed terrain lab are
-built and accepted in `scenes/dev/cave_transition_lab.tscn`; commit `4beae5c` is
+built and accepted in `scenes/dev/level_2_wip.tscn`; commit `4beae5c` is
 that baseline. The enclosed lab proves the interior terrain grammar and the
 transition, not a designed climb, so what remains before production geometry is
 the interior route itself. Do not reopen Level 1 unless a regression or

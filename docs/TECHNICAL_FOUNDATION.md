@@ -466,8 +466,9 @@ death and reset behavior.
 
 Approved replacement levels enter `CampaignCatalog`; protected prototypes use
 the separate regression catalog. `GameRoot.developer_level_definitions` is
-reserved for disposable tools with a null world definition. Animation Lab is
-currently the only developer level and the only one with ability toggles.
+reserved for disposable tools with a null world definition: the Animation Lab,
+the Enclosed Terrain Lab, and the Level 2 WIP approach. Animation Lab remains
+the only one with in-room ability toggles.
 
 ## Validation and visual review
 

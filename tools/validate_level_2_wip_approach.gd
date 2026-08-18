@@ -1,7 +1,7 @@
 extends SceneTree
-## Guards native scale and level-ground contact for the cave entrance approach.
+## Guards native scale and level-ground contact for the Level 2 approach.
 
-const SCENE_PATH := "res://scenes/dev/cave_entrance_mockup_lab.tscn"
+const SCENE_PATH := "res://scenes/dev/level_2_wip.tscn"
 ## The scene renders the native export; the 4x enlargement is kept only as the
 ## art source, and the two must stay pixel-identical under that scale.
 const CAVE_PATH := (
@@ -44,7 +44,7 @@ func _run() -> void:
 	var room := packed_scene.instantiate() as LevelSession3D
 	assert(room != null)
 	var definition := LevelDefinition.new()
-	definition.level_id = &"dev_cave_entrance_mockups"
+	definition.level_id = &"dev_level_2_wip"
 	definition.available_abilities = []
 	room.configure(definition)
 	root.add_child(room)
@@ -101,7 +101,7 @@ func _run() -> void:
 		"The cave's rear edge must extend beyond the level and be cropped away."
 	)
 
-	print("Cave entrance approach passed: native export on full-depth level ground.")
+	print("Level 2 approach passed: native export on full-depth level ground.")
 	quit(0)
 
 
