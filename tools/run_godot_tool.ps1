@@ -241,6 +241,24 @@ try {
         )) {
         Get-Content -LiteralPath $logPath
     }
+    if ($exitCode -eq 0 -and -not [string]::IsNullOrWhiteSpace($Script)) {
+        # A failed assert() aborts only the function it occurs in. The caller
+        # keeps running and can still reach quit(0), so a tool script can
+        # report success while an assertion inside a helper has failed. Treat
+        # any script error in the log as a failed run.
+        if (Test-Path -LiteralPath $logPath -PathType Leaf) {
+            $scriptErrors = @(
+                Select-String -LiteralPath $logPath -Pattern 'SCRIPT ERROR' -SimpleMatch
+            )
+            if ($scriptErrors.Count -gt 0) {
+                $exitCode = 4
+                [Console]::Error.WriteLine(
+                    ("Godot $modeLabel reported {0} script error(s) despite " -f $scriptErrors.Count) +
+                    "exiting cleanly. Log: $logPath"
+                )
+            }
+        }
+    }
     if ($exitCode -ne 0) {
         [Console]::Error.WriteLine(
             "Godot $modeLabel failed with exit code $exitCode. Log: $logPath"

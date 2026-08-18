@@ -28,6 +28,11 @@ automation still uses the smaller standard build through Compatibility.
   implement it as `--editor --quit`; that exits on the first iteration while
   import workers may still be active and emitted unfinished-thread warnings in
   the same sessions as native access violations.
+- The runner fails any `-Script` run whose log contains `SCRIPT ERROR`, even
+  when Godot itself exits 0. A failed `assert()` aborts only the function it
+  occurs in; the caller keeps running and can still reach `quit(0)`, so without
+  this check a validator can print its success message and exit cleanly while an
+  assertion inside a helper has failed.
 - Keep every runner mode supervising the real non-console Godot executable
   with `Start-Process -Wait`; the Windows console launcher alone cannot be
   trusted to surface a delayed process crash. Keep the runner's exclusive

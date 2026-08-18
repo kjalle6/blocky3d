@@ -63,13 +63,9 @@ a tutorial interface:
 8. mix in a flow encounter and spike recap, then end on safe flat ground at a
    tire-swing tree landmark rather than repeating the lesson.
 
-F10 provides a world-locked tile grid plus live player-feet and mouse-world X/Y
-coordinates for precise hands-on layout feedback; F11 remains the independent
-god/noclip/free-flight inspection mode. F7 independently reveals collision,
-hazard, progression-trigger, and active attack regions for fairness review.
-Entering F11 grants the loaded level's available abilities for that session;
-they remain available after inspection exits for a normal-physics test, survive
-death and `R`, never write campaign progression, and clear on level reload.
+The developer tooling used for hands-on layout review — the F10 measurement
+grid, F11 inspection mode, and F7 collision overlay — is specified in
+`docs/TECHNICAL_FOUNDATION.md` under Developer tools.
 
 The production level was authored in reviewable slices rather than padded to
 its target runtime in one pass. Its locked opening includes the shoreline,
@@ -97,32 +93,16 @@ Garden takeoff platform: its right lip ends at the terrain edge and points
 toward the first aerial landing, while its matching left side turns the prop
 into a coherent local landmark rather than a disconnected ramp.
 
-#### Authored route-section contract
+#### Constraints that still bind Level 1
 
-The authored rise develops the ability Level 1 actually owns without
-importing Level 2's spatial language:
-
-1. Begin at the Thorn Garden exit without changing any approved earlier route
-   geometry, checkpoint behavior, camera composition, or background timing.
-2. Continue through open-air Green Zone terrain. A short ladder-like rise may
-   vary the silhouette, but Level 1 does not introduce Wall Jump and does not
-   suddenly become a shaft, corridor, folded return route, or indoor puzzle.
-3. Develop Double Jump through a small number of distinct height, distance,
-   correction, recovery, and route-reading beats rather than a repeated
-   platform staircase.
-4. Build each beat from environmental forms already available in the imported
-   Green Zone library, auditioning the actual art before committing geometry.
-   Use props and structures because they belong in the place, not because the
-   engine can support them.
-5. Keep the established horizontal camera framing unless a modest open-air rise
-   genuinely needs the already-proven opt-in vertical camera region. Sustained
-   shafts and Wall Jump camera work belong to Level 2.
-6. Keep decoration behind readable gameplay unless a deliberately foregrounded
-   object has been proven not to hide the player, enemies, hazards, or implied
-   collision.
-7. Author a short, coherent gameplay phrase first, capture it at the relevant
-   elevations, then let human playtesting decide whether it deserves extension.
-   Automated traversal proves legality only and never determines difficulty.
+The rise is built and locked. Two of its authoring constraints continue to
+apply to any later edit: Level 1 does not introduce Wall Jump and must not
+become a shaft, corridor, folded return route, or indoor puzzle, and it keeps
+the established horizontal camera framing. Sustained shafts and Wall Jump
+camera work belong to Level 2. The broader rules that work produced — build
+beats from art that belongs in the place, keep decoration behind readable
+gameplay, and let human playtesting rather than the bot decide difficulty — are
+recorded in `docs/SET_DRESSING_WORKFLOW.md` and `docs/TECHNICAL_FOUNDATION.md`.
 
 The opening uses shoreline sand and water against the Green Zone background,
 then joins directly into existing Green Zone terrain. Grounded land uses the
@@ -288,82 +268,19 @@ other asset may be borrowed when it fits the local composition.
 
 ### Completed for Level 1
 
-1. Completed: promote Arrival / Shoreline into the production campaign while
-   preserving all six prototypes in a separate regression catalog.
-2. Completed: add reusable typed platform styles without changing the shared
-   1.28-metre gameplay grid.
-3. Completed: curate only the beach/green-zone art used by the opening slice.
-4. Completed: build and capture the opening slice at 1920x1080.
-5. Completed: validate movement, collision, session-local unlock/checkpoint
-   behavior, camera bounds, prop grounding, route completion, and legacy
-   regressions.
-6. Completed: replace oversized hand-placed parallax sprites with the
-   native-scale reusable background rig; validate flat projection,
-   horizontal/ultrawide recycling, and vertical-camera coverage.
-7. Completed: hands-on review of the slice at normal speed. Its opening
-   composition, development overlay, cloud behavior, and transition timing are
-   locked.
-8. Completed: author the shoreline surf as small lapping crests at the terrain
-   pixel scale, breaking at the sand and handing off to a splash. Sprites anchor
-   on the art's own waterline and visible leading edge rather than on frame
-   bounds.
-9. Completed: add a named scene-owned background transition
-   anchor at the shoreline/Green Zone seam. Express the forest and cloud fade
-   windows as offsets from that anchor, and validate that moving the anchor
-   keeps presentation synchronized with the motivating terrain.
-10. Completed: remove the rejected stitched-tree ascent completely and return
-    the production scene to the approved Thorn Garden endpoint.
-11. Completed: prove an opt-in vertical camera region and a folded dual-route
-    greybox in isolation. Human review confirmed the camera tool works but the
-    corridor/fold language belongs to later indoor or Level 2 material, so the
-    disposable route proof was removed instead of being forced into Level 1.
-12. Completed: author one coherent open-air Double Jump phrase after Thorn
-    Garden, with alternating elevations, a continuous thorn basin, and no Wall
-    Jump, shaft, corridor fold, or return-route language.
-13. Completed: make the final descent a camera-framing lesson rather than a
-    spawned trap. The landing spike always exists below the high ledge; a focused
-    runtime check proves it begins outside the frame, becomes visible during the
-    fall, punishes its authored drop line, and can be cleared by moving forward.
-14. Completed: tune the concealed cluster across the ordinary run-off line.
-    Human review accepts the gameplay phrase; focused checks lock its visible
-    placement, exact collision reach, hidden-to-revealed camera lesson, and
-    forward Double Jump escape.
-15. Completed: add an explicitly toggled, development-only F11 inspection mode
-    combining god mode, noclip, unclamped camera following, and direct free
-    flight. It lets the user inspect geometry, spacing, camera transitions, and
-    distant scenery without changing campaign progression or checkpoints, and
-    restores normal collision and camera rules on exit.
-16. Completed: add an independent F10 world measurement grid for normal play
-    and inspection. It exposes 1.28 m terrain cells, 0.64 m subdivisions, world
-    coordinate labels, and the player's live position so review screenshots can
-    communicate precise geometry changes.
-17. Completed: add two familiar patrol encounters and restrained environmental
-    dressing to the accepted rise. The small-platform enemy remains readable,
-    the landing enemy walks from just before the blind spike cluster to the
-    platform's right end, and every new prop remains non-colliding and behind
-    gameplay.
-18. Completed: prove the first gameplay-aware set-dressing slice described in
-    `docs/SET_DRESSING_WORKFLOW.md`. The open-air rise now owns a typed Green
-    Zone palette, three authored intent/exclusion zones, deterministic candidate
-    captures, explicit support contacts, and a focused validator. The rejected
-    tree-on-a-small-platform candidate remains preview-only; the accepted pass
-    uses irregular native bushes to vary the island silhouettes while preserving
-    the established broad-ground tree landmark. A hanging-root candidate was
-    rejected after hands-on review; clean platform undersides are now an explicit
-    project rule and validator contract.
-19. Completed: hands-on enemy-flow, readability, and composition review of the
-    dressed rise. Bot success remains legality evidence only and did not
-    authorize easier geometry or final visual taste.
-20. Completed: keep candidate generation opt-in and bake only accepted props as
-    named scene nodes. The workflow is reusable, but it is not an automatic
-    whole-level clutter pass and never scans the full asset mirror at runtime.
-21. Completed: replace the temporary finish with a flat tire-swing-tree
-    clearing, invisible completion trigger, and brief application-owned fade.
-    Hands-on review accepted its trigger timing, framing, and restrained role.
-22. Completed: curate and place the matching Green Zone skate-ramp pair as a
-    non-colliding half-pipe on the final Thorn Garden platform. Its right lip is
-    flush with the jump edge, visually motivating the first aerial crossing;
-    clean and diagnostic captures plus support validation lock its placement.
+Level 1 is complete and locked: the shoreline opening, Green Threshold, Thorn
+Garden, the open-air Double Jump rise with its concealed landing cluster, two
+patrol encounters, the dressed Green Zone pass, and the tire-swing clearing
+finish. The build record is in git history, and the rules that work produced are
+recorded where they apply — set-dressing practice in
+`docs/SET_DRESSING_WORKFLOW.md`, runtime and tooling contracts in
+`docs/TECHNICAL_FOUNDATION.md`, and the level's own design statement above.
+
+Two outcomes stay in view because they shaped what Level 2 may do. The
+stitched-tree ascent was removed rather than kept as baggage once it proved
+visually incoherent. The opt-in vertical camera region and the corridor/fold
+route language were both proven in isolation and then deliberately withheld from
+Level 1, leaving them for Level 2 to own.
 
 ### Next production milestone: Level 2 pre-production
 
@@ -463,12 +380,12 @@ around bot skill. Human review accepts the route gameplay and concealed hazard.
 Human review also accepts the finish clearing, completion fade, environmental
 dressing, and half-pipe composition. Commit `59a034b` is the Level 1 baseline.
 
-The active gate is Level 2 pre-production. The current attempt is a brief Green
-Zone approach leading into a substantial enclosed cavern, mine, tunnel, or
-collapsed underworks route. Before committing production geometry, build and
-review the isolated enclosed-terrain lab; only a successful connected-art,
-collision, camera, and movement proof authorizes the actual route mock-up. Do
-not reopen Level 1 unless a regression or deliberate later polish pass requires
-it.
+The active gate is Level 2 pre-production. The Green Zone approach, its dressed
+cave threshold, and the fade that hands the run to the enclosed terrain lab are
+built and accepted in `scenes/dev/cave_transition_lab.tscn`; commit `4beae5c` is
+that baseline. The enclosed lab proves the interior terrain grammar and the
+transition, not a designed climb, so what remains before production geometry is
+the interior route itself. Do not reopen Level 1 unless a regression or
+deliberate later polish pass requires it.
 Guns, crafting, saws, secrets, currency, lives, and new enemy families remain
 outside Level 1.

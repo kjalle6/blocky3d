@@ -50,6 +50,15 @@ scene tree is three-dimensional.
 
 Gameplay behavior does not accumulate directly on `GameRoot`.
 
+The reusable `pixel_level_base.tscn` scene owns the common runtime frame and the
+default `green_zone_day` background profile. Authored levels override the
+profile resource, as Arrival does with `arrival_shoreline`, rather than adding
+private background sprites or level-specific movement scripts. Individual
+level scenes otherwise contain only authored route content and intentional
+overrides.
+
+## Developer tools
+
 During active development, `GameRoot.developer_fresh_level_runs` is enabled.
 Each level selection therefore receives a fresh level-defined entry state
 without reading or modifying the campaign save. That state seeds the level's
@@ -64,31 +73,7 @@ selector. It is a disposable `LevelSession3D` test course, not a campaign
 world or level. Current test abilities are granted as session-local unlocks:
 they survive `R`, never enter the save payload, and never mark campaign
 completion. An in-room panel toggles each implemented ability immediately.
-Gameplay tool panels are hidden when a session opens and toggle together with
-`F1`; only the compact `F1 / ESC` reminder remains on screen. This keeps
-composition inspection unobstructed without removing development controls.
-`F11` independently toggles a development-only inspection state in any loaded
-session. The real player becomes invulnerable and non-colliding, flies directly
-with `WASD`/arrows (`Space` also rises and `Shift` accelerates), and drives the
-existing camera without route clamps. Exiting keeps the inspected position but
-restores body collision, the separate hazard sensor, gravity, and normal camera
-policy. Entering F11 also grants every ability available in that level as a
-session-local test unlock. Those abilities remain after exiting inspection and
-through death or `R`, allowing a real-physics test from the inspected position;
-reloading the level restores its genuine unlock state. The mode is gated by
-`developer_tools_enabled`, never writes progression, and displays a persistent
-warning so footage cannot be mistaken for release play.
-`F10` toggles a separate world-locked measurement overlay during normal play or
-inspection. Major lines are one 1.28 m terrain tile apart, minor lines are half
-a tile (0.64 m), sparse axis labels report world coordinates, and a compact HUD
-shows the player's live `X / Y`. The grid recycles around the camera but remains
-anchored to world zero, allowing screenshot feedback to name exact distances.
 
-Collision/hitbox visualization and the mouse world-coordinate probe are now
-implemented. Useful later candidates are checkpoint warping and a freeze-world
-toggle for moving hazards and enemies. Coordinate-stamped review captures are
-already possible through the paired diagnostic capture workflow; add further
-tools only when a real authoring problem justifies them.
 The room provides clear surfaces for triggering and inspecting idle, run,
 jump, Double Jump, wall contact, attack, landing, and transition timing
 without level hazards or scenery. It is an animation lab, not a mechanic
@@ -101,11 +86,49 @@ restart while enabled, and its important animation states can be triggered
 there. Focused runtime checks and its authored introduction level own mechanic
 validation.
 
+Gameplay tool panels are hidden when a session opens and toggle together with
+`F1`; only the compact `F1 / ESC` reminder remains on screen. This keeps
+composition inspection unobstructed without removing development controls.
+
+`F11` independently toggles a development-only inspection state in any loaded
+session. The real player becomes invulnerable and non-colliding, flies directly
+with `WASD`/arrows (`Space` also rises and `Shift` accelerates), and drives the
+existing camera without route clamps. Exiting keeps the inspected position but
+restores body collision, the separate hazard sensor, gravity, and normal camera
+policy. Entering F11 also grants every ability available in that level as a
+session-local test unlock. Those abilities remain after exiting inspection and
+through death or `R`, allowing a real-physics test from the inspected position;
+reloading the level restores its genuine unlock state. The mode is gated by
+`developer_tools_enabled`, never writes progression, and displays a persistent
+warning so footage cannot be mistaken for release play.
+
+`F10` toggles a world-locked measurement overlay during normal play or
+inspection. Major lines are one 1.28 m terrain tile apart, minor lines half a
+tile, and sparse axis labels report world coordinates. The HUD reports the
+player's ground-contact point rather than the less intuitive centre of the
+physics body, and a second readout follows the mouse, projecting the camera ray
+onto the gameplay plane at Z = 0 so coordinates can be taken from level
+geometry without moving the player. The grid recycles around the camera but
+stays anchored to world zero, so screenshot feedback can name exact distances.
+Both readouts and the grid are unavailable when developer tools are disabled.
+
+F7 independently projects gameplay collision onto the side-scrolling plane.
+It distinguishes terrain, player body and hazard sensor, enemy body and contact
+sensor, lethal hazards, checkpoints, pickups, and goals. Melee damage regions
+are drawn only while their corresponding attack is active. The overlay is a
+read-only visualization and does not modify physics layers, masks, or shapes.
+
 A separate Combat Lab is planned before firearm and boss production. It will
 preview enemy behavior and animation, body/attack/hurt/stomp geometry, melee
 visual sets, projectiles, firearm poses and aim angles, ammo behavior, and boss
 states. It must remain development-only and must not become a substitute for
 testing complete encounters in authored levels.
+
+Useful later candidates are checkpoint warping and a freeze-world toggle for
+moving hazards and enemies. Add further tools only when a real authoring
+problem justifies them.
+
+## Camera and background
 
 `PixelSideCamera3D` keeps a continuous follow position and quantizes its
 rendered transform to the current output-pixel grid. The default side camera is
@@ -154,31 +177,6 @@ Horizontal motion is likewise explicit: `SCREEN_LOCKED`, `PARALLAX`, or
 attached to the camera. Autonomous drift is a separate future presentation
 choice and must not be simulated with near-zero parallax.
 
-Developer measurement mode is toggled with F10. Its world-locked major and
-minor lines correspond to one terrain tile and half a terrain tile, while its
-HUD reports the player's ground-contact point rather than the less intuitive
-centre of the physics body. A second readout follows the mouse
-and projects the camera ray onto the gameplay plane at Z = 0, so coordinates
-can be taken from level geometry without moving the player. Both readouts and
-the grid remain unavailable when developer tools are disabled.
-
-F7 independently projects gameplay collision onto the side-scrolling plane.
-It distinguishes terrain, player body and hazard sensor, enemy body and contact
-sensor, lethal hazards, checkpoints, pickups, and goals. Melee damage regions
-are drawn only while their corresponding attack is active. The overlay is a
-read-only visualization and does not modify physics layers, masks, or shapes.
-
-Spike rows use a small fixed horizontal collision inset at each visible end.
-The inset must not scale with total row width: proportional shrinkage creates
-large nonlethal gutters on long hazard beds even though spike art fills them.
-
-The reusable `pixel_level_base.tscn` scene owns the common runtime frame and the
-default `green_zone_day` background profile. Authored levels override the
-profile resource, as Arrival does with `arrival_shoreline`, rather than adding
-private background sprites or level-specific movement scripts. Individual
-level scenes otherwise contain only authored route content and intentional
-overrides.
-
 No production section currently consumes the vertical-region or height-window
 extensions. They remain dormant reusable capabilities after the rejected
 stitched-tree experiment was removed. A future approved climb may use fixed-
@@ -207,21 +205,28 @@ than travel.
 
 ## Pixel-art invariants
 
-Two rules govern every sprite in a level scene. Both have already been broken
-once each, and both times the symptom looked like something else.
+Two rules govern authored scenery. Each has been broken once, and both times the
+symptom looked like something else, so both are now asserted by
+`tools/validate_pixel_art_invariants.gd` rather than left to review.
 
-- **Every sprite renders at `PixelPlatform3D.TILE_PIXEL_SIZE` (0.04 m).** A
-  sprite on any other scale re-rounds its pixels independently as the camera
-  pans, so it visibly jitters against its neighbours. Source art that is an
-  exact integer upscale is downscaled to native resolution rather than shrunk
-  at display time. `PixelBackgroundProfile` validates this for backgrounds;
-  props have no equivalent guard, so it is enforced by review.
-- **`render_priority = 0` is the terrain line.** Terrain faces carry the default
-  priority, so anything that should look bedded into the ground is negative and
-  anything sitting on top of it is positive. Props that overlap each other are
-  given explicit unique priorities rather than relying on depth to break ties,
-  because equal-depth sprites fall back to distance sorting and can swap order
-  as the camera moves.
+- **Scenery renders at `PixelPlatform3D.TILE_PIXEL_SIZE` (0.04 m).** Art on any
+  other scale re-rounds its pixels independently as the camera pans, so it
+  jitters against its neighbours. Source art that is an exact integer upscale is
+  downscaled to native resolution rather than shrunk at display time.
+- **`render_priority = 0` is the terrain line.** Anything that should look
+  bedded into the ground is negative and anything sitting on top is positive.
+  Overlapping props get unique values, because equal-depth sprites fall back to
+  distance sorting and can swap order as the camera moves.
+
+Actors are a deliberate exception to the first rule. The player, enemies,
+pickups, and the goal chest are authored at their own scales so they read at the
+right size against the tiles; they are self-contained and never sit still beside
+static art, so the sub-pixel cost never shows. The validator exempts them by
+group and enforces the rule everywhere else.
+
+A new level scene must be named in that validator as either checked or legacy.
+It fails on any scene it has not been told about, so dressing cannot land
+somewhere the rules are not applied.
 
 ## Gameplay collision
 
@@ -254,6 +259,10 @@ and `patrol_right_distance` values when a readable route must stop at a nearby
 hazard instead of a terrain ledge. The bounds are measured from the enemy's
 reset transform, reverse direction without teleporting, and remain optional so
 ordinary full-platform patrols do not change.
+
+Spike rows use a small fixed horizontal collision inset at each visible end.
+The inset must not scale with total row width: proportional shrinkage creates
+large nonlethal gutters on long hazard beds even though spike art fills them.
 
 ## Wall movement contract
 
@@ -510,6 +519,13 @@ Every lasting system receives focused validation. The current suite covers:
 - Arrival dressing definition integrity, authored support contact, clean
   platform undersides, non-collision, gameplay-plane separation, and paired
   clean/diagnostic visual captures.
+- pixel-art invariants across every checked level scene: authored scenery on the
+  shared pixel scale, unique render priorities wherever props overlap at one
+  depth, and a coverage guard that fails on any level scene the validator has
+  not been told about;
+- the Level 2 cave approach: a native-resolution entrance that still matches its
+  4x art source pixel for pixel, its authored ground contact, and the enclosed
+  terrain lab's interior grammar.
 
 Graphical capture scripts render deterministic 1920x1080 review positions for
 all current levels. Visual changes are inspected in the running game;
