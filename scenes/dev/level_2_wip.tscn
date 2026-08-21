@@ -370,6 +370,11 @@ render_priority = -9
 position = Vector3(37.44, 0.64, 0)
 script = ExtResource("3_transition")
 target_level = ExtResource("4_interior")
+source_exit_mode = 2
+run_destination_during_fade_in = true
+run_direction = 1.0
+run_speed = 8.0
+run_duration = 0.45
 
 [node name="Collision" type="CollisionShape3D" parent="CaveThreshold" index="0"]
 shape = SubResource("Shape_threshold")

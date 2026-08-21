@@ -49,11 +49,10 @@ remain read-only design references.
   outcrop, garden gates and hedges, the non-colliding skate half-pipe at the
   aerial takeoff, and the tire-swing-tree finish clearing
 - 1920x1080 presentation baseline
-- Next milestone: pre-produce Overgrown Coastal Ascent as a current enclosed
-  Level 2 attempt. First prove a grid-driven cave/mine/underworks interior in a
-  disposable lab with connected floor, wall, ceiling, corner, collision,
-  camera, and capture contracts. Only a successful hands-on review advances to
-  the actual Wall Jump and Dash route plan
+- Next milestone: author the actual enclosed Wall Jump and Dash route for
+  Overgrown Coastal Ascent. The disposable lab already proves the connected
+  interior terrain and collision grammar, and the Level 2 WIP approach proves
+  the separately authored exit / entrance fade used at scene boundaries
 
 The living design and authoring documents are:
 

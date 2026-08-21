@@ -4,7 +4,12 @@ extends Node3D
 ## session owns run reset/completion, while gameplay behavior stays on entities.
 
 signal run_completed
-signal transition_requested(target: LevelDefinition)
+signal transition_requested(
+	target: LevelDefinition,
+	run_direction: float,
+	run_speed: float,
+	run_duration: float
+)
 signal run_reset
 signal checkpoint_changed(route_index: int)
 signal ability_unlocked(ability_id: StringName)
@@ -125,14 +130,38 @@ func _on_goal_reached(body: PlayerCharacter) -> void:
 	run_completed.emit()
 
 
-## A threshold hands the run to another scene. The player is stopped exactly as
-## a goal stops it, so nothing keeps simulating behind the fade.
-func _on_transition_entered(target: LevelDefinition) -> void:
+## A threshold hands the run to another scene. Ordinary thresholds stop like a
+## goal; a matched handoff instead carries one authored run through both halves
+## of the black fade so an exit and entrance read as continuous movement.
+func _on_transition_entered(transition: LevelTransition3D) -> void:
+	if transition == null:
+		return
+	var target := transition.target_level
 	if _completed or target == null:
 		return
 	_completed = true
-	player.stop_for_completion()
-	transition_requested.emit(target)
+	match transition.source_exit_mode:
+		LevelTransition3D.SourceExitMode.RUN:
+			player.begin_transition_run(
+				transition.run_direction,
+				transition.run_speed,
+				transition.run_duration
+			)
+		LevelTransition3D.SourceExitMode.HIDE:
+			player.disappear_for_transition()
+		_:
+			player.stop_for_completion()
+	var destination_run_duration := (
+		transition.run_duration
+		if transition.run_destination_during_fade_in
+		else 0.0
+	)
+	transition_requested.emit(
+		target,
+		transition.run_direction,
+		transition.run_speed,
+		destination_run_duration
+	)
 
 
 func _on_checkpoint_activated(checkpoint: LevelCheckpoint3D) -> void:

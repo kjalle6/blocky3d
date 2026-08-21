@@ -41,6 +41,8 @@ var _developer_collision_overlay_enabled := false
 
 var _completion_fade_tween: Tween
 
+const TRANSITION_FADE_DURATION := 0.45
+
 
 func _ready() -> void:
 	assert(campaign != null, "GameRoot requires a CampaignCatalog.")
@@ -574,15 +576,26 @@ func _on_run_reset() -> void:
 ## Running into a threshold fades out, swaps the scene behind the black, and
 ## fades back in. The player never sees two terrain grammars meet, which is the
 ## whole reason a doorway is a fade rather than a seam.
-func _on_transition_requested(target: LevelDefinition) -> void:
+func _on_transition_requested(
+	target: LevelDefinition,
+	run_direction: float,
+	run_speed: float,
+	run_duration: float
+) -> void:
 	if target == null:
 		return
-	await _fade_to_black(0.45)
+	await _fade_to_black(TRANSITION_FADE_DURATION)
 	if target in _ordered_developer_definitions():
 		load_developer_level(target)
 	else:
 		load_level(target.level_id)
-	await _fade_from_black(0.45)
+	if current_level != null and run_duration > 0.0:
+		current_level.player.begin_transition_run(
+			run_direction,
+			run_speed,
+			run_duration
+		)
+	await _fade_from_black(TRANSITION_FADE_DURATION)
 
 
 func _fade_to_black(duration: float) -> void:

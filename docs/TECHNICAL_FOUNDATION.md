@@ -27,7 +27,7 @@ scene tree is three-dimensional.
 | Application flow | `GameRoot`: active world container, interface container, and catalog-driven level selector |
 | Campaign content | `CampaignCatalog`, typed `WorldDefinition`, and typed `LevelDefinition` resources; no level-number behavior branches |
 | Level run state | `LevelSession3D`: player wiring, death, checkpoint respawn, full restart, and completion |
-| Level thresholds | `LevelTransition3D`: a doorway that hands the run to another level. `GameRoot` fades out, swaps the scene behind the black, and fades back in. Not a goal: a goal ends a run and records progress, a threshold continues a journey into a separately authored space |
+| Level thresholds | `LevelTransition3D`: a doorway that hands the run to another level. `GameRoot` fades out, swaps the scene behind the black, and fades back in. Source exit and destination entrance presentation are authored separately: stop, run, or disappear into an occluding doorway on exit; optionally run while black lifts on entry. Direct level loads remain stationary. Not a goal: a goal ends a run and records progress, a threshold continues a journey into a separately authored space |
 | Locomotion | `PlayerCharacter` plus typed `PlayerMovementConfig` tuning |
 | Route extent | `RouteExtent3D`: metadata describing the authored start and end of a level's route. Movement is plain +X; nothing projects onto a path |
 | Camera | `PixelSideCamera3D`, independent from player movement ownership |
@@ -568,18 +568,19 @@ and tire-swing-tree finish form the authored baseline. The rejected
 stitched-tree and folded-corridor experiments remain removed rather than hidden
 as production baggage.
 
-The next milestone is Overgrown Coastal Ascent pre-production. Its current
-attempt moves from a brief Green Zone approach into a substantial enclosed
-cavern, mine, tunnel, or collapsed underworks, but that direction is not locked.
-Before route geometry, an isolated disposable lab must prove a reusable
-grid-driven interior terrain component whose connected floor, wall, ceiling,
-and corner art derives consolidated collision from the same solid-cell source.
-The lab validates enclosed camera travel and existing Wall Jump/Dash contact
-without pretending to be a miniature campaign level or final Dash-spacing
-test. Failure returns the project to system or visual-direction review rather
-than hand-placed patches. Reusable vertical camera regions and height-aware
-background fades already exist but stay opt-in until an approved route needs
-them. Structural, visual, and regression automation owns technical confidence;
-hands-on human review remains the gate for presentation, difficulty, fairness,
-pacing, and feel. Firearms, saws, bosses, Combat Lab, and the curated cyberpunk
-UI theme follow only when their corresponding campaign milestone requires them.
+The next milestone is the Overgrown Coastal Ascent interior route. The isolated
+lab has proved the reusable grid-driven terrain component, connected floor,
+wall, ceiling and corner art, consolidated collision, enclosed camera travel,
+and existing Wall Jump/Dash contact. The current Level 2 WIP approach also
+proves a matched doorway handoff: the exterior player disappears into the cave
+mouth and the interior player runs in under fade-in, while direct menu loads
+remain stationary. These are construction
+and presentation contracts, not a miniature campaign level or final Dash-spacing
+test. The next work is therefore deliberate route geometry, pacing, checkpoint
+beats, and hands-on review rather than more foundation experiments. Reusable
+vertical camera regions and height-aware background fades already exist but
+stay opt-in until the approved route needs them. Structural, visual, and
+regression automation owns technical confidence; hands-on human review remains
+the gate for presentation, difficulty, fairness, pacing, and feel. Firearms,
+saws, bosses, Combat Lab, and the curated cyberpunk UI theme follow only when
+their corresponding campaign milestone requires them.

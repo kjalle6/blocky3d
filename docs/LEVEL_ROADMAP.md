@@ -168,6 +168,15 @@ lifts. This is a decision rather than a convenience:
   the outdoor sky through the interior chambers. A doorway costs nothing and
   reuses cleanly for any later door, tunnel, or building.
 
+Matched thresholds author each half of that black screen separately. At the
+cave, the source player disappears into the mouth rather than running past its
+art, while the interior player is already running right when black lifts. Input
+returns when the entrance fade finishes. Other boundaries may run through both
+halves when their composition supports it; a direct menu or developer load
+stays stationary. Continuous run-out/run-in remains the approved rule for the
+eventual Level 1-to-Level 2 cut, but that production connection stays unwired
+while Level 2 is a WIP.
+
 `scenes/dev/level_2_wip.tscn` owns this handoff and its dressing. The
 approach uses the `green_zone_dusk` background; the interior keeps its own dark
 environment, which is now simply correct rather than something to fight.
@@ -380,12 +389,14 @@ around bot skill. Human review accepts the route gameplay and concealed hazard.
 Human review also accepts the finish clearing, completion fade, environmental
 dressing, and half-pipe composition. Commit `59a034b` is the Level 1 baseline.
 
-The active gate is Level 2 pre-production. The Green Zone approach, its dressed
-cave threshold, and the fade that hands the run to the enclosed terrain lab are
-built and accepted in `scenes/dev/level_2_wip.tscn`; commit `4beae5c` is
-that baseline. The enclosed lab proves the interior terrain grammar and the
-transition, not a designed climb, so what remains before production geometry is
-the interior route itself. Do not reopen Level 1 unless a regression or
-deliberate later polish pass requires it.
+The active gate is the actual Level 2 interior route. The Green Zone approach,
+its dressed cave threshold, and the fade that hands the run to the enclosed
+terrain lab are built and accepted in `scenes/dev/level_2_wip.tscn`; commit
+`4beae5c` is that visual baseline. The enclosed lab proves the interior terrain
+grammar and contact behavior, while the matched run handoff now proves the
+presentation contract for scene boundaries. Neither proof is a designed climb,
+so what remains is route geometry, pacing, and human playtesting. Do not connect
+Level 1 to the WIP or reopen its route unless a regression or deliberate later
+polish pass requires it.
 Guns, crafting, saws, secrets, currency, lives, and new enemy families remain
 outside Level 1.

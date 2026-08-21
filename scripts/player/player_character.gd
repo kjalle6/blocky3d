@@ -45,6 +45,9 @@ var _blocked_wall_jump_direction := 0.0
 var _dash_remaining := 0.0
 var _dash_available := false
 var _dash_direction := 1.0
+var _transition_run_remaining := 0.0
+var _transition_run_direction := 1.0
+var _transition_run_speed := 0.0
 var _developer_inspection_enabled := false
 var _normal_collision_layer := 0
 var _normal_collision_mask := 0
@@ -70,6 +73,9 @@ func _physics_process(delta: float) -> void:
 		return
 	if _dead:
 		_update_pixel_visual(delta)
+		return
+	if is_transition_running():
+		_update_transition_run(delta)
 		return
 
 	_update_jump_timers(delta)
@@ -180,7 +186,7 @@ func _update_jump_timers(delta: float) -> void:
 
 
 func kill(kind: StringName = DEATH_KIND_GENERIC) -> void:
-	if _dead or _developer_inspection_enabled:
+	if _dead or _developer_inspection_enabled or is_transition_running():
 		return
 	_dead = true
 	_death_kind = kind
@@ -209,10 +215,20 @@ func was_descending_before_slide() -> bool:
 
 
 func stop_for_completion() -> void:
+	_transition_run_remaining = 0.0
+	_transition_run_speed = 0.0
 	_dash_remaining = 0.0
 	velocity = Vector3.ZERO
 	horizontal_speed = 0.0
 	set_physics_process(false)
+
+
+## Used when a doorway's art is itself the occluder. The body stops at the
+## threshold and vanishes into that authored darkness instead of visibly
+## running beyond the entrance while the screen closes.
+func disappear_for_transition() -> void:
+	stop_for_completion()
+	visible = false
 
 
 func reset_at(spawn_transform: Transform3D) -> void:
@@ -233,6 +249,9 @@ func reset_at(spawn_transform: Transform3D) -> void:
 	_dash_remaining = 0.0
 	_dash_available = has_ability(PlayerAbility.DASH)
 	_dash_direction = _facing_sign
+	_transition_run_remaining = 0.0
+	_transition_run_direction = _facing_sign
+	_transition_run_speed = 0.0
 	_aerial_jumps_remaining = 1 if has_ability(PlayerAbility.DOUBLE_JUMP) else 0
 	_dead = false
 	_death_kind = DEATH_KIND_GENERIC
@@ -333,7 +352,7 @@ func developer_melee_bounds() -> Rect2:
 
 
 func receive_enemy_hit(source_position: Vector3) -> void:
-	if _dead or _developer_inspection_enabled:
+	if _dead or _developer_inspection_enabled or is_transition_running():
 		return
 	damage_received.emit(source_position)
 	kill()
@@ -346,6 +365,8 @@ func set_developer_inspection_enabled(enabled: bool) -> void:
 	velocity = Vector3.ZERO
 	horizontal_speed = 0.0
 	_dash_remaining = 0.0
+	_transition_run_remaining = 0.0
+	_transition_run_speed = 0.0
 	_attack_remaining = 0.0
 	_attack_hit_applied = false
 	_wall_sliding = false
@@ -358,6 +379,45 @@ func set_developer_inspection_enabled(enabled: bool) -> void:
 
 func is_developer_inspection_enabled() -> bool:
 	return _developer_inspection_enabled
+
+
+## Carries a committed horizontal run through a black scene transition. Input,
+## attacks, abilities, and lethal contacts are temporarily ignored so the exit
+## and entrance read as one matched movement rather than two stationary spawns.
+func begin_transition_run(direction: float, speed: float, duration: float) -> void:
+	assert(is_equal_approx(absf(direction), 1.0))
+	assert(speed > 0.0)
+	assert(duration > 0.0)
+	_transition_run_direction = signf(direction)
+	_transition_run_speed = speed
+	_transition_run_remaining = duration
+	_facing_sign = _transition_run_direction
+	_dash_remaining = 0.0
+	_attack_remaining = 0.0
+	_attack_hit_applied = false
+	_wall_sliding = false
+	_wall_jump_control_lock_remaining = 0.0
+	horizontal_speed = _transition_run_direction * _transition_run_speed
+	velocity.x = horizontal_speed
+	set_physics_process(true)
+
+
+func is_transition_running() -> bool:
+	return _transition_run_remaining > 0.0
+
+
+func _update_transition_run(delta: float) -> void:
+	_transition_run_remaining = maxf(0.0, _transition_run_remaining - delta)
+	_facing_sign = _transition_run_direction
+	horizontal_speed = _transition_run_direction * _transition_run_speed
+	velocity.x = horizontal_speed
+	velocity.z = 0.0
+	velocity.y = maxf(
+		velocity.y - movement.gravity * delta,
+		-movement.maximum_fall_speed
+	)
+	move_and_slide()
+	_update_pixel_visual(delta)
 
 
 func _apply_developer_inspection_collision() -> void:
