@@ -4,7 +4,7 @@ extends SceneTree
 ## enters moving right, and ordinary input control resumes afterwards.
 
 const SOURCE_LEVEL_ID: StringName = &"dev_level_2_wip"
-const TARGET_LEVEL_ID: StringName = &"dev_enclosed_terrain_lab"
+const TARGET_LEVEL_ID: StringName = &"dev_level_2_interior_wip"
 const EXPECTED_DIRECTION := 1.0
 const EXPECTED_SPEED := 8.0
 const EXPECTED_DURATION := 0.45
@@ -51,6 +51,9 @@ func _run() -> void:
 	var target_session := game_root.current_level as LevelSession3D
 	assert(target_session != null and target_session != source_session)
 	var target_player := target_session.player
+	assert(target_player.has_ability(PlayerAbility.DOUBLE_JUMP))
+	assert(not target_player.has_ability(PlayerAbility.WALL_JUMP))
+	assert(not target_player.has_ability(PlayerAbility.DASH))
 	var target_spawn_x := target_session.spawn_point.global_position.x
 	assert(target_player.is_transition_running())
 	assert(target_player.horizontal_speed > 0.0)

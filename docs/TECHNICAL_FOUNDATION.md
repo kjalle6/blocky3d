@@ -466,9 +466,10 @@ death and reset behavior.
 
 Approved replacement levels enter `CampaignCatalog`; protected prototypes use
 the separate regression catalog. `GameRoot.developer_level_definitions` is
-reserved for disposable tools with a null world definition: the Animation Lab,
-the Enclosed Terrain Lab, and the Level 2 WIP approach. Animation Lab remains
-the only one with in-room ability toggles.
+reserved for tools and explicitly unfinished routes with a null world
+definition: the Animation Lab, the Enclosed Terrain Lab, the Level 2 WIP
+approach, and the directly loadable Level 2 interior opening. Animation Lab
+remains the only one with in-room ability toggles.
 
 ## Validation and visual review
 
@@ -526,7 +527,11 @@ Every lasting system receives focused validation. The current suite covers:
   not been told about;
 - the Level 2 cave approach: a native-resolution entrance that still matches its
   4x art source pixel for pixel, its authored ground contact, and the enclosed
-  terrain lab's interior grammar.
+  terrain lab's interior grammar;
+- the Level 2 interior opening: one-grid enclosed topology, pickup order,
+  checkpoint policy, hazard dimensions, camera region, a 10.24 m Dash-only
+  well, and a real-input traversal through Double Jump, four Wall Jumps, and one
+  Dash.
 
 Graphical capture scripts render deterministic 1920x1080 review positions for
 all current levels. Visual changes are inspected in the running game;
@@ -568,16 +573,17 @@ and tire-swing-tree finish form the authored baseline. The rejected
 stitched-tree and folded-corridor experiments remain removed rather than hidden
 as production baggage.
 
-The next milestone is the Overgrown Coastal Ascent interior route. The isolated
-lab has proved the reusable grid-driven terrain component, connected floor,
-wall, ceiling and corner art, consolidated collision, enclosed camera travel,
-and existing Wall Jump/Dash contact. The current Level 2 WIP approach also
-proves a matched doorway handoff: the exterior player disappears into the cave
-mouth and the interior player runs in under fade-in, while direct menu loads
-remain stationary. These are construction
-and presentation contracts, not a miniature campaign level or final Dash-spacing
-test. The next work is therefore deliberate route geometry, pacing, checkpoint
-beats, and hands-on review rather than more foundation experiments. Reusable
+The Overgrown Coastal Ascent interior is now underway. The isolated lab proved
+the reusable grid-driven terrain component, while the Level 2 WIP approach
+proves the matched doorway handoff. The first authored interior slice uses those
+contracts for a combat-and-spike recap, Double Jump rise, Wall Jump pickup and
+shaft, forced left turn to the Dash pickup, and immediate 10.24 m Dash-only
+return crossing. Structural checks and a real-input traversal prove technical
+reachability. The next system-facing addition is a dedicated indestructible
+flying-hazard archetype for Green Zone enemy 5: it must remain outside the
+`melee_target` and stomp contracts while exposing explicit lethal body/electric
+contact and reset behavior. Its first use is one generous chamber offering a
+jump-and-air-Dash route above and a timed ground-Dash route below. Reusable
 vertical camera regions and height-aware background fades already exist but
 stay opt-in until the approved route needs them. Structural, visual, and
 regression automation owns technical confidence; hands-on human review remains

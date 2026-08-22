@@ -25,8 +25,9 @@ remain read-only design references.
   Dash, and full-kit movement
 - World 1 is being re-authored as approximately three substantial levels:
   Arrival / Shoreline, Overgrown Coastal Ascent, and Green Zone Finale
-- The production selector currently exposes Arrival / Shoreline; Animation Lab
-  remains the only development-tool entry
+- The production selector currently exposes Arrival / Shoreline. Development
+  entries expose Animation Lab, the enclosed-terrain construction proof, the
+  Level 2 cave approach, and the authored Level 2 interior opening
 - A reusable profile-driven pixel-background rig provides native-scale,
   seam-safe horizontal coverage, authored coastal-to-green transitions, and
   stable framing during vertical camera travel. Dormant scene-authored vertical
@@ -49,10 +50,12 @@ remain read-only design references.
   outcrop, garden gates and hedges, the non-colliding skate half-pipe at the
   aerial takeoff, and the tire-swing-tree finish clearing
 - 1920x1080 presentation baseline
-- Next milestone: author the actual enclosed Wall Jump and Dash route for
-  Overgrown Coastal Ascent. The disposable lab already proves the connected
-  interior terrain and collision grammar, and the Level 2 WIP approach proves
-  the separately authored exit / entrance fade used at scene boundaries
+- The first Overgrown Coastal Ascent interior slice is authored: a familiar
+  combat-and-spike recap leads through a Double Jump rise into a Wall Jump
+  shaft, a forced left turn for Dash, and an immediate Dash-only return. The
+  next milestone is one visually reviewed two-route chamber introducing an
+  indestructible flying electrical hazard: jump and air-Dash above it or time a
+  ground Dash beneath it
 
 The living design and authoring documents are:
 

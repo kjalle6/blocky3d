@@ -1,0 +1,123 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_interior_terrain_3d.gd" id="2_terrain"]
+[ext_resource type="Resource" path="res://resources/presentation/interior_styles/rock_underworks.tres" id="3_style"]
+[ext_resource type="PackedScene" path="res://scenes/pickups/wall_jump_pickup.tscn" id="4_wall_pickup"]
+[ext_resource type="PackedScene" path="res://scenes/pickups/dash_pickup.tscn" id="5_dash_pickup"]
+[ext_resource type="PackedScene" path="res://scenes/hazards/pixel_spike_row.tscn" id="6_spikes"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/pixel_patrol_enemy.tscn" id="7_enemy"]
+[ext_resource type="PackedScene" path="res://scenes/level/level_checkpoint.tscn" id="8_checkpoint"]
+[ext_resource type="Script" path="res://scripts/camera/vertical_camera_region_3d.gd" id="9_camera_region"]
+
+[sub_resource type="Environment" id="Environment_underworks"]
+background_mode = 1
+background_color = Color(0.035, 0.045, 0.065, 1)
+ambient_light_source = 3
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.0
+
+[sub_resource type="BoxShape3D" id="Shape_kill_plane"]
+size = Vector3(96, 1, 8)
+
+[node name="OvergrownCoastalAscentInterior" instance=ExtResource("1_base")]
+
+[node name="WorldEnvironment" parent="." index="1"]
+environment = SubResource("Environment_underworks")
+
+[node name="RouteExtent" parent="." index="2"]
+route_start_x = 0.0
+route_end_x = 92.16
+
+[node name="Background" parent="." index="3"]
+visible = false
+
+[node name="RockShell" type="StaticBody3D" parent="Platforms" index="0"]
+position = Vector3(0, -2.56, 0)
+script = ExtResource("2_terrain")
+solid_rows = PackedStringArray("########################################################################", "########################################################################", "########################################################################", "########################################################################", "########################################################################", "########################################################################", "########################################################################", "########################################################################", "########################################################################", "########################################################################", "########################################################################", "########################################################################", "##################################......................................", "##################################......................................", "##################################......................................", "##################################......................................", "############################################....########################", "############################################....########################", "############################################....########################", "############################################....########################", "############################################....########################", "############################################....########################", "############################################....########################", "############################################....########################", "############################################....########################", "############################################....########################", "############################################....########################", "############################################....########################", "############################################....########################", "#...............................................########################", "#...............................................########################", "#...............................................########################", "#...............................................########################", "#...............................................########################", "#...............................................########################", "#...............................................########################", "#...............................................########################", "#...............................................########################", "########################################################################", "########################################################################")
+style = ExtResource("3_style")
+
+[node name="AscentPlatform01" type="StaticBody3D" parent="Platforms" index="1"]
+position = Vector3(34.56, 1.28, 0)
+script = ExtResource("2_terrain")
+solid_rows = PackedStringArray("####")
+style = ExtResource("3_style")
+
+[node name="AscentPlatform02" type="StaticBody3D" parent="Platforms" index="2"]
+position = Vector3(44.8, 3.2, 0)
+script = ExtResource("2_terrain")
+solid_rows = PackedStringArray("####")
+style = ExtResource("3_style")
+
+[node name="AscentPlatform03" type="StaticBody3D" parent="Platforms" index="3"]
+position = Vector3(55.04, 5.12, 0)
+script = ExtResource("2_terrain")
+solid_rows = PackedStringArray("####")
+style = ExtResource("3_style")
+
+[node name="RecapSpikes" parent="Hazards" index="0" instance=ExtResource("6_spikes")]
+position = Vector3(12.8, 0, 0)
+row_width = 2.56
+
+[node name="ShaftRightSpikesLow" parent="Hazards" index="1" instance=ExtResource("6_spikes")]
+position = Vector3(61.44, 11.946667, 0)
+rotation = Vector3(0, 0, 1.570796)
+row_width = 1.706667
+
+[node name="ShaftRightSpikesHigh" parent="Hazards" index="3" instance=ExtResource("6_spikes")]
+position = Vector3(61.44, 23.413333, 0)
+rotation = Vector3(0, 0, 1.570796)
+row_width = 1.706667
+
+[node name="DashCrossingSpikes" parent="Hazards" index="4" instance=ExtResource("6_spikes")]
+position = Vector3(69.12, 28.16, 0)
+row_width = 10.24
+
+[node name="CheckpointWallReady" parent="Checkpoints" index="0" instance=ExtResource("8_checkpoint")]
+position = Vector3(57.6, 6.4, 0)
+route_index = 1
+
+[node name="CheckpointDashReady" parent="Checkpoints" index="1" instance=ExtResource("8_checkpoint")]
+position = Vector3(48.64, 28.16, 0)
+route_index = 2
+
+[node name="SpawnPoint" parent="." index="8"]
+position = Vector3(4.48, 0.7, 0)
+
+[node name="Player" parent="." index="9"]
+position = Vector3(4.48, 0.7, 0)
+
+[node name="GameplayCamera" parent="." index="10"]
+look_ahead = 2.6
+minimum_center_x = 6.47
+maximum_center_x = 80.64
+
+[node name="KillPlane" parent="." index="11"]
+position = Vector3(46.08, -8, 0)
+
+[node name="Collision" parent="KillPlane" index="0"]
+shape = SubResource("Shape_kill_plane")
+
+[node name="WallJumpPickup" parent="." index="12" instance=ExtResource("4_wall_pickup")]
+position = Vector3(57.6, 6.4, 0)
+
+[node name="DashPickup" parent="." index="13" instance=ExtResource("5_dash_pickup")]
+position = Vector3(48.64, 28.16, 0)
+
+[node name="RecapEnemy" parent="." index="14" instance=ExtResource("7_enemy")]
+position = Vector3(20.48, 0.42, 0)
+patrol_speed = 2.0
+patrol_left_distance = 3.2
+patrol_right_distance = 3.2
+
+[node name="ShaftCameraRegion" type="Node3D" parent="." index="15"]
+position = Vector3(67.84, 0, 0)
+script = ExtResource("9_camera_region")
+size = Vector2(53.76, 72)
+vertical_anchor_y = 0.7
+minimum_vertical_offset = 0.0
+maximum_vertical_offset = 30.72
+priority = 10
+
+[editable path="Player"]

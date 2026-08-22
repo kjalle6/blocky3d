@@ -193,6 +193,24 @@ The intended teaching arc remains:
 7. the final sections combine enclosed walls, purposeful Dash runways, vertical
    transfers, and flow encounters.
 
+The first authored interior slice now implements steps 1-6 as one connected
+route. A low enclosed tunnel recaps an enemy and visible spikes, then a grounded
+step and spike-floored rise require the owned Double Jump. The player collects
+Wall Jump at the shaft floor, climbs between two continuous walls, and meets a
+spiked right-hand cap that redirects them left to the Dash pickup. Returning
+right requires a 10.24 m jump-and-Dash crossing that remains well beyond the
+ordinary jump envelope but leaves a fair landing margin for a first Dash use.
+This is still a WIP route slice with no completion trigger; human playtesting
+owns its difficulty and pacing before the route is extended.
+
+The next approved extension is one generous evasive-flyer chamber beyond the
+current upper-right landing. It introduces Green Zone enemy 5 as an
+indestructible traversal hazard rather than a combat target. One readable route
+uses a jump and air Dash above it; the other uses a timed ground Dash beneath
+its electrical underside. Dash does not provide invulnerability, and the enemy
+cannot be stabbed or stomped. This single chamber is reviewed visually and by
+hand before any later combination section is authored.
+
 The asset audit found useful ingredients rather than a ready-made pure-cave
 kit: a connected brown rock terrain sheet, matching cave-rock and stalagmite
 families, and complete factory, industrial, and power-station interior
@@ -389,14 +407,16 @@ around bot skill. Human review accepts the route gameplay and concealed hazard.
 Human review also accepts the finish clearing, completion fade, environmental
 dressing, and half-pipe composition. Commit `59a034b` is the Level 1 baseline.
 
-The active gate is the actual Level 2 interior route. The Green Zone approach,
-its dressed cave threshold, and the fade that hands the run to the enclosed
-terrain lab are built and accepted in `scenes/dev/level_2_wip.tscn`; commit
-`4beae5c` is that visual baseline. The enclosed lab proves the interior terrain
-grammar and contact behavior, while the matched run handoff now proves the
-presentation contract for scene boundaries. Neither proof is a designed climb,
-so what remains is route geometry, pacing, and human playtesting. Do not connect
-Level 1 to the WIP or reopen its route unless a regression or deliberate later
-polish pass requires it.
+The active gate is human playtesting of the first actual Level 2 interior slice.
+The Green Zone approach and its dressed cave threshold hand the run to
+`scenes/levels/overgrown_coastal_ascent_interior.tscn`; direct development-menu
+entry remains available for iteration. The route now covers the opening recap,
+Double Jump rise, Wall Jump pickup and shaft, forced Dash turnback, and first
+Dash-only crossing. The enclosed lab remains a disposable terrain/contact
+fixture rather than part of the route. The next authored beat is the isolated
+two-route evasive-flyer chamber described above; later chambers and combination
+sections wait until that introduction is accepted by hand. Do not connect Level
+1 to the WIP or reopen its route unless a regression or deliberate later polish
+pass requires it.
 Guns, crafting, saws, secrets, currency, lives, and new enemy families remain
 outside Level 1.

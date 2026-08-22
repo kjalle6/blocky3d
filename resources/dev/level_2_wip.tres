@@ -11,4 +11,4 @@ title = "Level 2 WIP"
 lesson = "The Green Zone approach to the cave entrance and the fade that hands the run to the enclosed interior."
 scene = ExtResource("2_scene")
 available_abilities = Array[StringName]([&"double_jump", &"wall_jump", &"dash"])
-assumed_owned_abilities = Array[StringName]([&"double_jump", &"wall_jump", &"dash"])
+assumed_owned_abilities = Array[StringName]([&"double_jump"])

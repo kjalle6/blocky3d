@@ -29,6 +29,9 @@ func _validate() -> void:
 		"EnclosedTerrainLabButton"
 	) as Button
 	var level_2_wip_button := world_list.get_node("Level2WipButton") as Button
+	var level_2_interior_wip_button := world_list.get_node(
+		"Level2InteriorWipButton"
+	) as Button
 
 	assert(game_root.campaign is CampaignCatalog, "GameRoot requires typed campaign data.")
 	assert(game_root.campaign.validation_errors().is_empty(), "Campaign data must validate.")
@@ -50,6 +53,7 @@ func _validate() -> void:
 	assert(animation_lab_button.text == "ANIMATION LAB")
 	assert(enclosed_lab_button.text == "ENCLOSED TERRAIN LAB")
 	assert(level_2_wip_button.text == "LEVEL 2 WIP")
+	assert(level_2_interior_wip_button.text == "LEVEL 2 INTERIOR WIP")
 	assert(world_list.get_node_or_null("ArrivalShorelineSliceButton") == null)
 	assert(level_01_button.has_focus(), "The selector should initially focus Level 1.")
 
@@ -58,7 +62,7 @@ func _validate() -> void:
 	menu_up.pressed = true
 	game_root._unhandled_input(menu_up)
 	assert(
-		level_2_wip_button.has_focus(),
+		level_2_interior_wip_button.has_focus(),
 		"W should wrap Level 1 to the final developer level."
 	)
 	var menu_down := InputEventKey.new()

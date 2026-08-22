@@ -19,6 +19,7 @@ const CHECKED_LEVELS: Array[StringName] = [
 const CHECKED_DEVELOPER_LEVELS: Array[StringName] = [
 	&"dev_enclosed_terrain_lab",
 	&"dev_level_2_wip",
+	&"dev_level_2_interior_wip",
 	&"dev_animation_lab",
 ]
 ## Prototype movement levels from before the pixel grammar existed. They still

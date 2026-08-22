@@ -23,6 +23,10 @@ func _init() -> void:
 
 
 func _run() -> void:
+	var entry_definition := load("res://resources/dev/level_2_wip.tres") as LevelDefinition
+	assert(entry_definition != null)
+	var expected_entry_abilities: Array[StringName] = [&"double_jump"]
+	assert(entry_definition.assumed_owned_abilities == expected_entry_abilities)
 	var cave_texture := load(CAVE_PATH) as Texture2D
 	assert(cave_texture != null, "Cave-entrance native texture is missing.")
 	assert(cave_texture.get_size() == Vector2(EXPECTED_TEXTURE_SIZE))
@@ -100,6 +104,10 @@ func _run() -> void:
 		is_equal_approx(cave_right_edge - 38.4, 0.8),
 		"The cave's rear edge must extend beyond the level and be cropped away."
 	)
+	var threshold := room.get_node("CaveThreshold") as LevelTransition3D
+	assert(threshold != null)
+	assert(threshold.target_level != null)
+	assert(threshold.target_level.level_id == &"dev_level_2_interior_wip")
 
 	print("Level 2 approach passed: native export on full-depth level ground.")
 	quit(0)
