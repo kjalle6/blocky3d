@@ -103,9 +103,14 @@ func _run() -> void:
 	root.content_scale_size = OUTPUT_SIZE
 	root.size = OUTPUT_SIZE
 	await process_frame
-	game_root.campaign = load("res://resources/regression/main_campaign.tres") as CampaignCatalog
-	await _validate_vertical_fixture(game_root, &"wall_jump", 14.5)
-	await _validate_vertical_fixture(game_root, &"green_zone_finale", 16.5)
+	# The Level 2 interior is the sustained climb in the project: its vertical
+	# camera region travels 28 m, further than any earlier fixture.
+	await _validate_vertical_fixture(
+		game_root,
+		load("res://resources/dev/level_2_interior_wip.tres") as LevelDefinition,
+		Vector3(58.88, 7.1, 0.0),
+		18.0
+	)
 
 	print("Pixel background rig, camera projection, imports, and coverage validation passed.")
 	quit(0)
@@ -347,17 +352,18 @@ func _layer_world_phase(
 
 func _validate_vertical_fixture(
 	game_root: Node,
-	level_id: StringName,
-	maximum_offset: float
+	definition: LevelDefinition,
+	base_position: Vector3,
+	rise: float
 ) -> void:
 	game_root.show_level_select()
-	game_root.load_level(level_id)
+	game_root.load_developer_level(definition)
 	await process_frame
 	var level := game_root.current_level as LevelSession3D
 	var camera := level.camera as PixelSideCamera3D
 	var background := level.background as PixelBackgroundRig3D
 	level.player.set_physics_process(false)
-	level.player.global_position.y = camera.vertical_anchor_y
+	level.player.global_position = base_position
 	camera.snap_to_target()
 	background.snap_to_camera()
 	var baseline_y := PackedFloat32Array()
@@ -366,7 +372,7 @@ func _validate_vertical_fixture(
 			background.runtime_copies(layer_index)[0].global_position
 		).y)
 
-	level.player.global_position.y = camera.vertical_anchor_y + maximum_offset
+	level.player.global_position = base_position + Vector3(0.0, rise, 0.0)
 	camera.snap_to_target()
 	background.snap_to_camera()
 	for layer_index in background.runtime_layer_count():
@@ -375,5 +381,8 @@ func _validate_vertical_fixture(
 		).y
 		assert(
 			absf(projected_y - baseline_y[layer_index]) < 0.01,
-			"Screen-locked background layers must survive vertical camera travel."
+			(
+				"Screen-locked background layers must survive vertical camera "
+				+ "travel; layer %d moved %.3f px."
+			) % [layer_index, projected_y - baseline_y[layer_index]]
 		)

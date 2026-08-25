@@ -9,16 +9,15 @@ func _init() -> void:
 func _run() -> void:
 	var packed_scene := load("res://scenes/app/game_root.tscn") as PackedScene
 	var game_root := packed_scene.instantiate()
-	game_root.campaign = load("res://resources/regression/main_campaign.tres") as CampaignCatalog
 	game_root.persist_progression = false
 	root.add_child(game_root)
-	game_root.load_level(&"gaps_and_spikes")
+	game_root.load_level(&"arrival_shoreline")
 	await process_frame
 
 	var level := game_root.current_level as LevelSession3D
 	var player := level.player
 	var camera := level.camera as PixelSideCamera3D
-	var reference_platform := level.get_node("Platforms/GroundMid") as PixelPlatform3D
+	var reference_platform := level.get_node("Platforms/GreenApproach") as PixelPlatform3D
 	player.set_physics_process(false)
 	camera.follow_response = 8.0
 	camera.snap_to_target()

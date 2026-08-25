@@ -1,6 +1,11 @@
 extends SceneTree
-## Exercises the production player, Level 1 collision, input, and full-run
-## reset without depending on a separate legacy movement lab.
+## Exercises the production player, collision, input, and full-run reset.
+##
+## This runs in the Animation Lab rather than an authored level: the contract
+## being proven is the movement kit itself, which no piece of level geometry
+## owns. The lab is the declared home for that - PlayerAbility.IMPLEMENTED is
+## its contract - so the proof does not die with any level it happened to be
+## written against.
 
 
 func _init() -> void:
@@ -10,10 +15,10 @@ func _init() -> void:
 func _run() -> void:
 	var packed_scene := load("res://scenes/app/game_root.tscn") as PackedScene
 	var game_root := packed_scene.instantiate()
-	game_root.campaign = load("res://resources/regression/main_campaign.tres") as CampaignCatalog
 	game_root.persist_progression = false
 	root.add_child(game_root)
-	game_root.load_level(&"fundamentals")
+	await process_frame
+	game_root.load_developer_room()
 	await process_frame
 	var level := game_root.current_level as LevelSession3D
 	var player := level.player
@@ -49,10 +54,10 @@ func _run() -> void:
 	player.kill()
 	for frame in 40:
 		await physics_frame
-	assert(not player.is_dead(), "Level 1 should restore the player after death.")
+	assert(not player.is_dead(), "The lab should restore the player after death.")
 	assert(
 		player.global_position.distance_to(level.spawn_point.global_position) < 0.2,
-		"Reset should return the player to the Level 1 spawn."
+		"Reset should return the player to the lab spawn."
 	)
 
 	print("Runtime movement and reset validation passed.")

@@ -2,6 +2,10 @@ extends SceneTree
 ## Focused movement contract for Double Jump: coyote jumps preserve it,
 ## one aerial reset is available, release still shortens it, and horizontal
 ## momentum is never secretly replaced.
+##
+## Runs in the Animation Lab, which is the declared home for ability contracts.
+## The lab grants the ability outright, so unlocking it is not tested here -
+## that path belongs to the pickups in an authored level.
 
 
 func _init() -> void:
@@ -11,18 +15,16 @@ func _init() -> void:
 func _run() -> void:
 	var packed_scene := load("res://scenes/app/game_root.tscn") as PackedScene
 	var game_root := packed_scene.instantiate()
-	game_root.campaign = load("res://resources/regression/main_campaign.tres") as CampaignCatalog
 	game_root.persist_progression = false
 	root.add_child(game_root)
-	game_root.load_level(&"double_jump")
+	await process_frame
+	game_root.load_developer_room()
 	await process_frame
 	var level := game_root.current_level as LevelSession3D
 	var player := level.player
 	for frame in 12:
 		await physics_frame
 
-	assert(not player.has_ability(PlayerAbility.DOUBLE_JUMP))
-	assert(level.unlock_ability(PlayerAbility.DOUBLE_JUMP))
 	assert(player.has_ability(PlayerAbility.DOUBLE_JUMP))
 	assert(player.aerial_jumps_remaining() == 1)
 
@@ -33,9 +35,9 @@ func _run() -> void:
 				performed_count[0] += 1
 	)
 
-	# Run off the opening edge, then use coyote time. This remains the ground
-	# jump and must not consume the aerial jump.
-	player.reset_at(Transform3D(Basis.IDENTITY, Vector3(9.1, 0.7, 0)))
+	# Run off the landing block's edge, then use coyote time. This remains the
+	# ground jump and must not consume the aerial jump.
+	player.reset_at(Transform3D(Basis.IDENTITY, Vector3(11.5, 1.83, 0)))
 	for frame in 4:
 		await physics_frame
 	assert(player.is_on_floor())
@@ -44,7 +46,7 @@ func _run() -> void:
 		await physics_frame
 		if not player.is_on_floor():
 			break
-	assert(not player.is_on_floor(), "The test should have run beyond the opening ledge.")
+	assert(not player.is_on_floor(), "The test should have run off the landing block.")
 	Input.action_press("jump")
 	for frame in 2:
 		await physics_frame
@@ -90,7 +92,7 @@ func _run() -> void:
 	assert(player.aerial_jumps_remaining() == 0)
 
 	Input.action_release("move_right")
-	player.reset_at(Transform3D(Basis.IDENTITY, Vector3(3.0, 0.7, 0)))
+	player.reset_at(Transform3D(Basis.IDENTITY, Vector3(5.0, 0.7, 0)))
 	for frame in 12:
 		await physics_frame
 	assert(player.is_on_floor())

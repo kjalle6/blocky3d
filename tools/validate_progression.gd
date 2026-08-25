@@ -15,13 +15,13 @@ func _run() -> void:
 	var progress := GameProgress.new()
 	assert(progress.complete_level(&"arrival_shoreline"))
 	assert(not progress.complete_level(&"arrival_shoreline"))
-	assert(progress.complete_level(&"green_zone_finale"))
+	assert(progress.complete_level(&"overgrown_coastal_ascent"))
 	assert(progress.unlock_ability(PlayerAbility.DOUBLE_JUMP))
 	assert(not progress.unlock_ability(PlayerAbility.DOUBLE_JUMP))
 	var serialized := progress.to_dictionary()
 	var restored := GameProgress.from_dictionary(serialized)
 	assert(restored.has_completed(&"arrival_shoreline"))
-	assert(restored.has_completed(&"green_zone_finale"))
+	assert(restored.has_completed(&"overgrown_coastal_ascent"))
 	assert(restored.owns_ability(PlayerAbility.DOUBLE_JUMP))
 
 	var test_save_path := "user://campaign_progress_validation.json"
@@ -30,14 +30,14 @@ func _run() -> void:
 	var first_store := ProgressionStore.new()
 	first_store.save_path = test_save_path
 	first_store.mark_level_completed(&"arrival_shoreline")
-	first_store.mark_level_completed(&"green_zone_finale")
+	first_store.mark_level_completed(&"overgrown_coastal_ascent")
 	first_store.unlock_ability(PlayerAbility.DOUBLE_JUMP)
 	assert(FileAccess.file_exists(test_save_path))
 	var second_store := ProgressionStore.new()
 	second_store.save_path = test_save_path
 	second_store.load_progress()
 	assert(second_store.has_completed(&"arrival_shoreline"))
-	assert(second_store.has_completed(&"green_zone_finale"))
+	assert(second_store.has_completed(&"overgrown_coastal_ascent"))
 	assert(second_store.owns_ability(PlayerAbility.DOUBLE_JUMP))
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(test_save_path))
 	first_store.free()
@@ -92,21 +92,6 @@ func _run() -> void:
 	assert(arrival.required_abilities == [PlayerAbility.DOUBLE_JUMP])
 	assert(arrival.prerequisite_level_ids.is_empty())
 	assert(catalog.find_world_for_level(&"arrival_shoreline") == green_zone)
-
-	# The discarded six-level campaign remains a typed regression fixture. It
-	# protects the mechanics we learned there without exposing those scenes as
-	# current campaign content.
-	var regression_catalog := load(
-		"res://resources/regression/main_campaign.tres"
-	) as CampaignCatalog
-	assert(regression_catalog.validation_errors().is_empty())
-	assert(regression_catalog.ordered_levels().size() == 6)
-	assert(regression_catalog.ordered_levels()[0].level_id == &"fundamentals")
-	assert(regression_catalog.ordered_levels()[1].level_id == &"gaps_and_spikes")
-	assert(regression_catalog.ordered_levels()[2].level_id == &"double_jump")
-	assert(regression_catalog.ordered_levels()[3].level_id == &"wall_jump")
-	assert(regression_catalog.ordered_levels()[4].level_id == &"dash")
-	assert(regression_catalog.ordered_levels()[5].level_id == &"green_zone_finale")
 
 	print("Campaign progression and ability-policy validation passed.")
 	quit(0)

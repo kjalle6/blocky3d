@@ -11,7 +11,6 @@ func _init() -> void:
 func _run() -> void:
 	var packed_scene := load("res://scenes/app/game_root.tscn") as PackedScene
 	var game_root := packed_scene.instantiate()
-	game_root.campaign = load("res://resources/regression/main_campaign.tres") as CampaignCatalog
 	assert(game_root.developer_fresh_level_runs)
 	assert(game_root.persist_progression)
 	root.add_child(game_root)
@@ -20,21 +19,24 @@ func _run() -> void:
 		(game_root.get_node("Interface/LevelSelect/Center/Panel/Margin/Options/DeveloperModeLabel") as Label).visible
 	)
 
-	game_root.load_level(&"double_jump")
+	var interior := load(
+		"res://resources/dev/level_2_interior_wip.tres"
+	) as LevelDefinition
+	game_root.load_developer_level(interior)
 	await process_frame
 	var first_session := game_root.current_level as LevelSession3D
-	var first_pickup := first_session.get_node("DoubleJumpPickup") as AbilityPickup3D
-	assert(not first_session.player.has_ability(PlayerAbility.DOUBLE_JUMP))
+	var first_pickup := first_session.get_node("WallJumpPickup") as AbilityPickup3D
+	assert(not first_session.player.has_ability(PlayerAbility.WALL_JUMP))
 	assert(not first_pickup.is_claimed())
 
-	assert(first_session.unlock_ability(PlayerAbility.DOUBLE_JUMP))
-	assert(first_session.player.has_ability(PlayerAbility.DOUBLE_JUMP))
+	assert(first_session.unlock_ability(PlayerAbility.WALL_JUMP))
+	assert(first_session.player.has_ability(PlayerAbility.WALL_JUMP))
 	assert(first_pickup.is_claimed())
 
 	first_session._reset_run()
 	await physics_frame
 	assert(
-		first_session.player.has_ability(PlayerAbility.DOUBLE_JUMP),
+		first_session.player.has_ability(PlayerAbility.WALL_JUMP),
 		"Manual restart inside the loaded level must retain its session unlock."
 	)
 	assert(first_pickup.is_claimed())
@@ -44,42 +46,42 @@ func _run() -> void:
 		await physics_frame
 	assert(not first_session.player.is_dead())
 	assert(
-		first_session.player.has_ability(PlayerAbility.DOUBLE_JUMP),
+		first_session.player.has_ability(PlayerAbility.WALL_JUMP),
 		"Death inside the loaded level must retain its session unlock."
 	)
 
 	game_root.show_level_select()
-	game_root.load_level(&"double_jump")
+	game_root.load_developer_level(interior)
 	await process_frame
 	var fresh_session := game_root.current_level as LevelSession3D
-	var fresh_pickup := fresh_session.get_node("DoubleJumpPickup") as AbilityPickup3D
+	var fresh_pickup := fresh_session.get_node("WallJumpPickup") as AbilityPickup3D
 	assert(
-		not fresh_session.player.has_ability(PlayerAbility.DOUBLE_JUMP),
+		not fresh_session.player.has_ability(PlayerAbility.WALL_JUMP),
 		"Loading a level from the selector must create fresh development progression."
 	)
 	assert(not fresh_pickup.is_claimed(), "The fresh level load must restore its pickup.")
 
 	game_root.show_level_select()
-	game_root.load_level(&"green_zone_finale")
+	game_root.load_developer_room()
 	await process_frame
 	var finale_session := game_root.current_level as LevelSession3D
-	_assert_complete_kit(finale_session, "Level 6 entry")
+	_assert_complete_kit(finale_session, "Animation Lab entry")
 
 	finale_session._reset_run()
 	await physics_frame
-	_assert_complete_kit(finale_session, "Level 6 manual restart")
+	_assert_complete_kit(finale_session, "Animation Lab manual restart")
 
 	finale_session.player.kill()
 	for frame in 40:
 		await physics_frame
 	assert(not finale_session.player.is_dead())
-	_assert_complete_kit(finale_session, "Level 6 death reset")
+	_assert_complete_kit(finale_session, "Animation Lab death reset")
 
 	game_root.show_level_select()
-	game_root.load_level(&"green_zone_finale")
+	game_root.load_developer_room()
 	await process_frame
 	var fresh_finale_session := game_root.current_level as LevelSession3D
-	_assert_complete_kit(fresh_finale_session, "fresh Level 6 reload")
+	_assert_complete_kit(fresh_finale_session, "fresh Animation Lab reload")
 
 	game_root.free()
 	print("Fresh-per-level developer progression validation passed.")
