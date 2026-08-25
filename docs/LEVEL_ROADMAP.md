@@ -41,7 +41,7 @@ larger cyberpunk setting.
 | Target level | Core arc | New capability | Status |
 | --- | --- | --- | --- |
 | 1: Arrival / Shoreline | Classic fundamentals grow into an aerial route | Double Jump | Complete and accepted; production baseline locked at commit `59a034b` |
-| 2: Overgrown Coastal Ascent | A brief Green Zone approach gives way to a candidate enclosed cavern / underworks route | Wall Jump and Dash | Next milestone; enclosed-terrain proof required before route geometry |
+| 2: Overgrown Coastal Ascent | A brief Green Zone approach gives way to an enclosed cavern / underworks route | Wall Jump and Dash | In progress; opening route and two machine chambers built, upper-cave presentation next |
 | 3: Green Zone Finale | Full-kit mastery, saws, enemy escalation, gun lesson, and boss | Limited firearm | Planned concept |
 
 These are working titles. A level should be long enough to develop several
@@ -178,15 +178,18 @@ eventual Level 1-to-Level 2 cut, but that production connection stays unwired
 while Level 2 is a WIP.
 
 `scenes/dev/level_2_wip.tscn` owns this handoff and its dressing. The
-approach uses the `green_zone_dusk` background; the interior keeps its own dark
-environment, which is now simply correct rather than something to fight.
+approach uses the `green_zone_dusk` background; the interior owns its separate
+cave environment. `docs/LEVEL_2_VISUAL_BRIEF.md` is the source of truth for its
+background zoning and later regional lighting treatment.
 
 For the next presentation pass, those two development entries are deliberately
 isolated. `Level 2 WIP` enters the frozen
 `overgrown_coastal_ascent_interior_snapshot.tscn`, preserving the accepted
 route below. `Level 2 Interior WIP` opens the editable
 `overgrown_coastal_ascent_interior.tscn`; cave-background experiments and the
-next build occur only there until separately reviewed.
+next build occur only there until separately reviewed. Background zoning is
+built and approved at unchanged lighting first; regional lighting follows as a
+separate tuning pass.
 
 The intended teaching arc remains:
 
@@ -232,30 +235,13 @@ encounter boundary. Technical traversal is guarded; human review owns whether
 the paired timing is readable and fun before anything is authored beyond its
 landing.
 
-The asset audit found useful ingredients rather than a ready-made pure-cave
-kit: a connected brown rock terrain sheet, matching cave-rock and stalagmite
-families, and complete factory, industrial, and power-station interior
-vocabularies. The current visual candidate is therefore a natural cavern or
-mine that gradually reveals restrained buried infrastructure. The incompatible
-smooth/vector cave background is rejected. Props may dress or explain the
-space, but they never hold its visual shell or collision together.
-
-Before production route work, prove an entirely enclosed interior in a small
-disposable lab scene. The lab starts underground and contains a connected
-floor, ceiling, side walls, inside and outside corners, a low passage, a short
-Wall Jump shaft, and an ordinary upper corridor. It is a construction and
-collision proof, not a miniature Level 2 and not a Dash-spacing test. It has no
-outdoor approach, enemies, pickups, checkpoints, or campaign progression.
-
-The healthy implementation target is a reusable grid-driven interior terrain
-component: solid/empty cells select the required floor, wall, ceiling, and
-corner art, while adjacent cells generate consolidated collision rectangles.
-Begin with only the tile roles the lab needs rather than hand-placing art or
-overengineering the full source atlas. Validate ceiling contact, both wall
-directions, corner snagging, wall impact during Dash, camera travel, visual
-continuity, and 1920x1080 presentation. If the proof cannot make collision and
-art agree cleanly, stop and revise the system or visual direction; do not bury
-the failure under cave rocks and machinery.
+The asset audit and enclosed-terrain lab established the production direction:
+a natural cavern or mine that can gradually reveal restrained buried
+infrastructure. The reusable grid-driven terrain now owns connected floor,
+ceiling, wall, corner art, and consolidated collision; props may dress or
+explain the space but never hold its shell together. The lab remains a
+disposable construction fixture rather than a miniature Level 2. That proof is
+complete and is no longer an active milestone.
 
 ### Level 3: Green Zone Finale
 
@@ -330,34 +316,27 @@ visually incoherent. The opt-in vertical camera region and the corridor/fold
 route language were both proven in isolation and then deliberately withheld from
 Level 1, leaving them for Level 2 to own.
 
-### Next production milestone: Level 2 pre-production
+### Next production milestone: Level 2 upper-cave presentation
 
-Do not extend Level 1 or begin decorating a guessed Level 2 route. Prepare
-Overgrown Coastal Ascent in this order:
+Do not extend gameplay beyond the paired-machine landing until the existing
+route has a coherent background treatment. Work in this order:
 
-1. Extract the lasting Wall Jump and Dash contracts, useful route beats, and
-   known exploits from protected prototypes 4 and 5 and the legacy idea bank.
-2. State the level's teaching arc before drawing geometry: familiar opening,
-   brief exterior threshold, immediate safe Wall Jump lesson inside, recovery
-   chambers, increasingly offset climbs, immediate Dash lesson, purposeful
-   Dash runways, and a combined movement payoff.
-3. Completed asset-audit conclusion: the library can audition a rocky
-   cave/mine with restrained buried infrastructure, but it does not contain a
-   ready-made coherent pure-cave kit. Cave rocks and machinery are dressing,
-   not substitutes for connected interior terrain.
-4. Build the isolated enclosed-terrain lab described above. Keep it outside the
-   campaign and prove the smallest reusable grid, visual, collision, camera,
-   and capture contracts before drawing the production route.
-5. Review the lab visually and by hand. Treat the enclosed Level 2 direction as
-   accepted only if the room reads as one continuous interior and movement is
-   clean against floors, ceilings, walls, and corners.
-6. After that gate passes, draw and review the actual route mock-up with
-   approximate world-grid measurements, checkpoint beats, camera regions,
-   enemy lanes, recovery spaces, and Dash distances. The brief exterior
-   approach and substantial enclosed route must read as one deliberate level.
-7. Only after the route and visual plan are approved, author the first short
-   gameplay slice, validate legality, capture it clean and diagnostic, and hand
-   difficulty and feel back to human playtesting.
+1. Preserve the accepted world-Y lock and the frozen transition snapshot. The
+   camera must never drag cave art vertically during ordinary jumps.
+2. Implement the global lower/upper background zoning, localized fixed water
+   vistas, and reversible terrain-masked handoff specified in the Level 2
+   visual brief.
+3. Review bottom, middle, threshold, and upper-floor captures, then traverse the
+   boundary in both directions at normal speed. Also test jumping at the
+   boundary, checkpoint respawn, restart, direct Interior WIP loading, and
+   inspection mode before accepting the background pass.
+4. Only after the art transition works at unchanged lighting, add the regional
+   lighting pass from the brief and leave its lower-darkness value exposed for
+   hands-on tuning.
+5. Keep this authored to Level 2. Extract a generalized regional-background or
+   atmosphere system only after a second production level needs the same rule.
+6. Promote the accepted presentation into the frozen snapshot, then resume
+   gameplay authoring beyond the paired-machine landing.
 
 ### Needed before the finale
 
@@ -457,28 +436,9 @@ around bot skill. Human review accepts the route gameplay and concealed hazard.
 Human review also accepts the finish clearing, completion fade, environmental
 dressing, and half-pipe composition. Commit `59a034b` is the Level 1 baseline.
 
-The Green Zone approach and its dressed cave threshold hand the run to the
-frozen `scenes/levels/overgrown_coastal_ascent_interior_snapshot.tscn`; the
-direct `Level 2 Interior WIP` development-menu entry targets the editable
-`scenes/levels/overgrown_coastal_ascent_interior.tscn`. The route now covers the opening recap,
-Double Jump rise, Wall Jump pickup and shaft, forced Dash turnback, the intended
-13.28 m Dash-required crossing, the first accepted two-route evasive-flyer
-encounter, and a matching second shaft with two
-opposite-phase flyers awaiting hands-on review. The enclosed lab remains a
-disposable terrain/contact fixture rather than part of the route. Nothing beyond
-the paired-machine landing is approved yet; later chambers and combination
-sections may vary speed, phase, count, and lane demands only after they are
-authored and reviewed one at a time. Do not connect Level 1 to the WIP or reopen
-its route unless a regression or deliberate later polish pass requires it.
-Guns, crafting, saws, secrets, currency, lives, and new enemy families remain
-outside Level 1.
-
-Only the directly loadable Interior WIP currently experiments with the new cave
-composition. Two horizontally recycled but world-Y-locked layers establish the
-same cave depth throughout the route, with exact vertical rows covering the
-full climb. Terrain masks a localized split vista behind each machine gap. Its
-ceiling, lake, and rocks all remain attached to the cave during jumps; uniform
-edge rows extend the fixed ceiling and deep water beyond every reachable camera
-bound. The lake and rocks sit 2.0 m lower than their source alignment. The
-frozen snapshot reached from the exterior approach remains unchanged until this
-presentation pass is accepted.
+The Green Zone approach still targets the frozen Level 2 interior snapshot,
+while `Level 2 Interior WIP` targets the editable route. That route reaches the
+paired opposite-phase machine chamber; nothing beyond its landing is approved.
+The active milestone is the upper-cave presentation pass defined above. Level 1
+remains locked, the frozen Level 2 snapshot remains unchanged until explicit
+promotion, and later gameplay waits for visual and hands-on acceptance.

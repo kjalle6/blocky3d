@@ -36,20 +36,51 @@ The current approved implementation is frozen in
 presentation experiments belong only in the editable Interior WIP until they
 are explicitly accepted into a later snapshot.
 
-The editable Interior WIP currently tests one coherent cave composition across
-the entire route. Its base and distant-rock layers replace the black void in
-ordinary tunnels. Foreground terrain then masks a localized lake layer inside
-each full-height machine shaft, so water is revealed only through those gaps
-without changing art style. Every cave layer is fixed in world Y: jumping and
-climbing move the camera past the art instead of dragging the cave with the
-player. The two global layers repeat in exact texture-height rows to cover the
-full climb without a seam; their existing horizontal behavior remains intact.
-Each localized vista stays authored to its shaft on both axes. Uniform source
-rows extend its ceiling to the distant cave roof and its deep water below the
-kill plane, so fixed art never exposes a hard edge. The lake crop sits 2.0 m
-lower than its source alignment. The pack's foreground cave frame is omitted
-because the level's own rock shell remains the foreground and collision source
-of truth.
+## Cave background zoning and lighting order
+
+### Global background zoning
+
+The editable Interior WIP currently proves that every cave layer can remain
+fixed in world Y: jumping and climbing move the camera past the art instead of
+dragging the cave with the player. That behavior is accepted and must not be
+changed. The vertically repeated distant-rock composition is only a coverage
+proof, however; using the recognizable full-screen art through the entire
+climb reads as scrolling wallpaper and is not the target presentation.
+
+The target composition is spatially zoned. Enclosed lower tunnels, shafts, and
+any later route that descends from the upper floor use the clean pale blue-grey
+base without the full distant composition. The complete layered cave parallax
+belongs to the upper floor where the water chambers open up. This rule follows
+authored world regions rather than player progress: descending returns to the
+base treatment, and climbing back up restores the full upper-floor treatment.
+The base may remain underneath as continuous fallback coverage, but it is the
+visible treatment only in the lower and descending regions; the detailed upper
+composition owns the visible background upstairs.
+
+The transition at the top of the climb must read as the cave naturally opening
+into the larger water cavern. Foreground cave walls and the turn onto the upper
+floor mask an overlapping handoff between treatments; there must be no hard
+screen-wide seam, visible pop, or camera-height-only switch.
+
+### Localized machine-gap water vistas
+
+Each localized water vista stays authored to its shaft on both axes; it is a
+fixed view through an opening, not part of the global background handoff.
+Uniform source rows extend its ceiling to the distant cave roof and its deep
+water below the kill plane, so fixed art never exposes a hard edge. The lake
+crop sits 2.0 m lower than its source alignment. The pack's foreground cave
+frame is omitted because the level's own rock shell remains the foreground and
+collision source of truth.
+
+### Lighting order
+
+Build and approve the background zoning at the current lighting first. Only
+then add a restrained lower-cave colour grade that blends back to the current
+upper-floor brightness during the sustained climb. The grade follows authored
+world regions, reverses on descent, leaves UI unchanged, and must not pulse
+during ordinary jumps. Its exact lower darkness remains a hands-on tuning
+value. Keep this Level 2-specific until another production level proves a
+shared system is useful.
 
 ## Visual contracts
 
@@ -62,18 +93,19 @@ of truth.
 | Dash alcove | A connected upper-left reward space reached after the climb | A distant floating chamber or giant empty turnback room |
 | Dash crossing | One legible rightward gap whose spikes explain why Dash is required | An isolated spike box, one-tile pillar, or disconnected destination |
 | Machine shaft | A break in the corridor wide enough that Dash is required, open far above and below, with one hovering machine in it and two readable ways past | A gap a Double Jump can clear, a ceiling over the machine, a floor under it, or geometry that only pretends to offer a choice |
-| Cave depth and lake vista | One cave family throughout, with its water layer revealed only through each full-height machine shaft | Black ordinary rooms beside a finished painting, a collision surface, or an art edge exposed during the climb |
+| Background zoning | A restrained solid cave base below; the full layered cave composition revealed on the upper water floor; descending naturally returns to the base | Repeated vertical wallpaper, a hard regional pop, a camera-height-only switch, or lighting used to hide a broken transition |
+| Machine-gap vista | A fixed lake view visible only through its authored opening, with the level shell remaining in front | A collision surface, global scrolling layer, or exposed top/bottom art edge |
 
 ## Current approval boundary
 
-Everything up to and including the machine shaft is visually approved: the lower
+Everything through the first machine encounter is visually approved: the lower
 recap, the three detached ascent platforms with Wall Jump on P3, the shaft fed
 by P3, the wall-spike patches biasing the top exit left, Dash and its checkpoint
 in the upper-left alcove, the 13.28 m Dash-required crossing back right, and the
-machine shaft that ends the current route.
+first machine shaft.
 
-A checkpoint sits on the ledge before the machine, so a fall retries the machine
-rather than the crossing before it.
+A checkpoint sits on the ledge before the first machine, so a fall retries that
+encounter rather than the Dash crossing before it.
 
 Hands-on review accepts the first machine as a deliberately isolated, readable
 introduction. A second matching 14.08 m shaft is now authored after a full
@@ -109,13 +141,12 @@ The post-crossing checkpoint moves right to 80.64 m so its trigger and respawn
 space remain clear of the new final spike. The frozen snapshot intentionally
 remains at 10.24 m until a later explicit promotion.
 
-## Next approved beat
+## Upper-floor machine sequence
 
-The machine shaft is built. The corridor breaks for 14.08 m, open far above and
-below,
-and one machine hovers in the gap on a slow vertical bob. Falling in is a long
-drop past the kill plane, and the top of the gap is closed by spikes far above
-the camera rather than by a roof, so it cannot be stood on.
+The first machine shaft is built. The corridor breaks for 14.08 m, open far
+above and below, and one machine hovers in the gap on a slow vertical bob.
+Falling in is a long drop past the kill plane. There is no artificial roof or
+off-screen spike lid over the chamber.
 
 Crossings are sized against the reach the player actually has. A Double Jump
 carries 11.79 m - two full arcs - so a gap tuned to a single jump does not
@@ -138,6 +169,12 @@ player already knows what "it is rising, go low" means.
 
 Later chambers may combine several machines at different speeds, and may demand
 a Double Jump to reach a lane. Build and review one at a time.
+
+## Next presentation pass
+
+Gameplay stops at the paired-machine landing. Complete and review the
+background-then-lighting sequence under **Cave background zoning and lighting
+order** before extending the route or promoting a new snapshot.
 
 ## Required review loop
 
