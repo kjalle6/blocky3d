@@ -612,9 +612,17 @@ func _validate_session(
 	assert(not player.is_physics_processing())
 	assert(completion_fade.visible)
 	assert(completion_label.visible)
-	for frame in 20:
-		await process_frame
-	assert(completion_fade.modulate.a > 0.2)
+	# The fade is a 0.55 s tween, so wait on elapsed time rather than a frame
+	# count. Headless frames are uncapped, so twenty of them can pass in a
+	# couple of milliseconds and show no progress at all - which is what made
+	# this assertion flaky.
+	await create_timer(0.3).timeout
+	await process_frame
+	assert(
+		completion_fade.modulate.a > 0.2,
+		"The completion fade should have progressed after 0.3 s; alpha is %.3f."
+		% completion_fade.modulate.a
+	)
 
 	level._reset_run()
 	await physics_frame

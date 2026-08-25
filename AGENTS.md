@@ -78,6 +78,11 @@ prototype levels used to be a separate scope worth skipping, at roughly 60% of
 a full run; they are deleted, and the switch is kept because a slow set will
 almost certainly reappear.
 
+`tools/probe_level_2_background_jump_drift.gd` is deliberately outside the
+suite. It drives one real jump and samples after `frame_post_draw`, so it needs
+a rendering context: run it with `-Visual`. Headless it cannot work, and it now
+says so and exits rather than hanging on the automation lock.
+
 Run the suite when a change could plausibly reach what it covers, not as
 reassurance. Two full passes in a row, the second confirming what the first
 already proved, is wasted time whether or not it opens windows.

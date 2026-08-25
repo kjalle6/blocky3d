@@ -12,6 +12,7 @@ const PLAYER_CENTER_Y := SAMPLE_FEET_Y + 0.70
 const HOLD_JUMP_FRAMES := 18
 const MAX_JUMP_FRAMES := 150
 
+var _completed := false
 var _ranges := {}
 var _samples: Array[Dictionary] = []
 var _settled_player_y := 0.0
@@ -22,6 +23,17 @@ func _init() -> void:
 
 
 func _run() -> void:
+	# This probe waits on frame_post_draw, which never fires without a rendering
+	# context: run it through the runner's -Visual switch, not -Headless. The
+	# watchdog exists because the headless failure mode is a hang that holds the
+	# automation lock rather than an error.
+	var watchdog := Timer.new()
+	watchdog.wait_time = 120.0
+	watchdog.one_shot = true
+	watchdog.autostart = true
+	watchdog.timeout.connect(_on_watchdog_timeout)
+	root.add_child(watchdog)
+
 	var packed_scene := load("res://scenes/app/game_root.tscn") as PackedScene
 	assert(packed_scene != null)
 	var game_root := packed_scene.instantiate()
@@ -104,6 +116,7 @@ func _run() -> void:
 			+ "on screen."
 		) % foreground_screen_range
 	)
+	_completed = true
 	root.remove_child(game_root)
 	game_root.free()
 	await process_frame
@@ -217,3 +230,13 @@ func _freeze_enemies(level: LevelSession3D) -> void:
 		if node is CharacterBody3D:
 			(node as CharacterBody3D).velocity = Vector3.ZERO
 		node.set_physics_process(false)
+
+
+func _on_watchdog_timeout() -> void:
+	if _completed:
+		return
+	printerr(
+		"Background jump-drift probe never finished. It needs a rendering "
+		+ "context: run it with -Visual rather than -Headless."
+	)
+	quit(1)
