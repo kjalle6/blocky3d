@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene load_steps=21 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_interior_terrain_3d.gd" id="2_terrain"]
@@ -11,6 +11,9 @@
 [ext_resource type="Script" path="res://scripts/camera/vertical_camera_region_3d.gd" id="9_camera_region"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_background_region_3d.gd" id="13_background_region"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_region_grade_3d.gd" id="14_region_grade"]
+[ext_resource type="Script" path="res://scripts/hazards/hazard_3d.gd" id="15_hazard"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_water_death_splash_3d.gd" id="16_water_splash"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/effects/water_death_splash.png" id="17_splash_art"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/green_zone_flyer.tscn" id="10_flyer"]
 [ext_resource type="PackedScene" path="res://scenes/presentation/water_cave_vista_window.tscn" id="11_water_vista"]
 [ext_resource type="Resource" path="res://resources/presentation/backgrounds/rock_underworks_cave.tres" id="12_cave_background"]
@@ -21,6 +24,9 @@ background_color = Color(0.035, 0.045, 0.065, 1)
 ambient_light_source = 3
 ambient_light_color = Color(1, 1, 1, 1)
 ambient_light_energy = 0.0
+
+[sub_resource type="BoxShape3D" id="Shape_cave_water"]
+size = Vector3(14.08, 4, 2)
 
 [sub_resource type="BoxShape3D" id="Shape_kill_plane"]
 size = Vector3(160, 1, 8)
@@ -184,3 +190,46 @@ zone_tag = &"upper"
 dark_brightness = 0.74
 dark_saturation = 0.88
 dark_contrast = 1.04
+
+[node name="MachineShaftWaterContact" type="Area3D" parent="Hazards" index="6"]
+position = Vector3(94.08, -5.64, 0)
+script = ExtResource("15_hazard")
+death_kind = &"water"
+height_source_path = NodePath("../../MachineShaftWaterVista")
+height_source_offset = -5.64
+
+[node name="Collision" type="CollisionShape3D" parent="Hazards/MachineShaftWaterContact" index="0"]
+shape = SubResource("Shape_cave_water")
+
+[node name="DualMachineShaftWaterContact" type="Area3D" parent="Hazards" index="7"]
+position = Vector3(120.96, -5.64, 0)
+script = ExtResource("15_hazard")
+death_kind = &"water"
+height_source_path = NodePath("../../DualMachineShaftWaterVista")
+height_source_offset = -5.64
+
+[node name="Collision" type="CollisionShape3D" parent="Hazards/DualMachineShaftWaterContact" index="0"]
+shape = SubResource("Shape_cave_water")
+
+[node name="WaterDeathSplash" type="Node3D" parent="." index="23"]
+script = ExtResource("16_water_splash")
+player_path = NodePath("../Player")
+surface_source_path = NodePath("../MachineShaftWaterVista")
+surface_source_offset = -3.64
+
+[node name="Sprite" type="Sprite3D" parent="WaterDeathSplash" index="0"]
+position = Vector3(0, 0.64, 1.22)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("17_splash_art")
+shaded = false
+render_priority = 12
+
+[node name="ShaftFallCameraRegion" type="Node3D" parent="." index="24"]
+position = Vector3(107.52, 13.0, 0)
+script = ExtResource("9_camera_region")
+size = Vector2(46.08, 46.0)
+vertical_anchor_y = 0.7
+minimum_vertical_offset = 28.0
+maximum_vertical_offset = 28.0
+priority = 20

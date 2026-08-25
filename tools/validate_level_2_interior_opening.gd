@@ -2,6 +2,9 @@ extends SceneTree
 ## Structural and progression contract for the first production Level 2 slice.
 
 const DEFINITION_PATH := "res://resources/dev/level_2_interior_wip.tres"
+## Row in water_cave_lake.png where the lake surface begins, measured from the
+## art: above it the crop is empty, below it is water.
+const WATERLINE_SOURCE_ROW := 203.0
 const TILE_SIZE := PixelInteriorTerrain3D.TILE_WORLD_SIZE
 const EXPECTED_DASH_SPIKE_WIDTH := 13.28
 const EXPECTED_DASH_SPIKE_LEFT_EDGE := 64.0
@@ -99,6 +102,82 @@ func _run() -> void:
 		and distant.horizontal_parallax > 0.0,
 		"The distant composition must drift as the player walks."
 	)
+	# Falling down a machine shaft ends at the water you can see, not at a fixed
+	# depth. The lake is drawn by a camera-locked vista, so its world height
+	# moves with the camera: a hazard pinned to any single height is correct for
+	# one instant of a fall and wrong for the rest, which is how the splash
+	# ended up firing tens of metres below the visible surface. Parenting the
+	# contact to the vista makes it ride the same water, and the splash reads
+	# its surface from the same node, so all three cannot disagree.
+	for frame in 3:
+		await process_frame
+	var vista_contacts := {
+		"MachineShaftWaterVista": "MachineShaftWaterContact",
+		"DualMachineShaftWaterVista": "DualMachineShaftWaterContact",
+	}
+	var lake_surface_local := 0.0
+	for vista_name in vista_contacts:
+		var vista := level.get_node(NodePath(vista_name)) as PixelVistaWindow3D
+		var lake := vista.get_node("LakeAndRocks") as Sprite3D
+		assert(lake != null and lake.region_enabled)
+		var centre_row := lake.region_rect.position.y + lake.region_rect.size.y * 0.5
+		var water_surface_y: float = (
+			lake.global_position.y
+			+ (centre_row - WATERLINE_SOURCE_ROW) * lake.pixel_size
+		)
+		lake_surface_local = water_surface_y - vista.global_position.y
+
+		var contact := level.get_node(
+			NodePath("Hazards/%s" % vista_contacts[vista_name])
+		) as Hazard3D
+		assert(
+			contact != null,
+			"%s needs a water contact following it so the two move together."
+			% vista_name
+		)
+		assert(
+			not contact.height_source_path.is_empty(),
+			(
+				"%s water contact must follow the vista. A fixed height is "
+				+ "right for one instant of a fall and wrong for the rest."
+			) % vista_name
+		)
+		assert(
+			contact.death_kind == PlayerCharacter.DEATH_KIND_WATER,
+			"%s must report a water death, not a generic one." % vista_name
+		)
+		var box := (
+			contact.get_node("Collision") as CollisionShape3D
+		).shape as BoxShape3D
+		var contact_top := contact.global_position.y + box.size.y * 0.5
+		assert(
+			absf(contact_top - water_surface_y) <= 0.05,
+			(
+				"%s kills at y %.2f but its water is drawn at %.2f."
+			) % [vista_name, contact_top, water_surface_y]
+		)
+		assert(
+			box.size.x >= DUAL_SHAFT_WIDTH - 0.01,
+			"%s water contact must span its whole shaft." % vista_name
+		)
+
+	var splash := level.get_node("WaterDeathSplash") as PixelWaterDeathSplash3D
+	assert(splash != null, "The cave needs the water death presentation.")
+	assert(
+		not splash.surface_source_path.is_empty(),
+		(
+			"The splash must follow the drawn water rather than a fixed height, "
+			+ "or it plays where the lake used to be."
+		)
+	)
+	assert(
+		absf(splash.surface_source_offset - lake_surface_local) <= 0.05,
+		(
+			"The splash sits %.2f m from its source but the lake surface is "
+			+ "%.2f m from it."
+		) % [splash.surface_source_offset, lake_surface_local]
+	)
+
 	var upper_region := level.get_node("UpperCaveBackgroundRegion") as PixelBackgroundRegion3D
 	assert(upper_region != null, "The upper floor needs an authored background region.")
 	assert(upper_region.validation_errors().is_empty())

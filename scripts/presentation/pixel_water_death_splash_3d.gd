@@ -6,6 +6,11 @@ extends Node3D
 
 @export var player_path: NodePath
 @export var water_surface_y := 0.0
+## Optional node whose height carries the water surface, for water that is not
+## at a fixed world height - a camera-locked vista, say. When set, this replaces
+## water_surface_y so the splash lands where the water is actually drawn.
+@export var surface_source_path: NodePath
+@export var surface_source_offset := 0.0
 @export_range(1, 16, 1) var frame_count := 6
 @export_range(1.0, 30.0, 0.5) var frame_rate := 12.0
 
@@ -56,7 +61,7 @@ func _on_death_started(kind: StringName, world_position: Vector3) -> void:
 	_player.visible = false
 	global_position = Vector3(
 		world_position.x,
-		water_surface_y,
+		_surface_y(),
 		world_position.z
 	)
 	_elapsed = 0.0
@@ -70,3 +75,10 @@ func _finish() -> void:
 	_active = false
 	sprite.visible = false
 	set_process(false)
+
+
+func _surface_y() -> float:
+	var source := get_node_or_null(surface_source_path) as Node3D
+	if source == null:
+		return water_surface_y
+	return source.global_position.y + surface_source_offset
