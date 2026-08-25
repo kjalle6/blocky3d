@@ -28,6 +28,29 @@ LOWER TUNNEL
 The user's drawn plan owns this route. Coordinates, tile counts, and camera
 regions serve it; they do not get to reinterpret it.
 
+The current approved implementation is frozen in
+`scenes/levels/overgrown_coastal_ascent_interior_snapshot.tscn`. The exterior
+`Level 2 WIP` route enters that snapshot, while the directly loadable
+`Level 2 Interior WIP` entry continues to use
+`scenes/levels/overgrown_coastal_ascent_interior.tscn`. New background and
+presentation experiments belong only in the editable Interior WIP until they
+are explicitly accepted into a later snapshot.
+
+The editable Interior WIP currently tests one coherent cave composition across
+the entire route. Its base and distant-rock layers replace the black void in
+ordinary tunnels. Foreground terrain then masks a localized lake layer inside
+each full-height machine shaft, so water is revealed only through those gaps
+without changing art style. Every cave layer is fixed in world Y: jumping and
+climbing move the camera past the art instead of dragging the cave with the
+player. The two global layers repeat in exact texture-height rows to cover the
+full climb without a seam; their existing horizontal behavior remains intact.
+Each localized vista stays authored to its shaft on both axes. Uniform source
+rows extend its ceiling to the distant cave roof and its deep water below the
+kill plane, so fixed art never exposes a hard edge. The lake crop sits 2.0 m
+lower than its source alignment. The pack's foreground cave frame is omitted
+because the level's own rock shell remains the foreground and collision source
+of truth.
+
 ## Visual contracts
 
 | Beat | Must read as | Must not become |
@@ -39,33 +62,37 @@ regions serve it; they do not get to reinterpret it.
 | Dash alcove | A connected upper-left reward space reached after the climb | A distant floating chamber or giant empty turnback room |
 | Dash crossing | One legible rightward gap whose spikes explain why Dash is required | An isolated spike box, one-tile pillar, or disconnected destination |
 | Machine shaft | A break in the corridor wide enough that Dash is required, open far above and below, with one hovering machine in it and two readable ways past | A gap a Double Jump can clear, a ceiling over the machine, a floor under it, or geometry that only pretends to offer a choice |
+| Cave depth and lake vista | One cave family throughout, with its water layer revealed only through each full-height machine shaft | Black ordinary rooms beside a finished painting, a collision surface, or an art edge exposed during the climb |
 
 ## Current approval boundary
 
 Everything up to and including the machine shaft is visually approved: the lower
 recap, the three detached ascent platforms with Wall Jump on P3, the shaft fed
 by P3, the wall-spike patches biasing the top exit left, Dash and its checkpoint
-in the upper-left alcove, the Dash-only crossing back right, and the machine
-shaft that ends the current route.
+in the upper-left alcove, the 13.28 m Dash-required crossing back right, and the
+machine shaft that ends the current route.
 
 A checkpoint sits on the ledge before the machine, so a fall retries the machine
 rather than the crossing before it.
 
-Hands-on review of the machine is the remaining gate. Nothing beyond it is
-approved, and no second machine is authored until the first one has been played.
+Hands-on review accepts the first machine as a deliberately isolated, readable
+introduction. A second matching 14.08 m shaft is now authored after a full
+12.8 m reveal runway. Its width is divided into thirds: one machine sits in each
+outer third, each nudged 0.32 m toward the empty middle to give both ledges more
+breathing room. Both begin at the same height, with the left machine rising
+while the right falls. This second beat is pending hands-on review; nothing
+after its landing is approved.
 
-## Pending change: widen the Dash crossing
+## Dash crossing width
 
-The Dash crossing before the machine is still 10.24 m, which sits inside the
-11.79 m a Double Jump reaches, so the beat that introduces Dash does not require
-it. Hands-on it took about a hundred attempts to clear once, which is the worst
-of both outcomes: technically possible, never reliable, and it teaches nothing
-while occasionally rewarding a fluke. The timing that works is counterintuitive
-- the second jump has to be spent late, near floor level, because double jumping
-at the apex puts the player's head into the 33.28 m ceiling and costs the arc.
+The editable Interior WIP now uses a 13.28 m row of 17 spikes. Its original
+64.0 m left edge stays fixed and all four added spikes extend the hazard to the
+right. This is beyond the 11.79 m Double Jump envelope while retaining roughly
+4 m of the Double Jump plus Dash envelope, so the beat now requires the ability
+it just gave the player without demanding its absolute limit.
 
-Approved fix: grow the spike row so Dash is genuinely required. Note that one or
-two more spikes is not enough. At the authored spike_height of 0.76 m:
+The selected width follows the earlier reach audit. At the authored
+`spike_height` of 0.76 m:
 
 | extra spikes | row width | vs the 11.79 m reach |
 | --- | --- | --- |
@@ -74,10 +101,13 @@ two more spikes is not enough. At the authored spike_height of 0.76 m:
 | +3 | 12.52 m | clears |
 | +4 | 13.28 m | clears with the same 1.5 m margin the machine gap uses |
 
-Take it to roughly 13.3 m so it matches the machine gap's standard, widen the
-gap in the floor to match the spike row, and add the same
-ideal_double_jump_distance assertion the machine gap already carries so it
-cannot drift back under the reach.
+Only the lethal row grows; the solid cave floor beneath it remains part of the
+interior construction. The validator locks both the 17 visible spikes and the
+original left edge, plus the movement-envelope margins, so the crossing cannot
+silently drift back under Double Jump reach or grow toward the pickup alcove.
+The post-crossing checkpoint moves right to 80.64 m so its trigger and respawn
+space remain clear of the new final spike. The frozen snapshot intentionally
+remains at 10.24 m until a later explicit promotion.
 
 ## Next approved beat
 

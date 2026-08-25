@@ -54,6 +54,10 @@ func _validate() -> void:
 	assert(enclosed_lab_button.text == "ENCLOSED TERRAIN LAB")
 	assert(level_2_wip_button.text == "LEVEL 2 WIP")
 	assert(level_2_interior_wip_button.text == "LEVEL 2 INTERIOR WIP")
+	assert(
+		world_list.get_node_or_null("Level2WipInteriorSnapshotButton") == null,
+		"The frozen Level 2 snapshot is transition-only and must not add a third menu entry."
+	)
 	assert(world_list.get_node_or_null("ArrivalShorelineSliceButton") == null)
 	assert(level_01_button.has_focus(), "The selector should initially focus Level 1.")
 

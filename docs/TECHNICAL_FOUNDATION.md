@@ -177,6 +177,25 @@ Horizontal motion is likewise explicit: `SCREEN_LOCKED`, `PARALLAX`, or
 attached to the camera. Autonomous drift is a separate future presentation
 choice and must not be simulated with near-zero parallax.
 
+Localized interior openings use `PixelVistaWindow3D` for layers that should not
+fill every room. Its explicit root policy prevents camera behavior from being
+smuggled into an arbitrary parallax value. Level 2 world-locks each entire vista
+so its ceiling, horizon, and rocks remain attached to the cave during jumps.
+Foreground terrain masks each vista's authored X edges. Transparent source
+bands are safe crop boundaries: Level 2 keeps the ceiling crop at its normal
+world framing and lowers the lake crop by 2.0 m. Uniform one-pixel source rows
+extend the fixed ceiling to the roof and the deep water below the kill plane.
+The view is presentation-only and contains no collision. The editable Interior
+WIP combines a two-layer global cave profile with these localized split vistas,
+while its frozen transition snapshot omits the experiment.
+
+World-locked global layers may request exact texture-height rows above or below
+their authored base through `world_repeat_above` and `world_repeat_below`. The
+background rig snaps the base row once, then derives every additional row from
+the native texture height; it never re-snaps rows independently. This supplies
+coverage for tall spaces without coupling art to camera Y or introducing fake
+depth layers.
+
 The vertical-region extension remains opt-in rather than global, but it is no
 longer dormant: the Level 2 WIP interior depends on it for the shaft's 30.72 m
 maximum vertical camera offset. That WIP entry is not yet a cataloged production
@@ -472,6 +491,14 @@ definition: the Animation Lab, the Enclosed Terrain Lab, the Level 2 WIP
 approach, and the directly loadable Level 2 interior opening. Animation Lab
 remains the only one with in-room ability toggles.
 
+The Level 2 approach threshold targets a separate, hidden level definition
+whose scene is the frozen interior snapshot. The visible `Level 2 Interior WIP`
+definition still targets the editable interior scene. This keeps experimental
+presentation work from silently changing the baseline reached through
+`Level 2 WIP`; accepting a new baseline is an explicit snapshot update.
+`GameRoot.developer_hidden_level_definitions` registers transition-only
+developer targets without exposing an extra selector button.
+
 ## Validation and visual review
 
 Every lasting system receives focused validation. The current suite covers:
@@ -530,9 +557,10 @@ Every lasting system receives focused validation. The current suite covers:
   4x art source pixel for pixel, its authored ground contact, and the enclosed
   terrain lab's interior grammar;
 - the Level 2 interior opening: one-grid enclosed topology, pickup order,
-  checkpoint policy, hazard dimensions, camera region, a 10.24 m Dash-only
-  well, and a real-input traversal through Double Jump, four Wall Jumps, and one
-  Dash.
+  checkpoint policy, hazard dimensions, camera region, a validated 13.28 m
+  17-spike Dash crossing beyond Double Jump reach, a 14.08 m
+  single- and dual-machine 14.08 m gaps, and a real-input traversal through
+  Double Jump, repeated Wall Jumps, and three Dashes.
 
 Graphical capture scripts render deterministic 1920x1080 review positions for
 all current levels. Visual changes are inspected in the running game;
@@ -578,16 +606,23 @@ The Overgrown Coastal Ascent interior is now underway. The isolated lab proved
 the reusable grid-driven terrain component, while the Level 2 WIP approach
 proves the matched doorway handoff. The first authored interior slice uses those
 contracts for a combat-and-spike recap, Double Jump rise, Wall Jump pickup and
-shaft, forced left turn to the Dash pickup, and immediate 10.24 m Dash-only
-return crossing. Structural checks and a real-input traversal prove technical
-reachability. Its 30.72 m shaft is already an active consumer of the reusable,
-opt-in vertical camera region system. The next system-facing addition is a
-dedicated indestructible flying-hazard archetype for Green Zone enemy 5: it must
-remain outside the `melee_target` and stomp contracts while exposing explicit
-lethal body/electric contact and reset behavior. Its first use is one generous
-chamber offering a jump-and-air-Dash route above and a timed ground-Dash route
-below. Reusable height-aware background fades also exist but remain unused and
-opt-in until an approved composition needs them. Structural, visual, and
+shaft, forced left turn to the Dash pickup, and a 13.28 m Dash return crossing
+validated beyond the Double Jump envelope. Structural
+checks and a real-input traversal prove technical reachability. Its 30.72 m
+shaft is already an active consumer of the reusable, opt-in vertical camera
+region system. Green Zone enemy 5 now has a dedicated indestructible
+flying-hazard archetype outside the `melee_target` and stomp contracts, with
+explicit lethal body/electric contact and deterministic reset behavior. Its
+first accepted use is one generous chamber offering a jump-and-air-Dash route
+above and a timed ground-Dash route below. The next authored chamber deliberately
+duplicates that geometry and places one flyer in each outer horizontal third,
+with a small symmetric inward offset for ledge clearance and the middle left
+empty. A half-cycle bob offset produces one rising and one falling start
+direction. Its structure, thirds-derived placement,
+opposite-phase contract, checkpoint, and real-input traversal are automated;
+human review remains the acceptance gate. Reusable height-aware background fades
+also exist but remain unused and opt-in until an approved composition needs
+them. Structural, visual, and
 regression automation owns technical confidence; hands-on human review remains
 the gate for presentation, difficulty, fairness, pacing, and feel. Firearms,
 saws, bosses, Combat Lab, and the curated cyberpunk UI theme follow only when

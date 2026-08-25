@@ -19,6 +19,7 @@ const CHECKED_LEVELS: Array[StringName] = [
 const CHECKED_DEVELOPER_LEVELS: Array[StringName] = [
 	&"dev_enclosed_terrain_lab",
 	&"dev_level_2_wip",
+	&"dev_level_2_wip_interior_snapshot",
 	&"dev_level_2_interior_wip",
 	&"dev_animation_lab",
 ]
@@ -84,7 +85,7 @@ func _run() -> void:
 ## dressing cannot quietly land somewhere the validator does not look.
 func _assert_every_scene_is_accounted_for(game_root: Node) -> void:
 	var covered := PackedStringArray()
-	for definition in game_root.campaign.ordered_levels() + game_root._ordered_developer_definitions():
+	for definition in game_root.campaign.ordered_levels() + game_root._known_developer_definitions():
 		if definition.level_id in CHECKED_LEVELS or definition.level_id in CHECKED_DEVELOPER_LEVELS:
 			covered.append(definition.scene.resource_path)
 	for directory in ["res://scenes/levels", "res://scenes/dev"]:
@@ -102,7 +103,7 @@ func _assert_every_scene_is_accounted_for(game_root: Node) -> void:
 
 
 func _developer_definition(game_root: Node, level_id: StringName) -> LevelDefinition:
-	for definition in game_root._ordered_developer_definitions():
+	for definition in game_root._known_developer_definitions():
 		if definition.level_id == level_id:
 			return definition
 	assert(false, "Unknown developer level: %s" % level_id)

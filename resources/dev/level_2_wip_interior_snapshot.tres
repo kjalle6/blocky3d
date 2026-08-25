@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="LevelDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/campaign/level_definition.gd" id="1_definition"]
+[ext_resource type="PackedScene" path="res://scenes/levels/overgrown_coastal_ascent_interior_snapshot.tscn" id="2_scene"]
+
+[resource]
+script = ExtResource("1_definition")
+level_id = &"dev_level_2_wip_interior_snapshot"
+title = "Level 2 WIP Interior Snapshot"
+lesson = "Frozen interior checkpoint used by the Level 2 WIP approach while the directly loadable Interior WIP keeps evolving."
+scene = ExtResource("2_scene")
+available_abilities = Array[StringName]([&"double_jump", &"wall_jump", &"dash"])
+assumed_owned_abilities = Array[StringName]([&"double_jump"])
+required_abilities = Array[StringName]([&"double_jump", &"wall_jump", &"dash"])

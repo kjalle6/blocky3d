@@ -4,8 +4,8 @@ extends SceneTree
 const OUTPUT_SIZE := Vector2i(1920, 1080)
 const OUTPUT_DIRECTORY := "res://build/previews/level_2_interior_opening"
 const GAMEPLAY_CAMERA_SIZE := 12.9375
-const OVERVIEW_CAMERA_SIZE := 68.0
-const OVERVIEW_CENTER := Vector3(58.88, 22.0, 0.0)
+const OVERVIEW_CAMERA_SIZE := 82.0
+const OVERVIEW_CENTER := Vector3(71.68, 22.0, 0.0)
 ## Each route is shown at the moment a player would actually take it, because
 ## that is what "visibly real" means for review. The machine rises to open the
 ## floor lane and drops to open the ceiling lane, so each frame is pinned to the
@@ -15,6 +15,11 @@ const BEAT_MACHINE_PHASE := {
 	&"09_machine_low_route": 0.25,   # machine risen, so the floor lane is the open one
 	&"10_machine_high_route": 0.75,  # machine dropped, so the ceiling lane is the open one
 }
+const BEAT_DUAL_MACHINE_PHASE := {
+	# Both bodies remain visible in one frame while still demonstrating the
+	# opposite-direction timing window.
+	&"14_dual_machine_window": Vector2(0.125, 0.625),
+}
 const REVIEW_BEATS := {
 	&"00_entry": Vector3(7.68, 0.7, 0.0),
 	&"01_recap": Vector3(22.4, 0.7, 0.0),
@@ -23,12 +28,15 @@ const REVIEW_BEATS := {
 	&"04_shaft_middle": Vector3(58.88, 17.0, 0.0),
 	&"05_top_left_end": Vector3(44.8, 28.86, 0.0),
 	&"06_top_junction": Vector3(58.88, 28.86, 0.0),
-	&"07_dash_crossing": Vector3(69.12, 30.0, 0.0),
+	&"07_dash_crossing": Vector3(70.64, 30.0, 0.0),
 	&"08_machine_run_up": Vector3(80.64, 28.86, 0.0),
 	&"09_machine_low_route": Vector3(94.08, 28.71, 0.0),
 	&"10_machine_high_route": Vector3(94.08, 32.73, 0.0),
 	&"11_chamber_landing": Vector3(105.0, 29.50, 0.0),
 	&"12_chamber_end": Vector3(113.0, 28.86, 0.0),
+	&"13_dual_machine_run_up": Vector3(107.52, 28.86, 0.0),
+	&"14_dual_machine_window": Vector3(120.96, 31.115, 0.0),
+	&"15_dual_chamber_landing": Vector3(132.0, 29.50, 0.0),
 }
 
 
@@ -148,9 +156,21 @@ func _capture(file_name: String) -> void:
 
 func _pin_machine_phase(level: LevelSession3D, beat_id: StringName) -> void:
 	var machine := level.get_node_or_null("ShaftFlyer") as HoveringHazard3D
-	if machine == null:
-		return
-	if BEAT_MACHINE_PHASE.has(beat_id):
-		machine.bob_phase = BEAT_MACHINE_PHASE[beat_id]
+	var dual_rising := level.get_node_or_null(
+		"DualShaftFlyerRising"
+	) as HoveringHazard3D
+	var dual_falling := level.get_node_or_null(
+		"DualShaftFlyerFalling"
+	) as HoveringHazard3D
+	if machine != null:
+		machine.bob_phase = BEAT_MACHINE_PHASE.get(beat_id, 0.0)
 		machine.reset_run()
-	machine.set_physics_process(false)
+		machine.set_physics_process(false)
+	if dual_rising == null or dual_falling == null:
+		return
+	var phases := BEAT_DUAL_MACHINE_PHASE.get(beat_id, Vector2(0.0, 0.5)) as Vector2
+	dual_rising.bob_phase = phases.x
+	dual_falling.bob_phase = phases.y
+	for dual_machine in [dual_rising, dual_falling]:
+		dual_machine.reset_run()
+		dual_machine.set_physics_process(false)

@@ -181,6 +181,13 @@ while Level 2 is a WIP.
 approach uses the `green_zone_dusk` background; the interior keeps its own dark
 environment, which is now simply correct rather than something to fight.
 
+For the next presentation pass, those two development entries are deliberately
+isolated. `Level 2 WIP` enters the frozen
+`overgrown_coastal_ascent_interior_snapshot.tscn`, preserving the accepted
+route below. `Level 2 Interior WIP` opens the editable
+`overgrown_coastal_ascent_interior.tscn`; cave-background experiments and the
+next build occur only there until separately reviewed.
+
 The intended teaching arc remains:
 
 1. one familiar opening jump confirms ordinary control;
@@ -198,20 +205,32 @@ route. A low enclosed tunnel recaps an enemy and visible spikes, then three
 separate unsupported platforms rise toward the shaft and require the owned
 Double Jump. The player collects Wall Jump at the shaft floor, climbs between
 two continuous walls, and meets a spiked right-hand cap that redirects them
-left to the Dash pickup. Returning
-right requires a 10.24 m jump-and-Dash crossing that remains well beyond the
-ordinary jump envelope but leaves a fair landing margin for a first Dash use.
+left to the Dash pickup. Returning right now uses a 13.28 m row of 17 spikes:
+the original left edge remains fixed and all four additions extend right. It is
+beyond the 11.79 m Double Jump envelope but comfortably inside the Double Jump
+plus Dash envelope, so the newly collected ability is required. Its following
+checkpoint is shifted clear of the widened hazard.
 This is still a WIP route slice with no completion trigger; human playtesting
 owns its difficulty and pacing before the route is extended.
 
 The machine shaft is now built at the end of that route. The corridor breaks for
-10.24 m, open floor to sky, with one hovering machine bobbing slowly in the gap;
+14.08 m, open floor to sky, with one hovering machine bobbing slowly in the gap;
 falling in is a long drop past the kill plane. The machine is indestructible and
 cannot be stabbed or stomped, its body is always lethal, and its electrical
 discharge hangs beneath it, so the low route is the timed one. Its travel never
 closes both routes at once, which the structural validator asserts. Hands-on
-review of that encounter is the open gate; later chambers may vary speed, phase,
-and count, one at a time.
+review accepts this first deliberately isolated, slow encounter. Later chambers
+may vary speed, phase, and count, one at a time.
+
+The immediate follow-up now repeats that exact 14.08 m chamber after another
+12.8 m readable run-up. The gap is divided into equal horizontal thirds: one
+machine occupies each outer third with a small symmetric bias toward the empty
+middle, giving both ledges extra clearance. They begin half a bob cycle apart,
+so the left starts upward while the right starts downward. A checkpoint at the
+start of the runway preserves the
+encounter boundary. Technical traversal is guarded; human review owns whether
+the paired timing is readable and fun before anything is authored beyond its
+landing.
 
 The asset audit found useful ingredients rather than a ready-made pure-cave
 kit: a connected brown rock terrain sheet, matching cave-rock and stalagmite
@@ -438,16 +457,28 @@ around bot skill. Human review accepts the route gameplay and concealed hazard.
 Human review also accepts the finish clearing, completion fade, environmental
 dressing, and half-pipe composition. Commit `59a034b` is the Level 1 baseline.
 
-The active gate is human playtesting of the first actual Level 2 interior slice.
-The Green Zone approach and its dressed cave threshold hand the run to
-`scenes/levels/overgrown_coastal_ascent_interior.tscn`; direct development-menu
-entry remains available for iteration. The route now covers the opening recap,
-Double Jump rise, Wall Jump pickup and shaft, forced Dash turnback, and first
-Dash-only crossing. The enclosed lab remains a disposable terrain/contact
-fixture rather than part of the route. The next authored beat is the isolated
-two-route evasive-flyer chamber described above; later chambers and combination
-sections wait until that introduction is accepted by hand. Do not connect Level
-1 to the WIP or reopen its route unless a regression or deliberate later polish
-pass requires it.
+The Green Zone approach and its dressed cave threshold hand the run to the
+frozen `scenes/levels/overgrown_coastal_ascent_interior_snapshot.tscn`; the
+direct `Level 2 Interior WIP` development-menu entry targets the editable
+`scenes/levels/overgrown_coastal_ascent_interior.tscn`. The route now covers the opening recap,
+Double Jump rise, Wall Jump pickup and shaft, forced Dash turnback, the intended
+13.28 m Dash-required crossing, the first accepted two-route evasive-flyer
+encounter, and a matching second shaft with two
+opposite-phase flyers awaiting hands-on review. The enclosed lab remains a
+disposable terrain/contact fixture rather than part of the route. Nothing beyond
+the paired-machine landing is approved yet; later chambers and combination
+sections may vary speed, phase, count, and lane demands only after they are
+authored and reviewed one at a time. Do not connect Level 1 to the WIP or reopen
+its route unless a regression or deliberate later polish pass requires it.
 Guns, crafting, saws, secrets, currency, lives, and new enemy families remain
 outside Level 1.
+
+Only the directly loadable Interior WIP currently experiments with the new cave
+composition. Two horizontally recycled but world-Y-locked layers establish the
+same cave depth throughout the route, with exact vertical rows covering the
+full climb. Terrain masks a localized split vista behind each machine gap. Its
+ceiling, lake, and rocks all remain attached to the cave during jumps; uniform
+edge rows extend the fixed ceiling and deep water beyond every reachable camera
+bound. The lake and rocks sit 2.0 m lower than their source alignment. The
+frozen snapshot reached from the exterior approach remains unchanged until this
+presentation pass is accepted.

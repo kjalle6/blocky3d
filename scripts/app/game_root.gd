@@ -5,6 +5,7 @@ extends Node
 @export var campaign: CampaignCatalog
 @export var developer_room_definition: LevelDefinition
 @export var developer_level_definitions: Array[LevelDefinition] = []
+@export var developer_hidden_level_definitions: Array[LevelDefinition] = []
 @export var level_button_style: StyleBox
 @export var persist_progression := true
 @export var developer_fresh_level_runs := true
@@ -151,7 +152,7 @@ func load_developer_level(definition: LevelDefinition) -> void:
 	assert(developer_tools_enabled, "Developer tools are disabled.")
 	assert(definition != null, "A developer level definition is required.")
 	assert(
-		definition in _ordered_developer_definitions(),
+		definition in _known_developer_definitions(),
 		"Unknown developer level: %s" % definition.level_id
 	)
 	var room_errors := definition.validation_errors()
@@ -310,6 +311,14 @@ func _ordered_developer_definitions() -> Array[LevelDefinition]:
 			definitions.append(definition)
 	if developer_room_definition != null and developer_room_definition not in definitions:
 		definitions.append(developer_room_definition)
+	return definitions
+
+
+func _known_developer_definitions() -> Array[LevelDefinition]:
+	var definitions := _ordered_developer_definitions()
+	for definition in developer_hidden_level_definitions:
+		if definition != null and definition not in definitions:
+			definitions.append(definition)
 	return definitions
 
 
@@ -585,7 +594,7 @@ func _on_transition_requested(
 	if target == null:
 		return
 	await _fade_to_black(TRANSITION_FADE_DURATION)
-	if target in _ordered_developer_definitions():
+	if target in _known_developer_definitions():
 		load_developer_level(target)
 	else:
 		load_level(target.level_id)

@@ -4,7 +4,8 @@ extends SceneTree
 ## enters moving right, and ordinary input control resumes afterwards.
 
 const SOURCE_LEVEL_ID: StringName = &"dev_level_2_wip"
-const TARGET_LEVEL_ID: StringName = &"dev_level_2_interior_wip"
+const TARGET_LEVEL_ID: StringName = &"dev_level_2_wip_interior_snapshot"
+const ACTIVE_INTERIOR_LEVEL_ID: StringName = &"dev_level_2_interior_wip"
 const EXPECTED_DIRECTION := 1.0
 const EXPECTED_SPEED := 8.0
 const EXPECTED_DURATION := 0.45
@@ -68,7 +69,9 @@ func _run() -> void:
 	assert(target_player.is_physics_processing())
 
 	game_root.show_level_select()
-	game_root.load_developer_level(_developer_definition(game_root, TARGET_LEVEL_ID))
+	game_root.load_developer_level(
+		_developer_definition(game_root, ACTIVE_INTERIOR_LEVEL_ID)
+	)
 	await process_frame
 	assert(
 		not game_root.current_level.player.is_transition_running(),

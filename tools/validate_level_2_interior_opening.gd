@@ -3,7 +3,20 @@ extends SceneTree
 
 const DEFINITION_PATH := "res://resources/dev/level_2_interior_wip.tres"
 const TILE_SIZE := PixelInteriorTerrain3D.TILE_WORLD_SIZE
-const EXPECTED_DASH_GAP := 10.24
+const EXPECTED_DASH_SPIKE_WIDTH := 13.28
+const EXPECTED_DASH_SPIKE_LEFT_EDGE := 64.0
+const EXPECTED_DASH_SPIKE_CENTER := (
+	EXPECTED_DASH_SPIKE_LEFT_EDGE + EXPECTED_DASH_SPIKE_WIDTH * 0.5
+)
+const DUAL_SHAFT_LEFT_EDGE := 89.0 * TILE_SIZE
+const DUAL_SHAFT_WIDTH := 11.0 * TILE_SIZE
+const DUAL_FLYER_INWARD_NUDGE := 0.32
+const DUAL_FLYER_LEFT_X := (
+	DUAL_SHAFT_LEFT_EDGE + DUAL_SHAFT_WIDTH / 6.0 + DUAL_FLYER_INWARD_NUDGE
+)
+const DUAL_FLYER_RIGHT_X := (
+	DUAL_SHAFT_LEFT_EDGE + DUAL_SHAFT_WIDTH * 5.0 / 6.0 - DUAL_FLYER_INWARD_NUDGE
+)
 var _completed := false
 
 
@@ -31,11 +44,34 @@ func _run() -> void:
 	assert(terrain != null)
 	assert(terrain.validation_errors().is_empty())
 	assert(terrain.row_count() == 40)
-	assert(terrain.column_count() == 92)
+	assert(terrain.column_count() == 113)
 	assert(
-		terrain.collision_rectangle_count() == 10,
+		terrain.collision_rectangle_count() == 12,
 		"collision rectangles: %d" % terrain.collision_rectangle_count()
 	)
+
+	# The editable Interior WIP owns two localized lake-cavern vistas. Their X
+	# positions and every visual layer stay authored in world space; neither a
+	# jump nor the shaft climb may drag cave art vertically with the camera.
+	# The frozen transition snapshot deliberately has no such experiment.
+	_validate_water_vista(level, "MachineShaftWaterVista", 94.08, 30.88)
+	_validate_water_vista(level, "DualMachineShaftWaterVista", 120.96, 30.88)
+	var background := level.get_node("Background") as PixelBackgroundRig3D
+	assert(background != null and background.visible)
+	assert(background.profile != null)
+	assert(background.profile.profile_id == &"rock_underworks_cave")
+	assert(background.profile.layers.size() == 2)
+	assert(background.profile.validation_errors().is_empty())
+	for index in background.profile.layers.size():
+		var layer := background.profile.layers[index]
+		assert(
+			layer.vertical_policy
+			== PixelBackgroundLayerProfile.VerticalPolicy.WORLD_LOCKED
+		)
+		assert(layer.horizontal_policy == PixelBackgroundLayerProfile.HorizontalPolicy.SCREEN_LOCKED)
+		assert(layer.world_repeat_below == 0)
+		assert(layer.world_repeat_above == 3)
+		assert(layer.world_row_count() == 4)
 
 	# One grid owns the lower tunnel, continuous shaft, upper-left Dash alcove,
 	# and upper-right destination corridor. The ascent itself remains three
@@ -57,45 +93,50 @@ func _run() -> void:
 	assert(terrain.is_solid_cell(16, 60))
 	assert(terrain.is_solid_cell(11, 60))
 
-	# The evasive-flyer chamber: a full-height break in the corridor with a
-	# hovering machine in it. The break is open floor-to-sky, so nothing above
-	# or below the machine can be mistaken for a route.
-	for row in [5, 9, 11, 14, 20, 30, 39]:
-		assert(
-			not terrain.is_solid_cell(row, 73),
-			"The gap must stay open through the corridor and out the bottom (row %d)." % row
-		)
-	# The gap has to read as endless, so it stays open far past anything the
-	# camera shows. What closes it is a spiked lid rather than a floor: if the
-	# movement kit ever grows enough to climb up there, the answer is death, not
-	# a roof to stand on.
-	for row in [0, 2, 4]:
-		assert(
-			terrain.is_solid_cell(row, 73),
-			"The gap must be closed off well above the camera at row %d." % row
-		)
-	var ceiling_spikes := level.get_node(
-		"Hazards/MachineShaftCeilingSpikes"
-	) as PixelSpikeRow3D
-	assert(ceiling_spikes != null, "The gap needs a lethal lid, not an open top.")
-	assert(is_equal_approx(ceiling_spikes.position.y, 42.24))
-	assert(is_equal_approx(ceiling_spikes.position.x, 94.08))
+	# Both evasive-flyer chambers are full-height breaks in the corridor. They
+	# stay open floor-to-sky, so nothing above or below a machine can be mistaken
+	# for a route.
+	for gap_column in [73, 94]:
+		for row in [5, 9, 11, 14, 20, 30, 39]:
+			assert(
+				not terrain.is_solid_cell(row, gap_column),
+				(
+					"Gap at column %d must stay open through the corridor and out "
+					+ "the bottom (row %d)."
+				) % [gap_column, row]
+			)
+	# The gap stays open far past the ordinary camera framing. A distant solid
+	# cave roof bounds the WIP space, but it must remain harmless: the machine
+	# encounter does not force a surprise row of overhead spikes.
+	for gap_column in [73, 94]:
+		for row in [0, 2, 4]:
+			assert(
+				terrain.is_solid_cell(row, gap_column),
+				"Gap at column %d must close above the camera at row %d."
+				% [gap_column, row]
+			)
 	assert(
-		ceiling_spikes.row_width >= (79.0 - 68.0) * TILE_SIZE,
-		"The lid must span the whole gap or it can be climbed around."
+		level.get_node_or_null("Hazards/MachineShaftCeilingSpikes") == null,
+		"The first machine gap must not have forced overhead spikes."
 	)
 	assert(
-		ceiling_spikes.position.y > 33.28 + 6.4,
-		"The lid must sit well above the corridor so it stays out of frame."
+		level.get_node_or_null("Hazards/DualMachineShaftCeilingSpikes") == null,
+		"The dual-machine gap must not have forced overhead spikes."
 	)
 
 	assert(terrain.is_solid_cell(16, 67), "Takeoff ledge must be solid.")
 	assert(terrain.is_solid_cell(16, 79), "Landing ledge must be solid.")
+	assert(terrain.is_solid_cell(16, 88), "Second takeoff ledge must be solid.")
+	assert(terrain.is_solid_cell(16, 100), "Second landing ledge must be solid.")
 	assert(not terrain.is_solid_cell(15, 67))
 	assert(not terrain.is_solid_cell(15, 79))
-	assert(terrain.is_solid_cell(13, 91), "The corridor must end in a back wall.")
+	assert(not terrain.is_solid_cell(15, 88))
+	assert(not terrain.is_solid_cell(15, 100))
+	assert(terrain.is_solid_cell(13, 112), "The corridor must end in a back wall.")
 
 	var shaft_gap := (79.0 - 68.0) * TILE_SIZE
+	var dual_shaft_gap := (100.0 - 89.0) * TILE_SIZE
+	assert(is_equal_approx(dual_shaft_gap, shaft_gap))
 	# Sized against the reach the player actually has here, not a single jump.
 	# They own Double Jump by this point, and two arcs carry roughly twice as
 	# far, so a gap tuned to one jump stops requiring the ability it teaches.
@@ -118,10 +159,18 @@ func _run() -> void:
 	# The machine has to be visible and readable well before it is committed to,
 	# so the ledge leading in is authored length rather than whatever was left
 	# over after the Dash crossing.
-	var run_up := 68.0 * TILE_SIZE - (69.12 + 10.24 * 0.5)
+	var run_up := (
+		68.0 * TILE_SIZE
+		- (EXPECTED_DASH_SPIKE_LEFT_EDGE + EXPECTED_DASH_SPIKE_WIDTH)
+	)
 	assert(
-		run_up >= 12.8 - 0.01,
+		run_up >= 7.5 * TILE_SIZE - 0.01,
 		"Run-up to the machine is only %.2f m; it must stay long enough to read it." % run_up
+	)
+	var dual_run_up := (89.0 - 79.0) * TILE_SIZE
+	assert(
+		dual_run_up >= 12.8 - 0.01,
+		"Run-up to the dual machines is only %.2f m." % dual_run_up
 	)
 
 	var flyer := level.get_node("ShaftFlyer") as HoveringHazard3D
@@ -155,6 +204,38 @@ func _run() -> void:
 		"With the machine dropped the ceiling lane is only %.2f m." % ceiling_lane
 	)
 
+	var rising_flyer := level.get_node("DualShaftFlyerRising") as HoveringHazard3D
+	var falling_flyer := level.get_node("DualShaftFlyerFalling") as HoveringHazard3D
+	assert(rising_flyer != null and falling_flyer != null)
+	for dual_flyer in [rising_flyer, falling_flyer]:
+		assert(dual_flyer.validation_errors().is_empty())
+		assert(not dual_flyer.is_in_group("melee_target"))
+		assert(not dual_flyer.is_in_group("stompable"))
+		assert(is_equal_approx(dual_flyer.bob_amplitude, flyer.bob_amplitude))
+		assert(is_equal_approx(dual_flyer.bob_period, flyer.bob_period))
+		assert(is_equal_approx(dual_flyer.lowest_body_y(), flyer.lowest_body_y()))
+		assert(is_equal_approx(dual_flyer.highest_body_y(), flyer.highest_body_y()))
+	assert(is_equal_approx(rising_flyer.position.x, DUAL_FLYER_LEFT_X))
+	assert(is_equal_approx(falling_flyer.position.x, DUAL_FLYER_RIGHT_X))
+	assert(is_equal_approx(
+		falling_flyer.position.x - rising_flyer.position.x,
+		DUAL_SHAFT_WIDTH * 2.0 / 3.0 - DUAL_FLYER_INWARD_NUDGE * 2.0
+	))
+	assert(is_equal_approx(rising_flyer.bob_phase, 0.0))
+	assert(is_equal_approx(falling_flyer.bob_phase, 0.5))
+	assert(
+		is_equal_approx(
+			absf(sin(rising_flyer.bob_phase * TAU) - sin(falling_flyer.bob_phase * TAU)),
+			0.0
+		),
+		"Both machines must begin at the same height."
+	)
+	assert(
+		cos(rising_flyer.bob_phase * TAU) > 0.0
+		and cos(falling_flyer.bob_phase * TAU) < 0.0,
+		"One dual machine must begin rising while the other begins falling."
+	)
+
 	assert(level.player.has_ability(PlayerAbility.DOUBLE_JUMP))
 	assert(not level.player.has_ability(PlayerAbility.WALL_JUMP))
 	assert(not level.player.has_ability(PlayerAbility.DASH))
@@ -186,8 +267,24 @@ func _run() -> void:
 	assert(dash_pickup.ability_id == PlayerAbility.DASH)
 	assert(dash_pickup.position.is_equal_approx(Vector3(48.64, 28.16, 0.0)))
 	assert(dash_crossing_spikes != null)
-	assert(is_equal_approx(dash_crossing_spikes.position.x, 69.12))
-	assert(is_equal_approx(dash_crossing_spikes.row_width, EXPECTED_DASH_GAP))
+	assert(is_equal_approx(dash_crossing_spikes.position.x, EXPECTED_DASH_SPIKE_CENTER))
+	assert(is_equal_approx(dash_crossing_spikes.row_width, EXPECTED_DASH_SPIKE_WIDTH))
+	assert(is_equal_approx(
+		dash_crossing_spikes.position.x - dash_crossing_spikes.row_width * 0.5,
+		EXPECTED_DASH_SPIKE_LEFT_EDGE
+	))
+	assert(dash_crossing_spikes.get_node_or_null("Spike17") != null)
+	assert(dash_crossing_spikes.get_node_or_null("Spike18") == null)
+	var shaft_checkpoint := level.get_node(
+		"Checkpoints/CheckpointShaftReady"
+	) as LevelCheckpoint3D
+	assert(shaft_checkpoint != null)
+	assert(shaft_checkpoint.position.is_equal_approx(Vector3(80.64, 28.16, 0.0)))
+	assert(
+		shaft_checkpoint.position.x - 1.2
+		> dash_crossing_spikes.position.x + dash_crossing_spikes.row_width * 0.5,
+		"Post-crossing checkpoint trigger must not overlap the widened spike row."
+	)
 	var low_wall_spikes := level.get_node(
 		"Hazards/ShaftRightSpikesLow"
 	) as PixelSpikeRow3D
@@ -200,13 +297,20 @@ func _run() -> void:
 	assert(is_equal_approx(low_wall_spikes.position.y, 11.946667))
 	assert(is_equal_approx(high_wall_spikes.position.y, 23.413333))
 
-	var takeoff_edge := 54.0 * TILE_SIZE
-	var landing_edge := 62.0 * TILE_SIZE
-	var dash_gap := landing_edge - takeoff_edge
-	assert(is_equal_approx(dash_gap, EXPECTED_DASH_GAP))
+	var dash_spike_width := dash_crossing_spikes.row_width
 	assert(
-		dash_gap > level.player.movement.ideal_full_speed_jump_distance() * 1.6,
-		"Upper crossing must clearly exceed the ordinary jump envelope."
+		dash_spike_width > movement.ideal_double_jump_distance() + 1.4,
+		(
+			"Dash spike row is %.2f m but a Double Jump reaches %.2f m; "
+			+ "the newly collected Dash must be required."
+		) % [dash_spike_width, movement.ideal_double_jump_distance()]
+	)
+	assert(
+		dash_spike_width < movement.ideal_double_jump_dash_distance() - 1.5,
+		(
+			"Dash spike row is %.2f m but Double Jump plus Dash only reaches "
+			+ "%.2f m; the crossing must keep a fair landing margin."
+		) % [dash_spike_width, movement.ideal_double_jump_dash_distance()]
 	)
 
 	var camera_region := level.get_node(
@@ -216,6 +320,7 @@ func _run() -> void:
 	assert(camera_region.validation_errors().is_empty())
 	assert(camera_region.contains_world_position(Vector3(58.88, 18.0, 0)))
 	assert(camera_region.contains_world_position(Vector3(80.0, 28.86, 0)))
+	assert(camera_region.contains_world_position(Vector3(120.96, 28.86, 0)))
 	assert(is_equal_approx(camera_region.maximum_vertical_offset, 30.72))
 
 	# Contact probes make sure the authored art and collision agree at each beat.
@@ -228,14 +333,21 @@ func _run() -> void:
 	assert(_blocked(level.player, Vector3(48.64, 28.86, 0), Vector3.DOWN))
 	assert(_blocked(level.player, Vector3(80.64, 28.86, 0), Vector3.DOWN))
 	assert(_blocked(level.player, Vector3(105.0, 28.86, 0), Vector3.DOWN))
+	assert(_blocked(level.player, Vector3(110.0, 28.86, 0), Vector3.DOWN))
+	assert(_blocked(level.player, Vector3(132.0, 28.86, 0), Vector3.DOWN))
 	assert(
 		not _blocked(level.player, Vector3(94.08, 28.86, 0), Vector3.DOWN),
 		"The machine's shaft must be a real hole, not a floor with art removed."
 	)
+	assert(
+		not _blocked(level.player, Vector3(120.96, 28.86, 0), Vector3.DOWN),
+		"The dual-machine shaft must be a real hole."
+	)
+	_validate_vertical_background_lock(level, background, camera_region)
 
 	print(
 		"Level 2 interior opening passed: recap, shaft, turnback, %.2f m Dash crossing."
-		% dash_gap
+		% dash_spike_width
 	)
 	_completed = true
 	quit(0)
@@ -243,6 +355,158 @@ func _run() -> void:
 
 func _blocked(body: CharacterBody3D, origin: Vector3, motion: Vector3) -> bool:
 	return body.test_move(Transform3D(Basis.IDENTITY, origin), motion)
+
+
+func _validate_water_vista(
+	level: LevelSession3D,
+	node_name: StringName,
+	expected_x: float,
+	expected_y: float
+) -> void:
+	var vista := level.get_node(NodePath(node_name)) as PixelVistaWindow3D
+	assert(vista != null, "%s is missing its localized water vista." % node_name)
+	assert(is_equal_approx(vista.position.x, expected_x))
+	assert(is_equal_approx(vista.authored_world_y(), expected_y))
+	assert(vista.vertical_policy == PixelVistaWindow3D.VerticalPolicy.WORLD_LOCKED)
+	assert(vista.find_children("*", "CollisionObject3D", true, false).is_empty())
+	var expected_layers := {
+		"CeilingFill": {
+			"region": Rect2(112.0, 0.0, 352.0, 1.0),
+			"position_y": 8.92,
+			"scale_y": 122.0,
+		},
+		"CaveCeiling": {
+			"region": Rect2(112.0, 0.0, 352.0, 87.0),
+			"position_y": 4.74,
+		},
+		"LakeAndRocks": {
+			"region": Rect2(112.0, 150.0, 352.0, 174.0),
+			"position_y": -5.0,
+		},
+		"DeepWaterFill": {
+			"region": Rect2(112.0, 323.0, 352.0, 1.0),
+			"position_y": -23.68,
+			"scale_y": 760.0,
+		},
+	}
+	for layer_name in expected_layers:
+		var layer := vista.get_node(layer_name) as Sprite3D
+		assert(layer != null, "%s/%s is missing." % [node_name, layer_name])
+		assert(is_equal_approx(layer.pixel_size, PixelPlatform3D.TILE_PIXEL_SIZE))
+		assert(layer.region_enabled)
+		assert(layer.region_rect == expected_layers[layer_name]["region"])
+		assert(is_equal_approx(
+			layer.position.y,
+			expected_layers[layer_name]["position_y"]
+		))
+		if expected_layers[layer_name].has("scale_y"):
+			assert(is_equal_approx(
+				layer.scale.y,
+				expected_layers[layer_name]["scale_y"]
+			))
+		assert(layer.render_priority == -90)
+		assert(not layer.shaded)
+		assert(layer.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF)
+
+
+func _validate_vertical_background_lock(
+	level: LevelSession3D,
+	background: PixelBackgroundRig3D,
+	camera_region: VerticalCameraRegion3D
+) -> void:
+	var camera := level.camera as PixelSideCamera3D
+	assert(camera != null)
+	var original_player_position := level.player.global_position
+	var baseline_camera_y := camera.global_position.y
+	var baseline_background_y: Array[PackedFloat32Array] = []
+	for layer_index in background.runtime_layer_count():
+		var copy_y := PackedFloat32Array()
+		for sprite in background.runtime_copies(layer_index):
+			copy_y.append(sprite.global_position.y)
+		baseline_background_y.append(copy_y)
+		var row_centers := _unique_sorted_y(copy_y)
+		assert(row_centers.size() == 4)
+		var row_height := (
+			background.profile.layers[layer_index].texture.get_height()
+			* background.profile.pixel_size
+		)
+		for row_index in range(1, row_centers.size()):
+			assert(is_equal_approx(
+				row_centers[row_index] - row_centers[row_index - 1],
+				row_height
+			))
+
+	var vistas: Array[PixelVistaWindow3D] = [
+		level.get_node("MachineShaftWaterVista") as PixelVistaWindow3D,
+		level.get_node("DualMachineShaftWaterVista") as PixelVistaWindow3D,
+	]
+	var baseline_vista_y := PackedFloat32Array()
+	var baseline_vista_child_y: Array[PackedFloat32Array] = []
+	for vista in vistas:
+		baseline_vista_y.append(vista.global_position.y)
+		var child_y := PackedFloat32Array()
+		for child in vista.get_children():
+			if child is Node3D:
+				child_y.append((child as Node3D).global_position.y)
+		baseline_vista_child_y.append(child_y)
+
+	level.player.set_physics_process(false)
+	level.player.global_position = Vector3(
+		camera_region.global_position.x,
+		camera_region.vertical_anchor_world_y()
+			+ camera_region.maximum_vertical_offset,
+		0.0
+	)
+	camera.snap_to_target()
+	background.snap_to_camera()
+	assert(camera.global_position.y > baseline_camera_y + 25.0)
+
+	for layer_index in background.runtime_layer_count():
+		var copies := background.runtime_copies(layer_index)
+		assert(copies.size() == baseline_background_y[layer_index].size())
+		for copy_index in copies.size():
+			assert(is_equal_approx(
+				copies[copy_index].global_position.y,
+				baseline_background_y[layer_index][copy_index]
+			))
+		var rows := _unique_sorted_y(baseline_background_y[layer_index])
+		var half_texture_height := (
+			background.profile.layers[layer_index].texture.get_height()
+			* background.profile.pixel_size
+			* 0.5
+		)
+		assert(rows[0] - half_texture_height <= baseline_camera_y - camera.size * 0.5)
+		assert(rows[-1] + half_texture_height >= camera.global_position.y + camera.size * 0.5)
+
+	for vista_index in vistas.size():
+		var vista := vistas[vista_index]
+		assert(is_equal_approx(vista.global_position.y, baseline_vista_y[vista_index]))
+		var child_index := 0
+		for child in vista.get_children():
+			if child is Node3D:
+				assert(is_equal_approx(
+					(child as Node3D).global_position.y,
+					baseline_vista_child_y[vista_index][child_index]
+				))
+				child_index += 1
+
+	level.player.global_position = original_player_position
+	camera.snap_to_target()
+	background.snap_to_camera()
+
+
+func _unique_sorted_y(values: PackedFloat32Array) -> PackedFloat32Array:
+	var result := PackedFloat32Array()
+	for value in values:
+		var already_present := false
+		for existing in result:
+			if is_equal_approx(value, existing):
+				already_present = true
+				break
+		if not already_present:
+			result.append(value)
+	result.sort()
+	return result
 
 
 func _on_watchdog_timeout() -> void:

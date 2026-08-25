@@ -60,6 +60,19 @@ func _run() -> void:
 	var flyer_second_jump_requested := false
 	var flyer_second_jump_frame := -1
 	var flyer_dash_requested := false
+	var dual_rising := level.get_node_or_null(
+		"DualShaftFlyerRising"
+	) as HoveringHazard3D
+	var dual_falling := level.get_node_or_null(
+		"DualShaftFlyerFalling"
+	) as HoveringHazard3D
+	var dual_rising_previous_y := 0.0
+	if dual_rising != null:
+		dual_rising_previous_y = dual_rising.position.y
+	var dual_jump_requested := false
+	var dual_second_jump_requested := false
+	var dual_second_jump_frame := -1
+	var dual_dash_requested := false
 	var double_jump_count := [0]
 	var wall_jump_count := [0]
 	var dash_count := [0]
@@ -392,28 +405,104 @@ func _run() -> void:
 					and player.global_position.y >= 28.7
 				):
 					stage = 17
+
+			17:
+				# Give the pair the same full 12.8 m reveal runway as the first
+				# machine, then stop short enough to choose the timing window.
+				_set_horizontal_input(1.0)
+				if player.global_position.x >= 109.0:
+					_set_horizontal_input(0.0)
+					stage = 18
+
+			18:
+				# The pair occupies the outer thirds and starts in opposite
+				# directions. Commit while the left machine is low and rising: by
+				# the time the player reaches its third it is high, while the right
+				# machine has fallen out of the later part of the route.
+				_set_horizontal_input(0.0)
+				if dual_rising == null or dual_falling == null:
+					stage = 19
+				else:
+					var dual_left_ascending := (
+						dual_rising.position.y > dual_rising_previous_y
+					)
+					if dual_left_ascending and dual_rising.position.y <= 27.7:
+						stage = 19
+
+			19:
+				_set_horizontal_input(1.0)
+				if (
+					not dual_jump_requested
+					and player.is_on_floor()
+					and not jump_is_held
+					and player.global_position.x >= 113.0
+				):
+					jump_is_held = _request_jump(false)
+					# Stay low under the first-third flyer, then spend the full
+					# aerial jump once that obstacle is behind the player.
+					jump_hold_remaining = 10
+					dual_jump_requested = true
+					stage = 20
+
+			20:
+				_set_horizontal_input(1.0)
+				if (
+					not dual_second_jump_requested
+					and not player.is_on_floor()
+					and not jump_is_held
+					and player.velocity.y < 0.0
+					and player.global_position.y <= 29.0
+				):
+					jump_is_held = _request_jump(false)
+					jump_hold_remaining = JUMP_HOLD_FRAMES
+					dual_second_jump_requested = true
+					dual_second_jump_frame = frame
+				if (
+					not dual_dash_requested
+					and dual_second_jump_requested
+					and frame > dual_second_jump_frame + 3
+					and player.velocity.y <= 0.0
+				):
+					Input.action_press("dash")
+					dash_pressed = true
+					dual_dash_requested = true
+				if (
+					player.is_on_floor()
+					and player.global_position.x >= 128.4
+					and player.global_position.y >= 28.7
+				):
+					stage = 21
 					_set_horizontal_input(0.0)
 					break
 
 		if machine != null:
 			machine_previous_y = machine.position.y
+		if dual_rising != null:
+			dual_rising_previous_y = dual_rising.position.y
 		await physics_frame
 
 	_release_inputs()
 	if death_count[0] > 0 or player.is_dead():
+		var dual_rising_y := NAN if dual_rising == null else dual_rising.position.y
+		var dual_falling_y := NAN if dual_falling == null else dual_falling.position.y
 		_fail(
-			"Level 2 traversal died in stage %d near (%.2f, %.2f), wall %.0f blocked %.0f, after %d Double Jumps."
+			(
+				"Level 2 traversal died in stage %d near (%.2f, %.2f), wall %.0f "
+				+ "blocked %.0f, dual flyers %.2f/%.2f, after %d Double Jumps."
+			)
 			% [
 				stage,
 				player.global_position.x,
 				player.global_position.y,
 				player.wall_contact_direction(),
 				player.blocked_wall_jump_direction(),
+				dual_rising_y,
+				dual_falling_y,
 				double_jump_count[0],
 			]
 		)
 		return
-	if stage != 17:
+	if stage != 21:
 		_fail(
 			"Level 2 traversal stopped in stage %d near (%.2f, %.2f), peaked at %.2f, after %d Wall Jumps."
 			% [stage, player.global_position.x, player.global_position.y, maximum_height, wall_jump_count[0]]
@@ -422,8 +511,8 @@ func _run() -> void:
 	if wall_jump_count[0] < 2:
 		_fail("Level 2 traversal did not exercise repeated wall jumps.")
 		return
-	if dash_count[0] != 2:
-		_fail("Level 2 traversal must Dash across both crossings.")
+	if dash_count[0] != 3:
+		_fail("Level 2 traversal must Dash across all three crossings.")
 		return
 	print(
 		"Level 2 opening traversed with %d wall jumps and %d Dashes."

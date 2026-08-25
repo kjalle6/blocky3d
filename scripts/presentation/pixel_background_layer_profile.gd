@@ -31,6 +31,11 @@ enum HorizontalRepeat {
 @export var depth := -5.0
 @export var offset_pixels := Vector2.ZERO
 @export var tint := Color.WHITE
+@export_category("Vertical world layout")
+## Extra texture-height rows below and above a world-locked layer. This keeps
+## tall spaces covered without making their art follow the camera vertically.
+@export_range(0, 16, 1) var world_repeat_below := 0
+@export_range(0, 16, 1) var world_repeat_above := 0
 @export_category("Horizontal layout")
 @export var horizontal_repeat := HorizontalRepeat.MIRROR
 ## Coverage tracks tile without gaps. Decorative tracks, such as clouds, may
@@ -105,6 +110,10 @@ func repeat_step_pixels() -> float:
 	return float(texture.get_width())
 
 
+func world_row_count() -> int:
+	return world_repeat_below + 1 + world_repeat_above
+
+
 func validation_errors() -> PackedStringArray:
 	var errors := PackedStringArray()
 	if texture == null:
@@ -115,6 +124,11 @@ func validation_errors() -> PackedStringArray:
 		vertical_parallax < 0.0 or vertical_parallax > 1.0
 	):
 		errors.append("Vertical parallax must stay between zero and one.")
+	if (
+		(world_repeat_below > 0 or world_repeat_above > 0)
+		and vertical_policy != VerticalPolicy.WORLD_LOCKED
+	):
+		errors.append("Vertical world repeats require a world-locked layer.")
 	if fade_in_enabled and fade_in_end_offset_x <= fade_in_start_offset_x:
 		errors.append("Fade-in end must be after fade-in start.")
 	if fade_out_enabled and fade_out_end_offset_x <= fade_out_start_offset_x:

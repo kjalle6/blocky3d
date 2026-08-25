@@ -107,7 +107,11 @@ func _run() -> void:
 	var threshold := room.get_node("CaveThreshold") as LevelTransition3D
 	assert(threshold != null)
 	assert(threshold.target_level != null)
-	assert(threshold.target_level.level_id == &"dev_level_2_interior_wip")
+	assert(threshold.target_level.level_id == &"dev_level_2_wip_interior_snapshot")
+	assert(
+		threshold.target_level.scene.resource_path
+		== "res://scenes/levels/overgrown_coastal_ascent_interior_snapshot.tscn"
+	)
 
 	print("Level 2 approach passed: native export on full-depth level ground.")
 	quit(0)

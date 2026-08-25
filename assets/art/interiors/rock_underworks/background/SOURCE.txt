@@ -1,0 +1,15 @@
+Pixel Cave Game Parallax Backgrounds
+
+Source archive:
+D:\GodotProjects\blocky3dassets\backgrounds\pixel_caves_parallax\craftpix-net-576316-pixel-cave-game-parallax-backgrounds.zip
+
+Promoted files come from `background 4` and retain their original pixels:
+- 1.png -> water_cave_base.png
+- 2.png -> water_cave_distant.png
+- 3.png -> water_cave_lake.png
+
+Supplied source page: https://craftpix.net/freebies/
+Supplied license reference: https://craftpix.net/file-licenses/
+
+The pack's fourth foreground layer is intentionally omitted. The project's
+connected rock-underworks terrain remains the foreground cave shell.

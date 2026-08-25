@@ -117,8 +117,13 @@ func _update_layer(
 ) -> void:
 	var layer := runtime.profile
 	var texture_width := float(layer.texture.get_width()) * profile.pixel_size
+	var texture_height := float(layer.texture.get_height()) * profile.pixel_size
 	var repeat_step := layer.repeat_step_pixels() * profile.pixel_size
-	var required_copies := maxi(3, ceili(visible_width / repeat_step) + 2)
+	var required_horizontal_copies := maxi(
+		3,
+		ceili(visible_width / repeat_step) + 2
+	)
+	var required_copies := required_horizontal_copies * layer.world_row_count()
 	_ensure_copy_count(runtime, required_copies, layer_index)
 
 	var screen_center := _screen_center_on_depth(layer.depth)
@@ -143,11 +148,16 @@ func _update_layer(
 		if copy_index >= required_copies:
 			sprite.visible = false
 			continue
-		var panel_index := first_panel_index + copy_index
+		var row_slot := floori(
+			float(copy_index) / float(required_horizontal_copies)
+		)
+		var horizontal_slot := copy_index % required_horizontal_copies
+		var world_row := row_slot - layer.world_repeat_below
+		var panel_index := first_panel_index + horizontal_slot
 		sprite.visible = opacity > 0.001
 		sprite.global_position = Vector3(
 			content_center_x + panel_index * repeat_step,
-			content_center_y,
+			content_center_y + world_row * texture_height,
 			layer.depth
 		)
 		sprite.flip_h = (

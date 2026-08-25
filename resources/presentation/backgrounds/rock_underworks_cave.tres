@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="PixelBackgroundProfile" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/presentation/pixel_background_profile.gd" id="1_profile"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_background_layer_profile.gd" id="2_layer"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/background/water_cave_base.png" id="3_base"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/background/water_cave_distant.png" id="4_distant"]
+
+[sub_resource type="Resource" id="Layer_base"]
+script = ExtResource("2_layer")
+texture = ExtResource("3_base")
+horizontal_policy = 0
+vertical_policy = 2
+world_repeat_above = 3
+depth = -5.8
+
+[sub_resource type="Resource" id="Layer_distant"]
+script = ExtResource("2_layer")
+texture = ExtResource("4_distant")
+horizontal_policy = 0
+vertical_policy = 2
+world_repeat_above = 3
+depth = -5.6
+
+[resource]
+script = ExtResource("1_profile")
+profile_id = &"rock_underworks_cave"
+layers = Array[ExtResource("2_layer")]([SubResource("Layer_base"), SubResource("Layer_distant")])
