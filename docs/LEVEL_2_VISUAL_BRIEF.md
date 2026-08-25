@@ -40,32 +40,44 @@ are explicitly accepted into a later snapshot.
 
 ### Global background zoning
 
-The editable Interior WIP currently proves that every cave layer can remain
-fixed in world Y: jumping and climbing move the camera past the art instead of
-dragging the cave with the player. That behavior is accepted and must not be
-changed. The vertically repeated distant-rock composition is only a coverage
-proof, however; using the recognizable full-screen art through the entire
-climb reads as scrolling wallpaper and is not the target presentation.
+Zoning is authored as world volumes rather than keyed to progress. A background
+layer carries a `zone_tag`; an empty tag means unzoned and always drawn. The
+pale base is therefore continuous fallback coverage, while the distant
+composition is tagged `upper` and only the upper-floor region reveals it.
+Enclosed lower tunnels and shafts visibly keep the restrained base treatment.
 
-The target composition is spatially zoned. Enclosed lower tunnels, shafts, and
-any later route that descends from the upper floor use the clean pale blue-grey
-base without the full distant composition. The complete layered cave parallax
-belongs to the upper floor where the water chambers open up. This rule follows
-authored world regions rather than player progress: descending returns to the
-base treatment, and climbing back up restores the full upper-floor treatment.
-The base may remain underneath as continuous fallback coverage, but it is the
-visible treatment only in the lower and descending regions; the detailed upper
-composition owns the visible background upstairs.
+Because influence is a pure function of camera position, descending returns to
+the base and climbing restores the upper treatment with no state to desync.
+Checkpoint respawn, death, restart, and direct loads reproduce the same
+background. Multiple regions revealing the same tag form a union without
+summing into an over-bright layer.
 
-The transition at the top of the climb must read as the cave naturally opening
-into the larger water cavern. Foreground cave walls and the turn onto the upper
-floor mask an overlapping handoff between treatments; there must be no hard
-screen-wide seam, visible pop, or camera-height-only switch.
+The handoff is deliberately back-loaded. `blend_exponent` keeps the upper
+composition faint through most of the climb and brings it in near the region
+face, so the change arrives at the top rather than halfway up the shaft, and
+the shaft walls hide the part of the ramp that moves fastest.
+
+Both global layers are screen-locked vertically, so ordinary jumps and sustained
+camera climbs do not slide their art up or down on screen. The camera itself
+clamps at the upper floor, so ordinary jumps there also leave the foreground
+cave shell still instead of changing which part of the backdrop it masks. The uniform base is
+also screen-locked horizontally. Only the distant upper composition uses normal
+horizontal parallax, so it drifts as the player walks without moving vertically.
+The localized water vistas keep the authored X of their specific openings but
+are screen-locked vertically. During the sustained shaft climb they remain fixed
+to the frame; after reaching the upper floor, the camera clamp keeps both the
+vista and the surrounding cave shell still through ordinary jumps.
+
+The earlier world-locked, vertically repeated composition remains useful proof
+that tall-space coverage was possible, but not an accepted presentation. It
+made the artwork scroll past the camera and repeated a recognizable band during
+the climb. Do not restore that workaround.
 
 ### Localized machine-gap water vistas
 
-Each localized water vista stays authored to its shaft on both axes; it is a
-fixed view through an opening, not part of the global background handoff.
+Each localized water vista stays authored to its shaft on X while preserving a
+fixed screen-space Y; it is a view through one opening, not a global scrolling
+layer or part of the background handoff.
 Uniform source rows extend its ceiling to the distant cave roof and its deep
 water below the kill plane, so fixed art never exposes a hard edge. The lake
 crop sits 2.0 m lower than its source alignment. The pack's foreground cave
@@ -94,7 +106,7 @@ shared system is useful.
 | Dash crossing | One legible rightward gap whose spikes explain why Dash is required | An isolated spike box, one-tile pillar, or disconnected destination |
 | Machine shaft | A break in the corridor wide enough that Dash is required, open far above and below, with one hovering machine in it and two readable ways past | A gap a Double Jump can clear, a ceiling over the machine, a floor under it, or geometry that only pretends to offer a choice |
 | Background zoning | A restrained solid cave base below; the full layered cave composition revealed on the upper water floor; descending naturally returns to the base | Repeated vertical wallpaper, a hard regional pop, a camera-height-only switch, or lighting used to hide a broken transition |
-| Machine-gap vista | A fixed lake view visible only through its authored opening, with the level shell remaining in front | A collision surface, global scrolling layer, or exposed top/bottom art edge |
+| Machine-gap vista | A lake view localized to its authored X opening and vertically static on screen, with the level shell remaining in front | A collision surface, global scrolling layer, jump-driven vertical drift, or exposed top/bottom art edge |
 
 ## Current approval boundary
 

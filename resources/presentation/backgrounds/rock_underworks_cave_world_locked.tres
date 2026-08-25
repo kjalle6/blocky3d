@@ -9,16 +9,20 @@
 script = ExtResource("2_layer")
 texture = ExtResource("3_base")
 horizontal_policy = 0
+vertical_policy = 2
+world_repeat_above = 3
 depth = -5.8
 
 [sub_resource type="Resource" id="Layer_distant"]
 script = ExtResource("2_layer")
 texture = ExtResource("4_distant")
-horizontal_parallax = 0.22
+horizontal_policy = 0
+vertical_policy = 2
+offset_pixels = Vector2(0, 670)
 zone_tag = &"upper"
 depth = -5.6
 
 [resource]
 script = ExtResource("1_profile")
-profile_id = &"rock_underworks_cave"
+profile_id = &"rock_underworks_cave_world_locked"
 layers = Array[ExtResource("2_layer")]([SubResource("Layer_base"), SubResource("Layer_distant")])

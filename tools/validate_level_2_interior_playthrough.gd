@@ -300,7 +300,13 @@ func _run() -> void:
 
 			11:
 				_set_horizontal_input(1.0)
-				if player.is_on_floor() and not jump_is_held:
+				# A player uses the short staging platform before committing to
+				# the extended spike row; do not launch from its left edge.
+				if (
+					player.is_on_floor()
+					and not jump_is_held
+					and player.global_position.x >= 63.0
+				):
 					jump_is_held = _request_jump(false)
 					jump_hold_remaining = JUMP_HOLD_FRAMES
 					second_jump_requested = false
@@ -320,7 +326,10 @@ func _run() -> void:
 				if (
 					not dash_crossing_requested
 					and second_jump_requested
-					and player.global_position.x >= 66.5
+					# The authored row now extends farther to the right. Preserve
+					# the human route and spend Dash later in the second jump so
+					# the automation clears the same visible spike tail.
+					and player.global_position.x >= 68.65
 				):
 					Input.action_press("dash")
 					dash_pressed = true

@@ -31,6 +31,17 @@ enum HorizontalRepeat {
 @export var depth := -5.0
 @export var offset_pixels := Vector2.ZERO
 @export var tint := Color.WHITE
+@export_category("Spatial zoning")
+## Which authored background region reveals this layer. An empty tag means the
+## layer is unzoned and always drawn - the restrained base coverage that every
+## region sits on top of.
+@export var zone_tag := &""
+
+
+func is_zoned() -> bool:
+	return not zone_tag.is_empty()
+
+
 @export_category("Vertical world layout")
 ## Extra texture-height rows below and above a world-locked layer. This keeps
 ## tall spaces covered without making their art follow the camera vertically.

@@ -161,6 +161,17 @@ The rig evaluates rendered camera Y rather than raw player Y, preventing a
 single jump from flashing a new background band into view. Existing profiles
 without vertical windows retain identical behavior.
 
+Authored background regions are a separate opt-in visibility gate. A layer with
+no zone tag remains continuous coverage; a tagged layer takes the strongest
+weight from any region revealing that tag, preserving each region's blend ramp
+without adding overlapping regions into an over-bright result. The weight is a
+pure function of rendered camera position, so traversal in either direction,
+restart, checkpoint respawn, and direct loads reproduce the same composition.
+Level 2 uses this to keep a flat cave base visible below and reveal its detailed
+upper composition near the water floor. The localized water vistas retain their
+authored world X while matching the camera on Y, so jump-follow never drags the
+water composition vertically across the screen.
+
 Viewport-covering background art uses the foreground pixel scale: 576x324
 pixels at 0.04 metres per pixel produces a 23.04x12.96-metre panel matching the
 16:9 framing. Coverage panels repeat only across X. Decorative tracks may use
@@ -179,9 +190,10 @@ choice and must not be simulated with near-zero parallax.
 
 Localized interior openings use `PixelVistaWindow3D` for layers that should not
 fill every room. Its explicit root policy prevents camera behavior from being
-smuggled into an arbitrary parallax value. Level 2 world-locks each entire vista
-so its ceiling, horizon, and rocks remain attached to the cave during jumps.
-Foreground terrain masks each vista's authored X edges. Transparent source
+smuggled into an arbitrary parallax value. Level 2 keeps each entire vista
+world-authored on X but camera-locked on Y, so its ceiling, horizon, and rocks
+remain vertically static on screen while the player jumps. Foreground terrain
+masks each vista's authored X edges. Transparent source
 bands are safe crop boundaries: Level 2 keeps the ceiling crop at its normal
 world framing and lowers the lake crop by 2.0 m. Uniform one-pixel source rows
 extend the fixed ceiling to the roof and the deep water below the kill plane.
@@ -197,8 +209,9 @@ coverage for tall spaces without coupling art to camera Y or introducing fake
 depth layers.
 
 The vertical-region extension remains opt-in rather than global, but it is no
-longer dormant: the Level 2 WIP interior depends on it for the shaft's 30.72 m
-maximum vertical camera offset. That WIP entry is not yet a cataloged production
+longer dormant: the Level 2 WIP interior depends on it for the shaft's 28.0 m
+upper-floor camera offset. The region clamps there so an ordinary jump cannot
+move the whole upper cave shell. That WIP entry is not yet a cataloged production
 section. The separate height-window extension remains dormant until an approved
 composition needs fixed-scale depth, parallax, deliberate viewport cropping,
 and camera-height fades; runtime scaling of scenery remains excluded because it
@@ -608,9 +621,9 @@ proves the matched doorway handoff. The first authored interior slice uses those
 contracts for a combat-and-spike recap, Double Jump rise, Wall Jump pickup and
 shaft, forced left turn to the Dash pickup, and a 13.28 m Dash return crossing
 validated beyond the Double Jump envelope. Structural
-checks and a real-input traversal prove technical reachability. Its 30.72 m
+checks and a real-input traversal prove technical reachability. Its sustained
 shaft is already an active consumer of the reusable, opt-in vertical camera
-region system. Green Zone enemy 5 now has a dedicated indestructible
+region system, capped at the 28.0 m upper-floor framing. Green Zone enemy 5 now has a dedicated indestructible
 flying-hazard archetype outside the `melee_target` and stomp contracts, with
 explicit lethal body/electric contact and deterministic reset behavior. Its
 first accepted use is one generous chamber offering a jump-and-air-Dash route

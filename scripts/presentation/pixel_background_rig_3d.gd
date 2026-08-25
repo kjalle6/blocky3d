@@ -27,6 +27,7 @@ var _reference_ready := false
 var _generated_root: Node3D
 var _transition_anchor: Node3D
 var _height_anchor: Node3D
+var _background_regions: Array[PixelBackgroundRegion3D] = []
 
 
 func _ready() -> void:
@@ -40,6 +41,7 @@ func _ready() -> void:
 	)
 	_resolve_transition_anchor()
 	_resolve_height_anchor()
+	_collect_background_regions()
 	_build_layers()
 
 
@@ -142,7 +144,7 @@ func _update_layer(
 		_transition_anchor_global_x(),
 		_camera.global_position.y,
 		_height_anchor_global_y()
-	)
+	) * zone_opacity_at(layer, _camera.global_position)
 	for copy_index in runtime.copies.size():
 		var sprite := runtime.copies[copy_index]
 		if copy_index >= required_copies:
@@ -248,6 +250,43 @@ func _resolve_transition_anchor() -> void:
 
 func _transition_anchor_global_x() -> float:
 	return _transition_anchor.global_position.x if _transition_anchor != null else 0.0
+
+
+## Visibility contributed by authored regions that reveal this layer.
+##
+## Multiple regions with the same tag form a union: the strongest influence
+## wins instead of summing into an over-bright layer. A single region therefore
+## retains its authored blend ramp rather than normalising that ramp back to 1.
+func zone_opacity_at(
+	layer: PixelBackgroundLayerProfile,
+	world_position: Vector3
+) -> float:
+	if not layer.is_zoned():
+		return 1.0
+	if _background_regions.is_empty():
+		return 0.0
+	var revealing := 0.0
+	for region in _background_regions:
+		if region.shows_zone(layer.zone_tag):
+			revealing = maxf(revealing, region.weight_at(world_position))
+	return clampf(revealing, 0.0, 1.0)
+
+
+func _collect_background_regions() -> void:
+	_background_regions.clear()
+	var owner_scene := owner if owner != null else get_parent()
+	if owner_scene == null:
+		return
+	for node in owner_scene.find_children("*", "Node3D", true, false):
+		var region := node as PixelBackgroundRegion3D
+		if region == null:
+			continue
+		assert(
+			region.validation_errors().is_empty(),
+			"Background region %s is invalid:\n%s"
+			% [region.name, "\n".join(region.validation_errors())]
+		)
+		_background_regions.append(region)
 
 
 func _resolve_height_anchor() -> void:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_interior_terrain_3d.gd" id="2_terrain"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" path="res://scenes/enemies/pixel_patrol_enemy.tscn" id="7_enemy"]
 [ext_resource type="PackedScene" path="res://scenes/level/level_checkpoint.tscn" id="8_checkpoint"]
 [ext_resource type="Script" path="res://scripts/camera/vertical_camera_region_3d.gd" id="9_camera_region"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_background_region_3d.gd" id="13_background_region"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/green_zone_flyer.tscn" id="10_flyer"]
 [ext_resource type="PackedScene" path="res://scenes/presentation/water_cave_vista_window.tscn" id="11_water_vista"]
 [ext_resource type="Resource" path="res://resources/presentation/backgrounds/rock_underworks_cave.tres" id="12_cave_background"]
@@ -128,7 +129,7 @@ script = ExtResource("9_camera_region")
 size = Vector2(102.4, 72)
 vertical_anchor_y = 0.7
 minimum_vertical_offset = 0.0
-maximum_vertical_offset = 30.72
+maximum_vertical_offset = 28.0
 priority = 10
 
 [editable path="Player"]
@@ -158,6 +159,18 @@ spark_active = 0.6
 
 [node name="MachineShaftWaterVista" parent="." index="19" instance=ExtResource("11_water_vista")]
 position = Vector3(94.08, 30.88, 0)
+vertical_policy = 1
+vertical_offset = 0.02
 
 [node name="DualMachineShaftWaterVista" parent="." index="20" instance=ExtResource("11_water_vista")]
 position = Vector3(120.96, 30.88, 0)
+vertical_policy = 1
+vertical_offset = 0.02
+
+[node name="UpperCaveBackgroundRegion" type="Node3D" parent="." index="21"]
+position = Vector3(94.08, 39.0, 0)
+script = ExtResource("13_background_region")
+size = Vector2(110.0, 22.0)
+visible_zones = Array[StringName]([&"upper"])
+blend_margin = 3.0
+blend_exponent = 2.0

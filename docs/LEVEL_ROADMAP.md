@@ -321,9 +321,11 @@ Level 1, leaving them for Level 2 to own.
 Do not extend gameplay beyond the paired-machine landing until the existing
 route has a coherent background treatment. Work in this order:
 
-1. Preserve the accepted world-Y lock and the frozen transition snapshot. The
-   camera must never drag cave art vertically during ordinary jumps.
-2. Implement the global lower/upper background zoning, localized fixed water
+1. Preserve the accepted axis split and the frozen transition snapshot. Global
+   cave art stays screen-static vertically and only the detailed layer uses
+   horizontal parallax; localized water vistas keep their authored X opening
+   while remaining vertically static on screen.
+2. Implement the global lower/upper background zoning, localized water
    vistas, and reversible terrain-masked handoff specified in the Level 2
    visual brief.
 3. Review bottom, middle, threshold, and upper-floor captures, then traverse the

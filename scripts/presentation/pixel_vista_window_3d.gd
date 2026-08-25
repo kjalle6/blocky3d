@@ -38,10 +38,10 @@ func _snap_to_camera() -> void:
 	var camera := get_viewport().get_camera_3d()
 	if camera == null:
 		return
-	global_position.y = snappedf(
-		camera.global_position.y + vertical_offset,
-		PixelPlatform3D.TILE_PIXEL_SIZE
-	)
+	# A camera-locked composition must preserve an exact screen-space offset.
+	# Re-snapping it to the foreground art grid would put the camera and vista
+	# on different lattices, producing a small vertical step during a jump.
+	global_position.y = camera.global_position.y + vertical_offset
 
 
 func authored_world_y() -> float:

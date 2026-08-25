@@ -62,16 +62,78 @@ func _run() -> void:
 	assert(background.profile.profile_id == &"rock_underworks_cave")
 	assert(background.profile.layers.size() == 2)
 	assert(background.profile.validation_errors().is_empty())
+	# Global cave art stays static on screen vertically, so a jump changes
+	# nothing. The flat base is screen-locked on both axes; only the featured
+	# distant composition parallax-scrolls as the player travels horizontally.
+	#
+	# Neither layer repeats vertically. Repeating featured art puts an identical
+	# band overhead during a climb, which reads exactly like art that follows.
 	for index in background.profile.layers.size():
 		var layer := background.profile.layers[index]
 		assert(
 			layer.vertical_policy
-			== PixelBackgroundLayerProfile.VerticalPolicy.WORLD_LOCKED
+			== PixelBackgroundLayerProfile.VerticalPolicy.SCREEN_LOCKED,
+			(
+				"Cave layer %d is not vertically static; jumping would move "
+				+ "the background."
+			) % index
 		)
-		assert(layer.horizontal_policy == PixelBackgroundLayerProfile.HorizontalPolicy.SCREEN_LOCKED)
-		assert(layer.world_repeat_below == 0)
-		assert(layer.world_repeat_above == 3)
-		assert(layer.world_row_count() == 4)
+		assert(layer.world_repeat_below == 0 and layer.world_repeat_above == 0)
+
+	# The base is unzoned continuous coverage; the distant composition is the
+	# zoned layer that authored regions reveal.
+	var base := background.profile.layers[0]
+	assert(not base.is_zoned())
+	assert(
+		base.horizontal_policy
+		== PixelBackgroundLayerProfile.HorizontalPolicy.SCREEN_LOCKED
+	)
+	var distant := background.profile.layers[1]
+	assert(
+		distant.zone_tag == &"upper",
+		"The distant cave composition must stay zoned to the upper floor."
+	)
+	assert(
+		distant.horizontal_policy
+		== PixelBackgroundLayerProfile.HorizontalPolicy.PARALLAX
+		and distant.horizontal_parallax > 0.0,
+		"The distant composition must drift as the player walks."
+	)
+	var upper_region := level.get_node("UpperCaveBackgroundRegion") as PixelBackgroundRegion3D
+	assert(upper_region != null, "The upper floor needs an authored background region.")
+	assert(upper_region.validation_errors().is_empty())
+	assert(
+		upper_region.shows_zone(&"upper"),
+		"The upper region must reveal the zone the distant layer is tagged with."
+	)
+	assert(
+		upper_region.blend_margin >= 2.5 and upper_region.blend_exponent >= 1.5,
+		(
+			"The handoff must arrive rather than accumulate: a ramp that is "
+			+ "short and back-loaded keeps the lower cave in its own treatment "
+			+ "until the climb actually reaches the top."
+		)
+	)
+	assert(upper_region.position.is_equal_approx(Vector3(94.08, 39.0, 0.0)))
+	assert(upper_region.size.is_equal_approx(Vector2(110.0, 22.0)))
+	var lower_face_y := upper_region.global_position.y - upper_region.size.y * 0.5
+	var sample_x := upper_region.global_position.x
+	assert(is_zero_approx(background.zone_opacity_at(
+		distant,
+		Vector3(sample_x, lower_face_y - upper_region.blend_margin - 0.1, 0.0)
+	)))
+	var blend_opacity := background.zone_opacity_at(
+		distant,
+		Vector3(sample_x, lower_face_y - upper_region.blend_margin * 0.5, 0.0)
+	)
+	assert(
+		blend_opacity > 0.0 and blend_opacity < 1.0,
+		"The upper cave region must produce a real partial-opacity blend."
+	)
+	assert(is_equal_approx(background.zone_opacity_at(
+		distant,
+		Vector3(sample_x, lower_face_y + 0.1, 0.0)
+	), 1.0))
 
 	# One grid owns the lower tunnel, continuous shaft, upper-left Dash alcove,
 	# and upper-right destination corridor. The ascent itself remains three
@@ -321,7 +383,13 @@ func _run() -> void:
 	assert(camera_region.contains_world_position(Vector3(58.88, 18.0, 0)))
 	assert(camera_region.contains_world_position(Vector3(80.0, 28.86, 0)))
 	assert(camera_region.contains_world_position(Vector3(120.96, 28.86, 0)))
-	assert(is_equal_approx(camera_region.maximum_vertical_offset, 30.72))
+	assert(
+		is_equal_approx(camera_region.maximum_vertical_offset, 28.0),
+		(
+			"The shaft camera must clamp to the upper floor. Extra travel above "
+			+ "28.0 m makes the entire cave shell follow an ordinary jump."
+		)
+	)
 
 	# Contact probes make sure the authored art and collision agree at each beat.
 	assert(_blocked(level.player, Vector3(4.48, 0.7, 0), Vector3.DOWN))
@@ -343,7 +411,7 @@ func _run() -> void:
 		not _blocked(level.player, Vector3(120.96, 28.86, 0), Vector3.DOWN),
 		"The dual-machine shaft must be a real hole."
 	)
-	_validate_vertical_background_lock(level, background, camera_region)
+	await _validate_vertical_background_behavior(level, background, camera_region)
 
 	print(
 		"Level 2 interior opening passed: recap, shaft, turnback, %.2f m Dash crossing."
@@ -367,7 +435,14 @@ func _validate_water_vista(
 	assert(vista != null, "%s is missing its localized water vista." % node_name)
 	assert(is_equal_approx(vista.position.x, expected_x))
 	assert(is_equal_approx(vista.authored_world_y(), expected_y))
-	assert(vista.vertical_policy == PixelVistaWindow3D.VerticalPolicy.WORLD_LOCKED)
+	assert(
+		vista.vertical_policy == PixelVistaWindow3D.VerticalPolicy.CAMERA_LOCKED,
+		(
+			"The lake keeps its authored horizontal opening but must stay "
+			+ "vertically fixed on screen while the jump camera follows."
+		)
+	)
+	assert(is_equal_approx(vista.vertical_offset, 0.02))
 	assert(vista.find_children("*", "CollisionObject3D", true, false).is_empty())
 	var expected_layers := {
 		"CeilingFill": {
@@ -409,13 +484,19 @@ func _validate_water_vista(
 		assert(layer.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF)
 
 
-func _validate_vertical_background_lock(
+func _validate_vertical_background_behavior(
 	level: LevelSession3D,
 	background: PixelBackgroundRig3D,
 	camera_region: VerticalCameraRegion3D
 ) -> void:
 	var camera := level.camera as PixelSideCamera3D
 	assert(camera != null)
+	# Every backdrop in the upper chamber must ride the camera exactly on Y.
+	# Horizontal localization remains independent: the global layers cover the
+	# viewport while each water vista stays attached to its authored shaft X.
+	# Let the camera and global background settle before recording a baseline.
+	for frame in 2:
+		await process_frame
 	var original_player_position := level.player.global_position
 	var baseline_camera_y := camera.global_position.y
 	var baseline_background_y: Array[PackedFloat32Array] = []
@@ -425,7 +506,10 @@ func _validate_vertical_background_lock(
 			copy_y.append(sprite.global_position.y)
 		baseline_background_y.append(copy_y)
 		var row_centers := _unique_sorted_y(copy_y)
-		assert(row_centers.size() == 4)
+		assert(
+			row_centers.size()
+			== background.profile.layers[layer_index].world_row_count()
+		)
 		var row_height := (
 			background.profile.layers[layer_index].texture.get_height()
 			* background.profile.pixel_size
@@ -459,34 +543,50 @@ func _validate_vertical_background_lock(
 	)
 	camera.snap_to_target()
 	background.snap_to_camera()
+	# Let the camera and global background settle after this deliberate 28 m
+	# teleport before comparing screen-relative and world-relative behavior.
+	for frame in 6:
+		await process_frame
 	assert(camera.global_position.y > baseline_camera_y + 25.0)
 
+	# Vertically static means the art must ride the camera exactly: same screen
+	# position before and after a jump, which is the whole point.
+	var camera_rise := camera.global_position.y - baseline_camera_y
 	for layer_index in background.runtime_layer_count():
 		var copies := background.runtime_copies(layer_index)
 		assert(copies.size() == baseline_background_y[layer_index].size())
 		for copy_index in copies.size():
-			assert(is_equal_approx(
-				copies[copy_index].global_position.y,
-				baseline_background_y[layer_index][copy_index]
-			))
-		var rows := _unique_sorted_y(baseline_background_y[layer_index])
-		var half_texture_height := (
-			background.profile.layers[layer_index].texture.get_height()
-			* background.profile.pixel_size
-			* 0.5
-		)
-		assert(rows[0] - half_texture_height <= baseline_camera_y - camera.size * 0.5)
-		assert(rows[-1] + half_texture_height >= camera.global_position.y + camera.size * 0.5)
+			assert(
+				is_equal_approx(
+					copies[copy_index].global_position.y,
+					baseline_background_y[layer_index][copy_index] + camera_rise
+				),
+				(
+					"Cave layer %d moved relative to the screen during a %.2f m "
+					+ "camera rise; jumping must not shift the background."
+				) % [layer_index, camera_rise]
+			)
 
+	# The localized lake vistas keep their authored X but ride the camera on Y,
+	# preventing the whole water composition from dropping on screen during a
+	# jump. Their children must preserve exactly the same relative transform.
 	for vista_index in vistas.size():
 		var vista := vistas[vista_index]
-		assert(is_equal_approx(vista.global_position.y, baseline_vista_y[vista_index]))
+		assert(
+			is_equal_approx(
+				vista.global_position.y,
+				baseline_vista_y[vista_index] + camera_rise
+			),
+			"Vista %d moved relative to the screen during the camera rise."
+			% vista_index
+		)
 		var child_index := 0
 		for child in vista.get_children():
 			if child is Node3D:
 				assert(is_equal_approx(
 					(child as Node3D).global_position.y,
 					baseline_vista_child_y[vista_index][child_index]
+						+ camera_rise
 				))
 				child_index += 1
 
