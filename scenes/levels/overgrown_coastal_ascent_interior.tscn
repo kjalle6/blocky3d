@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3]
+[gd_scene load_steps=17 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_interior_terrain_3d.gd" id="2_terrain"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" path="res://scenes/level/level_checkpoint.tscn" id="8_checkpoint"]
 [ext_resource type="Script" path="res://scripts/camera/vertical_camera_region_3d.gd" id="9_camera_region"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_background_region_3d.gd" id="13_background_region"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_region_grade_3d.gd" id="14_region_grade"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/green_zone_flyer.tscn" id="10_flyer"]
 [ext_resource type="PackedScene" path="res://scenes/presentation/water_cave_vista_window.tscn" id="11_water_vista"]
 [ext_resource type="Resource" path="res://resources/presentation/backgrounds/rock_underworks_cave.tres" id="12_cave_background"]
@@ -174,3 +175,12 @@ size = Vector2(110.0, 22.0)
 visible_zones = Array[StringName]([&"upper"])
 blend_margin = 3.0
 blend_exponent = 2.0
+
+[node name="CaveRegionGrade" type="Node3D" parent="." index="22"]
+script = ExtResource("14_region_grade")
+world_environment_path = NodePath("../WorldEnvironment")
+background_path = NodePath("../Background")
+zone_tag = &"upper"
+dark_brightness = 0.74
+dark_saturation = 0.88
+dark_contrast = 1.04

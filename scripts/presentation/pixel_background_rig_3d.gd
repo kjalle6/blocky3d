@@ -263,11 +263,18 @@ func zone_opacity_at(
 ) -> float:
 	if not layer.is_zoned():
 		return 1.0
+	return zone_weight_at(layer.zone_tag, world_position)
+
+
+## How strongly a named zone is revealed at a world position. Anything that
+## should change together with the background - a colour grade, say - reads this
+## rather than recomputing the ramp, so the two boundaries cannot drift apart.
+func zone_weight_at(zone_tag: StringName, world_position: Vector3) -> float:
 	if _background_regions.is_empty():
 		return 0.0
 	var revealing := 0.0
 	for region in _background_regions:
-		if region.shows_zone(layer.zone_tag):
+		if region.shows_zone(zone_tag):
 			revealing = maxf(revealing, region.weight_at(world_position))
 	return clampf(revealing, 0.0, 1.0)
 
