@@ -8,21 +8,18 @@ Godot launch per validator. A full pass is therefore expensive and, without a
 scope, dominated by the six frozen prototype levels: their twelve validators
 are roughly 60% of the wall time and cannot be affected by most changes.
 
-Scopes:
-  Current   - everything except the dedicated prototype level validators.
-              The default, and the right choice for ordinary work.
-  Prototype - only the level1-6 runtime and playthrough validators, which
-              guard the frozen regression fixtures.
-  All       - both. Use before a commit, and after any change to shared
-              infrastructure such as the runner, GameRoot, or the level base.
+Runs every validator. The scope switch is kept because a slower set will
+almost certainly reappear - the six prototype levels used to be that set, and
+their twelve validators were roughly 60% of a full run before they were
+deleted.
 
 Validators run through tools/run_godot_tool.ps1, which holds the exclusive
 automation lock, so they run one at a time by design.
 #>
 [CmdletBinding()]
 param(
-    [ValidateSet('Current', 'Prototype', 'All')]
-    [string]$Scope = 'Current',
+    [ValidateSet('All')]
+    [string]$Scope = 'All',
 
     # Opt-in; see the note on -Headless in tools/run_godot_tool.ps1.
     [switch]$Headless
@@ -30,15 +27,9 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $runner = Join-Path $PSScriptRoot 'run_godot_tool.ps1'
-$prototypePattern = '^validate_level[1-6]_(runtime|playthrough)$'
-
 $all = Get-ChildItem -LiteralPath $PSScriptRoot -Filter 'validate_*.gd' |
     Sort-Object Name
-$selected = switch ($Scope) {
-    'Prototype' { $all | Where-Object { $_.BaseName -match $prototypePattern } }
-    'Current'   { $all | Where-Object { $_.BaseName -notmatch $prototypePattern } }
-    default     { $all }
-}
+$selected = $all
 
 if (@($selected).Count -eq 0) {
     throw "No validators matched scope '$Scope'."

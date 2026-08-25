@@ -401,15 +401,15 @@ world-aware flow.
 
 `LevelDefinition.assumed_owned_abilities` records abilities the campaign
 expects the player to own on entry. A fresh level-defined development entry
-state seeds exactly that set without writing save data. The current prototypes
-use this to test later abilities independently. The replacement campaign levels
-will use the same contract while introducing more than one ability within a
-substantial level where appropriate.
+state seeds exactly that set without writing save data. The developer levels
+use this to test later abilities independently, and the campaign levels use the
+same contract while introducing more than one ability within a substantial
+level where appropriate.
 
 The production `CampaignCatalog` currently contains the completed Arrival /
-Shoreline as the first Green Zone level. The six validated prototypes live in
-a separate regression catalog, keeping their tests available without
-presenting them as campaign content. The target campaign structure remains
+Shoreline as the first Green Zone level. The six prototypes that proved the
+movement kit are deleted, their contracts having moved to the Animation Lab,
+Arrival, and the Level 2 interior. The target campaign structure remains
 approximately three re-authored levels: Arrival / Shoreline, Overgrown Coastal
 Ascent, and Green Zone Finale.
 Missing future levels are not represented by fake scenes or disabled
@@ -497,8 +497,7 @@ low 48-pixel foam strip plays once at contact, preventing stacked effects.
 Both systems are presentation-only; explicit hazard areas continue to own
 death and reset behavior.
 
-Approved replacement levels enter `CampaignCatalog`; protected prototypes use
-the separate regression catalog. `GameRoot.developer_level_definitions` is
+Approved replacement levels enter `CampaignCatalog`. `GameRoot.developer_level_definitions` is
 reserved for tools and explicitly unfinished routes with a null world
 definition: the Animation Lab, the Enclosed Terrain Lab, the Level 2 WIP
 approach, and the directly loadable Level 2 interior opening. Animation Lab
@@ -528,7 +527,7 @@ Every lasting system receives focused validation. The current suite covers:
 - native background scale and import settings, flat-camera cross-depth
   projection, allocation-free pooled recycling through travel and teleports,
   16:9 and ultrawide edge coverage, mirrored joins, and screen-locked vertical
-  coverage using prototype Levels 4 and 6 as regression fixtures;
+  coverage using the Level 2 interior's 28 m shaft as its fixture;
 - movement, jump envelope, coyote time, buffering, and reset;
 - Level 1 combat, goal flow, reset, and full completion;
 - Level 2 route measurements, spike collision and centering, checkpoints,
@@ -598,9 +597,9 @@ Before committing a gameplay milestone:
 
 ## Current baseline - 13 August 2026
 
-Prototype Levels 1-6 are protected in the regression catalog. New abilities
-and systems must not silently change their proven movement, collision, enemy,
-checkpoint, or restart behavior during campaign migration.
+The movement, collision, enemy, checkpoint and restart behaviour that Prototype
+Levels 1-6 used to protect is now proven in the Animation Lab, Arrival, and the
+Level 2 interior. New abilities and systems must not silently change it.
 
 The typed world catalog and grouped selector, versioned progression payload,
 permanent ability ownership, per-level ability policy, Double Jump, reusable

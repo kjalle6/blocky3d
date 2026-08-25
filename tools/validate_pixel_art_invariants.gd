@@ -23,16 +23,6 @@ const CHECKED_DEVELOPER_LEVELS: Array[StringName] = [
 	&"dev_level_2_interior_wip",
 	&"dev_animation_lab",
 ]
-## Prototype movement levels from before the pixel grammar existed. They still
-## carry props at 0.035 and 0.02 and are scheduled for rebuild, not repair.
-const LEGACY_SCENES: PackedStringArray = [
-	"res://scenes/levels/level_01_pixel.tscn",
-	"res://scenes/levels/level_02_gaps_and_spikes.tscn",
-	"res://scenes/levels/level_03_double_jump.tscn",
-	"res://scenes/levels/level_04_wall_jump.tscn",
-	"res://scenes/levels/level_05_dash.tscn",
-	"res://scenes/levels/level_06_green_zone_finale.tscn",
-]
 ## Props that merely share an edge are not overlapping.
 const EDGE_TOLERANCE := 0.01
 const ACTOR_GROUPS: PackedStringArray = [
@@ -93,12 +83,12 @@ func _assert_every_scene_is_accounted_for(game_root: Node) -> void:
 			if not file_name.ends_with(".tscn"):
 				continue
 			var path := "%s/%s" % [directory, file_name]
-			if path in covered or path in LEGACY_SCENES:
+			if path in covered:
 				continue
 			_failures.append(
-				"%s is neither checked nor listed as legacy. Add it to "
+				"%s is not covered. Add it to CHECKED_LEVELS or "
 				% path
-				+ "CHECKED_LEVELS/CHECKED_DEVELOPER_LEVELS, or to LEGACY_SCENES with a reason."
+				+ "CHECKED_DEVELOPER_LEVELS so its scenery is held to the rules."
 			)
 
 

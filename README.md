@@ -20,9 +20,10 @@ remain read-only design references.
   and an open-air Double Jump rise to a safe tire-swing-tree clearing. The
   completion trigger and fade are final Level 1 behavior rather than a temporary
   construction boundary
-- Six earlier Green Zone prototype levels remain in a separate regression
-  catalog to validate Fundamentals, Gaps & Spikes, Double Jump, Wall Jump,
-  Dash, and full-kit movement
+- The six earlier Green Zone prototype levels are deleted. Their movement
+  contracts moved to permanent homes first: the Animation Lab for the ability
+  kit, Arrival for camera stability, and the Level 2 interior for progression
+  and background coverage
 - World 1 is being re-authored as approximately three substantial levels:
   Arrival / Shoreline, Overgrown Coastal Ascent, and Green Zone Finale
 - The production selector currently exposes Arrival / Shoreline. Development

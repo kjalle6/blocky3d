@@ -70,15 +70,13 @@ powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -EditorImpor
 ## Running the validators
 
 Use `tools/run_validation_suite.ps1` rather than looping over `validate_*.gd`
-by hand. A loop over the directory can only mean every validator, and a full
-pass is dominated by the twelve `level1-6` validators guarding the frozen
-prototypes - about 60% of the wall time, and unaffected by most changes.
+by hand. It runs every validator - about 150s headless - and reports a single
+pass or fail rather than a wall of output.
 
-- `-Scope Current` (default, ~78s headless): everything except those twelve.
-- `-Scope Prototype` (~132s headless): only the frozen fixtures.
-- `-Scope All`: both. Run before a commit, and after any change to shared
-  infrastructure - the runner, `GameRoot`, or `pixel_level_base.tscn` - because
-  those can change the result of validators that look unrelated.
+It still takes a `-Scope` switch even though only `All` exists today. The six
+prototype levels used to be a separate scope worth skipping, at roughly 60% of
+a full run; they are deleted, and the switch is kept because a slow set will
+almost certainly reappear.
 
 Run the suite when a change could plausibly reach what it covers, not as
 reassurance. Two full passes in a row, the second confirming what the first

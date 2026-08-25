@@ -44,8 +44,6 @@ func _validate() -> void:
 	assert(arrival is LevelDefinition)
 	assert(arrival.display_number == 1)
 	assert(level_01_button.text == "1  -  ARRIVAL / SHORELINE")
-	assert(game_root.campaign.find_by_id(&"fundamentals") == null)
-	assert(game_root.campaign.find_by_id(&"gaps_and_spikes") == null)
 	assert(InputMap.has_action("dash"))
 	assert(InputMap.has_action("developer_fly_up"))
 	assert(InputMap.has_action("developer_fly_down"))

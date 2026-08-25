@@ -179,7 +179,7 @@ three re-authored levels:
    saws and a small escalation of the enemy roster, then teaches a limited gun
    before a simple first boss.
 
-The existing six short Godot levels are validated prototypes and regression
+The six short Godot prototype levels are deleted; they were regression
 evidence for these mechanics. They are not the final campaign structure. They
 remain during migration, then leave the menu and repository after replacement
 levels preserve their useful gameplay contracts. Git remains the archive.

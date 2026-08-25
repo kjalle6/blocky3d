@@ -1,7 +1,7 @@
 # Level roadmap
 
-This document separates the production campaign from the protected prototype
-baseline. The prototypes prove mechanics; they do not dictate the final number,
+This document owns the production campaign. The deleted prototypes proved
+mechanics; they never dictated the final number,
 size, or order of levels.
 
 The Python game at
@@ -12,23 +12,22 @@ reference. Godot is canonical.
 
 ## Current implementation
 
-Arrival / Shoreline is the only current production campaign entry. Six short
-Green Zone prototypes remain playable through a separate regression catalog:
+Arrival / Shoreline is the only production campaign entry, and Level 2's
+interior is in progress through the developer entries.
 
-| Prototype | Proven material | Migration role |
-| --- | --- | --- |
-| 1: Fundamentals | Base movement, patrol, stomp, knife, death, goal, and camera | Opening language for new Level 1 |
-| 2: Gaps & Spikes | Longer rhythm, spike fairness, platform spacing, and checkpoints | Route material for new Level 1 |
-| 3: Double Jump | Pickup, persistence, jump timing, and aerial proof | Second half of new Level 1 |
-| 4: Wall Jump | Wall sensing, slide, kick, lockout, vertical camera, and shafts | Opening language for new Level 2 |
-| 5: Dash | Ground and air Dash, required crossing envelope, and flow enemies | Second half of new Level 2 |
-| 6: Green Zone Finale | Full-kit combinations and capstone route fragments | Material for new Level 3 |
+The six Green Zone prototype levels that preceded this are deleted. They were
+regression evidence for the movement kit, and that job is finished: every
+contract they proved now lives somewhere permanent. Movement, Double Jump, Wall
+Jump and Dash are validated in the Animation Lab, which is their declared home;
+camera pixel stability runs against Arrival; fresh-per-load progression and
+vertical background coverage run against the Level 2 interior, whose 28 m shaft
+is a longer climb than either prototype offered. Only one assertion did not
+survive the move - a level that starts with an ability locked - and the Level 2
+Wall Jump pickup covers it with content that ships.
 
-These scenes and their focused tests remain protected during re-authoring. They
-are regression evidence, not six finished campaign levels and not production
-selector entries. Once the replacement campaign preserves every useful
-contract, obsolete fixtures, captures, and tests are removed together. Git is
-the long-term archive.
+Deleting them removed six scenes, twelve validators, six capture scripts and
+the regression catalog, and cut a full validation run from 282s to 150s. Git is
+the archive if any of it is ever wanted again.
 
 ## Target World 1 structure
 
@@ -135,9 +134,8 @@ Deterministic capture frames cover both the offshore swell and the shore break
 so future presentation changes cannot quietly desynchronize the effect.
 
 Its authored background profile moves from a restrained coastal hint into
-established Green Zone depth as the camera travels inland. Prototype Levels
-1-6 exercise the shared rig only as regression fixtures and are not visual
-polish targets. The environment colour deliberately owns complete vertical sky
+established Green Zone depth as the camera travels inland. The environment
+colour deliberately owns complete vertical sky
 coverage; horizon and decorative tracks need not fill the screen vertically.
 Any future layer that promises full-height artwork must declare and validate
 that contract explicitly rather than changing the shared default.
