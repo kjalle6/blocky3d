@@ -177,12 +177,13 @@ Horizontal motion is likewise explicit: `SCREEN_LOCKED`, `PARALLAX`, or
 attached to the camera. Autonomous drift is a separate future presentation
 choice and must not be simulated with near-zero parallax.
 
-No production section currently consumes the vertical-region or height-window
-extensions. They remain dormant reusable capabilities after the rejected
-stitched-tree experiment was removed. A future approved climb may use fixed-
-scale depth, parallax, deliberate viewport cropping, and camera-height fades;
-runtime scaling of scenery remains excluded because it reads as zooming rather
-than travel.
+The vertical-region extension remains opt-in rather than global, but it is no
+longer dormant: the Level 2 WIP interior depends on it for the shaft's 30.72 m
+maximum vertical camera offset. That WIP entry is not yet a cataloged production
+section. The separate height-window extension remains dormant until an approved
+composition needs fixed-scale depth, parallax, deliberate viewport cropping,
+and camera-height fades; runtime scaling of scenery remains excluded because it
+reads as zooming rather than travel.
 
 ## Engineering rules
 
@@ -579,13 +580,14 @@ proves the matched doorway handoff. The first authored interior slice uses those
 contracts for a combat-and-spike recap, Double Jump rise, Wall Jump pickup and
 shaft, forced left turn to the Dash pickup, and immediate 10.24 m Dash-only
 return crossing. Structural checks and a real-input traversal prove technical
-reachability. The next system-facing addition is a dedicated indestructible
-flying-hazard archetype for Green Zone enemy 5: it must remain outside the
-`melee_target` and stomp contracts while exposing explicit lethal body/electric
-contact and reset behavior. Its first use is one generous chamber offering a
-jump-and-air-Dash route above and a timed ground-Dash route below. Reusable
-vertical camera regions and height-aware background fades already exist but
-stay opt-in until the approved route needs them. Structural, visual, and
+reachability. Its 30.72 m shaft is already an active consumer of the reusable,
+opt-in vertical camera region system. The next system-facing addition is a
+dedicated indestructible flying-hazard archetype for Green Zone enemy 5: it must
+remain outside the `melee_target` and stomp contracts while exposing explicit
+lethal body/electric contact and reset behavior. Its first use is one generous
+chamber offering a jump-and-air-Dash route above and a timed ground-Dash route
+below. Reusable height-aware background fades also exist but remain unused and
+opt-in until an approved composition needs them. Structural, visual, and
 regression automation owns technical confidence; hands-on human review remains
 the gate for presentation, difficulty, fairness, pacing, and feel. Firearms,
 saws, bosses, Combat Lab, and the curated cyberpunk UI theme follow only when

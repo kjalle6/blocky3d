@@ -31,8 +31,11 @@ func _run() -> void:
 	assert(terrain != null)
 	assert(terrain.validation_errors().is_empty())
 	assert(terrain.row_count() == 40)
-	assert(terrain.column_count() == 72)
-	assert(terrain.collision_rectangle_count() == 6)
+	assert(terrain.column_count() == 92)
+	assert(
+		terrain.collision_rectangle_count() == 10,
+		"collision rectangles: %d" % terrain.collision_rectangle_count()
+	)
 
 	# One grid owns the lower tunnel, continuous shaft, upper-left Dash alcove,
 	# and upper-right destination corridor. The ascent itself remains three
@@ -53,6 +56,104 @@ func _run() -> void:
 	assert(not terrain.is_solid_cell(15, 60))
 	assert(terrain.is_solid_cell(16, 60))
 	assert(terrain.is_solid_cell(11, 60))
+
+	# The evasive-flyer chamber: a full-height break in the corridor with a
+	# hovering machine in it. The break is open floor-to-sky, so nothing above
+	# or below the machine can be mistaken for a route.
+	for row in [5, 9, 11, 14, 20, 30, 39]:
+		assert(
+			not terrain.is_solid_cell(row, 73),
+			"The gap must stay open through the corridor and out the bottom (row %d)." % row
+		)
+	# The gap has to read as endless, so it stays open far past anything the
+	# camera shows. What closes it is a spiked lid rather than a floor: if the
+	# movement kit ever grows enough to climb up there, the answer is death, not
+	# a roof to stand on.
+	for row in [0, 2, 4]:
+		assert(
+			terrain.is_solid_cell(row, 73),
+			"The gap must be closed off well above the camera at row %d." % row
+		)
+	var ceiling_spikes := level.get_node(
+		"Hazards/MachineShaftCeilingSpikes"
+	) as PixelSpikeRow3D
+	assert(ceiling_spikes != null, "The gap needs a lethal lid, not an open top.")
+	assert(is_equal_approx(ceiling_spikes.position.y, 42.24))
+	assert(is_equal_approx(ceiling_spikes.position.x, 94.08))
+	assert(
+		ceiling_spikes.row_width >= (79.0 - 68.0) * TILE_SIZE,
+		"The lid must span the whole gap or it can be climbed around."
+	)
+	assert(
+		ceiling_spikes.position.y > 33.28 + 6.4,
+		"The lid must sit well above the corridor so it stays out of frame."
+	)
+
+	assert(terrain.is_solid_cell(16, 67), "Takeoff ledge must be solid.")
+	assert(terrain.is_solid_cell(16, 79), "Landing ledge must be solid.")
+	assert(not terrain.is_solid_cell(15, 67))
+	assert(not terrain.is_solid_cell(15, 79))
+	assert(terrain.is_solid_cell(13, 91), "The corridor must end in a back wall.")
+
+	var shaft_gap := (79.0 - 68.0) * TILE_SIZE
+	# Sized against the reach the player actually has here, not a single jump.
+	# They own Double Jump by this point, and two arcs carry roughly twice as
+	# far, so a gap tuned to one jump stops requiring the ability it teaches.
+	var movement := level.player.movement
+	assert(
+		shaft_gap > movement.ideal_double_jump_distance() + 1.5,
+		(
+			"The machine gap is %.2f m but a Double Jump reaches %.2f m; "
+			+ "it must clearly exceed that or Dash is optional."
+		) % [shaft_gap, movement.ideal_double_jump_distance()]
+	)
+	assert(
+		shaft_gap < movement.ideal_double_jump_dash_distance() - 1.5,
+		(
+			"The machine gap is %.2f m but Double Jump plus Dash only reaches "
+			+ "%.2f m; the crossing must keep a fair landing margin."
+		) % [shaft_gap, movement.ideal_double_jump_dash_distance()]
+	)
+
+	# The machine has to be visible and readable well before it is committed to,
+	# so the ledge leading in is authored length rather than whatever was left
+	# over after the Dash crossing.
+	var run_up := 68.0 * TILE_SIZE - (69.12 + 10.24 * 0.5)
+	assert(
+		run_up >= 12.8 - 0.01,
+		"Run-up to the machine is only %.2f m; it must stay long enough to read it." % run_up
+	)
+
+	var flyer := level.get_node("ShaftFlyer") as HoveringHazard3D
+	assert(flyer != null)
+	assert(flyer.validation_errors().is_empty())
+	assert(
+		not flyer.is_in_group("melee_target"),
+		"The machine is a traversal hazard; it must not be attackable."
+	)
+	assert(not flyer.is_in_group("stompable"))
+
+	# The design rule for this beat: the machine's travel must never close both
+	# routes at once. When it rises the floor lane opens; when it drops the
+	# ceiling lane opens. Whatever the bob is tuned to, one of them stays
+	# generous, so the encounter is a choice rather than a needle to thread.
+	var corridor_floor_y := 28.16
+	var corridor_ceiling_y := 33.28
+	var player_box := (
+		level.player.get_node("CollisionShape3D") as CollisionShape3D
+	).shape as BoxShape3D
+	assert(player_box != null)
+	var lane_needed := player_box.size.y + 0.4
+	var floor_lane := (flyer.highest_body_y() - 0.92) - corridor_floor_y
+	var ceiling_lane := corridor_ceiling_y - (flyer.lowest_body_y() + 0.5)
+	assert(
+		floor_lane > lane_needed,
+		"With the machine risen the floor lane is only %.2f m." % floor_lane
+	)
+	assert(
+		ceiling_lane > lane_needed,
+		"With the machine dropped the ceiling lane is only %.2f m." % ceiling_lane
+	)
 
 	assert(level.player.has_ability(PlayerAbility.DOUBLE_JUMP))
 	assert(not level.player.has_ability(PlayerAbility.WALL_JUMP))
@@ -125,7 +226,12 @@ func _run() -> void:
 	assert(_blocked(level.player, Vector3(58.88, 12.0, 0), Vector3.LEFT * 4.0))
 	assert(_blocked(level.player, Vector3(58.88, 12.0, 0), Vector3.RIGHT * 4.0))
 	assert(_blocked(level.player, Vector3(48.64, 28.86, 0), Vector3.DOWN))
-	assert(_blocked(level.player, Vector3(84.0, 28.86, 0), Vector3.DOWN))
+	assert(_blocked(level.player, Vector3(80.64, 28.86, 0), Vector3.DOWN))
+	assert(_blocked(level.player, Vector3(105.0, 28.86, 0), Vector3.DOWN))
+	assert(
+		not _blocked(level.player, Vector3(94.08, 28.86, 0), Vector3.DOWN),
+		"The machine's shaft must be a real hole, not a floor with art removed."
+	)
 
 	print(
 		"Level 2 interior opening passed: recap, shaft, turnback, %.2f m Dash crossing."

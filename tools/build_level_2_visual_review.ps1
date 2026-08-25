@@ -30,7 +30,11 @@ $beats = @(
     '05_top_left_end',
     '06_top_junction',
     '07_dash_crossing',
-    '08_top_right_end'
+    '08_machine_run_up',
+    '09_machine_low_route',
+    '10_machine_high_route',
+    '11_chamber_landing',
+    '12_chamber_end'
 )
 $reviewPaths = @()
 foreach ($beat in $beats) {

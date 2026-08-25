@@ -48,6 +48,10 @@ $assets = [ordered]@{
         "enemies\green_zone_enemies\1\Attack.png"
     "enemies/green_death.png" =
         "enemies\green_zone_enemies\1\Death.png"
+    "enemies/flyer_idle.png" =
+        "enemies\green_zone_enemies\5\Idle.png"
+    "enemies/flyer_attack.png" =
+        "enemies\green_zone_enemies\5\Attack.png"
     "goal/chest_open.png" =
         "tilesets\green_zone\4 Animated objects\Chest_open.png"
     "props/tree.png" =

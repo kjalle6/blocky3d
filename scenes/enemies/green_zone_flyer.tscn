@@ -1,0 +1,42 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/hovering_hazard_3d.gd" id="1_flyer"]
+[ext_resource type="Script" path="res://scripts/hazards/hazard_3d.gd" id="2_hazard"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/enemies/flyer_idle.png" id="3_idle"]
+
+[sub_resource type="BoxShape3D" id="Shape_body"]
+size = Vector3(0.8, 0.8, 0.72)
+
+[sub_resource type="BoxShape3D" id="Shape_spark"]
+size = Vector3(0.48, 0.58, 0.72)
+
+[node name="GreenZoneFlyer" type="Node3D"]
+script = ExtResource("1_flyer")
+
+[node name="Visual" type="Sprite3D" parent="."]
+position = Vector3(0, 0, 1.2)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("3_idle")
+hframes = 4
+shaded = false
+render_priority = 10
+
+[node name="BodyHazard" type="Area3D" parent="."]
+position = Vector3(0, 0.1, 0)
+collision_layer = 0
+collision_mask = 3
+script = ExtResource("2_hazard")
+
+[node name="Collision" type="CollisionShape3D" parent="BodyHazard"]
+shape = SubResource("Shape_body")
+
+[node name="SparkHazard" type="Area3D" parent="."]
+position = Vector3(0, -0.63, 0)
+collision_layer = 0
+collision_mask = 3
+monitoring = false
+script = ExtResource("2_hazard")
+
+[node name="Collision" type="CollisionShape3D" parent="SparkHazard"]
+shape = SubResource("Shape_spark")

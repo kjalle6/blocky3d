@@ -52,6 +52,14 @@ func _run() -> void:
 	var dash_crossing_requested := false
 	var desired_wall_direction := 1.0
 	var shaft_exit_committed := false
+	var machine := level.get_node_or_null("ShaftFlyer") as HoveringHazard3D
+	var machine_previous_y := 0.0
+	if machine != null:
+		machine_previous_y = machine.position.y
+	var flyer_jump_requested := false
+	var flyer_second_jump_requested := false
+	var flyer_second_jump_frame := -1
+	var flyer_dash_requested := false
 	var double_jump_count := [0]
 	var wall_jump_count := [0]
 	var dash_count := [0]
@@ -310,9 +318,85 @@ func _run() -> void:
 					and player.global_position.y >= 28.7
 				):
 					stage = 13
+
+			13:
+				# Approach along the authored run-up and stop short of the drop.
+				_set_horizontal_input(1.0)
+				if player.global_position.x >= 82.0:
+					_set_horizontal_input(0.0)
+					stage = 14
+
+			14:
+				# The machine now sweeps the full corridor, sealing one lane at a
+				# time, so the crossing has to be timed rather than just executed.
+				# Commit while it is descending and already low: by the time the
+				# jump peaks it is at the bottom and the ceiling lane is open.
+				_set_horizontal_input(0.0)
+				if machine == null:
+					stage = 15
+				else:
+					# The flight now takes about 1.4 s to reach the middle, and
+					# the bot passes low while Dashing out of the second jump.
+					# Commit as the machine bottoms out and starts climbing, so
+					# it is near the ceiling by the time the player is under it.
+					var ascending := machine.position.y > machine_previous_y
+					if ascending and machine.position.y <= 29.6:
+						stage = 15
+
+			15:
+				_set_horizontal_input(1.0)
+				if (
+					not flyer_jump_requested
+					and player.is_on_floor()
+					and not jump_is_held
+					and player.global_position.x >= 86.2
+				):
+					jump_is_held = _request_jump(false)
+					jump_hold_remaining = JUMP_HOLD_FRAMES
+					flyer_jump_requested = true
+					stage = 16
+
+			16:
+				# Same jump-and-Dash shape as the crossing before it: the ability
+				# just earned stays required rather than lapsing for one beat.
+				_set_horizontal_input(1.0)
+				# Spend the aerial jump at the end of the first arc and Dash
+				# straight after it: that is the longest the kit can carry, and
+				# 14.08 m needs most of it.
+				if (
+					not flyer_second_jump_requested
+					and not player.is_on_floor()
+					and not jump_is_held
+					and player.velocity.y < 0.0
+					and player.global_position.y <= 29.0
+				):
+					jump_is_held = _request_jump(false)
+					jump_hold_remaining = JUMP_HOLD_FRAMES
+					flyer_second_jump_requested = true
+					flyer_second_jump_frame = frame
+				# Dash at the apex, not off the jump: Dash flattens vertical
+				# motion, so dashing straight after the second jump throws away
+				# the height it just bought and drops the player into the gap.
+				if (
+					not flyer_dash_requested
+					and flyer_second_jump_requested
+					and frame > flyer_second_jump_frame + 3
+					and player.velocity.y <= 0.0
+				):
+					Input.action_press("dash")
+					dash_pressed = true
+					flyer_dash_requested = true
+				if (
+					player.is_on_floor()
+					and player.global_position.x >= 101.5
+					and player.global_position.y >= 28.7
+				):
+					stage = 17
 					_set_horizontal_input(0.0)
 					break
 
+		if machine != null:
+			machine_previous_y = machine.position.y
 		await physics_frame
 
 	_release_inputs()
@@ -329,7 +413,7 @@ func _run() -> void:
 			]
 		)
 		return
-	if stage != 13:
+	if stage != 17:
 		_fail(
 			"Level 2 traversal stopped in stage %d near (%.2f, %.2f), peaked at %.2f, after %d Wall Jumps."
 			% [stage, player.global_position.x, player.global_position.y, maximum_height, wall_jump_count[0]]
@@ -338,11 +422,11 @@ func _run() -> void:
 	if wall_jump_count[0] < 2:
 		_fail("Level 2 traversal did not exercise repeated wall jumps.")
 		return
-	if dash_count[0] != 1:
-		_fail("Level 2 traversal must perform exactly one Dash.")
+	if dash_count[0] != 2:
+		_fail("Level 2 traversal must Dash across both crossings.")
 		return
 	print(
-		"Level 2 opening traversed with %d wall jumps and %d Dash."
+		"Level 2 opening traversed with %d wall jumps and %d Dashes."
 		% [wall_jump_count[0], dash_count[0]]
 	)
 	quit(0)

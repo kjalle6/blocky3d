@@ -67,6 +67,14 @@
                                     "source":  "enemies/green_zone_enemies/1/Death.png",
                                     "sha256":  "bc27a23c4903acdec0854f8c9f117e76bd10ec66fc1d61ad4a6c9275b3b4a564"
                                 },
+    "enemies/flyer_idle.png":  {
+                                   "source":  "enemies/green_zone_enemies/5/Idle.png",
+                                   "sha256":  "5ad8605f1949d39e07efe432389f254e666567afcbcccd2ebb866f7708aa3118"
+                               },
+    "enemies/flyer_attack.png":  {
+                                     "source":  "enemies/green_zone_enemies/5/Attack.png",
+                                     "sha256":  "ac7201ca4575178f48e9f17ec4fc06e99d084b52fe3fb095db9bff1c326e6de4"
+                                 },
     "goal/chest_open.png":  {
                                 "source":  "tilesets/green_zone/4 Animated objects/Chest_open.png",
                                 "sha256":  "8d1834aa41d70e29805b1d3f5a4d1b9f24721b650e2e0239b46010bbe73531e6"

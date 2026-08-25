@@ -45,3 +45,19 @@ func ideal_jump_air_time() -> float:
 
 func ideal_full_speed_jump_distance() -> float:
 	return maximum_speed * ideal_jump_air_time()
+
+
+## Reach with the aerial jump spent at the end of the first arc, which is the
+## cheapest way across a gap once Double Jump is owned. A crossing sized against
+## a single jump is not a crossing at all by the time the player has two.
+func ideal_double_jump_distance() -> float:
+	return maximum_speed * ideal_jump_air_time() * 2.0
+
+
+## Reach with both jumps and a Dash. Dash suspends gravity, so it adds its own
+## duration to the airtime as well as covering ground faster.
+func ideal_double_jump_dash_distance() -> float:
+	return (
+		maximum_speed * ideal_jump_air_time() * 2.0
+		+ dash_speed * dash_duration
+	)

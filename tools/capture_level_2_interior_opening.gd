@@ -4,8 +4,17 @@ extends SceneTree
 const OUTPUT_SIZE := Vector2i(1920, 1080)
 const OUTPUT_DIRECTORY := "res://build/previews/level_2_interior_opening"
 const GAMEPLAY_CAMERA_SIZE := 12.9375
-const OVERVIEW_CAMERA_SIZE := 55.0
-const OVERVIEW_CENTER := Vector3(46.08, 22.0, 0.0)
+const OVERVIEW_CAMERA_SIZE := 68.0
+const OVERVIEW_CENTER := Vector3(58.88, 22.0, 0.0)
+## Each route is shown at the moment a player would actually take it, because
+## that is what "visibly real" means for review. The machine rises to open the
+## floor lane and drops to open the ceiling lane, so each frame is pinned to the
+## end of its travel that opens the route being shown. The worst case of each
+## lane is a number, not a picture, and the structural validator asserts it.
+const BEAT_MACHINE_PHASE := {
+	&"09_machine_low_route": 0.25,   # machine risen, so the floor lane is the open one
+	&"10_machine_high_route": 0.75,  # machine dropped, so the ceiling lane is the open one
+}
 const REVIEW_BEATS := {
 	&"00_entry": Vector3(7.68, 0.7, 0.0),
 	&"01_recap": Vector3(22.4, 0.7, 0.0),
@@ -15,7 +24,11 @@ const REVIEW_BEATS := {
 	&"05_top_left_end": Vector3(44.8, 28.86, 0.0),
 	&"06_top_junction": Vector3(58.88, 28.86, 0.0),
 	&"07_dash_crossing": Vector3(69.12, 30.0, 0.0),
-	&"08_top_right_end": Vector3(90.88, 28.86, 0.0),
+	&"08_machine_run_up": Vector3(80.64, 28.86, 0.0),
+	&"09_machine_low_route": Vector3(94.08, 28.71, 0.0),
+	&"10_machine_high_route": Vector3(94.08, 32.73, 0.0),
+	&"11_chamber_landing": Vector3(105.0, 29.50, 0.0),
+	&"12_chamber_end": Vector3(113.0, 28.86, 0.0),
 }
 
 
@@ -57,6 +70,7 @@ func _run() -> void:
 	_restore_gameplay_camera(level)
 
 	for beat_id in REVIEW_BEATS:
+		_pin_machine_phase(level, beat_id)
 		_set_diagnostic_tools(game_root, false)
 		game_root.get_node("Interface").visible = false
 		await _place_review_camera(level, REVIEW_BEATS[beat_id])
@@ -130,3 +144,13 @@ func _capture(file_name: String) -> void:
 	assert(image.get_size() == OUTPUT_SIZE)
 	var error := image.save_png("%s/%s.png" % [OUTPUT_DIRECTORY, file_name])
 	assert(error == OK, "Could not save Level 2 review frame '%s'." % file_name)
+
+
+func _pin_machine_phase(level: LevelSession3D, beat_id: StringName) -> void:
+	var machine := level.get_node_or_null("ShaftFlyer") as HoveringHazard3D
+	if machine == null:
+		return
+	if BEAT_MACHINE_PHASE.has(beat_id):
+		machine.bob_phase = BEAT_MACHINE_PHASE[beat_id]
+		machine.reset_run()
+	machine.set_physics_process(false)
