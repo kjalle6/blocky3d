@@ -6,6 +6,7 @@ const OUTPUT_DIRECTORY := "res://build/previews/level_2_interior_opening"
 const GAMEPLAY_CAMERA_SIZE := 12.9375
 const OVERVIEW_CAMERA_SIZE := 99.0
 const OVERVIEW_CENTER := Vector3(87.04, 22.0, 0.0)
+const LEVEL_2_INTERIOR := preload("res://tools/level_2_interior_fixture.gd")
 ## Each route is shown at the moment a player would actually take it, because
 ## that is what "visibly real" means for review. The machine rises to open the
 ## floor lane and drops to open the ceiling lane, so each frame is pinned to the
@@ -64,14 +65,9 @@ func _run() -> void:
 	root.add_child(game_root)
 	for frame in 6:
 		await process_frame
-	var definition := load(
-		"res://resources/dev/overgrown_coastal_ascent_interior_review.tres"
-	) as LevelDefinition
-	assert(definition != null)
-	game_root.load_developer_level(definition)
+	var level := LEVEL_2_INTERIOR.load_into(game_root)
 	for frame in 8:
 		await physics_frame
-	var level := game_root.current_level as LevelSession3D
 	assert(level != null)
 	_freeze_enemies(level)
 

@@ -5,6 +5,7 @@ extends SceneTree
 const OUTPUT_SIZE := Vector2i(1920, 1080)
 const WIDE_OUTPUT_SIZE := Vector2i(2560, 1080)
 const EPSILON := 0.05
+const LEVEL_2_INTERIOR := preload("res://tools/level_2_interior_fixture.gd")
 
 
 func _init() -> void:
@@ -107,9 +108,6 @@ func _run() -> void:
 	# camera region travels 28 m, further than any earlier fixture.
 	await _validate_vertical_fixture(
 		game_root,
-		load(
-			"res://resources/dev/overgrown_coastal_ascent_interior_review.tres"
-		) as LevelDefinition,
 		Vector3(58.88, 7.1, 0.0),
 		18.0
 	)
@@ -354,14 +352,12 @@ func _layer_world_phase(
 
 func _validate_vertical_fixture(
 	game_root: Node,
-	definition: LevelDefinition,
 	base_position: Vector3,
 	rise: float
 ) -> void:
 	game_root.show_level_select()
-	game_root.load_developer_level(definition)
+	var level := LEVEL_2_INTERIOR.load_into(game_root)
 	await process_frame
-	var level := game_root.current_level as LevelSession3D
 	var camera := level.camera as PixelSideCamera3D
 	var background := level.background as PixelBackgroundRig3D
 	level.player.set_physics_process(false)

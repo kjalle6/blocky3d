@@ -4,6 +4,7 @@ extends SceneTree
 
 const MAXIMUM_FRAMES := 2400
 const JUMP_HOLD_FRAMES := 18
+const LEVEL_2_INTERIOR := preload("res://tools/level_2_interior_fixture.gd")
 
 
 func _init() -> void:
@@ -11,12 +12,6 @@ func _init() -> void:
 
 
 func _run() -> void:
-	var definition := load(
-		"res://resources/dev/overgrown_coastal_ascent_interior_review.tres"
-	) as LevelDefinition
-	if definition == null:
-		_fail("Level 2 interior definition did not load.")
-		return
 	var packed_scene := load("res://scenes/app/game_root.tscn") as PackedScene
 	if packed_scene == null:
 		_fail("GameRoot did not load for the Level 2 traversal.")
@@ -25,10 +20,9 @@ func _run() -> void:
 	game_root.persist_progression = false
 	root.add_child(game_root)
 	await process_frame
-	game_root.load_developer_level(definition)
+	var level := LEVEL_2_INTERIOR.load_into(game_root)
 	for frame in 12:
 		await physics_frame
-	var level := game_root.current_level as LevelSession3D
 	if level == null:
 		_fail("Level 2 interior scene did not instantiate.")
 		return

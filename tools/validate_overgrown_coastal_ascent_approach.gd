@@ -100,6 +100,46 @@ func _run() -> void:
 	assert(is_equal_approx(ground.size.y, 6.4))
 	assert(is_equal_approx(ground.position.y + ground.size.y * 0.5, -0.64))
 	assert(is_equal_approx(ground.position.x + ground.size.x * 0.5, 38.4))
+	var route_start_x := (
+		room.route_extent.global_position.x + room.route_extent.route_start_x
+	)
+	var left_boundary := room.get_node(
+		"Platforms/LeftBoundary"
+	) as StaticBody3D
+	assert(left_boundary != null)
+	var left_boundary_collision := left_boundary.get_node(
+		"Collision"
+	) as CollisionShape3D
+	assert(
+		left_boundary_collision != null
+		and left_boundary_collision.shape is BoxShape3D
+	)
+	var left_boundary_shape := left_boundary_collision.shape as BoxShape3D
+	var boundary_right_edge := (
+		left_boundary.global_position.x + left_boundary_shape.size.x * 0.5
+	)
+	var boundary_bottom_edge := (
+		left_boundary.global_position.y - left_boundary_shape.size.y * 0.5
+	)
+	assert(
+		is_equal_approx(boundary_right_edge, route_start_x),
+		"The invisible wall must meet the authored route start exactly."
+	)
+	assert(
+		is_equal_approx(boundary_bottom_edge, -0.64),
+		"The invisible wall must meet the playable ground without a gap."
+	)
+	assert(
+		left_boundary_shape.size.y >= room.camera.size - EPSILON,
+		"The player must not be able to jump over the left route boundary."
+	)
+	assert(
+		room.player.test_move(
+			Transform3D(Basis.IDENTITY, Vector3(0.4, 0.06, 0.0)),
+			Vector3.LEFT * 0.2
+		),
+		"The production Level 2 player must be physically blocked at route start."
+	)
 	var approach_patrol := room.get_node("ApproachPatrol") as StompableEnemy3D
 	var cave_run_patrol := room.get_node("CaveRunPatrol") as StompableEnemy3D
 	assert(approach_patrol != null and cave_run_patrol != null)

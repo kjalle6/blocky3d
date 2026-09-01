@@ -5,9 +5,7 @@ extends SceneTree
 
 const LEVEL_1_ID: StringName = &"arrival_shoreline"
 const LEVEL_2_ID: StringName = &"overgrown_coastal_ascent"
-const INTERIOR_REVIEW_ID: StringName = (
-	&"dev_overgrown_coastal_ascent_interior_review"
-)
+const LEVEL_2_INTERIOR := preload("res://tools/level_2_interior_fixture.gd")
 const EXPECTED_DIRECTION := 1.0
 const EXPECTED_SPEED := 8.0
 const EXPECTED_DURATION := 0.45
@@ -133,13 +131,13 @@ func _run() -> void:
 	assert(not store.has_completed(LEVEL_2_ID))
 
 	game_root.show_level_select()
-	game_root.load_developer_level(
-		_developer_definition(game_root, INTERIOR_REVIEW_ID)
-	)
+	var direct_interior := LEVEL_2_INTERIOR.load_into(game_root)
 	await process_frame
+	assert(game_root.current_level_definition.level_id == LEVEL_2_ID)
+	assert(game_root.current_world_definition.world_id == &"green_zone")
 	assert(
-		not game_root.current_level.player.is_transition_running(),
-		"Direct review loads must remain stationary."
+		not direct_interior.player.is_transition_running(),
+		"Direct production-interior tool loads must remain stationary."
 	)
 
 	if FileAccess.file_exists(validation_save):
@@ -155,11 +153,3 @@ func _assert_run_contract(transition: LevelTransition3D) -> void:
 	assert(is_equal_approx(transition.run_direction, EXPECTED_DIRECTION))
 	assert(is_equal_approx(transition.run_speed, EXPECTED_SPEED))
 	assert(is_equal_approx(transition.run_duration, EXPECTED_DURATION))
-
-
-func _developer_definition(game_root: Node, level_id: StringName) -> LevelDefinition:
-	for definition in game_root.developer_level_definitions:
-		if definition != null and definition.level_id == level_id:
-			return definition
-	assert(false, "Missing developer level definition: %s" % level_id)
-	return null

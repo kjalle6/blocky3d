@@ -17,6 +17,7 @@ const CORRIDOR_FLOOR_Y := 28.16
 ## corridor, which is the thing that must not be reachable.
 const ESCAPE_MARGIN := 3.0
 const ATTEMPT_FRAMES := 600
+const LEVEL_2_INTERIOR := preload("res://tools/level_2_interior_fixture.gd")
 
 var _completed := false
 
@@ -42,18 +43,13 @@ func _run() -> void:
 	watchdog.timeout.connect(_on_watchdog_timeout)
 	root.add_child(watchdog)
 
-	var definition := load(
-		"res://resources/dev/overgrown_coastal_ascent_interior_review.tres"
-	) as LevelDefinition
-	assert(definition != null)
 	var game_root := (load("res://scenes/app/game_root.tscn") as PackedScene).instantiate()
 	game_root.persist_progression = false
 	root.add_child(game_root)
 	await process_frame
-	game_root.load_developer_level(definition)
+	var level := LEVEL_2_INTERIOR.load_into(game_root)
 	for frame in 12:
 		await physics_frame
-	var level := game_root.current_level as LevelSession3D
 	assert(level != null)
 	var player := level.player
 	for ability in PlayerAbility.IMPLEMENTED:

@@ -11,6 +11,7 @@ const SAMPLE_FEET_Y := 28.16
 const PLAYER_CENTER_Y := SAMPLE_FEET_Y + 0.70
 const HOLD_JUMP_FRAMES := 18
 const MAX_JUMP_FRAMES := 150
+const LEVEL_2_INTERIOR := preload("res://tools/level_2_interior_fixture.gd")
 
 var _completed := false
 var _ranges := {}
@@ -42,15 +43,10 @@ func _run() -> void:
 	for frame in 6:
 		await process_frame
 
-	var definition := load(
-		"res://resources/dev/overgrown_coastal_ascent_interior_review.tres"
-	) as LevelDefinition
-	assert(definition != null)
-	game_root.load_developer_level(definition)
+	var level := LEVEL_2_INTERIOR.load_into(game_root)
 	for frame in 8:
 		await physics_frame
 
-	var level := game_root.current_level as LevelSession3D
 	assert(level != null)
 	var camera := level.camera as PixelSideCamera3D
 	var background := level.background as PixelBackgroundRig3D

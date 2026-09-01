@@ -1,9 +1,9 @@
 extends SceneTree
-## Real-input traversal and paired visual review for the enclosed-room proof.
+## Real-input traversal and paired visual review for the Level Design Lab fixture.
 ## The bot starts at the authored spawn and crosses the room without teleports.
 
 const OUTPUT_SIZE := Vector2i(1920, 1080)
-const OUTPUT_DIRECTORY := "res://build/previews/enclosed_terrain_review"
+const OUTPUT_DIRECTORY := "res://build/previews/level_design_lab_review"
 const MAXIMUM_FRAMES := 1800
 const JUMP_HOLD_FRAMES := 10
 
@@ -25,7 +25,7 @@ func _run() -> void:
 	root.add_child(game_root)
 	await process_frame
 	var definition := load(
-		"res://resources/dev/enclosed_terrain_lab.tres"
+		"res://resources/dev/level_design_lab.tres"
 	) as LevelDefinition
 	game_root.load_developer_level(definition)
 	for frame in 12:
@@ -146,7 +146,7 @@ func _run() -> void:
 		_fail("Traversal must perform exactly one dash.")
 		return
 	print(
-		"Enclosed Terrain Lab traversed with %d wall jumps and %d dash."
+		"Level Design Lab traversed with %d wall jumps and %d dash."
 		% [wall_jump_count[0], dash_count[0]]
 	)
 	quit(0)

@@ -68,11 +68,12 @@ that loaded session, then reset when another level session is created.
 Disabling the mode restores the versioned persistent campaign behavior without
 changing level code.
 
-`GameRoot.developer_tools_enabled` adds a separate Animation Lab to the
-selector. It is a disposable `LevelSession3D` test course, not a campaign
-world or level. Current test abilities are granted as session-local unlocks:
-they survive `R`, never enter the save payload, and never mark campaign
-completion. An in-room panel toggles each implemented ability immediately.
+`GameRoot.developer_tools_enabled` adds separate Animation Lab and Level Design
+Lab entries to the selector. Both are development-only `LevelSession3D`
+fixtures, not campaign worlds or levels. Animation Lab test abilities are
+granted as session-local unlocks: they survive `R`, never enter the save payload,
+and never mark campaign completion. An in-room panel toggles each implemented
+ability immediately.
 
 The room provides clear surfaces for triggering and inspecting idle, run,
 jump, Double Jump, wall contact, attack, landing, and transition timing
@@ -85,6 +86,11 @@ finished until it can be enabled and disabled in the lab, survives a lab
 restart while enabled, and its important animation states can be triggered
 there. Focused runtime checks and its authored introduction level own mechanic
 validation.
+
+Level Design Lab is the reusable space for level-layout, terrain, and fixture
+prototyping. Its current cave-terrain and construction-lift proofs remain as
+useful starting content, but the lab does not define production Level 2 or its
+campaign progression.
 
 Gameplay tool panels are hidden when a session opens and toggle together with
 `F1`; only the compact `F1 / ESC` reminder remains on screen. This keeps
@@ -510,21 +516,24 @@ death and reset behavior.
 
 Approved replacement levels enter `CampaignCatalog`.
 `GameRoot.developer_level_definitions` is reserved for tools and focused review
-fixtures with a null world definition: the Animation Lab, the Enclosed Terrain
-Lab, and Overgrown Coastal Ascent Interior Review.
-Animation Lab remains the only one with in-room ability toggles. The production
-Level 2 approach uses a direct same-level `target_scene` handoff into its live
-interior; the developer Interior Review exists only to load that interior
-directly for inspection.
+fixtures with a null world definition: Animation Lab and Level Design Lab.
+Animation Lab remains the only one with in-room ability toggles; Level Design
+Lab is reserved for reusable layout, terrain, and fixture experiments. The
+production Level 2 approach uses a direct same-level `target_scene` handoff into
+its live interior. Focused validators, captures, and probes load that interior
+scene directly under `resources/campaign/level_02.tres`, preserving its
+production Level 2 identity without a separate selector entry.
 
 ## Validation and visual review
 
 Every lasting system receives focused validation. The current suite covers:
 
 - application and world-grouped level-selector structure, including keyboard
-  navigation and the development-only Animation Lab;
+  navigation and the development-only Animation Lab and Level Design Lab;
 - Animation Lab isolation, expanded geometry, immediate ability toggles,
   reset, and session-local ability policy;
+- Level Design Lab isolation and its retained cave-terrain and construction-lift
+  prototyping fixtures;
 - campaign catalog integrity, versioned progress serialization, and
   per-level ability filtering, including the two-level World 1 order;
 - fresh level-defined development entry state versus same-session restart
@@ -569,7 +578,7 @@ Every lasting system receives focused validation. The current suite covers:
   not been told about;
 - the Level 2 cave approach: a native-resolution entrance that still matches its
   4x art source pixel for pixel, authored ground contact, moving patrol bounds,
-  and the enclosed terrain lab's interior grammar;
+  and the Level Design Lab's retained cave-terrain grammar;
 - the Level 2 interior: one-grid enclosed topology, pickup order,
   checkpoint policy, hazard dimensions, camera region, a validated 13.28 m
   17-spike Dash crossing beyond Double Jump reach, a 14.08 m

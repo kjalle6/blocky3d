@@ -1,5 +1,5 @@
 extends SceneTree
-## Captures lower, shaft, upper, and collision-review views of the interior lab.
+## Captures the Level Design Lab's current cave-and-lift starting fixture.
 
 const OUTPUT_SIZE := Vector2i(1920, 1080)
 const OUTPUT_DIRECTORY := "res://build/previews"
@@ -22,7 +22,7 @@ func _run() -> void:
 	root.add_child(game_root)
 	await process_frame
 	var definition := load(
-		"res://resources/dev/enclosed_terrain_lab.tres"
+		"res://resources/dev/level_design_lab.tres"
 	) as LevelDefinition
 	game_root.load_developer_level(definition)
 	for frame in 6:
@@ -34,23 +34,23 @@ func _run() -> void:
 	await _move_and_capture(
 		room,
 		Vector3(7.68, 0.7, 0),
-		"enclosed_terrain_lab_lower"
+		"level_design_lab_lower"
 	)
 	await _move_and_capture(
 		room,
 		Vector3(21.12, 6.4, 0),
-		"enclosed_terrain_lab_shaft"
+		"level_design_lab_shaft"
 	)
 	await _move_and_capture(
 		room,
 		Vector3(31.36, 13.5, 0),
-		"enclosed_terrain_lab_upper"
+		"level_design_lab_upper"
 	)
 	room.set_developer_collision_overlay_enabled(true)
 	await _move_and_capture(
 		room,
 		Vector3(21.12, 6.4, 0),
-		"enclosed_terrain_lab_collision"
+		"level_design_lab_collision"
 	)
 	quit(0)
 

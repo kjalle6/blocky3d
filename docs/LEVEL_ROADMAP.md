@@ -191,8 +191,9 @@ background zoning, regional grade, ceiling, and camera composition.
 The cave threshold enters
 `scenes/levels/overgrown_coastal_ascent_interior.tscn` through a direct
 same-level `target_scene` handoff, preserving abilities and active run state.
-`resources/dev/overgrown_coastal_ascent_interior_review.tres` remains only as a
-direct developer review shortcut.
+Focused validators, captures, and probes load that scene directly under
+`resources/campaign/level_02.tres`, so the interior keeps its production Level 2
+identity instead of appearing as a separate developer level.
 
 The completed teaching arc is:
 
@@ -247,13 +248,14 @@ fixed while the lift rises, the ascent is visible, and the one-second completion
 fade reaches black before the physical ceiling. This lift departure is the
 accepted end of Level 2.
 
-The asset audit and enclosed-terrain lab established the production direction:
-a natural cavern or mine that can gradually reveal restrained buried
-infrastructure. The reusable grid-driven terrain now owns connected floor,
-ceiling, wall, corner art, and consolidated collision; props may dress or
-explain the space but never hold its shell together. The lab remains a
-disposable construction fixture rather than a miniature Level 2. That proof is
-complete and is no longer an active milestone.
+The asset audit and Level Design Lab's retained cave-terrain proof established
+the production direction: a natural cavern or mine that can gradually reveal
+restrained buried infrastructure. The reusable grid-driven terrain now owns
+connected floor, ceiling, wall, corner art, and consolidated collision; props
+may dress or explain the space but never hold its shell together. Level Design
+Lab remains a reusable space for level-layout, terrain, and fixture prototyping,
+with the current cave terrain and construction lift kept as useful starting
+fixtures rather than a miniature Level 2.
 
 ### Level 3: Green Zone Finale
 

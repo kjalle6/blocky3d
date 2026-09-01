@@ -1,5 +1,5 @@
 extends SceneTree
-## Clean review frames for the exposed cave-hoist prototype in the enclosed lab.
+## Clean review frames for the cave-hoist fixture in the Level Design Lab.
 
 const OUTPUT_SIZE := Vector2i(1920, 1080)
 const OUTPUT_DIRECTORY := "res://build/previews"
@@ -22,7 +22,7 @@ func _run() -> void:
 	root.add_child(game_root)
 	await process_frame
 	var definition := load(
-		"res://resources/dev/enclosed_terrain_lab.tres"
+		"res://resources/dev/level_design_lab.tres"
 	) as LevelDefinition
 	game_root.load_developer_level(definition)
 	for frame in 5:

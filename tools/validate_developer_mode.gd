@@ -1,7 +1,7 @@
 extends SceneTree
-## Development progression is isolated to one loaded level session: death and
-## manual restart retain earned abilities, while selecting a level creates a
-## fresh state without reading or changing the campaign save.
+## Development ability state is isolated to one loaded lab session: death and
+## manual restart retain its toggles, while selecting the lab again restores
+## its definition seed without reading or changing the campaign save.
 
 
 func _init() -> void:
@@ -19,47 +19,38 @@ func _run() -> void:
 		(game_root.get_node("Interface/LevelSelect/Center/Panel/Margin/Options/DeveloperModeLabel") as Label).visible
 	)
 
-	var interior := load(
-		"res://resources/dev/overgrown_coastal_ascent_interior_review.tres"
+	var level_design_lab := load(
+		"res://resources/dev/level_design_lab.tres"
 	) as LevelDefinition
-	game_root.load_developer_level(interior)
+	game_root.load_developer_level(level_design_lab)
 	await process_frame
 	var first_session := game_root.current_level as LevelSession3D
-	var first_pickup := first_session.get_node("WallJumpPickup") as AbilityPickup3D
+	_assert_complete_kit(first_session, "Level Design Lab entry")
+	first_session.set_session_ability_enabled(PlayerAbility.WALL_JUMP, false)
 	assert(not first_session.player.has_ability(PlayerAbility.WALL_JUMP))
-	assert(not first_pickup.is_claimed())
-
-	assert(first_session.unlock_ability(PlayerAbility.WALL_JUMP))
-	assert(first_session.player.has_ability(PlayerAbility.WALL_JUMP))
-	assert(first_pickup.is_claimed())
+	assert(not first_session.is_session_ability_enabled(PlayerAbility.WALL_JUMP))
 
 	first_session._reset_run()
 	await physics_frame
 	assert(
-		first_session.player.has_ability(PlayerAbility.WALL_JUMP),
-		"Manual restart inside the loaded level must retain its session unlock."
+		not first_session.player.has_ability(PlayerAbility.WALL_JUMP),
+		"Manual restart inside the loaded lab must retain its session toggle."
 	)
-	assert(first_pickup.is_claimed())
 
 	first_session.player.kill()
 	for frame in 40:
 		await physics_frame
 	assert(not first_session.player.is_dead())
 	assert(
-		first_session.player.has_ability(PlayerAbility.WALL_JUMP),
-		"Death inside the loaded level must retain its session unlock."
+		not first_session.player.has_ability(PlayerAbility.WALL_JUMP),
+		"Death inside the loaded lab must retain its session toggle."
 	)
 
 	game_root.show_level_select()
-	game_root.load_developer_level(interior)
+	game_root.load_developer_level(level_design_lab)
 	await process_frame
 	var fresh_session := game_root.current_level as LevelSession3D
-	var fresh_pickup := fresh_session.get_node("WallJumpPickup") as AbilityPickup3D
-	assert(
-		not fresh_session.player.has_ability(PlayerAbility.WALL_JUMP),
-		"Loading a level from the selector must create fresh development progression."
-	)
-	assert(not fresh_pickup.is_claimed(), "The fresh level load must restore its pickup.")
+	_assert_complete_kit(fresh_session, "fresh Level Design Lab reload")
 
 	game_root.show_level_select()
 	game_root.load_developer_room()

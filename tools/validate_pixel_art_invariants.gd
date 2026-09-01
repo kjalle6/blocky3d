@@ -18,10 +18,13 @@ const CHECKED_LEVELS: Array[StringName] = [
 	&"overgrown_coastal_ascent",
 ]
 const CHECKED_DEVELOPER_LEVELS: Array[StringName] = [
-	&"dev_enclosed_terrain_lab",
-	&"dev_overgrown_coastal_ascent_interior_review",
+	&"dev_level_design_lab",
 	&"dev_animation_lab",
 ]
+const LEVEL_2_INTERIOR_SCENE_PATH := (
+	"res://scenes/levels/overgrown_coastal_ascent_interior.tscn"
+)
+const LEVEL_2_INTERIOR := preload("res://tools/level_2_interior_fixture.gd")
 ## Props that merely share an edge are not overlapping.
 const EDGE_TOLERANCE := 0.01
 const ACTOR_GROUPS: PackedStringArray = [
@@ -52,6 +55,9 @@ func _run() -> void:
 		game_root.load_level(level_id)
 		await process_frame
 		_audit(game_root.current_level as LevelSession3D, level_id)
+	var level_2_interior := LEVEL_2_INTERIOR.load_into(game_root)
+	await process_frame
+	_audit(level_2_interior, &"overgrown_coastal_ascent_interior")
 	for level_id in CHECKED_DEVELOPER_LEVELS:
 		game_root.load_developer_level(_developer_definition(game_root, level_id))
 		await process_frame
@@ -65,7 +71,7 @@ func _run() -> void:
 		return
 	print("Pixel-art invariants passed: %d authored sprites across %d levels." % [
 		_scenery_seen,
-		CHECKED_LEVELS.size() + CHECKED_DEVELOPER_LEVELS.size(),
+		CHECKED_LEVELS.size() + CHECKED_DEVELOPER_LEVELS.size() + 1,
 	])
 	quit(0)
 
@@ -77,6 +83,7 @@ func _assert_every_scene_is_accounted_for(game_root: Node) -> void:
 	for definition in game_root.campaign.ordered_levels() + game_root._known_developer_definitions():
 		if definition.level_id in CHECKED_LEVELS or definition.level_id in CHECKED_DEVELOPER_LEVELS:
 			covered.append(definition.scene.resource_path)
+	covered.append(LEVEL_2_INTERIOR_SCENE_PATH)
 	for directory in ["res://scenes/levels", "res://scenes/dev"]:
 		for file_name in DirAccess.get_files_at(directory):
 			if not file_name.ends_with(".tscn"):

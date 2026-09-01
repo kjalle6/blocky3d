@@ -8,6 +8,7 @@ extends SceneTree
 const START_POSITION := Vector3(57.6, 7.1, 0.0)
 const JUMP_HOLD_FRAMES := 18
 const MAXIMUM_FRAMES := 600
+const LEVEL_2_INTERIOR := preload("res://tools/level_2_interior_fixture.gd")
 
 var _completed := false
 var _visible_sample_count := 0
@@ -39,14 +40,9 @@ func _run() -> void:
 	for frame in 6:
 		await process_frame
 
-	var definition := load(
-		"res://resources/dev/overgrown_coastal_ascent_interior_review.tres"
-	) as LevelDefinition
-	assert(definition != null)
-	game_root.load_developer_level(definition)
+	var level := LEVEL_2_INTERIOR.load_into(game_root)
 	for frame in 12:
 		await physics_frame
-	var level := game_root.current_level as LevelSession3D
 	assert(level != null)
 	var player := level.player as PlayerCharacter
 	var camera := level.camera as PixelSideCamera3D

@@ -16,7 +16,7 @@ ambient_light_energy = 0.0
 [sub_resource type="BoxShape3D" id="Shape_kill_plane"]
 size = Vector3(64, 1, 8)
 
-[node name="EnclosedTerrainLab" instance=ExtResource("1_base")]
+[node name="LevelDesignLab" instance=ExtResource("1_base")]
 
 [node name="WorldEnvironment" parent="." index="1"]
 environment = SubResource("Environment_underworks")

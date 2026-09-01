@@ -11,8 +11,9 @@ The accepted production build spans
 `resources/campaign/level_02.tres` providing its stable campaign identity. The
 exterior cave threshold uses a direct same-level `target_scene` handoff into the
 interior, preserving the two authored spaces without inventing a second level
-identity. `resources/dev/overgrown_coastal_ascent_interior_review.tres` remains
-only as a direct developer review entry.
+identity. Focused validators, captures, and probes load the interior scene
+directly under `resources/campaign/level_02.tres`, preserving that production
+Level 2 identity without a separate developer selector entry.
 
 ## Approved route
 

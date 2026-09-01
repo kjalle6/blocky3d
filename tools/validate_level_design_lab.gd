@@ -1,5 +1,5 @@
 extends SceneTree
-## Focused contract for the enclosed-terrain construction proof.
+## Focused contract for the reusable Level Design Lab's current cave fixture.
 
 
 func _init() -> void:
@@ -8,7 +8,7 @@ func _init() -> void:
 
 func _run() -> void:
 	var definition := load(
-		"res://resources/dev/enclosed_terrain_lab.tres"
+		"res://resources/dev/level_design_lab.tres"
 	) as LevelDefinition
 	assert(definition != null)
 	assert(definition.validation_errors().is_empty())
@@ -117,7 +117,7 @@ func _run() -> void:
 	assert(_blocked(room.player, Vector3(54.0, 13.5, 0), Vector3.RIGHT * 3.0))
 
 	print(
-		"Enclosed Terrain Lab passed: %d solid cells, %d collision rectangles."
+		"Level Design Lab passed: %d solid cells, %d collision rectangles."
 		% [terrain.solid_cell_count(), terrain.collision_rectangle_count()]
 	)
 	quit(0)

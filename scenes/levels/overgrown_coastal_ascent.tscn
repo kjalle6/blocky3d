@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3]
+[gd_scene load_steps=27 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
 [ext_resource type="Resource" path="res://resources/presentation/backgrounds/green_zone_dusk.tres" id="10_dusk"]
@@ -31,6 +31,9 @@ size = Vector3(64, 1, 8)
 [sub_resource type="BoxShape3D" id="Shape_threshold"]
 size = Vector3(1.28, 2.56, 2)
 
+[sub_resource type="BoxShape3D" id="Shape_left_boundary"]
+size = Vector3(1.28, 14.08, 2)
+
 [node name="OvergrownCoastalAscent" instance=ExtResource("1_base")]
 
 [node name="Background" parent="." index="3"]
@@ -44,6 +47,12 @@ route_end_x = 38.4
 position = Vector3(19.2, -3.84, 0)
 script = ExtResource("2_platform")
 size = Vector3(38.4, 6.4, 2)
+
+[node name="LeftBoundary" type="StaticBody3D" parent="Platforms" index="1"]
+position = Vector3(-0.64, 6.4, 0)
+
+[node name="Collision" type="CollisionShape3D" parent="Platforms/LeftBoundary" index="0"]
+shape = SubResource("Shape_left_boundary")
 
 [node name="FirstStone" type="Sprite3D" parent="Props" index="0"]
 position = Vector3(28.5, -0.38, 0.9)

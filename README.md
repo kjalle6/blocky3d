@@ -33,9 +33,10 @@ remain read-only design references.
 - World 1 is being re-authored as approximately three substantial levels:
   Arrival / Shoreline, Overgrown Coastal Ascent, and Green Zone Finale
 - The World 1 production selector exposes Arrival / Shoreline and Overgrown
-  Coastal Ascent. Development entries retain Animation Lab, the enclosed-terrain
-  construction proof, the directly loadable Overgrown Coastal Ascent Interior
-  Review
+  Coastal Ascent. Its cave interior is a same-level Level 2 section, and focused
+  tools load that section under the production Level 2 identity. Development
+  entries retain Animation Lab and the reusable Level Design Lab; the latter
+  keeps the current cave-terrain and lift proofs as starting fixtures
 - A reusable profile-driven pixel-background rig provides native-scale,
   seam-safe horizontal coverage, authored coastal-to-green transitions, and
   stable framing during vertical camera travel. Level 2 actively uses authored

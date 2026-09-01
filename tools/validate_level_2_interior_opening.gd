@@ -1,9 +1,7 @@
 extends SceneTree
 ## Structural and progression contract for the first production Level 2 slice.
 
-const DEFINITION_PATH := (
-	"res://resources/dev/overgrown_coastal_ascent_interior_review.tres"
-)
+const LEVEL_2_INTERIOR := preload("res://tools/level_2_interior_fixture.gd")
 ## Row in water_cave_lake.png where the lake surface begins, measured from the
 ## art: above it the crop is empty, below it is water.
 const WATERLINE_SOURCE_ROW := 203.0
@@ -43,16 +41,14 @@ func _init() -> void:
 
 
 func _run() -> void:
-	var definition := load(DEFINITION_PATH) as LevelDefinition
+	var definition := LEVEL_2_INTERIOR.production_definition()
 	assert(definition != null)
 	assert(definition.validation_errors().is_empty())
 	assert(definition.available_abilities == PlayerAbility.IMPLEMENTED)
 	var expected_entry_abilities: Array[StringName] = [&"double_jump"]
 	assert(definition.assumed_owned_abilities == expected_entry_abilities)
 
-	var level := definition.scene.instantiate() as LevelSession3D
-	assert(level != null)
-	level.configure(definition, null, definition.assumed_owned_abilities)
+	var level := LEVEL_2_INTERIOR.instantiate_session()
 	root.add_child(level)
 	for frame in 4:
 		await physics_frame
@@ -117,7 +113,7 @@ func _run() -> void:
 		"The terrain face needs at least one source pixel of bottom coverage margin."
 	)
 
-	# The direct interior review owns two localized lake-cavern vistas. Their X
+	# The production interior owns two localized lake-cavern vistas. Their X
 	# positions and every visual layer stay authored in world space; neither a
 	# jump nor the shaft climb may drag cave art vertically with the camera.
 	_validate_water_vista(level, "MachineShaftWaterVista", 94.08, 30.88)

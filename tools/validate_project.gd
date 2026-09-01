@@ -26,11 +26,8 @@ func _validate() -> void:
 	var level_02_button := world_list.get_node("World01Level02Button") as Button
 	var developer_heading := world_list.get_node("DeveloperToolsHeading") as Label
 	var animation_lab_button := world_list.get_node("AnimationLabButton") as Button
-	var enclosed_lab_button := world_list.get_node(
-		"EnclosedTerrainLabButton"
-	) as Button
-	var level_2_interior_review_button := world_list.get_node(
-		"OvergrownCoastalAscentInteriorReviewButton"
+	var level_design_lab_button := world_list.get_node(
+		"LevelDesignLabButton"
 	) as Button
 
 	assert(game_root.campaign is CampaignCatalog, "GameRoot requires typed campaign data.")
@@ -55,10 +52,12 @@ func _validate() -> void:
 	assert(InputMap.has_action("developer_fly_down"))
 	assert(developer_heading.text == "DEVELOPER TOOLS")
 	assert(animation_lab_button.text == "ANIMATION LAB")
-	assert(enclosed_lab_button.text == "ENCLOSED TERRAIN LAB")
+	assert(level_design_lab_button.text == "LEVEL DESIGN LAB")
+	assert(world_list.get_node_or_null("EnclosedTerrainLabButton") == null)
 	assert(
-		level_2_interior_review_button.text
-		== "OVERGROWN COASTAL ASCENT INTERIOR REVIEW"
+		world_list.get_node_or_null(
+			"OvergrownCoastalAscentInteriorReviewButton"
+		) == null
 	)
 	assert(world_list.get_node_or_null("Level2SlideIntroLabButton") == null)
 	assert(world_list.get_node_or_null("Level2WipButton") == null)
@@ -71,7 +70,7 @@ func _validate() -> void:
 	menu_up.pressed = true
 	game_root._unhandled_input(menu_up)
 	assert(
-		level_2_interior_review_button.has_focus(),
+		level_design_lab_button.has_focus(),
 		"W should wrap Level 1 to the final developer level."
 	)
 	var menu_down := InputEventKey.new()
