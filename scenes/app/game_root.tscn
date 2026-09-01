@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/app/game_root.gd" id="1_app"]
 [ext_resource type="Resource" path="res://resources/campaign/main_campaign.tres" id="2_campaign"]
@@ -6,7 +6,6 @@
 [ext_resource type="Resource" path="res://resources/dev/enclosed_terrain_lab.tres" id="4_enclosed_lab"]
 [ext_resource type="Script" path="res://scripts/campaign/level_definition.gd" id="5_level_definition"]
 [ext_resource type="Resource" path="res://resources/dev/overgrown_coastal_ascent_interior_review.tres" id="7_level_2_interior_review"]
-[ext_resource type="Resource" path="res://resources/dev/level_2_slide_intro_lab.tres" id="9_level_2_slide_intro_lab"]
 
 [sub_resource type="StyleBoxFlat" id="Style_panel"]
 bg_color = Color(0.03, 0.045, 0.075, 0.9)
@@ -38,7 +37,7 @@ corner_radius_bottom_left = 6
 script = ExtResource("1_app")
 campaign = ExtResource("2_campaign")
 developer_room_definition = ExtResource("3_animation_lab")
-developer_level_definitions = Array[ExtResource("5_level_definition")]([ExtResource("3_animation_lab"), ExtResource("4_enclosed_lab"), ExtResource("7_level_2_interior_review"), ExtResource("9_level_2_slide_intro_lab")])
+developer_level_definitions = Array[ExtResource("5_level_definition")]([ExtResource("3_animation_lab"), ExtResource("4_enclosed_lab"), ExtResource("7_level_2_interior_review")])
 level_button_style = SubResource("Style_button")
 developer_fresh_level_runs = true
 developer_tools_enabled = true

@@ -20,7 +20,6 @@ const CHECKED_LEVELS: Array[StringName] = [
 const CHECKED_DEVELOPER_LEVELS: Array[StringName] = [
 	&"dev_enclosed_terrain_lab",
 	&"dev_overgrown_coastal_ascent_interior_review",
-	&"dev_level_2_slide_intro_lab",
 	&"dev_animation_lab",
 ]
 ## Props that merely share an edge are not overlapping.

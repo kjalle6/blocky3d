@@ -1,5 +1,5 @@
 extends SceneTree
-## Focused contract for the Level 2 cave-slide cutscene and its disposable lab.
+## Focused contract for the production Level 2 cave-slide interstitial.
 
 
 func _init() -> void:
@@ -7,27 +7,16 @@ func _init() -> void:
 
 
 func _run() -> void:
-	var packed_root := load("res://scenes/app/game_root.tscn") as PackedScene
-	assert(packed_root != null)
-	var game_root := packed_root.instantiate()
-	game_root.persist_progression = false
-	root.add_child(game_root)
-	await process_frame
-
-	var definition := _developer_definition(
-		game_root,
-		&"dev_level_2_slide_intro_lab"
-	)
-	game_root.load_developer_level(definition)
+	var packed_cutscene := load(
+		"res://scenes/cutscenes/level_2_cave_slide_intro.tscn"
+	) as PackedScene
+	assert(packed_cutscene != null)
+	var cutscene := packed_cutscene.instantiate() as Level2CaveSlideIntro3D
+	assert(cutscene != null)
+	root.add_child(cutscene)
 	for frame in 4:
 		await process_frame
-	var lab := game_root.current_level as Level2SlideIntroLab
-	assert(lab != null)
-	assert(not lab.player.visible)
-	assert(not lab.player.is_physics_processing())
 
-	var cutscene := lab.cave_slide_intro
-	assert(cutscene != null)
 	assert(cutscene.validation_errors().is_empty())
 	assert(cutscene.camera.current)
 	assert(cutscene.camera.target == cutscene.camera_target)
@@ -37,10 +26,7 @@ func _run() -> void:
 	assert(is_equal_approx(cutscene.slide_duration, 4.4))
 	assert(is_equal_approx(cutscene.slide_contact_depth, 0.26))
 	assert(absf(cutscene.terminal_horizontal_speed() - 8.0) < 0.15)
-	assert(
-		cutscene.slide_dust_puff_count()
-		== cutscene.SLIDE_DUST_PUFF_COUNT
-	)
+	assert(cutscene.slide_dust_puff_count() == cutscene.SLIDE_DUST_PUFF_COUNT)
 
 	assert(
 		cutscene.find_children("ChuteFloorRock*", "Sprite3D", true, false).size()
@@ -69,17 +55,23 @@ func _run() -> void:
 	cutscene.preview_slide_progress(0.5)
 	await process_frame
 	assert(cutscene.pixel_visual.current_state() == "wall_slide")
-	assert(is_equal_approx(
-		rad_to_deg(cutscene.visual_pivot.rotation.z),
-		cutscene.slide_visual_angle_degrees
-	))
-	assert(cutscene.visual_pivot.position.is_equal_approx(
-		cutscene.slide_contact_offset()
-	))
-	assert(is_equal_approx(
-		cutscene.visual_pivot.position.length(),
-		cutscene.slide_contact_depth
-	))
+	assert(
+		is_equal_approx(
+			rad_to_deg(cutscene.visual_pivot.rotation.z),
+			cutscene.slide_visual_angle_degrees
+		)
+	)
+	assert(
+		cutscene.visual_pivot.position.is_equal_approx(
+			cutscene.slide_contact_offset()
+		)
+	)
+	assert(
+		is_equal_approx(
+			cutscene.visual_pivot.position.length(),
+			cutscene.slide_contact_depth
+		)
+	)
 	var middle_position := cutscene.puppet.global_position
 	var first_marker := cutscene.get_node(
 		cutscene.path_marker_paths.front()
@@ -104,9 +96,11 @@ func _run() -> void:
 	assert(cutscene.has_finished())
 	assert(cutscene.was_skipped())
 	assert(cutscene.pixel_visual.current_state() == "wall_slide")
-	assert(cutscene.puppet.global_position.is_equal_approx(
-		cutscene.slide_exit_global_position()
-	))
+	assert(
+		cutscene.puppet.global_position.is_equal_approx(
+			cutscene.slide_exit_global_position()
+		)
+	)
 	assert(cutscene.visible_slide_dust_count() == 0)
 	assert(finish_count[0] == 1)
 	cutscene.skip_to_end()
@@ -123,7 +117,7 @@ func _run() -> void:
 	assert(finish_count[0] == 2)
 
 	print(
-		"Level 2 slide intro lab passed: extended slide, dust, exit, skip, and replay."
+		"Level 2 production slide intro passed: framing, dust, exit, skip, and replay."
 	)
 	quit(0)
 
@@ -143,14 +137,3 @@ func _validate_pixel_sizes(cutscene: Level2CaveSlideIntro3D) -> void:
 			sprite.cast_shadow
 			== GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		)
-
-
-func _developer_definition(
-	game_root: Node,
-	level_id: StringName
-) -> LevelDefinition:
-	for definition in game_root.developer_level_definitions:
-		if definition != null and definition.level_id == level_id:
-			return definition
-	assert(false, "Missing developer level definition: %s" % level_id)
-	return null

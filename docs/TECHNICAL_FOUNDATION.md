@@ -511,7 +511,7 @@ death and reset behavior.
 Approved replacement levels enter `CampaignCatalog`.
 `GameRoot.developer_level_definitions` is reserved for tools and focused review
 fixtures with a null world definition: the Animation Lab, the Enclosed Terrain
-Lab, Overgrown Coastal Ascent Interior Review, and the slide-intro lab.
+Lab, and Overgrown Coastal Ascent Interior Review.
 Animation Lab remains the only one with in-room ability toggles. The production
 Level 2 approach uses a direct same-level `target_scene` handoff into its live
 interior; the developer Interior Review exists only to load that interior

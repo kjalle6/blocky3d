@@ -192,8 +192,7 @@ The cave threshold enters
 `scenes/levels/overgrown_coastal_ascent_interior.tscn` through a direct
 same-level `target_scene` handoff, preserving abilities and active run state.
 `resources/dev/overgrown_coastal_ascent_interior_review.tres` remains only as a
-direct developer review shortcut. The slide-intro lab remains available for
-focused cutscene inspection.
+direct developer review shortcut.
 
 The completed teaching arc is:
 

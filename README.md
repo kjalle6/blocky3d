@@ -35,7 +35,7 @@ remain read-only design references.
 - The World 1 production selector exposes Arrival / Shoreline and Overgrown
   Coastal Ascent. Development entries retain Animation Lab, the enclosed-terrain
   construction proof, the directly loadable Overgrown Coastal Ascent Interior
-  Review, and the slide-intro lab
+  Review
 - A reusable profile-driven pixel-background rig provides native-scale,
   seam-safe horizontal coverage, authored coastal-to-green transitions, and
   stable framing during vertical camera travel. Level 2 actively uses authored
