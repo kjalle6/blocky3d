@@ -8,6 +8,13 @@ automation still uses the smaller standard build through Compatibility.
 
 - Never launch either Godot executable directly for validation or captures.
 - Always use `tools/run_godot_tool.ps1`.
+- Codex launches using the runner's `-Game` switch are interactive GUI runs and
+  must be executed with desktop/GUI permission outside the restricted command
+  sandbox. A sandboxed game process can remain healthy while creating no window
+  the user can see. Keep using the runner; elevate the runner invocation rather
+  than bypassing it. Godot can report `MainWindowHandle = 0` even for a window
+  the user visibly received, so user confirmation is authoritative for these
+  launches.
 - Keep the runner on the standard non-.NET executable; do not override it with
   the Mono build.
 - `--headless` is opt-in through the runner's `-Headless` switch and is never
@@ -82,6 +89,10 @@ almost certainly reappear.
 suite. It drives one real jump and samples after `frame_post_draw`, so it needs
 a rendering context: run it with `-Visual`. Headless it cannot work, and it now
 says so and exits rather than hanging on the automation lock.
+
+`tools/probe_level_2_wall_jump_camera_focus.gd` is outside the suite for the
+same reason. It drives repeated real wall jumps and measures rendered player,
+camera, and ceiling motion; run it with `-Visual`, never headless.
 
 Run the suite when a change could plausibly reach what it covers, not as
 reassurance. Two full passes in a row, the second confirming what the first

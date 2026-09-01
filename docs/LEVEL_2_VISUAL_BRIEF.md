@@ -28,23 +28,23 @@ LOWER TUNNEL
 The user's drawn plan owns this route. Coordinates, tile counts, and camera
 regions serve it; they do not get to reinterpret it.
 
-The current approved implementation is frozen in
+The approved gameplay-route baseline is frozen in
 `scenes/levels/overgrown_coastal_ascent_interior_snapshot.tscn`. The exterior
 `Level 2 WIP` route enters that snapshot, while the directly loadable
-`Level 2 Interior WIP` entry continues to use
-`scenes/levels/overgrown_coastal_ascent_interior.tscn`. New background and
-presentation experiments belong only in the editable Interior WIP until they
-are explicitly accepted into a later snapshot.
+`Level 2 Interior WIP` entry uses
+`scenes/levels/overgrown_coastal_ascent_interior.tscn`. The presentation on this
+page is accepted in that editable scene, but remains isolated there until an
+explicit snapshot promotion.
 
-## Cave background zoning and lighting order
+## Cave background zoning and regional grade
 
 ### Global background zoning
 
 Zoning is authored as world volumes rather than keyed to progress. A background
-layer carries a `zone_tag`; an empty tag means unzoned and always drawn. The
-pale base is therefore continuous fallback coverage, while the distant
-composition is tagged `upper` and only the upper-floor region reveals it.
-Enclosed lower tunnels and shafts visibly keep the restrained base treatment.
+layer carries a `zone_tag`; an empty tag means unzoned and always drawn. Level 2
+uses five layers: three smoky-grey crystal-cave layers below and two pale
+water-cave layers above. The lower detail layers invert the `upper` region
+weight, so they fade out on the exact curve that reveals the upper composition.
 
 Because influence is a pure function of camera position, descending returns to
 the base and climbing restores the upper treatment with no state to desync.
@@ -52,17 +52,26 @@ Checkpoint respawn, death, restart, and direct loads reproduce the same
 background. Multiple regions revealing the same tag form a union without
 summing into an over-bright layer.
 
-The handoff is deliberately back-loaded. `blend_exponent` keeps the upper
-composition faint through most of the climb and brings it in near the region
-face, so the change arrives at the top rather than halfway up the shaft, and
-the shaft walls hide the part of the ramp that moves fastest.
+The accepted handoff begins during the final climb and uses a broad smooth
+blend: `blend_margin` is 7.0 m and `blend_exponent` is 1.0. Lower detail fades
+out as the upper composition, regional grade, and ceiling arrive, while the
+shaft walls mask the busiest part of the transition.
 
-Both global layers are screen-locked vertically, so ordinary jumps and sustained
+All global layers are screen-locked vertically, so ordinary jumps and sustained
 camera climbs do not slide their art up or down on screen. The camera itself
 clamps at the upper floor, so ordinary jumps there also leave the foreground
-cave shell still instead of changing which part of the backdrop it masks. The uniform base is
-also screen-locked horizontally. Only the distant upper composition uses normal
-horizontal parallax, so it drifts as the player walks without moving vertically.
+cave shell still instead of changing which part of the backdrop it masks. The
+flat base layers are also screen-locked horizontally. The lower distant and
+crystal layers use restrained 0.08 and 0.14 horizontal parallax; the upper
+distant layer uses 0.22. Their different rates preserve depth without allowing
+the rapid wall-jump zigzag to move the camera itself.
+
+The Wall Jump shaft owns a narrow horizontal camera focus at its 58.88 m
+centre. The camera keeps following the climb vertically, but does not chase the
+player's rapid left-right crossings inside those walls. The shaft, parallax
+layers, and emerging ceiling therefore hold one readable composition; ordinary
+look-ahead resumes smoothly when the player exits left onto the upper floor.
+
 The localized water vistas keep the authored X of their specific openings but
 are screen-locked vertically. During the sustained shaft climb they remain fixed
 to the frame; after reaching the upper floor, the camera clamp keeps both the
@@ -73,26 +82,49 @@ that tall-space coverage was possible, but not an accepted presentation. It
 made the artwork scroll past the camera and repeated a recognizable band during
 the climb. Do not restore that workaround.
 
-### Localized machine-gap water vistas
+### Shared upper ceiling and localized machine-gap water vistas
+
+The source artwork's rocky ceiling is shared across the entire upper zone as a
+five-panel, horizontally world-anchored overlay. It scrolls past as the player
+travels instead of following the camera, while its Y remains camera-stable for
+the tall transition. It follows the same spatial blend as the background and
+regional grade, but contains no water or collision.
+
+The foreground rock-shell roof is raised to its existing machine-gap height
+throughout that upper chamber. The rocky formation therefore keeps the exact
+placement established by the water section and is revealed naturally; it is
+not pulled down underneath the ordinary corridor roof. The raised shell and
+its collision remain identical, so the new headroom is visually honest.
 
 Each localized water vista stays authored to its shaft on X while preserving a
-fixed screen-space Y; it is a view through one opening, not a global scrolling
-layer or part of the background handoff.
-Uniform source rows extend its ceiling to the distant cave roof and its deep
-water below the kill plane, so fixed art never exposes a hard edge. The lake
-crop sits 2.0 m lower than its source alignment. The pack's foreground cave
-frame is omitted because the level's own rock shell remains the foreground and
-collision source of truth.
+fixed screen-space Y; it contributes only the lake, rocks, and deep-water fill
+through that opening. Uniform source rows extend its water below the kill plane,
+so fixed art never exposes a hard edge. The lake crop sits 2.0 m lower than its
+source alignment. The pack's foreground cave frame is omitted because the
+level's own rock shell remains the foreground and collision source of truth.
 
-### Lighting order
+### Accepted regional grade
 
-Build and approve the background zoning at the current lighting first. Only
-then add a restrained lower-cave colour grade that blends back to the current
-upper-floor brightness during the sustained climb. The grade follows authored
-world regions, reverses on descent, leaves UI unchanged, and must not pulse
-during ordinary jumps. Its exact lower darkness remains a hands-on tuning
-value. Keep this Level 2-specific until another production level proves a
-shared system is useful.
+Real lights are not available: every sprite is unshaded, so a light node has
+nothing to fall on. Lighting here means authored art plus the regional grade.
+
+`CaveRegionGrade` is the accepted lighting treatment. It follows the same
+`upper` zone weight as the backgrounds and ceiling, applying brightness 0.74,
+saturation 0.88, and contrast 1.04 below before returning all three values to
+1.0 above. The interface is composited separately and remains unchanged.
+
+No free-standing amber or cyan spill is active. Those overlay proofs drew
+attention to their own shape instead of making the cave feel naturally lit.
+The smoky lower palette, brighter upper artwork, water, shared ceiling, and
+regional grade now carry the transition together. Any future waterline bounce
+must read the same water-surface source used by contact and splash behavior.
+
+**One frame cannot show this presentation.** Background treatment follows the
+camera's own position, so a pulled-back overview renders the whole level in
+whichever zone its camera sits in. The review sheet therefore carries two
+overviews, from lower and upper camera heights, and neither shows the mixed
+state. Judge the handoff from the per-beat frames, which sit at the heights a
+player actually occupies.
 
 ## Visual contracts
 
@@ -105,7 +137,9 @@ shared system is useful.
 | Dash alcove | A connected upper-left reward space reached after the climb | A distant floating chamber or giant empty turnback room |
 | Dash crossing | One legible rightward gap whose spikes explain why Dash is required | An isolated spike box, one-tile pillar, or disconnected destination |
 | Machine shaft | A break in the corridor wide enough that Dash is required, open far above and below, with one hovering machine in it and two readable ways past | A gap a Double Jump can clear, a ceiling over the machine, a floor under it, or geometry that only pretends to offer a choice |
-| Background zoning | A restrained solid cave base below; the full layered cave composition revealed on the upper water floor; descending naturally returns to the base | Repeated vertical wallpaper, a hard regional pop, a camera-height-only switch, or lighting used to hide a broken transition |
+| Background zoning | A smoky layered crystal cave below, cross-fading into the pale water cave above; descending naturally restores the lower composition | Repeated vertical wallpaper, a hard regional pop, a camera-height-only switch, or lighting used to hide a broken transition |
+| Upper cave ceiling | One shared rocky roof across the upper chamber, authored on X and camera-stable on Y | Local duplicates, water outside its shafts, collision, or horizontal camera attachment |
+| Shaft camera | Vertical climb tracking with the composition held at the shaft's horizontal centre | Left-right camera sway during repeated wall jumps or a hard release at the upper exit |
 | Machine-gap vista | A lake view localized to its authored X opening and vertically static on screen, with the level shell remaining in front | A collision surface, global scrolling layer, jump-driven vertical drift, or exposed top/bottom art edge |
 
 ## Current approval boundary
@@ -115,6 +149,11 @@ recap, the three detached ascent platforms with Wall Jump on P3, the shaft fed
 by P3, the wall-spike patches biasing the top exit left, Dash and its checkpoint
 in the upper-left alcove, the 13.28 m Dash-required crossing back right, and the
 first machine shaft.
+
+Hands-on review also accepts the editable Interior WIP's five-layer lower/upper
+background blend, regional grade, raised upper rock-shell roof, shared ceiling,
+and horizontally focused Wall Jump shaft camera. The frozen transition snapshot
+remains unchanged; this approval does not silently promote it.
 
 A checkpoint sits on the ledge before the first machine, so a fall retries that
 encounter rather than the Dash crossing before it.
@@ -182,11 +221,11 @@ player already knows what "it is rising, go low" means.
 Later chambers may combine several machines at different speeds, and may demand
 a Double Jump to reach a lane. Build and review one at a time.
 
-## Next presentation pass
+## Current presentation boundary
 
-Gameplay stops at the paired-machine landing. Complete and review the
-background-then-lighting sequence under **Cave background zoning and lighting
-order** before extending the route or promoting a new snapshot.
+The presentation through the paired-machine landing is accepted in the editable
+Interior WIP. Gameplay still stops there. Do not promote the frozen snapshot or
+extend the route until the user explicitly chooses the next production step.
 
 ## Required review loop
 

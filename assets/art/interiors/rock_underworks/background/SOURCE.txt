@@ -3,10 +3,13 @@ Pixel Cave Game Parallax Backgrounds
 Source archive:
 D:\GodotProjects\blocky3dassets\backgrounds\pixel_caves_parallax\craftpix-net-576316-pixel-cave-game-parallax-backgrounds.zip
 
-Promoted files come from `background 4` and retain their original pixels:
-- 1.png -> water_cave_base.png
-- 2.png -> water_cave_distant.png
-- 3.png -> water_cave_lake.png
+Promoted files retain their original pixels:
+- background 3/1.png -> lower_cave_base.png
+- background 3/2.png -> lower_cave_distant.png
+- background 3/3.png -> lower_cave_crystals.png
+- background 4/1.png -> water_cave_base.png
+- background 4/2.png -> water_cave_distant.png
+- background 4/3.png -> water_cave_lake.png
 
 Supplied source page: https://craftpix.net/freebies/
 Supplied license reference: https://craftpix.net/file-licenses/

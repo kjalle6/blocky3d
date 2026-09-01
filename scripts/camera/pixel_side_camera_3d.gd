@@ -24,6 +24,7 @@ var _smoothed_x := 0.0
 var _smoothed_vertical_offset := 0.0
 var _vertical_regions: Array[VerticalCameraRegion3D] = []
 var _active_vertical_region: VerticalCameraRegion3D
+var _active_horizontal_focus_region: VerticalCameraRegion3D
 var _developer_inspection_enabled := false
 
 
@@ -41,6 +42,7 @@ func _process(delta: float) -> void:
 	var desired_vertical_offset := 0.0
 	if _developer_inspection_enabled:
 		_active_vertical_region = null
+		_active_horizontal_focus_region = null
 		desired_vertical_offset = target.global_position.y - target_height
 	else:
 		desired_x = clampf(
@@ -49,6 +51,15 @@ func _process(delta: float) -> void:
 			maximum_center_x
 		)
 		_active_vertical_region = _find_active_vertical_region()
+		_active_horizontal_focus_region = _find_active_horizontal_focus_region()
+		if (
+			_active_horizontal_focus_region != null
+		):
+			desired_x = clampf(
+				_active_horizontal_focus_region.horizontal_focus_world_x(),
+				minimum_center_x,
+				maximum_center_x
+			)
 	if not _developer_inspection_enabled and _active_vertical_region != null:
 		desired_vertical_offset = clampf(
 			target.global_position.y
@@ -111,6 +122,10 @@ func active_vertical_region() -> VerticalCameraRegion3D:
 	return _active_vertical_region
 
 
+func active_horizontal_focus_region() -> VerticalCameraRegion3D:
+	return _active_horizontal_focus_region
+
+
 func set_developer_inspection_enabled(enabled: bool) -> void:
 	_developer_inspection_enabled = enabled
 	snap_to_target()
@@ -153,6 +168,20 @@ func snap_world_y(world_y: float) -> float:
 func _find_active_vertical_region() -> VerticalCameraRegion3D:
 	var best_region: VerticalCameraRegion3D
 	for region in _vertical_regions:
+		if not region.vertical_framing_enabled:
+			continue
+		if not region.contains_world_position(target.global_position):
+			continue
+		if best_region == null or region.priority > best_region.priority:
+			best_region = region
+	return best_region
+
+
+func _find_active_horizontal_focus_region() -> VerticalCameraRegion3D:
+	var best_region: VerticalCameraRegion3D
+	for region in _vertical_regions:
+		if not region.horizontal_focus_enabled:
+			continue
 		if not region.contains_world_position(target.global_position):
 			continue
 		if best_region == null or region.priority > best_region.priority:

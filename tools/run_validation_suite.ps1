@@ -4,14 +4,10 @@ Runs the project's validator scripts as a named set.
 
 .DESCRIPTION
 Every validator is its own SceneTree main, so running "the tests" means one
-Godot launch per validator. A full pass is therefore expensive and, without a
-scope, dominated by the six frozen prototype levels: their twelve validators
-are roughly 60% of the wall time and cannot be affected by most changes.
-
-Runs every validator. The scope switch is kept because a slower set will
-almost certainly reappear - the six prototype levels used to be that set, and
-their twelve validators were roughly 60% of a full run before they were
-deleted.
+Godot launch per validator. Runs every current validator. The scope switch is
+kept because a slower set will almost certainly reappear; before the six
+prototype levels and their twelve dedicated validators were deleted, they were
+that set and accounted for roughly 60% of a full run.
 
 Validators run through tools/run_godot_tool.ps1, which holds the exclusive
 automation lock, so they run one at a time by design.

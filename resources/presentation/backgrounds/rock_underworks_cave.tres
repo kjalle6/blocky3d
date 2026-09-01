@@ -1,24 +1,50 @@
-[gd_resource type="Resource" script_class="PixelBackgroundProfile" load_steps=7 format=3]
+[gd_resource type="Resource" script_class="PixelBackgroundProfile" load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://scripts/presentation/pixel_background_profile.gd" id="1_profile"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_background_layer_profile.gd" id="2_layer"]
-[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/background/water_cave_base.png" id="3_base"]
-[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/background/water_cave_distant.png" id="4_distant"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/background/lower_cave_base.png" id="3_lower_base"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/background/lower_cave_distant.png" id="4_lower_distant"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/background/lower_cave_crystals.png" id="5_lower_crystals"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/background/water_cave_base.png" id="6_upper_base"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/background/water_cave_distant.png" id="7_upper_distant"]
 
-[sub_resource type="Resource" id="Layer_base"]
+[sub_resource type="Resource" id="Layer_lower_base"]
 script = ExtResource("2_layer")
-texture = ExtResource("3_base")
+texture = ExtResource("3_lower_base")
 horizontal_policy = 0
-depth = -5.8
+depth = -5.9
 
-[sub_resource type="Resource" id="Layer_distant"]
+[sub_resource type="Resource" id="Layer_lower_distant"]
 script = ExtResource("2_layer")
-texture = ExtResource("4_distant")
-horizontal_parallax = 0.22
+texture = ExtResource("4_lower_distant")
+horizontal_parallax = 0.08
+depth = -5.8
+zone_tag = &"upper"
+invert_zone_visibility = true
+
+[sub_resource type="Resource" id="Layer_lower_crystals"]
+script = ExtResource("2_layer")
+texture = ExtResource("5_lower_crystals")
+horizontal_parallax = 0.14
+depth = -5.7
+zone_tag = &"upper"
+invert_zone_visibility = true
+
+[sub_resource type="Resource" id="Layer_upper_base"]
+script = ExtResource("2_layer")
+texture = ExtResource("6_upper_base")
+horizontal_policy = 0
 zone_tag = &"upper"
 depth = -5.6
+
+[sub_resource type="Resource" id="Layer_upper_distant"]
+script = ExtResource("2_layer")
+texture = ExtResource("7_upper_distant")
+horizontal_parallax = 0.22
+zone_tag = &"upper"
+depth = -5.5
 
 [resource]
 script = ExtResource("1_profile")
 profile_id = &"rock_underworks_cave"
-layers = Array[ExtResource("2_layer")]([SubResource("Layer_base"), SubResource("Layer_distant")])
+layers = Array[ExtResource("2_layer")]([SubResource("Layer_lower_base"), SubResource("Layer_lower_distant"), SubResource("Layer_lower_crystals"), SubResource("Layer_upper_base"), SubResource("Layer_upper_distant")])

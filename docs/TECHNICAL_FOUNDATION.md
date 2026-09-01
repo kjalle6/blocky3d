@@ -167,10 +167,11 @@ weight from any region revealing that tag, preserving each region's blend ramp
 without adding overlapping regions into an over-bright result. The weight is a
 pure function of rendered camera position, so traversal in either direction,
 restart, checkpoint respawn, and direct loads reproduce the same composition.
-Level 2 uses this to keep a flat cave base visible below and reveal its detailed
-upper composition near the water floor. The localized water vistas retain their
-authored world X while matching the camera on Y, so jump-follow never drags the
-water composition vertically across the screen.
+`invert_zone_visibility` lets a layer consume the complementary weight, so one
+composition can disappear on exactly the curve that reveals another. Level 2
+uses three inverted smoky-grey lower-cave layers and two upper water-cave layers
+for a broad reversible handoff. Its regional grade and shared ceiling consume
+the same upper-zone influence, keeping the entire presentation synchronized.
 
 Viewport-covering background art uses the foreground pixel scale: 576x324
 pixels at 0.04 metres per pixel produces a 23.04x12.96-metre panel matching the
@@ -191,15 +192,18 @@ choice and must not be simulated with near-zero parallax.
 Localized interior openings use `PixelVistaWindow3D` for layers that should not
 fill every room. Its explicit root policy prevents camera behavior from being
 smuggled into an arbitrary parallax value. Level 2 keeps each entire vista
-world-authored on X but camera-locked on Y, so its ceiling, horizon, and rocks
-remain vertically static on screen while the player jumps. Foreground terrain
-masks each vista's authored X edges. Transparent source
-bands are safe crop boundaries: Level 2 keeps the ceiling crop at its normal
-world framing and lowers the lake crop by 2.0 m. Uniform one-pixel source rows
-extend the fixed ceiling to the roof and the deep water below the kill plane.
-The view is presentation-only and contains no collision. The editable Interior
-WIP combines a two-layer global cave profile with these localized split vistas,
-while its frozen transition snapshot omits the experiment.
+world-authored on X but camera-locked on Y, so its lake and rocks remain
+vertically static on screen while the player jumps. Foreground terrain masks
+each vista's authored X edges. Level 2 lowers the lake crop by 2.0 m, and a
+uniform one-pixel source row extends its deep-water fill below the kill plane.
+The view is presentation-only and contains no collision.
+
+`PixelCaveCeilingOverlay3D` owns the source artwork's rocky roof separately from
+those water openings. Level 2 lays out five mirrored panels on authored world X,
+locks their Y to the camera, and reveals them with the upper-zone influence. The
+overlay contains no water or collision. The editable Interior WIP combines that
+ceiling and the localized vistas with its five-layer global cave profile; the
+frozen transition snapshot remains unchanged.
 
 World-locked global layers may request exact texture-height rows above or below
 their authored base through `world_repeat_above` and `world_repeat_below`. The
@@ -208,14 +212,18 @@ the native texture height; it never re-snaps rows independently. This supplies
 coverage for tall spaces without coupling art to camera Y or introducing fake
 depth layers.
 
-The vertical-region extension remains opt-in rather than global, but it is no
-longer dormant: the Level 2 WIP interior depends on it for the shaft's 28.0 m
-upper-floor camera offset. The region clamps there so an ordinary jump cannot
-move the whole upper cave shell. That WIP entry is not yet a cataloged production
-section. The separate height-window extension remains dormant until an approved
-composition needs fixed-scale depth, parallax, deliberate viewport cropping,
-and camera-height fades; runtime scaling of scenery remains excluded because it
-reads as zooming rather than travel.
+Camera regions select vertical framing and horizontal focus independently. A
+narrow focus can therefore hold one shaft composition on X while a broader
+region continues to track its climb on Y; neither policy has to replace the
+other. The Level 2 WIP interior uses that split for its Wall Jump shaft and its
+28.0 m upper-floor camera offset. The vertical region clamps there so an
+ordinary jump cannot move the whole upper cave shell. That WIP entry is not yet
+a cataloged production section. Normal horizontal look-ahead resumes through
+the camera's smoothing when the player exits the shaft. The separate
+height-window extension remains dormant until an approved composition needs
+fixed-scale depth, parallax, deliberate viewport cropping, and camera-height
+fades; runtime scaling of scenery remains excluded because it reads as zooming
+rather than travel.
 
 ## Engineering rules
 
@@ -505,9 +513,9 @@ remains the only one with in-room ability toggles.
 
 The Level 2 approach threshold targets a separate, hidden level definition
 whose scene is the frozen interior snapshot. The visible `Level 2 Interior WIP`
-definition still targets the editable interior scene. This keeps experimental
-presentation work from silently changing the baseline reached through
-`Level 2 WIP`; accepting a new baseline is an explicit snapshot update.
+definition targets the editable interior scene. Its accepted presentation
+therefore cannot silently change the baseline reached through `Level 2 WIP`;
+promoting a new baseline remains an explicit snapshot update.
 `GameRoot.developer_hidden_level_definitions` registers transition-only
 developer targets without exposing an extra selector button.
 
@@ -529,25 +537,19 @@ Every lasting system receives focused validation. The current suite covers:
   16:9 and ultrawide edge coverage, mirrored joins, and screen-locked vertical
   coverage using the Level 2 interior's 28 m shaft as its fixture;
 - movement, jump envelope, coyote time, buffering, and reset;
-- Level 1 combat, goal flow, reset, and full completion;
-- Level 2 route measurements, spike collision and centering, checkpoints,
-  reset, and full completion.
 - Double Jump coyote, momentum, release, consumption, landing-refresh, and
   animation contracts;
-- Level 3 route measurements, permanent pickup and replay behavior,
-  checkpoints, reset, and full completion;
 - Wall Jump contact, slide, kick, same-wall lockout, opposite-wall refresh,
   Double Jump interaction, and Animation Lab contracts;
-- Level 4 route measurements, pickup policy, vertical camera, checkpoints,
-  reset, and full input-driven completion;
 - Dash direction, burst speed, gravity suspension, charge, jump cancellation,
   wall impact, attack priority, and Animation Lab contracts;
-- Level 5 route measurements, six Dash-required crossings, the rule prohibiting
-  vertically stacked playable surfaces, safely spaced flow encounters, pickup
-  policy, checkpoints, reset, and full production-input completion;
-- Level 6's two recap sections, strict Dash gap, full-kit entry policy,
-  uninterrupted Wall Jump, Double Jump, and Dash final proof, checkpoints,
-  mutable-actor reset, raised-chest goal, and full production-input completion.
+- the Level 2 WIP approach's native cave entrance, continuous ground, authored
+  cave handoff, frozen-snapshot boundary, and ability-preserving transition;
+- the editable Level 2 interior's enclosed terrain, pickup order, wall-jump
+  shaft, Dash crossing, hovering hazards, checkpoints, waterline death and
+  splash presentation, zoned cave background, regional grade, shared ceiling,
+  independent vertical and horizontal camera regions, containment, and full
+  real-input traversal;
 - production Arrival / Shoreline's catalog identity, typed sand style,
   synchronized animated water, collision-free travelling shore wave, grounded
   scenery, session-local Double Jump pickup, checkpoint/reset policy, Green
@@ -577,6 +579,8 @@ Every lasting system receives focused validation. The current suite covers:
 Graphical capture scripts render deterministic 1920x1080 review positions for
 all current levels. Visual changes are inspected in the running game;
 screenshots do not replace hands-on movement and collision testing.
+The rendered Level 2 background-drift and wall-jump-camera probes deliberately
+remain outside the headless suite because they sample after `frame_post_draw`.
 
 Automated playthroughs are technical legality checks, not difficulty judges.
 They may prove that collision, inputs, checkpoints, and completion work, but
@@ -595,7 +599,7 @@ Before committing a gameplay milestone:
 4. Play the complete route at normal speed.
 5. Confirm `git diff --check` and review the staged file set.
 
-## Current baseline - 13 August 2026
+## Current baseline - 1 September 2026
 
 The movement, collision, enemy, checkpoint and restart behaviour that Prototype
 Levels 1-6 used to protect is now proven in the Animation Lab, Arrival, and the
@@ -614,28 +618,29 @@ and tire-swing-tree finish form the authored baseline. The rejected
 stitched-tree and folded-corridor experiments remain removed rather than hidden
 as production baggage.
 
-The Overgrown Coastal Ascent interior is now underway. The isolated lab proved
-the reusable grid-driven terrain component, while the Level 2 WIP approach
-proves the matched doorway handoff. The first authored interior slice uses those
-contracts for a combat-and-spike recap, Double Jump rise, Wall Jump pickup and
-shaft, forced left turn to the Dash pickup, and a 13.28 m Dash return crossing
-validated beyond the Double Jump envelope. Structural
-checks and a real-input traversal prove technical reachability. Its sustained
-shaft is already an active consumer of the reusable, opt-in vertical camera
-region system, capped at the 28.0 m upper-floor framing. Green Zone enemy 5 now has a dedicated indestructible
+The Overgrown Coastal Ascent interior is underway. The isolated lab proved the
+reusable grid-driven terrain component, while the Level 2 WIP approach proves
+the matched doorway handoff. The editable interior now carries a connected
+combat-and-spike recap, Double Jump rise, Wall Jump pickup and shaft, forced
+left turn to the Dash pickup, 13.28 m Dash return crossing, and two hovering
+machine chambers. Its sustained shaft actively combines the reusable vertical
+camera region, capped at the 28.0 m upper-floor framing, with an independent
+horizontal focus that holds the shaft composition during rapid wall jumps.
+
+The editable presentation now uses a reversible five-layer smoky-lower to
+pale-upper cave blend, matching regional grade, localized water vistas, raised
+foreground roof, and shared upper ceiling. Hands-on review accepts those
+contracts in the Interior WIP; the frozen transition snapshot remains unchanged
+until explicit promotion. Green Zone enemy 5 remains a dedicated indestructible
 flying-hazard archetype outside the `melee_target` and stomp contracts, with
-explicit lethal body/electric contact and deterministic reset behavior. Its
-first accepted use is one generous chamber offering a jump-and-air-Dash route
-above and a timed ground-Dash route below. The next authored chamber deliberately
-duplicates that geometry and places one flyer in each outer horizontal third,
-with a small symmetric inward offset for ledge clearance and the middle left
-empty. A half-cycle bob offset produces one rising and one falling start
-direction. Its structure, thirds-derived placement,
-opposite-phase contract, checkpoint, and real-input traversal are automated;
-human review remains the acceptance gate. Reusable height-aware background fades
-also exist but remain unused and opt-in until an approved composition needs
-them. Structural, visual, and
-regression automation owns technical confidence; hands-on human review remains
-the gate for presentation, difficulty, fairness, pacing, and feel. Firearms,
-saws, bosses, Combat Lab, and the curated cyberpunk UI theme follow only when
-their corresponding campaign milestone requires them.
+explicit lethal body/electric contact and deterministic reset behavior. The
+first machine chamber offers an above-air-Dash or below-ground-Dash route; the
+second places two opposite-phase flyers in its outer thirds. Gameplay stops at
+that chamber's landing.
+
+Reusable height-aware background fades remain unused and opt-in; authored zone
+regions are active. Structural, visual, and regression automation owns
+technical confidence, while hands-on human review remains the gate for
+presentation, difficulty, fairness, pacing, and feel. Firearms, saws, bosses,
+Combat Lab, and the curated cyberpunk UI theme follow only when their campaign
+milestones require them.

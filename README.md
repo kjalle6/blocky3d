@@ -31,9 +31,10 @@ remain read-only design references.
   Level 2 cave approach, and the authored Level 2 interior opening
 - A reusable profile-driven pixel-background rig provides native-scale,
   seam-safe horizontal coverage, authored coastal-to-green transitions, and
-  stable framing during vertical camera travel. Dormant scene-authored vertical
-  regions and height-aware opacity controls are available when an approved
-  upward route actually needs them
+  stable framing during vertical camera travel. Level 2 actively uses authored
+  cave regions for a reversible lower/upper blend, plus independent horizontal
+  shaft focus while its vertical camera follows the climb. Height-aware opacity
+  controls remain available as a separate opt-in extension
 - The intended finale adds moving saws, a limited firearm lesson, and a simple
   first boss while keeping melee viable
 - Typed world catalog and world-grouped mouse or `W`/`S` + `Enter` level
@@ -53,16 +54,18 @@ remain read-only design references.
 - 1920x1080 presentation baseline
 - The first Overgrown Coastal Ascent interior slice is authored: a familiar
   combat-and-spike recap leads through a Double Jump rise into a Wall Jump
-  shaft, a forced left turn for Dash, and an immediate Dash-only return. The
-  next milestone is one visually reviewed two-route chamber introducing an
-  indestructible flying electrical hazard: jump and air-Dash above it or time a
-  ground Dash beneath it
+  shaft, a forced left turn for Dash, an immediate Dash-only return, and two
+  hovering-machine chambers. Its editable five-layer cave blend, regional
+  grade, localized water vistas, shared upper ceiling, and focused shaft camera
+  are hands-on accepted; the frozen transition snapshot remains unchanged
 
 The living design and authoring documents are:
 
 - [`docs/GAME_DIRECTION.md`](docs/GAME_DIRECTION.md) — what the game is
 - [`docs/LEVEL_ROADMAP.md`](docs/LEVEL_ROADMAP.md) — the eleven legacy ideas,
   revised campaign spine, and next level
+- [`docs/LEVEL_2_VISUAL_BRIEF.md`](docs/LEVEL_2_VISUAL_BRIEF.md) — the accepted
+  editable cave presentation and its promotion boundary
 - [`docs/TECHNICAL_FOUNDATION.md`](docs/TECHNICAL_FOUNDATION.md) — architecture,
   gameplay contracts, asset pipeline, and validation
 - [`docs/SET_DRESSING_WORKFLOW.md`](docs/SET_DRESSING_WORKFLOW.md) — curated

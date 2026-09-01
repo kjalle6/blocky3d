@@ -40,7 +40,7 @@ larger cyberpunk setting.
 | Target level | Core arc | New capability | Status |
 | --- | --- | --- | --- |
 | 1: Arrival / Shoreline | Classic fundamentals grow into an aerial route | Double Jump | Complete and accepted; production baseline locked at commit `59a034b` |
-| 2: Overgrown Coastal Ascent | A brief Green Zone approach gives way to an enclosed cavern / underworks route | Wall Jump and Dash | In progress; opening route and two machine chambers built, upper-cave presentation next |
+| 2: Overgrown Coastal Ascent | A brief Green Zone approach gives way to an enclosed cavern / underworks route | Wall Jump and Dash | In progress; opening route, two machine chambers, and editable upper-cave presentation built and reviewed |
 | 3: Green Zone Finale | Full-kit mastery, saws, enemy escalation, gun lesson, and boss | Limited firearm | Planned concept |
 
 These are working titles. A level should be long enough to develop several
@@ -142,13 +142,13 @@ that contract explicitly rather than changing the shared default.
 
 ### Level 2: Overgrown Coastal Ascent
 
-The current Level 2 attempt begins with a brief Green Zone approach, then sends
-the player into a cave, mine, tunnel, or collapsed maintenance underworks where
-the substantial route takes place. The exact fiction and final title remain
-provisional until the existing art can produce a coherent enclosed space. The
-interior is attractive because walls, ceilings, shafts, and controlled
-sightlines give Wall Jump and Dash geometry a natural visual cause; it is not
-permission to assemble a room from unrelated props or collision patches.
+Level 2 begins with a brief Green Zone approach, then sends the player into a
+cave, mine, tunnel, or collapsed maintenance underworks where the substantial
+route takes place. The isolated terrain proof and editable interior establish a
+coherent enclosed space; the exact fiction and final title remain provisional.
+Walls, ceilings, shafts, and controlled sightlines give Wall Jump and Dash
+geometry a natural visual cause. They are not permission to assemble a room
+from unrelated props or collision patches.
 
 The approach and the interior are two scenes joined by a fade, not one
 continuous space. Running into the cave mouth triggers a `LevelTransition3D`,
@@ -178,16 +178,15 @@ while Level 2 is a WIP.
 `scenes/dev/level_2_wip.tscn` owns this handoff and its dressing. The
 approach uses the `green_zone_dusk` background; the interior owns its separate
 cave environment. `docs/LEVEL_2_VISUAL_BRIEF.md` is the source of truth for its
-background zoning and later regional lighting treatment.
+accepted background zoning, regional grade, ceiling, and camera composition.
 
-For the next presentation pass, those two development entries are deliberately
-isolated. `Level 2 WIP` enters the frozen
+The two development entries remain deliberately isolated. `Level 2 WIP` enters
+the frozen
 `overgrown_coastal_ascent_interior_snapshot.tscn`, preserving the accepted
 route below. `Level 2 Interior WIP` opens the editable
-`overgrown_coastal_ascent_interior.tscn`; cave-background experiments and the
-next build occur only there until separately reviewed. Background zoning is
-built and approved at unchanged lighting first; regional lighting follows as a
-separate tuning pass.
+`overgrown_coastal_ascent_interior.tscn`. Hands-on review accepts that editable
+scene's current cave presentation, while the frozen snapshot remains unchanged
+until an explicit promotion decision.
 
 The intended teaching arc remains:
 
@@ -314,29 +313,21 @@ visually incoherent. The opt-in vertical camera region and the corridor/fold
 route language were both proven in isolation and then deliberately withheld from
 Level 1, leaving them for Level 2 to own.
 
-### Next production milestone: Level 2 upper-cave presentation
+### Current production boundary: accepted Level 2 presentation
 
-Do not extend gameplay beyond the paired-machine landing until the existing
-route has a coherent background treatment. Work in this order:
+The editable Interior WIP now owns the reviewed presentation through the
+paired-machine landing:
 
-1. Preserve the accepted axis split and the frozen transition snapshot. Global
-   cave art stays screen-static vertically and only the detailed layer uses
-   horizontal parallax; localized water vistas keep their authored X opening
-   while remaining vertically static on screen.
-2. Implement the global lower/upper background zoning, localized water
-   vistas, and reversible terrain-masked handoff specified in the Level 2
-   visual brief.
-3. Review bottom, middle, threshold, and upper-floor captures, then traverse the
-   boundary in both directions at normal speed. Also test jumping at the
-   boundary, checkpoint respawn, restart, direct Interior WIP loading, and
-   inspection mode before accepting the background pass.
-4. Only after the art transition works at unchanged lighting, add the regional
-   lighting pass from the brief and leave its lower-darkness value exposed for
-   hands-on tuning.
-5. Keep this authored to Level 2. Extract a generalized regional-background or
-   atmosphere system only after a second production level needs the same rule.
-6. Promote the accepted presentation into the frozen snapshot, then resume
-   gameplay authoring beyond the paired-machine landing.
+- a five-layer smoky lower cave that blends broadly into the pale upper cave;
+- a regional grade synchronized with that spatial handoff;
+- localized water vistas plus one shared upper rocky ceiling; and
+- independent horizontal shaft focus while the vertical camera follows the
+  Wall Jump climb.
+
+Deterministic captures, focused automation, and hands-on traversal accept this
+composition in the editable scene. The frozen transition snapshot remains
+unchanged. Do not promote it or extend gameplay beyond the paired-machine
+landing until the user explicitly chooses the next production step.
 
 ### Needed before the finale
 
@@ -439,6 +430,7 @@ dressing, and half-pipe composition. Commit `59a034b` is the Level 1 baseline.
 The Green Zone approach still targets the frozen Level 2 interior snapshot,
 while `Level 2 Interior WIP` targets the editable route. That route reaches the
 paired opposite-phase machine chamber; nothing beyond its landing is approved.
-The active milestone is the upper-cave presentation pass defined above. Level 1
-remains locked, the frozen Level 2 snapshot remains unchanged until explicit
-promotion, and later gameplay waits for visual and hands-on acceptance.
+Its background blend, regional grade, shared ceiling, water vistas, and focused
+Wall Jump camera are accepted in the editable scene. Level 1 remains locked,
+the frozen Level 2 snapshot remains unchanged until explicit promotion, and
+later gameplay waits for an explicit next-step decision.

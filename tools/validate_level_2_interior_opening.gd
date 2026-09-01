@@ -49,7 +49,7 @@ func _run() -> void:
 	assert(terrain.row_count() == 40)
 	assert(terrain.column_count() == 113)
 	assert(
-		terrain.collision_rectangle_count() == 12,
+		terrain.collision_rectangle_count() == 9,
 		"collision rectangles: %d" % terrain.collision_rectangle_count()
 	)
 
@@ -63,43 +63,64 @@ func _run() -> void:
 	assert(background != null and background.visible)
 	assert(background.profile != null)
 	assert(background.profile.profile_id == &"rock_underworks_cave")
-	assert(background.profile.layers.size() == 2)
+	assert(background.profile.layers.size() == 5)
 	assert(background.profile.validation_errors().is_empty())
-	# Global cave art stays static on screen vertically, so a jump changes
-	# nothing. The flat base is screen-locked on both axes; only the featured
-	# distant composition parallax-scrolls as the player travels horizontally.
-	#
-	# Neither layer repeats vertically. Repeating featured art puts an identical
-	# band overhead during a climb, which reads exactly like art that follows.
+	_validate_upper_cave_ceiling(level)
+	# Every global cave layer stays static on screen vertically, so a jump
+	# changes nothing. Each region owns one flat coverage layer while its depth
+	# layers parallax-scroll as the player travels horizontally.
+	# No layer repeats vertically: repeating featured art puts an identical
+	# band overhead during a climb.
 	for index in background.profile.layers.size():
 		var layer := background.profile.layers[index]
 		assert(
 			layer.vertical_policy
-			== PixelBackgroundLayerProfile.VerticalPolicy.SCREEN_LOCKED,
-			(
-				"Cave layer %d is not vertically static; jumping would move "
-				+ "the background."
-			) % index
+			== PixelBackgroundLayerProfile.VerticalPolicy.SCREEN_LOCKED
 		)
 		assert(layer.world_repeat_below == 0 and layer.world_repeat_above == 0)
 
-	# The base is unzoned continuous coverage; the distant composition is the
-	# zoned layer that authored regions reveal.
-	var base := background.profile.layers[0]
-	assert(not base.is_zoned())
+	# Smoky crystal-cave coverage remains beneath the upper composition's
+	# transparent pixels. Its two depth layers belong only below the upper
+	# region and fade out across the same boundary that reveals the water cave.
+	# All three retain the source artwork's pale smoky-grey palette unchanged.
+	var lower_base := background.profile.layers[0]
+	assert(not lower_base.is_zoned())
+	assert(lower_base.tint == Color.WHITE)
 	assert(
-		base.horizontal_policy
+		lower_base.horizontal_policy
 		== PixelBackgroundLayerProfile.HorizontalPolicy.SCREEN_LOCKED
 	)
-	var distant := background.profile.layers[1]
+	var lower_distant := background.profile.layers[1]
+	assert(lower_distant.zone_tag == &"upper")
+	assert(lower_distant.invert_zone_visibility)
+	assert(lower_distant.tint == Color.WHITE)
 	assert(
-		distant.zone_tag == &"upper",
+		lower_distant.horizontal_policy
+		== PixelBackgroundLayerProfile.HorizontalPolicy.PARALLAX
+		and lower_distant.horizontal_parallax > 0.0
+	)
+	var lower_crystals := background.profile.layers[2]
+	assert(lower_crystals.zone_tag == &"upper")
+	assert(lower_crystals.invert_zone_visibility)
+	assert(lower_crystals.tint == Color.WHITE)
+	assert(lower_crystals.horizontal_parallax > lower_distant.horizontal_parallax)
+	var upper_base := background.profile.layers[3]
+	assert(upper_base.zone_tag == &"upper")
+	assert(not upper_base.invert_zone_visibility)
+	assert(
+		upper_base.horizontal_policy
+		== PixelBackgroundLayerProfile.HorizontalPolicy.SCREEN_LOCKED
+	)
+	var upper_distant := background.profile.layers[4]
+	assert(
+		upper_distant.zone_tag == &"upper",
 		"The distant cave composition must stay zoned to the upper floor."
 	)
+	assert(not upper_distant.invert_zone_visibility)
 	assert(
-		distant.horizontal_policy
+		upper_distant.horizontal_policy
 		== PixelBackgroundLayerProfile.HorizontalPolicy.PARALLAX
-		and distant.horizontal_parallax > 0.0,
+		and upper_distant.horizontal_parallax > 0.0,
 		"The distant composition must drift as the player walks."
 	)
 	# Falling down a machine shaft ends at the water you can see, not at a fixed
@@ -186,11 +207,13 @@ func _run() -> void:
 		"The upper region must reveal the zone the distant layer is tagged with."
 	)
 	assert(
-		upper_region.blend_margin >= 2.5 and upper_region.blend_exponent >= 1.5,
+		upper_region.blend_margin >= 6.5
+		and upper_region.blend_exponent >= 0.9
+		and upper_region.blend_exponent <= 1.25,
 		(
-			"The handoff must arrive rather than accumulate: a ramp that is "
-			+ "short and back-loaded keeps the lower cave in its own treatment "
-			+ "until the climb actually reaches the top."
+			"The handoff must begin during the final climb and use a broad, "
+			+ "balanced ramp so the smoky grey mixes into the water-cave blue "
+			+ "before the player reaches the upper landing."
 		)
 	)
 	assert(upper_region.position.is_equal_approx(Vector3(94.08, 39.0, 0.0)))
@@ -198,19 +221,27 @@ func _run() -> void:
 	var lower_face_y := upper_region.global_position.y - upper_region.size.y * 0.5
 	var sample_x := upper_region.global_position.x
 	assert(is_zero_approx(background.zone_opacity_at(
-		distant,
+		upper_distant,
 		Vector3(sample_x, lower_face_y - upper_region.blend_margin - 0.1, 0.0)
 	)))
 	var blend_opacity := background.zone_opacity_at(
-		distant,
+		upper_distant,
 		Vector3(sample_x, lower_face_y - upper_region.blend_margin * 0.5, 0.0)
 	)
 	assert(
 		blend_opacity > 0.0 and blend_opacity < 1.0,
 		"The upper cave region must produce a real partial-opacity blend."
 	)
+	var lower_blend_opacity := background.zone_opacity_at(
+		lower_crystals,
+		Vector3(sample_x, lower_face_y - upper_region.blend_margin * 0.5, 0.0)
+	)
+	assert(
+		is_equal_approx(lower_blend_opacity + blend_opacity, 1.0),
+		"Lower and upper cave art must cross-fade without a colour gap."
+	)
 	assert(is_equal_approx(background.zone_opacity_at(
-		distant,
+		upper_distant,
 		Vector3(sample_x, lower_face_y + 0.1, 0.0)
 	), 1.0))
 
@@ -232,7 +263,15 @@ func _run() -> void:
 	assert(terrain.is_solid_cell(16, 38))
 	assert(not terrain.is_solid_cell(15, 60))
 	assert(terrain.is_solid_cell(16, 60))
-	assert(terrain.is_solid_cell(11, 60))
+	assert(not terrain.is_solid_cell(11, 60))
+
+	# The ordinary foreground roof is raised to the same top row as the two
+	# machine openings. That leaves the source artwork's rocky ceiling visible
+	# throughout the upper chamber without faking a lower decorative strip.
+	for upper_column in [38, 60, 73, 83, 94, 106]:
+		assert(terrain.is_solid_cell(4, upper_column))
+		assert(not terrain.is_solid_cell(5, upper_column))
+		assert(not terrain.is_solid_cell(11, upper_column))
 
 	# Both evasive-flyer chambers are full-height breaks in the corridor. They
 	# stay open floor-to-sky, so nothing above or below a machine can be mistaken
@@ -469,6 +508,25 @@ func _run() -> void:
 			+ "28.0 m makes the entire cave shell follow an ordinary jump."
 		)
 	)
+	var wall_jump_camera_focus := level.get_node(
+		"WallJumpCameraFocus"
+	) as VerticalCameraRegion3D
+	assert(wall_jump_camera_focus != null)
+	assert(wall_jump_camera_focus.validation_errors().is_empty())
+	assert(not wall_jump_camera_focus.vertical_framing_enabled)
+	assert(wall_jump_camera_focus.horizontal_focus_enabled)
+	assert(wall_jump_camera_focus.priority > camera_region.priority)
+	assert(wall_jump_camera_focus.position.is_equal_approx(
+		Vector3(58.88, 17.28, 0.0)
+	))
+	assert(wall_jump_camera_focus.size.is_equal_approx(Vector2(5.12, 29.44)))
+	assert(is_equal_approx(
+		wall_jump_camera_focus.horizontal_focus_world_x(),
+		58.88
+	))
+	assert(wall_jump_camera_focus.contains_world_position(Vector3(56.72, 18.0, 0.0)))
+	assert(wall_jump_camera_focus.contains_world_position(Vector3(61.04, 18.0, 0.0)))
+	assert(not wall_jump_camera_focus.contains_world_position(Vector3(62.0, 18.0, 0.0)))
 
 	# Contact probes make sure the authored art and collision agree at each beat.
 	assert(_blocked(level.player, Vector3(4.48, 0.7, 0), Vector3.DOWN))
@@ -490,6 +548,11 @@ func _run() -> void:
 		not _blocked(level.player, Vector3(120.96, 28.86, 0), Vector3.DOWN),
 		"The dual-machine shaft must be a real hole."
 	)
+	await _validate_wall_jump_camera_focus(
+		level,
+		wall_jump_camera_focus,
+		camera_region
+	)
 	await _validate_vertical_background_behavior(level, background, camera_region)
 
 	print(
@@ -502,6 +565,67 @@ func _run() -> void:
 
 func _blocked(body: CharacterBody3D, origin: Vector3, motion: Vector3) -> bool:
 	return body.test_move(Transform3D(Basis.IDENTITY, origin), motion)
+
+
+func _validate_upper_cave_ceiling(level: LevelSession3D) -> void:
+	var ceiling := level.get_node("UpperCaveCeiling") as PixelCaveCeilingOverlay3D
+	assert(ceiling != null, "The upper floor needs its shared cave ceiling.")
+	assert(ceiling.validation_errors().is_empty())
+	assert(ceiling.zone_tag == &"upper")
+	assert(is_equal_approx(ceiling.vertical_offset, 0.02))
+	assert(ceiling.horizontal_panel_count == 5)
+	assert(is_equal_approx(ceiling.horizontal_panel_step, 23.04))
+	assert(is_equal_approx(ceiling.global_position.x, 92.16))
+	assert(ceiling.get_node_or_null("LakeAndRocks") == null)
+	assert(ceiling.get_node_or_null("DeepWaterFill") == null)
+	var expected_layers := {
+		"CeilingFill": {
+			"region": Rect2(0.0, 0.0, 576.0, 1.0),
+			"position_y": 8.92,
+			"scale_y": 122.0,
+		},
+		"CaveCeiling": {
+			"region": Rect2(0.0, 0.0, 576.0, 87.0),
+			"position_y": 4.74,
+		},
+	}
+	for layer_name in expected_layers:
+		var layer := ceiling.get_node(layer_name) as Sprite3D
+		assert(layer != null, "UpperCaveCeiling/%s is missing." % layer_name)
+		assert(is_equal_approx(layer.pixel_size, PixelPlatform3D.TILE_PIXEL_SIZE))
+		assert(layer.region_enabled)
+		assert(layer.region_rect == expected_layers[layer_name]["region"])
+		assert(is_equal_approx(
+			layer.position.y,
+			expected_layers[layer_name]["position_y"]
+		))
+		if expected_layers[layer_name].has("scale_y"):
+			assert(is_equal_approx(
+				layer.scale.y,
+				expected_layers[layer_name]["scale_y"]
+			))
+		assert(layer.render_priority == -90)
+		assert(not layer.shaded)
+		assert(layer.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF)
+	var panel_counts := {}
+	var ceiling_sprites: Array[Sprite3D] = []
+	for child in ceiling.get_children():
+		var sprite := child as Sprite3D
+		if sprite == null:
+			continue
+		ceiling_sprites.append(sprite)
+		var slot := roundi(sprite.position.x / ceiling.horizontal_panel_step)
+		assert(slot >= -2 and slot <= 2)
+		assert(is_equal_approx(
+			sprite.position.x,
+			slot * ceiling.horizontal_panel_step
+		))
+		assert(sprite.flip_h == (abs(slot) % 2 == 1))
+		panel_counts[slot] = int(panel_counts.get(slot, 0)) + 1
+	assert(ceiling_sprites.size() == 10)
+	assert(panel_counts.size() == 5)
+	for slot in range(-2, 3):
+		assert(panel_counts.get(slot, 0) == 2)
 
 
 func _validate_water_vista(
@@ -523,16 +647,9 @@ func _validate_water_vista(
 	)
 	assert(is_equal_approx(vista.vertical_offset, 0.02))
 	assert(vista.find_children("*", "CollisionObject3D", true, false).is_empty())
+	assert(vista.get_node_or_null("CeilingFill") == null)
+	assert(vista.get_node_or_null("CaveCeiling") == null)
 	var expected_layers := {
-		"CeilingFill": {
-			"region": Rect2(112.0, 0.0, 352.0, 1.0),
-			"position_y": 8.92,
-			"scale_y": 122.0,
-		},
-		"CaveCeiling": {
-			"region": Rect2(112.0, 0.0, 352.0, 87.0),
-			"position_y": 4.74,
-		},
 		"LakeAndRocks": {
 			"region": Rect2(112.0, 150.0, 352.0, 174.0),
 			"position_y": -5.0,
@@ -563,6 +680,64 @@ func _validate_water_vista(
 		assert(layer.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF)
 
 
+func _validate_wall_jump_camera_focus(
+	level: LevelSession3D,
+	focus_region: VerticalCameraRegion3D,
+	vertical_region: VerticalCameraRegion3D
+) -> void:
+	var camera := level.camera as PixelSideCamera3D
+	assert(camera != null)
+	var original_player_position := level.player.global_position
+	var player_was_processing := level.player.is_physics_processing()
+	level.player.set_physics_process(false)
+	var expected_camera_x := camera.snap_world_x(
+		focus_region.horizontal_focus_world_x()
+	)
+	var expected_vertical_offset := clampf(
+		18.0 - vertical_region.vertical_anchor_world_y(),
+		vertical_region.minimum_vertical_offset,
+		vertical_region.maximum_vertical_offset
+	)
+	var expected_camera_y := (
+		camera.camera_height + camera.snap_world_y(expected_vertical_offset)
+	)
+	var minimum_measured_camera_x := INF
+	var maximum_measured_camera_x := -INF
+	for player_x in [56.72, 58.88, 61.04]:
+		level.player.global_position = Vector3(player_x, 18.0, 0.0)
+		camera.snap_to_target()
+		await process_frame
+		assert(camera.active_vertical_region() == vertical_region)
+		assert(camera.active_horizontal_focus_region() == focus_region)
+		minimum_measured_camera_x = minf(
+			minimum_measured_camera_x,
+			camera.global_position.x
+		)
+		maximum_measured_camera_x = maxf(
+			maximum_measured_camera_x,
+			camera.global_position.x
+		)
+		assert(
+			absf(camera.global_position.x - expected_camera_x)
+			<= camera.world_units_per_screen_pixel(),
+			"Wall-jump framing drifted away from the shaft focus."
+		)
+		assert(
+			absf(camera.global_position.y - expected_camera_y)
+			<= camera.world_units_per_screen_pixel(),
+			"Horizontal shaft focus changed the climb's vertical camera tracking."
+		)
+	assert(
+		absf(maximum_measured_camera_x - minimum_measured_camera_x)
+		<= camera.world_units_per_screen_pixel(),
+		"Crossing the wall-jump shaft made the camera chase the player horizontally."
+	)
+	level.player.global_position = original_player_position
+	level.player.set_physics_process(player_was_processing)
+	camera.snap_to_target()
+	await process_frame
+
+
 func _validate_vertical_background_behavior(
 	level: LevelSession3D,
 	background: PixelBackgroundRig3D,
@@ -571,13 +746,16 @@ func _validate_vertical_background_behavior(
 	var camera := level.camera as PixelSideCamera3D
 	assert(camera != null)
 	# Every backdrop in the upper chamber must ride the camera exactly on Y.
-	# Horizontal localization remains independent: the global layers cover the
-	# viewport while each water vista stays attached to its authored shaft X.
+	# Horizontal localization remains independent of that vertical lock.
 	# Let the camera and global background settle before recording a baseline.
 	for frame in 2:
 		await process_frame
 	var original_player_position := level.player.global_position
+	var baseline_camera_position := camera.global_position
 	var baseline_camera_y := camera.global_position.y
+	var ceiling := level.get_node("UpperCaveCeiling") as PixelCaveCeilingOverlay3D
+	assert(ceiling != null)
+	var baseline_ceiling_position := ceiling.global_position
 	var baseline_background_y: Array[PackedFloat32Array] = []
 	for layer_index in background.runtime_layer_count():
 		var copy_y := PackedFloat32Array()
@@ -628,9 +806,20 @@ func _validate_vertical_background_behavior(
 		await process_frame
 	assert(camera.global_position.y > baseline_camera_y + 25.0)
 
-	# Vertically static means the art must ride the camera exactly: same screen
-	# position before and after a jump, which is the whole point.
+	# The roof stays authored in the level on X, so walking does not carry it
+	# along with the player. Its Y still rides the camera exactly, preserving the
+	# established ceiling line through the tall transition.
+	var camera_shift := camera.global_position - baseline_camera_position
 	var camera_rise := camera.global_position.y - baseline_camera_y
+	assert(is_equal_approx(
+		ceiling.global_position.x,
+		baseline_ceiling_position.x
+	))
+	assert(absf(camera_shift.x) > 1.0)
+	assert(is_equal_approx(
+		ceiling.global_position.y,
+		baseline_ceiling_position.y + camera_rise
+	))
 	for layer_index in background.runtime_layer_count():
 		var copies := background.runtime_copies(layer_index)
 		assert(copies.size() == baseline_background_y[layer_index].size())
@@ -641,8 +830,8 @@ func _validate_vertical_background_behavior(
 					baseline_background_y[layer_index][copy_index] + camera_rise
 				),
 				(
-					"Cave layer %d moved relative to the screen during a %.2f m "
-					+ "camera rise; jumping must not shift the background."
+					"Cave layer %d moved relative to the screen during a "
+					+ "%.2f m camera rise; jumping must not shift the background."
 				) % [layer_index, camera_rise]
 			)
 

@@ -36,6 +36,9 @@ enum HorizontalRepeat {
 ## layer is unzoned and always drawn - the restrained base coverage that every
 ## region sits on top of.
 @export var zone_tag := &""
+## Inverts the authored region weight so a treatment belongs outside a zone
+## and disappears across the exact same blend boundary used to reveal it.
+@export var invert_zone_visibility := false
 
 
 func is_zoned() -> bool:
@@ -131,6 +134,8 @@ func validation_errors() -> PackedStringArray:
 		errors.append("Background layer requires a texture.")
 	if depth >= 0.0:
 		errors.append("Background layer depth must remain behind gameplay at Z < 0.")
+	if invert_zone_visibility and zone_tag.is_empty():
+		errors.append("Inverted zone visibility requires a zone tag.")
 	if vertical_policy == VerticalPolicy.PARALLAX and (
 		vertical_parallax < 0.0 or vertical_parallax > 1.0
 	):

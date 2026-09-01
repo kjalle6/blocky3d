@@ -6,29 +6,6 @@
 [node name="WaterCaveVistaWindow" type="Node3D"]
 script = ExtResource("4_window")
 
-[node name="CeilingFill" type="Sprite3D" parent="."]
-position = Vector3(0, 8.92, -5.4)
-scale = Vector3(1, 122, 1)
-texture_filter = 0
-pixel_size = 0.04
-texture = ExtResource("3_lake")
-region_enabled = true
-region_rect = Rect2(112, 0, 352, 1)
-shaded = false
-cast_shadow = 0
-render_priority = -90
-
-[node name="CaveCeiling" type="Sprite3D" parent="."]
-position = Vector3(0, 4.74, -5.4)
-texture_filter = 0
-pixel_size = 0.04
-texture = ExtResource("3_lake")
-region_enabled = true
-region_rect = Rect2(112, 0, 352, 87)
-shaded = false
-cast_shadow = 0
-render_priority = -90
-
 [node name="LakeAndRocks" type="Sprite3D" parent="."]
 position = Vector3(0, -5, -5.4)
 texture_filter = 0

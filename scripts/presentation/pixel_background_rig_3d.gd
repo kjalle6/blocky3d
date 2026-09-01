@@ -263,7 +263,8 @@ func zone_opacity_at(
 ) -> float:
 	if not layer.is_zoned():
 		return 1.0
-	return zone_weight_at(layer.zone_tag, world_position)
+	var weight := zone_weight_at(layer.zone_tag, world_position)
+	return 1.0 - weight if layer.invert_zone_visibility else weight
 
 
 ## How strongly a named zone is revealed at a world position. Anything that

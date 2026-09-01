@@ -26,6 +26,7 @@ const REVIEW_BEATS := {
 	&"02_floating_ascent": Vector3(47.36, 5.18, 0.0),
 	&"03_shaft_bottom": Vector3(60.16, 7.1, 0.0),
 	&"04_shaft_middle": Vector3(58.88, 17.0, 0.0),
+	&"04b_background_handoff": Vector3(58.88, 22.5, 0.0),
 	&"05_top_left_end": Vector3(44.8, 28.86, 0.0),
 	&"06_top_junction": Vector3(58.88, 28.86, 0.0),
 	&"07_dash_crossing": Vector3(70.64, 30.0, 0.0),
@@ -66,7 +67,7 @@ func _run() -> void:
 
 	_set_diagnostic_tools(game_root, false)
 	game_root.get_node("Interface").visible = false
-	await _place_overview_camera(level)
+	await _place_overview_camera(level, OVERVIEW_CENTER)
 	await _capture("route_overview_clean")
 
 	game_root.get_node("Interface").visible = true
@@ -75,6 +76,21 @@ func _run() -> void:
 	for frame in 2:
 		await process_frame
 	await _capture("route_overview_diagnostic")
+
+	# The same framing again, but from a camera height inside the upper region,
+	# so the upper treatment is visible rather than the lower one.
+	_set_diagnostic_tools(game_root, false)
+	game_root.get_node("Interface").visible = false
+	await _place_overview_camera(level, OVERVIEW_CENTER + Vector3(0.0, 12.0, 0.0))
+	await _capture("route_overview_upper_clean")
+
+	game_root.get_node("Interface").visible = true
+	_set_diagnostic_tools(game_root, true)
+	game_root._update_developer_cursor_coordinate_at(OUTPUT_SIZE * 0.5)
+	for frame in 2:
+		await process_frame
+	await _capture("route_overview_upper_diagnostic")
+
 	_restore_gameplay_camera(level)
 
 	for beat_id in REVIEW_BEATS:
@@ -106,16 +122,21 @@ func _place_review_camera(level: LevelSession3D, position: Vector3) -> void:
 		await process_frame
 
 
-func _place_overview_camera(level: LevelSession3D) -> void:
+## Background treatment follows the camera's own position, so a single
+## pulled-back frame renders the whole level in whichever zone the overview
+## camera happens to sit in. Two overviews are taken for that reason: one from
+## the lower cave and one from the upper floor. Neither shows the mixed state,
+## and no single frame can.
+func _place_overview_camera(level: LevelSession3D, centre: Vector3) -> void:
 	level.player.set_physics_process(false)
 	level.camera.set_process(false)
 	level.camera.size = OVERVIEW_CAMERA_SIZE
 	level.camera.global_position = Vector3(
-		OVERVIEW_CENTER.x,
-		OVERVIEW_CENTER.y,
+		centre.x,
+		centre.y,
 		level.camera.side_distance
 	)
-	level.camera.look_at(OVERVIEW_CENTER, Vector3.UP)
+	level.camera.look_at(centre, Vector3.UP)
 	for frame in 3:
 		await process_frame
 

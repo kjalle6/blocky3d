@@ -22,6 +22,7 @@ if (-not $SkipCapture) {
 
 $beats = @(
     'route_overview',
+    'route_overview_upper',
     '00_entry',
     '01_recap',
     '02_floating_ascent',

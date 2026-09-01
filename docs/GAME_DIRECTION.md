@@ -170,19 +170,21 @@ three re-authored levels:
 
 1. **Arrival / Shoreline** establishes running, jumping, gaps, spikes, enemies,
    stomping, knife combat, and fast restart, then introduces Double Jump.
-2. **Overgrown Coastal Ascent** currently attempts a brief Green Zone approach
-   into an enclosed cavern, mine, tunnel, or collapsed underworks. Its interior
-   introduces Wall Jump and Dash through increasingly connected movement. This
-   presentation remains provisional until an isolated terrain-and-collision
-   lab proves the available art can form a coherent enclosed space.
+2. **Overgrown Coastal Ascent** begins with a brief Green Zone approach and then
+   enters an enclosed cavern, mine, tunnel, or collapsed underworks. Its
+   interior introduces Wall Jump and Dash through increasingly connected
+   movement. The isolated terrain-and-collision proof is complete, and the
+   editable interior now carries the authored cave treatment; promoting that
+   work into the frozen transition snapshot remains an explicit review boundary.
 3. **Green Zone Finale** tests the complete movement kit, introduces moving
    saws and a small escalation of the enemy roster, then teaches a limited gun
    before a simple first boss.
 
 The six short Godot prototype levels are deleted; they were regression
-evidence for these mechanics. They are not the final campaign structure. They
-remain during migration, then leave the menu and repository after replacement
-levels preserve their useful gameplay contracts. Git remains the archive.
+evidence for these mechanics, not the final campaign structure. Their useful
+movement and progression contracts now run against active production levels,
+development levels, and the Animation Lab. Git remains the archive for the old
+layouts.
 
 The eleven Python levels continue to supply ideas for hazards, route shapes,
 power-up placement, and experiments. Their coordinates, ordering, lives, orb
@@ -211,7 +213,9 @@ require explicit designs before implementation.
 - GUI, crafting, constructor, and skill assets provide options, not commitments.
 - Collision, checkpoints, attacks, and hazards are authored for feel and
   readability.
-- The current six levels remain temporary regression baselines during migration.
+- Deleted prototypes are not active regression fixtures; reusable contracts
+  must run against current production or deliberately maintained development
+  content.
 
 ## Open decisions
 
