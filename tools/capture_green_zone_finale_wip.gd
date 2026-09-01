@@ -1,5 +1,5 @@
 extends SceneTree
-## Captures the Level 3 WIP lift arrival and its intentionally plain run-up.
+## Captures the Level 3 WIP lift arrival and the three-island ravine opener.
 
 const OUTPUT_SIZE := Vector2i(1920, 1080)
 const OUTPUT_DIRECTORY := "res://build/previews"
@@ -31,11 +31,29 @@ func _run() -> void:
 	assert(level != null)
 	await _capture(level, "level_3_wip_lift_start")
 
-	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(24.0, 0.7, 0)))
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(15.8, 0.7, 0)))
 	level.camera.snap_to_target()
 	for frame in 8:
 		await physics_frame
-	await _capture(level, "level_3_wip_run_up")
+	await _capture(level, "level_3_wip_double_jump_takeoff")
+
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(32.64, 0.7, 0)))
+	level.camera.snap_to_target()
+	for frame in 8:
+		await physics_frame
+	await _capture(level, "level_3_wip_first_dash_takeoff")
+
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(53.12, 0.7, 0)))
+	level.camera.snap_to_target()
+	for frame in 8:
+		await physics_frame
+	await _capture(level, "level_3_wip_second_dash_takeoff")
+
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(69.76, 0.7, 0)))
+	level.camera.snap_to_target()
+	for frame in 8:
+		await physics_frame
+	await _capture(level, "level_3_wip_spike_landing")
 	quit(0)
 
 

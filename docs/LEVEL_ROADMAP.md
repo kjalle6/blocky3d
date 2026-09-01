@@ -265,18 +265,35 @@ fixtures rather than a miniature Level 2.
 The finale is a payoff level, not another isolated movement lesson:
 
 1. arrive from Level 2 on the construction lift at night;
-2. recap fundamentals and the complete movement kit without prompts, beginning
-   with one familiar ground patrol followed by one familiar flyer;
-3. escalate the enemy roster gradually rather than deploying every owned asset;
-4. build one or more memorable full-kit sequences with recovery checkpoints;
-5. place a fixed firearm shortly before the final encounter;
-6. teach horizontal and upward-diagonal shooting in a short safe situation;
+2. recap learned jumping and Dash without prompts, beginning with one familiar
+   ground patrol followed by two familiar flyers and another ground patrol;
+3. introduce exactly one new ordinary enemy in isolation: the armed humanoid
+   from `assets/library/enemies/green_zone_enemies/2/`, using readable ranged
+   attacks while the player still relies on movement and melee;
+4. guarantee the gun pickup when that shooter dies, making the weapon an earned
+   encounter reward rather than a random drop or unrelated floating pickup;
+5. teach basic shooting in a short safe situation, then combine the gun with
+   the complete learned movement kit and familiar enemies;
+6. build one or more memorable full-kit sequences with recovery checkpoints;
 7. finish with a simple, readable first boss using movement, limited shooting,
    and viable melee openings.
 
-The current WIP implements only the parked lift-top spawn, its clean connection
-to flat ground, and the restrained night background. The opening enemies and
-the rest of the route are the next authored beats, not placeholder geometry.
+The current WIP implements the approved opening recap. The parked lift meets a
+short shelf guarded by one familiar ground patrol, then one continuous deep
+ravine carries three distinct landing islands. The first 8.96 m gap requires
+Double Jump, while the following two 14.08 m gaps sit beyond Double Jump reach
+and require Dash. Two familiar flyers move vertically and out of phase through
+the first Dash gap, reusing the readable over-or-under timing language from
+Level 2. Another ground patrol occupies their landing island. The broad last
+landing leaves 4.16 m of safe touchdown before a 7.36 m spike row running from
+world X 72.00 to its far edge; the terrain joins directly into safe checkpoint
+ground beyond the spikes without an unnecessary seam or hole.
+
+This ravine is only the opening phrase of a deliberately long level. It stops
+before the shooter, projectiles, gun, ammo HUD, and boss; those remain separate
+build decisions. Wall Jump remains available for the later full-kit gun section
+instead of forcing a tall camera move into this opener.
+
 A literal moon was tested and rejected. The subtler moonlight-through-trees idea
 is deferred rather than worth delaying the level over; the dark forest treatment
 is the accepted starting point. Moving saws were also cut from Level 3 because
@@ -362,15 +379,19 @@ the accepted level without redesigning it.
 
 ### Needed before the finale
 
-1. Typed enemy visual sets separated from reusable behavior archetypes.
-2. A focused projectile contract shared by enemies, firearms, and bosses where
-   their rules genuinely overlap.
-3. A firearm resource describing visuals, ammunition, cadence, projectile, and
+1. Promote the selected Green Zone enemy 2 animation set into `assets/art` and
+   keep its armed-shooter visuals separate from its reusable behavior contract.
+2. A focused projectile contract shared by the shooter, firearm, and boss only
+   where their rules genuinely overlap.
+3. A deterministic death-gated gun pickup contract: the selected shooter always
+   awards it, never through chance, and cannot be bypassed while still advancing
+   the route.
+4. A firearm resource describing visuals, ammunition, cadence, projectile, and
    supported aiming directions without owning player movement.
-4. Contextual ammo HUD that remains absent before a firearm is available.
-5. A boss-specific state machine using shared damage, reset, and projectile
+5. Contextual ammo HUD that remains absent before a firearm is available.
+6. A boss-specific state machine using shared damage, reset, and projectile
    contracts rather than a giant universal boss controller.
-6. A development-only Combat Lab for enemy, melee, projectile, firearm, and boss
+7. A development-only Combat Lab for enemy, melee, projectile, firearm, and boss
    inspection. Animation Lab remains focused on player presentation.
 
 ### Interface and optional systems

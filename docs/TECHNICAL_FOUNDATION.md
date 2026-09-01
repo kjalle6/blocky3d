@@ -343,7 +343,9 @@ each ability's resource ownership independent.
 ## Firearm and ammunition contract
 
 Firearms are planned, not currently implemented. Their first approved use is a
-fixed weapon introduced shortly before the World 1 boss.
+fixed weapon introduced shortly before the World 1 boss. Green Zone enemy 2 is
+the selected first shooter visual set; its death guarantees the gun pickup after
+an isolated encounter completed with the existing movement and melee kit.
 
 - Melee and shooting remain distinct actions so obtaining a gun does not remove
   the dependable close-range verb.
@@ -351,6 +353,11 @@ fixed weapon introduced shortly before the World 1 boss.
   aim and twin-stick behavior are outside the current direction.
 - A firearm definition owns visual references, projectile choice, cadence,
   supported directions, and ammo cost; it does not own player locomotion.
+- Shooter presentation, ranged-enemy behavior, and projectile behavior remain
+  separate contracts. The selected art does not define the AI.
+- The first shooter is a required authored encounter and its gun reward is
+  deterministic, not a loot roll. Death, checkpoint, and restart behavior may
+  not duplicate or permanently lose the one required pickup.
 - Projectile appearance, collision, and damage geometry remain separate.
 - Ammo is initially an authored run resource rather than a global stockpile.
 - Death, checkpoint respawn, manual restart, and encounter reset must each have
@@ -425,8 +432,11 @@ Arrival / Shoreline and Overgrown Coastal Ascent. The six prototypes that
 proved the movement kit are deleted, their contracts having moved to the
 Animation Lab and those production levels. The target campaign structure
 remains approximately three re-authored levels. Green Zone Finale now has a
-development-only WIP proving its parked lift-top spawn and basic night run-up,
-but it is not yet catalogued as production. `resources/campaign/level_02.tres`
+development-only WIP proving its parked lift-top spawn and opening ravine: one
+Double Jump gap, two Dash-required gaps, a Level 2-style paired vertical-flyer
+patrol, a second ground enemy, a final spike-side landing, and a joined safe continuation checkpoint. It is
+not yet catalogued as production.
+`resources/campaign/level_02.tres`
 identifies Overgrown Coastal Ascent and loads
 `scenes/levels/overgrown_coastal_ascent.tscn`; its cave threshold
 continues into `scenes/levels/overgrown_coastal_ascent_interior.tscn` without
@@ -522,8 +532,10 @@ fixtures with a null world definition: Animation Lab, Level Design Lab, and the
 Green Zone Finale Level 3 WIP. Animation Lab remains the only one with in-room
 ability toggles; Level Design Lab is reserved for reusable layout, terrain, and
 fixture experiments. Level 3 WIP starts with the full current movement kit on a
-parked construction lift and contains no goal, hazards, or production campaign
-identity yet. The production Level 2 approach uses a direct same-level
+parked construction lift. Its isolated developer route now contains one ground
+patrol before the ravine, two hovering hazards, another landing patrol, one
+spike row, and one recovery checkpoint, but no goal or production campaign
+identity. The production Level 2 approach uses a direct same-level
 `target_scene` handoff into its live interior. Focused validators, captures, and
 probes load that interior scene directly under
 `resources/campaign/level_02.tres`, preserving its production Level 2 identity

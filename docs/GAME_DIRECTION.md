@@ -122,9 +122,11 @@ packs are a roster of options, not a quota.
 
 ### Firearms
 
-World 1 is intended to introduce one fixed firearm shortly before its final
-boss. A safe, brief encounter teaches firing before the player is under
-meaningful pressure.
+World 1 introduces one fixed firearm shortly before its final boss. The player
+first defeats one newly introduced armed Green Zone humanoid using the existing
+movement and melee kit; that specific enemy then guarantees the gun pickup. A
+safe, brief follow-up teaches firing before the player is under meaningful
+pressure.
 The initial platformer-friendly aiming language is horizontal fire plus an
 upward diagonal shot; free mouse aim is not planned.
 
@@ -181,10 +183,15 @@ three re-authored levels:
    level and its authored cave treatment are complete, hands-on accepted, and
    form World 1's second production level.
 3. **Green Zone Finale** begins at night on the construction lift that ended
-   Level 2, then tests the complete movement kit. Its opening recap uses one
-   familiar ground enemy followed by one familiar flyer before a gradual enemy
-   escalation, limited-gun lesson, and simple first boss. Moving saws were cut
-   from this level and reserved for a later campaign fit.
+   Level 2, then immediately crosses a deep open ravine through one Double Jump
+   and two Dash-required island gaps. Its opening recap uses one familiar ground
+   enemy followed by two familiar flyers moving out of phase and another ground
+   enemy on their landing platform, with spikes controlling the last landing
+   rather than turning the opener into a tall climb. One new armed
+   humanoid shooter is then introduced alone; defeating it guarantees the gun
+   pickup. Shooting is taught safely before being mixed with the learned
+   movement and enemy language, followed by a simple first boss. Moving saws
+   were cut from this level and reserved for a later campaign fit.
 
 The six short Godot prototype levels are deleted; they were regression
 evidence for these mechanics, not the final campaign structure. Their useful

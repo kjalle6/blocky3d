@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="2_platform"]
@@ -7,6 +7,10 @@
 [ext_resource type="PackedScene" path="res://scenes/presentation/cave_construction_lift.tscn" id="5_lift"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/tree_small_grounded.png" id="6_tree"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/bush_wild_full.png" id="7_bush"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/pixel_patrol_enemy.tscn" id="8_enemy"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/green_zone_flyer.tscn" id="9_flyer"]
+[ext_resource type="PackedScene" path="res://scenes/hazards/pixel_spike_row.tscn" id="10_spikes"]
+[ext_resource type="PackedScene" path="res://scenes/level/level_checkpoint.tscn" id="11_checkpoint"]
 
 [sub_resource type="Environment" id="Environment_night"]
 background_mode = 1
@@ -23,7 +27,7 @@ adjustment_saturation = 0.76
 size = Vector3(0.24, 12.8, 2)
 
 [sub_resource type="BoxShape3D" id="Shape_kill_plane"]
-size = Vector3(60, 1, 8)
+size = Vector3(120, 1, 8)
 
 [node name="GreenZoneFinaleWip" instance=ExtResource("1_base")]
 
@@ -32,15 +36,15 @@ environment = SubResource("Environment_night")
 
 [node name="RouteExtent" parent="." index="2"]
 route_start_x = 0.0
-route_end_x = 38.4
+route_end_x = 99.84
 
 [node name="Background" parent="." index="3"]
 profile = ExtResource("4_background")
 
-[node name="RunUpGround" type="StaticBody3D" parent="Platforms" index="0"]
-position = Vector3(21.76, -3.2, 0)
+[node name="LiftShelf" type="StaticBody3D" parent="Platforms" index="0"]
+position = Vector3(10.88, -3.2, 0)
 script = ExtResource("2_platform")
-size = Vector3(33.28, 6.4, 2)
+size = Vector3(11.52, 6.4, 2)
 style = ExtResource("3_green_style")
 
 [node name="LiftLeftBoundary" type="StaticBody3D" parent="Platforms" index="1"]
@@ -48,6 +52,32 @@ position = Vector3(2.56, 6.4, 0)
 
 [node name="Collision" type="CollisionShape3D" parent="Platforms/LiftLeftBoundary" index="0"]
 shape = SubResource("Shape_left_boundary")
+
+[node name="DoubleJumpIsland" type="StaticBody3D" parent="Platforms" index="2"]
+position = Vector3(29.44, -3.2, 0)
+script = ExtResource("2_platform")
+size = Vector3(7.68, 6.4, 2)
+style = ExtResource("3_green_style")
+
+[node name="DashIsland01" type="StaticBody3D" parent="Platforms" index="3"]
+position = Vector3(50.56, -3.2, 0)
+script = ExtResource("2_platform")
+size = Vector3(6.4, 6.4, 2)
+style = ExtResource("3_green_style")
+
+[node name="DashIsland02" type="StaticBody3D" parent="Platforms" index="4"]
+position = Vector3(73.6, -3.2, 0)
+script = ExtResource("2_platform")
+size = Vector3(11.52, 6.4, 2)
+style = ExtResource("3_green_style")
+cap_right_edge = false
+
+[node name="ContinuationGround" type="StaticBody3D" parent="Platforms" index="5"]
+position = Vector3(89.6, -3.2, 0)
+script = ExtResource("2_platform")
+size = Vector3(20.48, 6.4, 2)
+style = ExtResource("3_green_style")
+cap_left_edge = false
 
 [node name="LevelStartLift" parent="Props" index="0" instance=ExtResource("5_lift")]
 position = Vector3(4, -12.8, 0)
@@ -58,22 +88,30 @@ return_from_top_when_empty = false
 [node name="ShaftBackdrop" parent="Props/LevelStartLift" index="0"]
 visible = false
 
-[node name="RunUpTree" type="Sprite3D" parent="Props" index="1"]
-position = Vector3(21.0, 2.04, 0.92)
+[node name="ContinuationTree" type="Sprite3D" parent="Props" index="1"]
+position = Vector3(94.72, 2.04, 0.92)
 modulate = Color(0.66, 0.74, 0.86, 1)
 texture_filter = 0
 pixel_size = 0.04
 texture = ExtResource("6_tree")
 shaded = false
 
-[node name="RunUpBush" type="Sprite3D" parent="Props" index="2"]
-position = Vector3(30.8, 0.44, 0.96)
+[node name="ContinuationBush" type="Sprite3D" parent="Props" index="2"]
+position = Vector3(86.4, 0.44, 0.96)
 modulate = Color(0.68, 0.77, 0.9, 1)
 texture_filter = 0
 pixel_size = 0.04
 texture = ExtResource("7_bush")
 flip_h = true
 shaded = false
+
+[node name="FinalLandingSpikes" parent="Hazards" index="0" instance=ExtResource("10_spikes")]
+position = Vector3(75.68, 0, 0)
+row_width = 7.36
+
+[node name="OpeningCheckpoint" parent="Checkpoints" index="0" instance=ExtResource("11_checkpoint")]
+position = Vector3(84.48, 0, 0)
+route_index = 1
 
 [node name="SpawnPoint" parent="." index="8"]
 position = Vector3(4.0, 0.7, 0)
@@ -82,15 +120,42 @@ position = Vector3(4.0, 0.7, 0)
 position = Vector3(4.0, 0.7, 0)
 
 [node name="GameplayCamera" parent="." index="10"]
-look_ahead = 2.0
+look_ahead = 4.48
 minimum_center_x = 11.52
-maximum_center_x = 26.88
+maximum_center_x = 88.32
 
 [node name="KillPlane" parent="." index="11"]
-position = Vector3(19.2, -7, 0)
+position = Vector3(49.92, -8, 0)
 
 [node name="Collision" parent="KillPlane" index="0"]
 shape = SubResource("Shape_kill_plane")
+
+[node name="OpeningPatrol" parent="." index="12" instance=ExtResource("8_enemy")]
+position = Vector3(11.52, 0.42, 0)
+patrol_speed = 2.0
+patrol_left_distance = 3.84
+patrol_right_distance = 3.84
+
+[node name="OpeningFlyerRising" parent="." index="13" instance=ExtResource("9_flyer")]
+position = Vector3(35.94667, 2.955, 0)
+bob_amplitude = 3.585
+bob_period = 3.0
+spark_period = 2.4
+spark_active = 0.6
+
+[node name="OpeningFlyerFalling" parent="." index="14" instance=ExtResource("9_flyer")]
+position = Vector3(44.69334, 2.955, 0)
+bob_amplitude = 3.585
+bob_period = 3.0
+bob_phase = 0.5
+spark_period = 2.4
+spark_active = 0.6
+
+[node name="DashLandingPatrol" parent="." index="15" instance=ExtResource("8_enemy")]
+position = Vector3(50.56, 0.42, 0)
+patrol_speed = 2.0
+patrol_left_distance = 1.92
+patrol_right_distance = 1.92
 
 [editable path="Player"]
 [editable path="Props/LevelStartLift"]

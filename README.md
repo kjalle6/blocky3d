@@ -27,9 +27,13 @@ remain read-only design references.
   before two hovering-machine chambers, a Dash-required exit gauntlet, and a
   construction-lift departure
 - Green Zone Finale now has a development-only Level 3 WIP. It begins on the
-  same construction lift at its upper landing, opens into a sparse flat Green
-  Zone run-up, and uses the accepted dark-blue night forest treatment. The
-  route, enemies, ending, and production promotion remain deliberately open
+  same construction lift at its upper landing, then opens across one continuous
+  ravine: a Double Jump island, two Dash-required crossings, and a spike-side
+  final landing lead into safe continuation ground. One familiar ground patrol
+  and a paired vertical-flyer gap followed by another patrol recap the existing
+  enemy language against the accepted dark-blue night forest treatment. The
+  later route, ending, and production
+  promotion remain deliberately open
 - The six earlier Green Zone prototype levels are deleted. Their movement
   contracts moved to permanent homes first: the Animation Lab for the ability
   kit, Arrival for camera stability, and the Level 2 interior for progression
@@ -47,10 +51,12 @@ remain read-only design references.
   cave regions for a reversible lower/upper blend, plus independent horizontal
   shaft focus while its vertical camera follows the climb. Height-aware opacity
   controls remain available as a separate opt-in extension
-- The intended finale starts by recapping the current enemy language with one
-  ground patrol followed by one flyer, then eventually adds a limited firearm
-  lesson and a simple first boss while keeping melee viable. Moving saws were
-  cut from this level and remain available for a later campaign fit
+- The intended finale starts by recapping the current movement and enemy
+  language with one ground patrol followed by two flyers and another patrol. One new armed Green
+  Zone humanoid then introduces ranged attacks; defeating that enemy guarantees
+  the gun pickup. A combined movement-and-shooting stretch leads to the simple
+  first boss while melee remains viable. Moving saws were cut from this level
+  and remain available for a later campaign fit
 - Typed world catalog and world-grouped mouse or `W`/`S` + `Enter` level
   selector
 - Development-only Animation Lab with a full-speed runway, test geometry,
