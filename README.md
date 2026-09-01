@@ -26,6 +26,10 @@ remain read-only design references.
   slide cutscene into the enclosed route, which teaches Wall Jump and Dash
   before two hovering-machine chambers, a Dash-required exit gauntlet, and a
   construction-lift departure
+- Green Zone Finale now has a development-only Level 3 WIP. It begins on the
+  same construction lift at its upper landing, opens into a sparse flat Green
+  Zone run-up, and uses the accepted dark-blue night forest treatment. The
+  route, enemies, ending, and production promotion remain deliberately open
 - The six earlier Green Zone prototype levels are deleted. Their movement
   contracts moved to permanent homes first: the Animation Lab for the ability
   kit, Arrival for camera stability, and the Level 2 interior for progression
@@ -35,16 +39,18 @@ remain read-only design references.
 - The World 1 production selector exposes Arrival / Shoreline and Overgrown
   Coastal Ascent. Its cave interior is a same-level Level 2 section, and focused
   tools load that section under the production Level 2 identity. Development
-  entries retain Animation Lab and the reusable Level Design Lab; the latter
-  keeps the current cave-terrain and lift proofs as starting fixtures
+  entries retain Animation Lab, the reusable Level Design Lab, and Level 3 WIP;
+  the lab keeps the current cave-terrain and lift proofs as starting fixtures
 - A reusable profile-driven pixel-background rig provides native-scale,
   seam-safe horizontal coverage, authored coastal-to-green transitions, and
   stable framing during vertical camera travel. Level 2 actively uses authored
   cave regions for a reversible lower/upper blend, plus independent horizontal
   shaft focus while its vertical camera follows the climb. Height-aware opacity
   controls remain available as a separate opt-in extension
-- The intended finale adds moving saws, a limited firearm lesson, and a simple
-  first boss while keeping melee viable
+- The intended finale starts by recapping the current enemy language with one
+  ground patrol followed by one flyer, then eventually adds a limited firearm
+  lesson and a simple first boss while keeping melee viable. Moving saws were
+  cut from this level and remain available for a later campaign fit
 - Typed world catalog and world-grouped mouse or `W`/`S` + `Enter` level
   selector
 - Development-only Animation Lab with a full-speed runway, test geometry,

@@ -180,9 +180,11 @@ three re-authored levels:
    enemy-and-spike gauntlet, then departs on a cave construction lift. The full
    level and its authored cave treatment are complete, hands-on accepted, and
    form World 1's second production level.
-3. **Green Zone Finale** tests the complete movement kit, introduces moving
-   saws and a small escalation of the enemy roster, then teaches a limited gun
-   before a simple first boss.
+3. **Green Zone Finale** begins at night on the construction lift that ended
+   Level 2, then tests the complete movement kit. Its opening recap uses one
+   familiar ground enemy followed by one familiar flyer before a gradual enemy
+   escalation, limited-gun lesson, and simple first boss. Moving saws were cut
+   from this level and reserved for a later campaign fit.
 
 The six short Godot prototype levels are deleted; they were regression
 evidence for these mechanics, not the final campaign structure. Their useful

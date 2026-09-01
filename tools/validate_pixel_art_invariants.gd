@@ -20,6 +20,7 @@ const CHECKED_LEVELS: Array[StringName] = [
 const CHECKED_DEVELOPER_LEVELS: Array[StringName] = [
 	&"dev_level_design_lab",
 	&"dev_animation_lab",
+	&"dev_green_zone_finale_wip",
 ]
 const LEVEL_2_INTERIOR_SCENE_PATH := (
 	"res://scenes/levels/overgrown_coastal_ascent_interior.tscn"

@@ -16,7 +16,10 @@ Arrival / Shoreline and Overgrown Coastal Ascent are the first two production
 campaign entries. Level 1 now records completion and continues directly into
 Level 2 through a matched run-out/run-in handoff without showing the completion
 overlay. Level 2's accepted route and presentation remain the production
-baseline.
+baseline. A development-only Level 3 WIP now proves Green Zone Finale's opening:
+the player begins on Level 2's construction lift at its upper landing and steps
+into a sparse, flat Green Zone run-up under the accepted dark-blue night forest.
+It is not yet a production campaign entry.
 
 The six Green Zone prototype levels that preceded this are deleted. They were
 regression evidence for the movement kit, and that job is finished: every
@@ -44,7 +47,7 @@ larger cyberpunk setting.
 | --- | --- | --- | --- |
 | 1: Arrival / Shoreline | Classic fundamentals grow into an aerial route | Double Jump | Complete and accepted; production baseline locked at commit `59a034b` |
 | 2: Overgrown Coastal Ascent | A brief Green Zone approach gives way to an enclosed cavern / underworks route | Wall Jump and Dash | Complete, hands-on accepted, and in production as World 1's second level |
-| 3: Green Zone Finale | Full-kit mastery, saws, enemy escalation, gun lesson, and boss | Limited firearm | Planned concept |
+| 3: Green Zone Finale | Lift-top night opening, full-kit mastery, enemy escalation, gun lesson, and boss | Limited firearm | Developer WIP: lift start and basic run-up |
 
 These are working titles. A level should be long enough to develop several
 connected ideas, but it should still end before repetition becomes padding.
@@ -261,15 +264,24 @@ fixtures rather than a miniature Level 2.
 
 The finale is a payoff level, not another isolated movement lesson:
 
-1. recap fundamentals and the complete movement kit without prompts;
-2. introduce reusable horizontal and vertical moving saws safely, then combine
-   them with traversal;
+1. arrive from Level 2 on the construction lift at night;
+2. recap fundamentals and the complete movement kit without prompts, beginning
+   with one familiar ground patrol followed by one familiar flyer;
 3. escalate the enemy roster gradually rather than deploying every owned asset;
 4. build one or more memorable full-kit sequences with recovery checkpoints;
 5. place a fixed firearm shortly before the final encounter;
 6. teach horizontal and upward-diagonal shooting in a short safe situation;
 7. finish with a simple, readable first boss using movement, limited shooting,
    and viable melee openings.
+
+The current WIP implements only the parked lift-top spawn, its clean connection
+to flat ground, and the restrained night background. The opening enemies and
+the rest of the route are the next authored beats, not placeholder geometry.
+A literal moon was tested and rejected. The subtler moonlight-through-trees idea
+is deferred rather than worth delaying the level over; the dark forest treatment
+is the accepted starting point. Moving saws were also cut from Level 3 because
+its movement, enemy, firearm, and boss arcs already carry enough ideas. They
+remain available to a later level where they fit the route.
 
 The boss is never an ammunition check. Initial ammo is useful but not a license
 to ignore the encounter, and zero ammo cannot make victory impossible. A few
@@ -306,7 +318,7 @@ other asset may be borrowed when it fits the local composition.
 | 4: Mastery | Established movement under pressure with enemies and optional rewards | Combination material, not a dedicated remake |
 | 5: Wall Jump | Early pickup, safe shaft, horizontal breathers, and alternating-wall finish | New Level 2 opening material |
 | 6: Mastery II | Directional wall hazards, longer climbs, enemies, and reward ledges | New Level 2 and later mastery material |
-| 7: Saws | Horizontal and vertical moving hazards in climbs and runways | New Level 3 reusable hazard family |
+| 7: Saws | Horizontal and vertical moving hazards in climbs and runways | Reserved for a later level; cut from Level 3 |
 | 8: Long Way Around | A route that climbs, returns beneath itself, and finishes above | Discarded. It existed for multidirectional routes and 2.5D turns, which the game no longer does |
 | 9: Stepping Stones | Small-platform endurance, wall climbs, hard gaps, and a chasing saw | Later mastery material after rescaling |
 | 10: Dash | Ground gap, air Dash, low route, vertical combination, and delayed Dash | New Level 2 second half |
@@ -350,16 +362,15 @@ the accepted level without redesigning it.
 
 ### Needed before the finale
 
-1. A reusable path-driven saw hazard with deterministic restart behavior.
-2. Typed enemy visual sets separated from reusable behavior archetypes.
-3. A focused projectile contract shared by enemies, firearms, and bosses where
+1. Typed enemy visual sets separated from reusable behavior archetypes.
+2. A focused projectile contract shared by enemies, firearms, and bosses where
    their rules genuinely overlap.
-4. A firearm resource describing visuals, ammunition, cadence, projectile, and
+3. A firearm resource describing visuals, ammunition, cadence, projectile, and
    supported aiming directions without owning player movement.
-5. Contextual ammo HUD that remains absent before a firearm is available.
-6. A boss-specific state machine using shared damage, reset, and projectile
+4. Contextual ammo HUD that remains absent before a firearm is available.
+5. A boss-specific state machine using shared damage, reset, and projectile
    contracts rather than a giant universal boss controller.
-7. A development-only Combat Lab for enemy, melee, projectile, firearm, and boss
+6. A development-only Combat Lab for enemy, melee, projectile, firearm, and boss
    inspection. Animation Lab remains focused on player presentation.
 
 ### Interface and optional systems

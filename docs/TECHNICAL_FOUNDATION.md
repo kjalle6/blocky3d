@@ -424,9 +424,11 @@ The production `CampaignCatalog` contains two completed Green Zone levels:
 Arrival / Shoreline and Overgrown Coastal Ascent. The six prototypes that
 proved the movement kit are deleted, their contracts having moved to the
 Animation Lab and those production levels. The target campaign structure
-remains approximately three re-authored levels, with Green Zone Finale still
-planned. `resources/campaign/level_02.tres` identifies Overgrown Coastal Ascent
-and loads `scenes/levels/overgrown_coastal_ascent.tscn`; its cave threshold
+remains approximately three re-authored levels. Green Zone Finale now has a
+development-only WIP proving its parked lift-top spawn and basic night run-up,
+but it is not yet catalogued as production. `resources/campaign/level_02.tres`
+identifies Overgrown Coastal Ascent and loads
+`scenes/levels/overgrown_coastal_ascent.tscn`; its cave threshold
 continues into `scenes/levels/overgrown_coastal_ascent_interior.tscn` without
 creating another campaign identity.
 Missing future levels are not represented by fake scenes or disabled
@@ -516,24 +518,30 @@ death and reset behavior.
 
 Approved replacement levels enter `CampaignCatalog`.
 `GameRoot.developer_level_definitions` is reserved for tools and focused review
-fixtures with a null world definition: Animation Lab and Level Design Lab.
-Animation Lab remains the only one with in-room ability toggles; Level Design
-Lab is reserved for reusable layout, terrain, and fixture experiments. The
-production Level 2 approach uses a direct same-level `target_scene` handoff into
-its live interior. Focused validators, captures, and probes load that interior
-scene directly under `resources/campaign/level_02.tres`, preserving its
-production Level 2 identity without a separate selector entry.
+fixtures with a null world definition: Animation Lab, Level Design Lab, and the
+Green Zone Finale Level 3 WIP. Animation Lab remains the only one with in-room
+ability toggles; Level Design Lab is reserved for reusable layout, terrain, and
+fixture experiments. Level 3 WIP starts with the full current movement kit on a
+parked construction lift and contains no goal, hazards, or production campaign
+identity yet. The production Level 2 approach uses a direct same-level
+`target_scene` handoff into its live interior. Focused validators, captures, and
+probes load that interior scene directly under
+`resources/campaign/level_02.tres`, preserving its production Level 2 identity
+without a separate selector entry.
 
 ## Validation and visual review
 
 Every lasting system receives focused validation. The current suite covers:
 
 - application and world-grouped level-selector structure, including keyboard
-  navigation and the development-only Animation Lab and Level Design Lab;
+  navigation and the development-only Animation Lab, Level Design Lab, and
+  Level 3 WIP;
 - Animation Lab isolation, expanded geometry, immediate ability toggles,
   reset, and session-local ability policy;
 - Level Design Lab isolation and its retained cave-terrain and construction-lift
   prototyping fixtures;
+- Level 3 WIP isolation, full-kit entry state, parked lift-top spawn, grounded
+  night scenery, empty route contract, and clean run-up support;
 - campaign catalog integrity, versioned progress serialization, and
   per-level ability filtering, including the two-level World 1 order;
 - fresh level-defined development entry state versus same-session restart
@@ -647,6 +655,10 @@ first machine chamber offers above-air-Dash and below-ground-Dash routes; the
 second places two opposite-phase flyers in its outer thirds. The final cave
 lift waits for one continuous second of supported stillness, rises under fixed
 camera framing, and begins the one-second completion fade at 62 percent ascent.
+Its cave exit instance and Level 3's receiving instance both hide the reusable
+lift's near-black shaft backdrop so their authored environments remain visible
+through the framework. The packed lift keeps the backdrop available for labs or
+future enclosed uses.
 Arrival's final threshold marks Level 1 complete without showing its completion
 overlay, then uses matched run-out/run-in presentation to preserve momentum into
 the Level 2 approach. The cave threshold in turn uses a direct same-level scene
@@ -656,6 +668,7 @@ state.
 Reusable height-aware background fades remain unused and opt-in; authored zone
 regions are active. Structural, visual, and regression automation owns
 technical confidence, while hands-on human review remains the gate for
-presentation, difficulty, fairness, pacing, and feel. Firearms, saws, bosses,
-Combat Lab, and the curated cyberpunk UI theme follow only when their campaign
-milestones require them.
+presentation, difficulty, fairness, pacing, and feel. Firearms, bosses, Combat
+Lab, and the curated cyberpunk UI theme follow only when their campaign
+milestones require them. Moving saws are no longer a Level 3 prerequisite and
+remain reserved for a later level whose route benefits from them.

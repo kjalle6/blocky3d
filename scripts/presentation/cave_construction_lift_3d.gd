@@ -20,6 +20,9 @@ const PIXEL_WORLD_SIZE := 0.04
 @export_range(0.0, 4.0, 0.05) var return_delay := 0.8
 @export var starts_at_top := false
 @export var trigger_on_boarding := true
+## A receiving level can leave the carriage parked at its upper landing. The
+## ordinary two-way lift keeps the original behavior and returns when empty.
+@export var return_from_top_when_empty := true
 @export var cable_top_y := 16.6
 @export_category("Level exit")
 ## Empty keeps this a reusable two-way lift. Pointing at a manual LevelGoal3D
@@ -98,7 +101,7 @@ func _physics_process(delta: float) -> void:
 				_change_state(TravelState.IDLE_TOP)
 		TravelState.IDLE_TOP:
 			_set_carriage_height(travel_height)
-			if _rider_count <= 0:
+			if return_from_top_when_empty and _rider_count <= 0:
 				_change_state(TravelState.RETURNING)
 		TravelState.RETURNING:
 			_set_carriage_height(travel_height)

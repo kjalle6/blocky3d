@@ -83,6 +83,9 @@ exit_goal_path = NodePath("../../Goal")
 exit_trigger_progress = 0.62
 exit_still_duration = 1.0
 
+[node name="ShaftBackdrop" parent="Props/CaveLiftExit" index="0"]
+visible = false
+
 [node name="RecapSpikes" parent="Hazards" index="0" instance=ExtResource("6_spikes")]
 position = Vector3(12.8, 0, 0)
 row_width = 2.56
@@ -300,3 +303,5 @@ size = Vector2(5.12, 29.44)
 vertical_framing_enabled = false
 priority = 20
 horizontal_focus_enabled = true
+
+[editable path="Props/CaveLiftExit"]

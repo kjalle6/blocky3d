@@ -687,6 +687,7 @@ func _run() -> void:
 	assert(lift.get("exit_goal_path") == NodePath("../../Goal"))
 	assert(is_equal_approx(level.completion_fade_duration, COMPLETION_FADE_DURATION))
 	var shaft_backdrop := lift.get_node("ShaftBackdrop") as MeshInstance3D
+	assert(not shaft_backdrop.visible)
 	var shaft_mesh := shaft_backdrop.mesh as QuadMesh
 	assert(shaft_mesh != null)
 	assert(shaft_mesh.size.is_equal_approx(Vector2(3.84, 17.92)))

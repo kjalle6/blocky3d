@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="LevelDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/campaign/level_definition.gd" id="1_definition"]
+[ext_resource type="PackedScene" path="res://scenes/dev/green_zone_finale_wip.tscn" id="2_scene"]
+
+[resource]
+script = ExtResource("1_definition")
+level_id = &"dev_green_zone_finale_wip"
+display_number = 3
+title = "Level 3 WIP"
+lesson = "Begin on the construction lift that left Level 2, then step into a basic Green Zone night run-up."
+scene = ExtResource("2_scene")
+available_abilities = Array[StringName]([&"double_jump", &"wall_jump", &"dash"])
+assumed_owned_abilities = Array[StringName]([&"double_jump", &"wall_jump", &"dash"])
