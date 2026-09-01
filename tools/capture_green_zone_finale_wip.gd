@@ -1,5 +1,6 @@
 extends SceneTree
-## Captures the Level 3 WIP lift arrival and the three-island ravine opener.
+## Captures the Level 3 WIP lift arrival, ravine opener, deceptive drop, short
+## deep-cave encounter, and long Wall Jump return.
 
 const OUTPUT_SIZE := Vector2i(1920, 1080)
 const OUTPUT_DIRECTORY := "res://build/previews"
@@ -54,6 +55,54 @@ func _run() -> void:
 	for frame in 8:
 		await physics_frame
 	await _capture(level, "level_3_wip_spike_landing")
+
+	# Pin the mixed encounter so this review frame does not depend on how much
+	# time the preceding captures took.
+	var runup_patrol := level.get_node("RunupPatrol") as StompableEnemy3D
+	var runup_flyer := level.get_node("RunupFlyer") as HoveringHazard3D
+	assert(runup_patrol != null and runup_flyer != null)
+	runup_patrol.reset_run()
+	runup_patrol.set_physics_process(false)
+	runup_flyer.horizontal_phase = 0.4
+	runup_flyer.reset_run()
+	runup_flyer.set_physics_process(false)
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(88.32, 0.7, 0)))
+	level.camera.snap_to_target()
+	for frame in 8:
+		await physics_frame
+	await _capture(level, "level_3_wip_enemy_runup")
+
+	# Capture the ordinary look-ahead revealing the far lip during the attempt;
+	# the route deliberately avoids a fixed takeoff camera lock.
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(115.2, 2.8, 0)))
+	level.camera.snap_to_target()
+	for frame in 8:
+		await physics_frame
+	await _capture(level, "level_3_wip_deceptive_gap")
+
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(127.0, -12.0, 0)))
+	level.camera.snap_to_target()
+	for frame in 8:
+		await physics_frame
+	await _capture(level, "level_3_wip_long_descent")
+
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(132.48, -24.9, 0)))
+	level.camera.snap_to_target()
+	for frame in 8:
+		await physics_frame
+	await _capture(level, "level_3_wip_deep_run")
+
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(157.44, -24.9, 0)))
+	level.camera.snap_to_target()
+	for frame in 8:
+		await physics_frame
+	await _capture(level, "level_3_wip_wall_jump_bottom")
+
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(165.12, 0.7, 0)))
+	level.camera.snap_to_target()
+	for frame in 8:
+		await physics_frame
+	await _capture(level, "level_3_wip_wall_jump_exit")
 	quit(0)
 
 

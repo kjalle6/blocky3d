@@ -106,7 +106,22 @@ func _run() -> void:
 	if enemy.facing_sign() >= 0.0:
 		_fail("Reset did not restore the bounded patrol's authored start direction.")
 		return
-	print("Reusable bounded enemy patrol validation passed.")
+
+	# Either authored side may be used independently. A zero right distance must
+	# keep natural wall/ledge patrol active instead of becoming a limit at spawn.
+	enemy.patrol_left_distance = 2.0
+	enemy.patrol_right_distance = 0.0
+	enemy.starts_moving_right = true
+	enemy.reset_run()
+	var one_sided_origin_x := enemy.global_position.x
+	var one_sided_maximum_x := one_sided_origin_x
+	for frame in 30:
+		await physics_frame
+		one_sided_maximum_x = maxf(one_sided_maximum_x, enemy.global_position.x)
+	if one_sided_maximum_x <= one_sided_origin_x + 1.0:
+		_fail("A disabled right limit prevented the one-sided patrol roaming naturally.")
+		return
+	print("Reusable natural, bounded, and one-sided enemy patrol validation passed.")
 	quit(0)
 
 

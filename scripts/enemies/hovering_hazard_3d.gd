@@ -1,6 +1,7 @@
 class_name HoveringHazard3D
 extends Node3D
-## An indestructible flying machine that patrols a vertical line.
+## An indestructible flying machine with a vertical bob and optional horizontal
+## patrol. Existing machines remain vertical-only until an authored scene opts in.
 ##
 ## It is a traversal hazard, not a combat target. It deliberately stays outside
 ## the melee_target and stomp contracts, so it cannot be stabbed or jumped on,
@@ -25,6 +26,15 @@ extends Node3D
 ## Starting point in the cycle, 0..1. Lets two machines run out of step.
 @export_range(0.0, 1.0, 0.01) var bob_phase := 0.0
 
+@export_category("Horizontal patrol")
+## Optional constant-speed sweep around the authored X. Zero amplitude keeps
+## the established vertical-only behaviour used by the Level 2 machines.
+@export_range(0.0, 20.0, 0.01, "or_greater") var horizontal_amplitude := 0.0
+@export_range(0.0, 20.0, 0.1, "or_greater") var horizontal_speed := 2.0
+## Starting point in the left-centre-right-centre cycle. A quarter cycle starts
+## at the authored centre moving right, which reads cleanly after a run reset.
+@export_range(0.0, 1.0, 0.01) var horizontal_phase := 0.25
+
 @export_category("Discharge")
 ## Seconds between the start of one discharge and the next.
 @export_range(0.2, 30.0, 0.05, "or_greater") var spark_period := 2.4
@@ -41,12 +51,14 @@ const IDLE_FRAME_RATE := 6.0
 @onready var _spark: Hazard3D = $SparkHazard
 
 var _rest_y := 0.0
+var _rest_x := 0.0
 var _elapsed := 0.0
 var _spark_lethal := false
 
 
 func _ready() -> void:
 	add_to_group("run_resettable")
+	_rest_x = position.x
 	_rest_y = position.y
 	_apply(0.0)
 
@@ -55,6 +67,8 @@ func validation_errors() -> PackedStringArray:
 	var errors := PackedStringArray()
 	if spark_active >= spark_period:
 		errors.append("A discharge that never ends removes the route beneath the machine.")
+	if horizontal_amplitude > 0.0 and horizontal_speed <= 0.0:
+		errors.append("A horizontal flyer patrol needs positive movement speed.")
 	if get_node_or_null("Visual") == null:
 		errors.append("Hovering hazard requires a Visual sprite.")
 	if get_node_or_null("BodyHazard") == null:
@@ -79,6 +93,20 @@ func highest_body_y() -> float:
 	return _rest_y + bob_amplitude
 
 
+func leftmost_body_x() -> float:
+	return _rest_x - horizontal_amplitude
+
+
+func rightmost_body_x() -> float:
+	return _rest_x + horizontal_amplitude
+
+
+func horizontal_patrol_period() -> float:
+	if horizontal_amplitude <= 0.0 or horizontal_speed <= 0.0:
+		return 0.0
+	return horizontal_amplitude * 4.0 / horizontal_speed
+
+
 func is_discharging() -> bool:
 	return _spark_lethal
 
@@ -89,6 +117,16 @@ func _physics_process(delta: float) -> void:
 
 
 func _apply(delta: float) -> void:
+	var horizontal_period := horizontal_patrol_period()
+	if horizontal_period > 0.0:
+		var horizontal_through := fposmod(
+			_elapsed / horizontal_period + horizontal_phase,
+			1.0
+		)
+		var horizontal_triangle := (
+			1.0 - 4.0 * absf(horizontal_through - 0.5)
+		)
+		position.x = _rest_x + horizontal_triangle * horizontal_amplitude
 	var bob := sin((_elapsed / bob_period + bob_phase) * TAU)
 	position.y = _rest_y + bob * bob_amplitude
 

@@ -431,6 +431,9 @@ func _run() -> void:
 		"The machine is a traversal hazard; it must not be attackable."
 	)
 	assert(not flyer.is_in_group("stompable"))
+	assert(is_zero_approx(flyer.horizontal_amplitude))
+	assert(is_zero_approx(flyer.horizontal_patrol_period()))
+	assert(is_equal_approx(flyer.leftmost_body_x(), flyer.rightmost_body_x()))
 
 	# The design rule for this beat: the machine's travel must never close both
 	# routes at once. When it rises the floor lane opens; when it drops the
@@ -461,6 +464,12 @@ func _run() -> void:
 		assert(dual_flyer.validation_errors().is_empty())
 		assert(not dual_flyer.is_in_group("melee_target"))
 		assert(not dual_flyer.is_in_group("stompable"))
+		assert(is_zero_approx(dual_flyer.horizontal_amplitude))
+		assert(is_zero_approx(dual_flyer.horizontal_patrol_period()))
+		assert(is_equal_approx(
+			dual_flyer.leftmost_body_x(),
+			dual_flyer.rightmost_body_x()
+		))
 		assert(is_equal_approx(dual_flyer.bob_amplitude, flyer.bob_amplitude))
 		assert(is_equal_approx(dual_flyer.bob_period, flyer.bob_period))
 		assert(is_equal_approx(dual_flyer.lowest_body_y(), flyer.lowest_body_y()))

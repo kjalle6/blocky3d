@@ -187,11 +187,18 @@ three re-authored levels:
    and two Dash-required island gaps. Its opening recap uses one familiar ground
    enemy followed by two familiar flyers moving out of phase and another ground
    enemy on their landing platform, with spikes controlling the last landing
-   rather than turning the opener into a tall climb. One new armed
-   humanoid shooter is then introduced alone; defeating it guarantees the gun
-   pickup. Shooting is taught safely before being mixed with the learned
-   movement and enemy language, followed by a simple first boss. Moving saws
-   were cut from this level and reserved for a later campaign fit.
+   rather than turning the opener into a tall climb. A further ground enemy
+   free-roams from the spike strip's far edge to the final ledge while a faster
+   horizontal flyer crosses the entire joined platform over those spikes with
+   only a slight vertical sway. A deceptively plausible gap then drops the
+   player safely into a brief dark cave run before a long,
+   hazard-free two-wall Wall Jump shaft returns them to the surface. One new
+   armed humanoid shooter is introduced alone after that traversal recap;
+   defeating it guarantees the gun pickup. Shooting is taught safely before it
+   is mixed with the learned movement and enemy language, followed by a simple
+   first boss. The current WIP stops at the Wall Jump exit; the shooter, gun
+   lesson, and boss are not implemented yet. Moving saws were cut from this
+   level and reserved for a later campaign fit.
 
 The six short Godot prototype levels are deleted; they were regression
 evidence for these mechanics, not the final campaign structure. Their useful

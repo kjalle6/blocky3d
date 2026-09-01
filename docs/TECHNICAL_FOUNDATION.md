@@ -224,10 +224,15 @@ other. The Level 2 interior uses that split for its Wall Jump shaft and its
 28.0 m upper-floor camera offset. The vertical region clamps there so an
 ordinary jump cannot move the whole upper cave shell. A second fixed region
 holds the lift-exit composition while the deck rises. Normal horizontal
-look-ahead resumes through
-the camera's smoothing when the player exits the Wall Jump shaft. The separate
-height-window extension remains dormant until an approved composition needs
-fixed-scale depth, parallax, deliberate viewport cropping, and camera-height
+look-ahead resumes through the camera's smoothing when the player exits the
+Wall Jump shaft. Level 3 WIP reuses the same independent policies: ordinary
+forward look-ahead reveals the deceptive far ledge during the committed jump,
+a broader vertical region waits until the player falls below the surface lip
+before following the 25.6 m descent, a fixed bottom hold prevents the short
+combat beat from bobbing with ordinary jumps, and a narrow horizontal focus
+holds the 5.12 m return shaft while vertical tracking follows the climb. The
+separate height-window extension remains dormant until an approved composition
+needs fixed-scale depth, parallax, deliberate viewport cropping, and camera-height
 fades; runtime scaling of scenery remains excluded because it reads as zooming
 rather than travel.
 
@@ -304,8 +309,9 @@ Ordinary patrols still use wall and ledge sensing as their default movement
 contract. A scene may additionally author independent `patrol_left_distance`
 and `patrol_right_distance` values when a readable route must stop at a nearby
 hazard instead of a terrain ledge. The bounds are measured from the enemy's
-reset transform, reverse direction without teleporting, and remain optional so
-ordinary full-platform patrols do not change.
+reset transform, reverse direction without teleporting, and are independently
+optional per side. Leaving either distance at zero preserves natural wall and
+ledge roaming on that side, so ordinary full-platform patrols do not change.
 
 Spike rows use a small fixed horizontal collision inset at each visible end.
 The inset must not scale with total row width: proportional shrinkage creates
@@ -434,8 +440,11 @@ Animation Lab and those production levels. The target campaign structure
 remains approximately three re-authored levels. Green Zone Finale now has a
 development-only WIP proving its parked lift-top spawn and opening ravine: one
 Double Jump gap, two Dash-required gaps, a Level 2-style paired vertical-flyer
-patrol, a second ground enemy, a final spike-side landing, and a joined safe continuation checkpoint. It is
-not yet catalogued as production.
+patrol, a second ground enemy, a final spike-side landing, then another patrol
+with a faster horizontal flyer across the joined continuation ground. The same
+WIP adds a 20.48 m deceptive gap, safe 25.6 m fall, short deep-cave patrol and
+5.12 m spike strip, then a hazard-free 5.12 m two-wall Wall Jump shaft back to
+the surface. It is not yet catalogued as production.
 `resources/campaign/level_02.tres`
 identifies Overgrown Coastal Ascent and loads
 `scenes/levels/overgrown_coastal_ascent.tscn`; its cave threshold
@@ -532,12 +541,18 @@ fixtures with a null world definition: Animation Lab, Level Design Lab, and the
 Green Zone Finale Level 3 WIP. Animation Lab remains the only one with in-room
 ability toggles; Level Design Lab is reserved for reusable layout, terrain, and
 fixture experiments. Level 3 WIP starts with the full current movement kit on a
-parked construction lift. Its isolated developer route now contains one ground
-patrol before the ravine, two hovering hazards, another landing patrol, one
-spike row, and one recovery checkpoint, but no goal or production campaign
-identity. The production Level 2 approach uses a direct same-level
-`target_scene` handoff into its live interior. Focused validators, captures, and
-probes load that interior scene directly under
+parked construction lift. Its isolated developer route now contains four
+ground patrols, three hovering hazards, two spike rows, and three recovery
+checkpoints across the ravine opener and deep return, but no goal or production
+campaign identity. The deep slice lowers the player's authored fall-reset limit
+to Y -31 and the global kill plane to Y -32 so the 25.6 m descent remains
+playable. A second kill plane stays at Y -8 across only X 0.00–79.36, preserving
+quick deaths in the three earlier gaps without touching the intended drop.
+The current night-forest profile stays continuous while a regional grade
+darkens it below the surface, and reused rock-underworks terrain forms the floor
+and two-face Wall Jump shaft. The production Level 2 approach uses a direct
+same-level `target_scene` handoff into its live interior. Focused validators,
+captures, and probes load that interior scene directly under
 `resources/campaign/level_02.tres`, preserving its production Level 2 identity
 without a separate selector entry.
 
@@ -553,7 +568,9 @@ Every lasting system receives focused validation. The current suite covers:
 - Level Design Lab isolation and its retained cave-terrain and construction-lift
   prototyping fixtures;
 - Level 3 WIP isolation, full-kit entry state, parked lift-top spawn, grounded
-  night scenery, empty route contract, and clean run-up support;
+  night scenery, measured ravine gaps, quick early-gap death planes, vertical
+  flyers, patrol and spike placements, safe deep fall, rock terrain, regional
+  grade, camera regions, checkpoints, and hazard-free two-wall return shaft;
 - campaign catalog integrity, versioned progress serialization, and
   per-level ability filtering, including the two-level World 1 order;
 - fresh level-defined development entry state versus same-session restart
@@ -663,7 +680,11 @@ blend, matching regional grade, localized water vistas, raised foreground roof,
 and shared upper ceiling. Green Zone enemy 5 remains a dedicated indestructible
 flying-hazard archetype outside the `melee_target` and stomp contracts, with
 explicit lethal body/electric contact and deterministic reset behavior. The
-first machine chamber offers above-air-Dash and below-ground-Dash routes; the
+archetype's optional constant-speed horizontal triangle patrol defaults to zero
+amplitude, preserving every established vertical-only machine. Level 3 opts one
+flyer into a 4.0 m/s sweep across the entire joined runway, including its spike
+strip, with only 0.64 m of vertical sway.
+The first machine chamber offers above-air-Dash and below-ground-Dash routes; the
 second places two opposite-phase flyers in its outer thirds. The final cave
 lift waits for one continuous second of supported stillness, rises under fixed
 camera framing, and begins the one-second completion fade at 62 percent ascent.
@@ -676,6 +697,16 @@ overlay, then uses matched run-out/run-in presentation to preserve momentum into
 the Level 2 approach. The cave threshold in turn uses a direct same-level scene
 handoff into the slide and interior, preserving the Level 2 identity and run
 state.
+
+Green Zone Finale's development WIP now carries the parked receiving lift into
+a night ravine recap with one Double Jump gap, two Dash gaps, paired vertical
+flyers, three ground patrols, a faster horizontal flyer, and the spike-controlled
+final landing. Its next 20.48 m gap intentionally exceeds the complete movement
+envelope without advertising failure: a missed crossing becomes a safe 25.6 m
+descent into a short, darkened rock-underworks pocket. One further patrol and a
+5.12 m spike strip lead to a long, hazard-free 5.12 m two-wall Wall Jump shaft
+that returns to the surface. The WIP stops there; firearms, shooter behavior,
+the gun lesson, and the boss remain future milestones.
 
 Reusable height-aware background fades remain unused and opt-in; authored zone
 regions are active. Structural, visual, and regression automation owns

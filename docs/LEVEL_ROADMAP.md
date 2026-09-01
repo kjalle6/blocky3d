@@ -18,7 +18,8 @@ Level 2 through a matched run-out/run-in handoff without showing the completion
 overlay. Level 2's accepted route and presentation remain the production
 baseline. A development-only Level 3 WIP now proves Green Zone Finale's opening:
 the player begins on Level 2's construction lift at its upper landing and steps
-into a sparse, flat Green Zone run-up under the accepted dark-blue night forest.
+into a ravine traversal under the accepted dark-blue night forest, then falls
+safely into a short deep-cave interruption and Wall Jumps back to the surface.
 It is not yet a production campaign entry.
 
 The six Green Zone prototype levels that preceded this are deleted. They were
@@ -47,7 +48,7 @@ larger cyberpunk setting.
 | --- | --- | --- | --- |
 | 1: Arrival / Shoreline | Classic fundamentals grow into an aerial route | Double Jump | Complete and accepted; production baseline locked at commit `59a034b` |
 | 2: Overgrown Coastal Ascent | A brief Green Zone approach gives way to an enclosed cavern / underworks route | Wall Jump and Dash | Complete, hands-on accepted, and in production as World 1's second level |
-| 3: Green Zone Finale | Lift-top night opening, full-kit mastery, enemy escalation, gun lesson, and boss | Limited firearm | Developer WIP: lift start and basic run-up |
+| 3: Green Zone Finale | Lift-top night opening, full-kit mastery, enemy escalation, gun lesson, and boss | Limited firearm | Developer WIP: ravine opener, surprise descent, and Wall Jump return |
 
 These are working titles. A level should be long enough to develop several
 connected ideas, but it should still end before repetition becomes padding.
@@ -287,12 +288,33 @@ the first Dash gap, reusing the readable over-or-under timing language from
 Level 2. Another ground patrol occupies their landing island. The broad last
 landing leaves 4.16 m of safe touchdown before a 7.36 m spike row running from
 world X 72.00 to its far edge; the terrain joins directly into safe checkpoint
-ground beyond the spikes without an unnecessary seam or hole.
+ground beyond the spikes without an unnecessary seam or hole. The final surface
+run-up lets one more familiar ground enemy free-roam from 0.72 m beyond the
+spike strip to its natural clearance at the fake-gap ledge. A flyer crosses the
+entire joined platform, including the spikes, at 4.0 m/s versus the ground
+enemy's 2.0 m/s while bobbing only 0.64 m vertically. Both turn 0.72 m before
+the fake lip.
 
 This ravine is only the opening phrase of a deliberately long level. It stops
-before the shooter, projectiles, gun, ammo HUD, and boss; those remain separate
-build decisions. Wall Jump remains available for the later full-kit gun section
-instead of forcing a tall camera move into this opener.
+on joined continuation ground before a 20.48 m gap that looks plausibly
+crossable but sits just beyond the combined Double Jump and Dash envelope. A
+committed attempt therefore becomes a consequence-free surprise descent rather
+than an obvious instruction to fall. The drop runs about 25.6 m beside a wall,
+so the player may control it with a Wall Slide or simply fall without taking
+damage. A separate shallow kill plane covers only the three earlier ravine gaps,
+so missing those crossings still resets quickly instead of borrowing the deep
+route's longer fall.
+
+The bottom deliberately stays brief. Reused Level 2 rock-underworks terrain
+frames one familiar ground enemy and one 5.12 m spike strip against a darkened
+version of the same night forest, then a recovery checkpoint feeds directly
+into a 5.12 m-wide two-wall shaft. Its long climb roughly matches the descent
+and contains no spikes or other hazards: this is a clean Wall Jump mastery beat,
+not a repeat of Level 2's trapped shaft. A second checkpoint returns the player
+to the surface shelf at the current WIP endpoint.
+
+The shooter, projectiles, gun, ammo HUD, and boss remain unbuilt and separate
+build decisions after this point.
 
 A literal moon was tested and rejected. The subtler moonlight-through-trees idea
 is deferred rather than worth delaying the level over; the dark forest treatment

@@ -31,8 +31,14 @@ remain read-only design references.
   ravine: a Double Jump island, two Dash-required crossings, and a spike-side
   final landing lead into safe continuation ground. One familiar ground patrol
   and a paired vertical-flyer gap followed by another patrol recap the existing
-  enemy language against the accepted dark-blue night forest treatment. The
-  later route, ending, and production
+  enemy language against the accepted dark-blue night forest treatment. One
+  more ground enemy free-roams from the spike strip's far edge to the final
+  ledge, while a faster flyer sweeps the entire joined platform over those
+  spikes with only a slight vertical sway. That mixed recap leads
+  into a plausible but deliberately unreachable 20.48 m gap that drops the
+  player safely about 25.6 m into a short rock-underworks pocket. One patrol, a
+  5.12 m spike strip, and a long hazard-free 5.12 m two-wall Wall Jump shaft
+  carry the route back to the surface. The shooter, gun, ending, and production
   promotion remain deliberately open
 - The six earlier Green Zone prototype levels are deleted. Their movement
   contracts moved to permanent homes first: the Animation Lab for the ability
@@ -52,11 +58,13 @@ remain read-only design references.
   shaft focus while its vertical camera follows the climb. Height-aware opacity
   controls remain available as a separate opt-in extension
 - The intended finale starts by recapping the current movement and enemy
-  language with one ground patrol followed by two flyers and another patrol. One new armed Green
-  Zone humanoid then introduces ranged attacks; defeating that enemy guarantees
-  the gun pickup. A combined movement-and-shooting stretch leads to the simple
-  first boss while melee remains viable. Moving saws were cut from this level
-  and remain available for a later campaign fit
+  language with one ground patrol followed by two flyers and another patrol,
+  then proves the full traversal kit through the surprise descent and Wall Jump
+  return. One new armed Green Zone humanoid will then introduce ranged attacks;
+  defeating that enemy guarantees the gun pickup. A combined
+  movement-and-shooting stretch leads to the simple first boss while melee
+  remains viable. Moving saws were cut from this level and remain available for
+  a later campaign fit
 - Typed world catalog and world-grouped mouse or `W`/`S` + `Enter` level
   selector
 - Development-only Animation Lab with a full-speed runway, test geometry,

@@ -10,6 +10,8 @@ const MINIMUM_PATROL_PROGRESS_RATIO := 0.25
 
 @export_range(0.1, 10.0, 0.1) var patrol_speed := 2.0
 @export var starts_moving_right := true
+## Optional one-sided limits measured from the authored spawn. A zero value
+## leaves that side to ordinary wall and ledge detection.
 @export_range(0.0, 50.0, 0.05) var patrol_left_distance := 0.0
 @export_range(0.0, 50.0, 0.05) var patrol_right_distance := 0.0
 @export_range(1.0, 100.0, 0.5) var gravity := 38.0
@@ -85,13 +87,17 @@ func _physics_process(delta: float) -> void:
 
 
 func _update_authored_patrol_bounds() -> void:
-	if patrol_left_distance <= 0.0 and patrol_right_distance <= 0.0:
-		return
-	var minimum_x := _initial_transform.origin.x - patrol_left_distance
-	var maximum_x := _initial_transform.origin.x + patrol_right_distance
-	if _direction < 0.0 and global_position.x <= minimum_x:
+	if (
+		_direction < 0.0
+		and patrol_left_distance > 0.0
+		and global_position.x <= _initial_transform.origin.x - patrol_left_distance
+	):
 		_direction = 1.0
-	elif _direction > 0.0 and global_position.x >= maximum_x:
+	elif (
+		_direction > 0.0
+		and patrol_right_distance > 0.0
+		and global_position.x >= _initial_transform.origin.x + patrol_right_distance
+	):
 		_direction = -1.0
 
 

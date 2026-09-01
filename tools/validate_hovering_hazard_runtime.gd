@@ -38,6 +38,8 @@ func _run() -> void:
 	for frame in 3:
 		await physics_frame
 	flyer.set_physics_process(false)
+	assert(is_zero_approx(flyer.horizontal_amplitude))
+	assert(is_equal_approx(flyer.global_position.x, FLYER_POSITION.x))
 
 	# The body remains lethal even while the electrical discharge is off.
 	flyer._set_spark(false)
@@ -77,6 +79,35 @@ func _run() -> void:
 		"A discharge activating around an existing occupant must kill the player."
 	)
 
-	print("Hovering-hazard body and discharge runtime validation passed.")
+	# Horizontal patrol is optional and deterministic. Its triangle wave moves at
+	# the authored constant speed, and reset returns it to the same phase.
+	var patrol_flyer := FLYER_SCENE.instantiate() as HoveringHazard3D
+	assert(patrol_flyer != null)
+	patrol_flyer.position = Vector3(20.0, 4.0, 0.0)
+	patrol_flyer.bob_amplitude = 0.0
+	patrol_flyer.horizontal_amplitude = 2.0
+	patrol_flyer.horizontal_speed = 4.0
+	patrol_flyer.horizontal_phase = 0.25
+	root.add_child(patrol_flyer)
+	await physics_frame
+	patrol_flyer.reset_run()
+	assert(is_equal_approx(patrol_flyer.leftmost_body_x(), 18.0))
+	assert(is_equal_approx(patrol_flyer.rightmost_body_x(), 22.0))
+	assert(is_equal_approx(patrol_flyer.horizontal_patrol_period(), 2.0))
+	assert(is_equal_approx(patrol_flyer.global_position.x, 20.0))
+	for frame in 15:
+		await physics_frame
+	assert(absf(patrol_flyer.global_position.x - 21.0) < 0.08)
+	assert(is_equal_approx(patrol_flyer.global_position.y, 4.0))
+	for frame in 15:
+		await physics_frame
+	assert(absf(patrol_flyer.global_position.x - 22.0) < 0.08)
+	for frame in 15:
+		await physics_frame
+	assert(absf(patrol_flyer.global_position.x - 21.0) < 0.08)
+	patrol_flyer.reset_run()
+	assert(is_equal_approx(patrol_flyer.global_position.x, 20.0))
+
+	print("Hovering-hazard contact and optional horizontal patrol validation passed.")
 	_completed = true
 	quit(0)
