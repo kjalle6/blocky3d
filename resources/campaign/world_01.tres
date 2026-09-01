@@ -1,7 +1,8 @@
-[gd_resource type="Resource" script_class="WorldDefinition" load_steps=3 format=3]
+[gd_resource type="Resource" script_class="WorldDefinition" load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/campaign/world_definition.gd" id="1_world"]
 [ext_resource type="Resource" path="res://resources/campaign/level_01.tres" id="2_level_01"]
+[ext_resource type="Resource" path="res://resources/campaign/level_02.tres" id="3_level_02"]
 [ext_resource type="Script" path="res://scripts/campaign/level_definition.gd" id="5_definition"]
 
 [resource]
@@ -11,4 +12,4 @@ display_number = 1
 title = "Green Zone"
 description = "The tutorial island begins at the shoreline and grows naturally into the Green Zone."
 theme_id = &"green_zone"
-levels = Array[ExtResource("5_definition")]([ExtResource("2_level_01")])
+levels = Array[ExtResource("5_definition")]([ExtResource("2_level_01"), ExtResource("3_level_02")])

@@ -1,7 +1,7 @@
 extends SceneTree
-## Guards native scale and level-ground contact for the Level 2 approach.
+## Guards native scale, combat bounds, and the cave handoff for production Level 2.
 
-const SCENE_PATH := "res://scenes/dev/level_2_wip.tscn"
+const SCENE_PATH := "res://scenes/levels/overgrown_coastal_ascent.tscn"
 ## The scene renders the native export; the 4x enlargement is kept only as the
 ## art source, and the two must stay pixel-identical under that scale.
 const CAVE_PATH := (
@@ -25,7 +25,9 @@ func _init() -> void:
 
 
 func _run() -> void:
-	var entry_definition := load("res://resources/dev/level_2_wip.tres") as LevelDefinition
+	var entry_definition := load(
+		"res://resources/campaign/level_02.tres"
+	) as LevelDefinition
 	assert(entry_definition != null)
 	var expected_entry_abilities: Array[StringName] = [&"double_jump"]
 	assert(entry_definition.assumed_owned_abilities == expected_entry_abilities)
@@ -49,10 +51,11 @@ func _run() -> void:
 	assert(packed_scene != null)
 	var room := packed_scene.instantiate() as LevelSession3D
 	assert(room != null)
-	var definition := LevelDefinition.new()
-	definition.level_id = &"dev_level_2_wip"
-	definition.available_abilities = []
-	room.configure(definition)
+	room.configure(
+		entry_definition,
+		null,
+		entry_definition.assumed_owned_abilities.duplicate()
+	)
 	root.add_child(room)
 	await process_frame
 
@@ -156,12 +159,13 @@ func _run() -> void:
 		< threshold.position.x - 0.64,
 		"Enemy contact must remain outside the cave trigger."
 	)
-	assert(threshold.target_level != null)
-	assert(threshold.target_level.level_id == &"dev_level_2_interior_wip")
+	assert(threshold.target_level == null)
+	assert(threshold.target_scene != null)
 	assert(
-		threshold.target_level.scene.resource_path
+		threshold.target_scene.resource_path
 		== "res://scenes/levels/overgrown_coastal_ascent_interior.tscn"
 	)
+	assert(not threshold.completes_source_level)
 	assert(threshold.interstitial_scene != null)
 	assert(
 		threshold.interstitial_scene.resource_path
@@ -169,7 +173,7 @@ func _run() -> void:
 	)
 
 	print(
-		"Level 2 approach passed: native entrance, slide interstitial, and live cave target."
+		"Overgrown Coastal Ascent approach passed: native entrance, patrols, and live cave section."
 	)
 	_completed = true
 	quit(0)

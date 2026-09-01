@@ -5,11 +5,14 @@ Runtime validators prove structure and progression only after the route passes
 hands-on review. A passing bot never authorizes geometry or presentation that
 contradicts this page.
 
-The accepted development build currently spans
-`scenes/dev/level_2_wip.tscn` and
-`scenes/levels/overgrown_coastal_ascent_interior.tscn`. The next production
-step promotes those same authored spaces; it is not permission to redesign
-them. The old frozen interior snapshot is no longer the approach target.
+The accepted production build spans
+`scenes/levels/overgrown_coastal_ascent.tscn` and
+`scenes/levels/overgrown_coastal_ascent_interior.tscn`, with
+`resources/campaign/level_02.tres` providing its stable campaign identity. The
+exterior cave threshold uses a direct same-level `target_scene` handoff into the
+interior, preserving the two authored spaces without inventing a second level
+identity. `resources/dev/overgrown_coastal_ascent_interior_review.tres` remains
+only as a direct developer review entry.
 
 ## Approved route
 
@@ -45,9 +48,11 @@ patrols may roam the full usable ground from the opening tree line to the cave,
 so the approach feels alive and lets the player carry momentum toward the
 entrance.
 
-The cave is an authored threshold between two scenes. The player disappears
-into the mouth, the screen fades to black, and a short downhill slide supplies
-the spatial story for the wall-climbing route that follows. The slide has no
+The cave is an authored threshold between two scenes of the same level. Its
+direct `target_scene` handoff preserves the active Level 2 identity and run
+state. The player disappears into the mouth, the screen fades to black, and a
+short downhill slide supplies the spatial story for the wall-climbing route
+that follows. The slide has no
 visible artificial top edge or underside. Dust at the player's feet supports
 contact without hiding it, and the arrival terrain masks the ramp so it reads as
 part of the cave rather than a placed playground slide. The cutscene lands on

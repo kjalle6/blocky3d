@@ -83,8 +83,8 @@ func _run() -> void:
 	assert(green_zone.display_number == 1)
 	assert(green_zone.title == "Green Zone")
 	assert(green_zone.theme_id == &"green_zone")
-	assert(green_zone.ordered_levels().size() == 1)
-	assert(catalog.ordered_levels().size() == 1)
+	assert(green_zone.ordered_levels().size() == 2)
+	assert(catalog.ordered_levels().size() == 2)
 	var arrival := catalog.find_level(&"green_zone", 1)
 	assert(arrival.level_id == &"arrival_shoreline")
 	assert(arrival.available_abilities == [PlayerAbility.DOUBLE_JUMP])
@@ -92,6 +92,27 @@ func _run() -> void:
 	assert(arrival.required_abilities == [PlayerAbility.DOUBLE_JUMP])
 	assert(arrival.prerequisite_level_ids.is_empty())
 	assert(catalog.find_world_for_level(&"arrival_shoreline") == green_zone)
+	var ascent := catalog.find_level(&"green_zone", 2)
+	assert(ascent.level_id == &"overgrown_coastal_ascent")
+	assert(
+		ascent.available_abilities
+		== [
+			PlayerAbility.DOUBLE_JUMP,
+			PlayerAbility.WALL_JUMP,
+			PlayerAbility.DASH,
+		]
+	)
+	assert(ascent.assumed_owned_abilities == [PlayerAbility.DOUBLE_JUMP])
+	assert(
+		ascent.required_abilities
+		== [
+			PlayerAbility.DOUBLE_JUMP,
+			PlayerAbility.WALL_JUMP,
+			PlayerAbility.DASH,
+		]
+	)
+	assert(ascent.prerequisite_level_ids == [&"arrival_shoreline"])
+	assert(catalog.find_world_for_level(&"overgrown_coastal_ascent") == green_zone)
 
 	print("Campaign progression and ability-policy validation passed.")
 	quit(0)

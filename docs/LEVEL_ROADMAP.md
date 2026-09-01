@@ -12,10 +12,11 @@ reference. Godot is canonical.
 
 ## Current implementation
 
-Arrival / Shoreline is the only production campaign entry. Overgrown Coastal
-Ascent is complete and hands-on accepted through the developer entries; its
-next step is a structural promotion into World 1 and a continuous handoff from
-Level 1, not more level design.
+Arrival / Shoreline and Overgrown Coastal Ascent are the first two production
+campaign entries. Level 1 now records completion and continues directly into
+Level 2 through a matched run-out/run-in handoff without showing the completion
+overlay. Level 2's accepted route and presentation remain the production
+baseline.
 
 The six Green Zone prototype levels that preceded this are deleted. They were
 regression evidence for the movement kit, and that job is finished: every
@@ -42,7 +43,7 @@ larger cyberpunk setting.
 | Target level | Core arc | New capability | Status |
 | --- | --- | --- | --- |
 | 1: Arrival / Shoreline | Classic fundamentals grow into an aerial route | Double Jump | Complete and accepted; production baseline locked at commit `59a034b` |
-| 2: Overgrown Coastal Ascent | A brief Green Zone approach gives way to an enclosed cavern / underworks route | Wall Jump and Dash | Complete and accepted in development form; pending campaign promotion |
+| 2: Overgrown Coastal Ascent | A brief Green Zone approach gives way to an enclosed cavern / underworks route | Wall Jump and Dash | Complete, hands-on accepted, and in production as World 1's second level |
 | 3: Green Zone Finale | Full-kit mastery, saws, enemy escalation, gun lesson, and boss | Limited firearm | Planned concept |
 
 These are working titles. A level should be long enough to develop several
@@ -87,10 +88,12 @@ the small dip platform and one constrained to a safe lane beyond the blind
 landing. Small foliage and one grounded tree dress those platforms behind the
 gameplay plane without implying collision. Beyond the patrol lane, the landing
 simply continues as safe flat ground toward a tire-swing tree landmark. An
-invisible exit trigger in that clearing replaces the temporary chest and fades
-to completion. No new terrain trick, hazard, enemy, checkpoint, or mechanic is
-introduced. A reviewed, non-colliding skate half-pipe fills the final Thorn
-Garden takeoff platform: its right lip ends at the terrain edge and points
+invisible exit threshold in that clearing replaces the temporary chest. It
+records Level 1 completion without displaying the completion overlay and
+carries the run directly into Level 2. No new terrain trick, hazard, enemy,
+checkpoint, or mechanic is introduced. A reviewed, non-colliding skate
+half-pipe fills the final Thorn Garden takeoff platform: its right lip ends at
+the terrain edge and points
 toward the first aerial landing, while its matching left side turns the prop
 into a coherent local landmark rather than a disconnected ramp.
 
@@ -174,20 +177,23 @@ cave, the source player disappears into the mouth rather than running past its
 art. The black then reveals a short downhill slide, lands inside the cave, and
 hands the player into the established rightward run with visible momentum.
 Input returns when the entrance fade finishes. A direct menu or developer load
-stays stationary. Continuous run-out/run-in remains the approved rule for the
-Level 1-to-Level 2 cut; wiring that connection is the promotion step that
-follows this completed-level checkpoint.
+stays stationary. The Level 1-to-Level 2 cut now uses continuous matched
+run-out/run-in presentation and marks Level 1 complete without interrupting the
+journey with its completion overlay.
 
-`scenes/dev/level_2_wip.tscn` currently owns this handoff and its dressing. The
-approach uses the `green_zone_dusk` background; the interior owns its separate
-cave environment. `docs/LEVEL_2_VISUAL_BRIEF.md` is the source of truth for its
-accepted background zoning, regional grade, ceiling, and camera composition.
+`scenes/levels/overgrown_coastal_ascent.tscn` owns the production approach and
+its dressing, and `resources/campaign/level_02.tres` gives the whole route one
+stable campaign identity. The approach uses the `green_zone_dusk` background;
+the interior owns its separate cave environment.
+`docs/LEVEL_2_VISUAL_BRIEF.md` is the source of truth for its accepted
+background zoning, regional grade, ceiling, and camera composition.
 
-The approach now enters the live
-`overgrown_coastal_ascent_interior.tscn`; the directly loadable Interior WIP
-remains only a review shortcut. The earlier frozen snapshot is no longer the
-handoff target. Hands-on review accepts the whole connected route, so promotion
-must preserve this build rather than re-stage it.
+The cave threshold enters
+`scenes/levels/overgrown_coastal_ascent_interior.tscn` through a direct
+same-level `target_scene` handoff, preserving abilities and active run state.
+`resources/dev/overgrown_coastal_ascent_interior_review.tres` remains only as a
+direct developer review shortcut. The slide-intro lab remains available for
+focused cutscene inspection.
 
 The completed teaching arc is:
 
@@ -325,7 +331,7 @@ Level 1, leaving them for Level 2 to own.
 
 ### Completed Level 2 presentation
 
-The completed development build owns the reviewed presentation from the dusk
+The completed production build owns the reviewed presentation from the dusk
 approach through the lift departure:
 
 - a five-layer smoky lower cave that blends broadly into the pale upper cave;
@@ -338,9 +344,8 @@ approach through the lift departure:
   still.
 
 Deterministic captures, focused automation, and hands-on traversal accept this
-composition and the finished route. The user has explicitly approved production
-promotion; promotion is a catalog/path/flow change and must not redesign the
-accepted level.
+composition and the finished route. Production paths and campaign flow preserve
+the accepted level without redesigning it.
 
 ### Needed before the finale
 
@@ -437,13 +442,17 @@ Automation checks loading, collision support, hazards, checkpoints, reset,
 completion, camera/background coverage, exact spike reach, the concealed-spike
 reveal, bounded patrol behavior, and visual regressions without tuning the route
 around bot skill. Human review accepts the route gameplay and concealed hazard.
-Human review also accepts the finish clearing, completion fade, environmental
-dressing, and half-pipe composition. Commit `59a034b` is the Level 1 baseline.
+Human review also accepts the finish clearing, matched exit fade, environmental
+dressing, and half-pipe composition. Commit `59a034b` is the Level 1 geometry
+baseline.
 
-Overgrown Coastal Ascent is now complete and hands-on accepted in development
-form. Its dusk approach, two roaming patrols, cave-slide handoff, movement
-progression, machine chambers, exit gauntlet, background blend, regional grade,
+Overgrown Coastal Ascent is complete, hands-on accepted, and now World 1's
+second production level. Its dusk approach, two roaming patrols, cave-slide
+handoff, movement progression, machine chambers, exit gauntlet, background
+blend, regional grade,
 shared ceiling, water vistas, focused Wall Jump camera, and cave-lift departure
-form one finished level. The next milestone is explicitly authorized: promote
-that accepted build into World 1, retire the obsolete WIP/snapshot identities,
-and make Level 1 continue naturally into Level 2.
+form one finished level. Commit `4bd953b` is the accepted Level 2 content
+baseline. Arrival now marks Level 1 complete without its
+completion overlay and carries the player through a continuous matched
+run-out/run-in handoff into this route. The next campaign milestone is Green
+Zone Finale.

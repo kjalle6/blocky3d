@@ -5,11 +5,14 @@ extends Node3D
 
 signal run_completed
 signal transition_requested(
-	target: LevelDefinition,
+	target_level: LevelDefinition,
+	target_scene: PackedScene,
 	run_direction: float,
 	run_speed: float,
 	run_duration: float,
-	interstitial_scene: PackedScene
+	interstitial_scene: PackedScene,
+	completes_source_level: bool,
+	session_abilities: Array[StringName]
 )
 signal run_reset
 signal checkpoint_changed(route_index: int)
@@ -141,8 +144,14 @@ func _on_goal_reached(body: PlayerCharacter) -> void:
 func _on_transition_entered(transition: LevelTransition3D) -> void:
 	if transition == null:
 		return
-	var target := transition.target_level
-	if _completed or target == null or player.is_dead():
+	if (
+		_completed
+		or player.is_dead()
+		or (
+			transition.target_level == null
+			and transition.target_scene == null
+		)
+	):
 		return
 	_completed = true
 	_reset_request_serial += 1
@@ -164,11 +173,14 @@ func _on_transition_entered(transition: LevelTransition3D) -> void:
 		else 0.0
 	)
 	transition_requested.emit(
-		target,
+		transition.target_level,
+		transition.target_scene,
 		transition.run_direction,
 		transition.run_speed,
 		destination_run_duration,
-		transition.interstitial_scene
+		transition.interstitial_scene,
+		transition.completes_source_level,
+		session_unlocked_abilities()
 	)
 
 
@@ -307,6 +319,12 @@ func unlock_ability(ability_id: StringName) -> bool:
 
 func level_definition() -> LevelDefinition:
 	return _definition
+
+
+## Scene-section transitions preserve abilities collected earlier in the same
+## logical level even when development mode deliberately bypasses save data.
+func session_unlocked_abilities() -> Array[StringName]:
+	return _session_unlocked_abilities.duplicate()
 
 
 func set_session_ability_enabled(ability_id: StringName, enabled: bool) -> void:

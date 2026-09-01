@@ -1,11 +1,13 @@
 extends SceneTree
-## Proves the Level 2 WIP cave handoff uses doorway-appropriate halves: the
-## source player disappears into the black cave mouth, the slide interstitial
-## plays once, the destination player enters moving right, and ordinary input
-## control resumes afterwards.
+## Proves both production handoffs: Level 1 completes into Level 2 as one
+## matched run, then Level 2 preserves its campaign identity and abilities
+## through the cave-slide transition into the interior section.
 
-const SOURCE_LEVEL_ID: StringName = &"dev_level_2_wip"
-const TARGET_LEVEL_ID: StringName = &"dev_level_2_interior_wip"
+const LEVEL_1_ID: StringName = &"arrival_shoreline"
+const LEVEL_2_ID: StringName = &"overgrown_coastal_ascent"
+const INTERIOR_REVIEW_ID: StringName = (
+	&"dev_overgrown_coastal_ascent_interior_review"
+)
 const EXPECTED_DIRECTION := 1.0
 const EXPECTED_SPEED := 8.0
 const EXPECTED_DURATION := 0.45
@@ -20,42 +22,92 @@ func _run() -> void:
 	var packed_root := load("res://scenes/app/game_root.tscn") as PackedScene
 	assert(packed_root != null)
 	var game_root = packed_root.instantiate()
-	game_root.persist_progression = false
+	game_root.persist_progression = true
+	game_root.developer_fresh_level_runs = false
 	root.add_child(game_root)
 	await process_frame
 
-	var source_definition := _developer_definition(game_root, SOURCE_LEVEL_ID)
-	game_root.load_developer_level(source_definition)
+	var store := root.get_node("GameProgression") as ProgressionStore
+	assert(store != null)
+	var validation_save := "user://matched_level_transition_validation.json"
+	if FileAccess.file_exists(validation_save):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(validation_save))
+	store.save_path = validation_save
+	store.progress = GameProgress.new()
+
+	game_root.load_level(LEVEL_1_ID)
 	await process_frame
-	var source_session := game_root.current_level as LevelSession3D
-	assert(source_session != null)
-	var source_player := source_session.player
-	var threshold := source_session.get_node("CaveThreshold") as LevelTransition3D
-	assert(threshold != null)
-	assert(threshold.validation_errors().is_empty())
-	assert(threshold.interstitial_scene != null)
+	var level_1 := game_root.current_level as LevelSession3D
+	assert(level_1 != null)
+	assert(level_1.unlock_ability(PlayerAbility.DOUBLE_JUMP))
+	var level_1_player := level_1.player
+	var campaign_threshold := level_1.get_node(
+		"Level2Transition"
+	) as LevelTransition3D
+	assert(campaign_threshold != null)
+	assert(campaign_threshold.validation_errors().is_empty())
+	assert(campaign_threshold.target_level != null)
+	assert(campaign_threshold.target_level.level_id == LEVEL_2_ID)
+	assert(campaign_threshold.target_scene == null)
+	assert(campaign_threshold.completes_source_level)
 	assert(
-		threshold.interstitial_scene.resource_path
+		campaign_threshold.source_exit_mode
+		== LevelTransition3D.SourceExitMode.RUN
+	)
+	assert(campaign_threshold.run_destination_during_fade_in)
+	_assert_run_contract(campaign_threshold)
+
+	campaign_threshold._on_body_entered(level_1_player)
+	await physics_frame
+	assert(level_1_player.visible)
+	assert(level_1_player.is_transition_running())
+	assert(level_1_player.horizontal_speed > 0.0)
+	assert(not game_root.completion_label.visible)
+	await create_timer(0.65).timeout
+	assert(store.has_completed(LEVEL_1_ID))
+	assert(game_root.current_level_definition.level_id == LEVEL_2_ID)
+	assert(game_root.current_world_definition.world_id == &"green_zone")
+	var approach := game_root.current_level as LevelSession3D
+	assert(approach != null and approach != level_1)
+	var approach_player := approach.player
+	assert(approach_player.has_ability(PlayerAbility.DOUBLE_JUMP))
+	assert(not approach_player.has_ability(PlayerAbility.WALL_JUMP))
+	assert(not approach_player.has_ability(PlayerAbility.DASH))
+	assert(approach_player.is_transition_running())
+	assert(approach_player.global_position.x > approach.spawn_point.global_position.x + EPSILON)
+	assert(not game_root.completion_label.visible)
+	await create_timer(EXPECTED_DURATION + 0.1).timeout
+	assert(not approach_player.is_transition_running())
+
+	var cave_threshold := approach.get_node("CaveThreshold") as LevelTransition3D
+	assert(cave_threshold != null)
+	assert(cave_threshold.validation_errors().is_empty())
+	assert(cave_threshold.target_level == null)
+	assert(cave_threshold.target_scene != null)
+	assert(
+		cave_threshold.target_scene.resource_path
+		== "res://scenes/levels/overgrown_coastal_ascent_interior.tscn"
+	)
+	assert(not cave_threshold.completes_source_level)
+	assert(cave_threshold.interstitial_scene != null)
+	assert(
+		cave_threshold.interstitial_scene.resource_path
 		== "res://scenes/cutscenes/level_2_cave_slide_intro.tscn"
 	)
-	assert(threshold.source_exit_mode == LevelTransition3D.SourceExitMode.HIDE)
-	assert(threshold.run_destination_during_fade_in)
-	assert(is_equal_approx(threshold.run_direction, EXPECTED_DIRECTION))
-	assert(is_equal_approx(threshold.run_speed, EXPECTED_SPEED))
-	assert(is_equal_approx(threshold.run_duration, EXPECTED_DURATION))
+	assert(cave_threshold.source_exit_mode == LevelTransition3D.SourceExitMode.HIDE)
+	assert(cave_threshold.run_destination_during_fade_in)
+	_assert_run_contract(cave_threshold)
 
-	threshold._on_body_entered(source_player)
+	cave_threshold._on_body_entered(approach_player)
 	await physics_frame
-	assert(not source_player.visible)
-	assert(not source_player.is_transition_running())
-	assert(is_zero_approx(source_player.horizontal_speed))
-	assert(not source_player.is_physics_processing())
+	assert(not approach_player.visible)
+	assert(not approach_player.is_transition_running())
+	assert(is_zero_approx(approach_player.horizontal_speed))
+	assert(not approach_player.is_physics_processing())
 
 	await create_timer(1.0).timeout
 	assert(game_root.current_level == null)
-	var slide_intro := (
-		game_root.active_interstitial() as Level2CaveSlideIntro3D
-	)
+	var slide_intro := game_root.active_interstitial() as Level2CaveSlideIntro3D
 	assert(slide_intro != null)
 	assert(not slide_intro.has_finished())
 	assert(slide_intro.slide_progress() > 0.0)
@@ -63,42 +115,46 @@ func _run() -> void:
 	slide_intro.skip_to_end()
 	await create_timer(0.3).timeout
 	assert(game_root.active_interstitial() == null)
-	assert(game_root.current_level_definition != null)
-	assert(game_root.current_level_definition.level_id == TARGET_LEVEL_ID)
-	var target_session := game_root.current_level as LevelSession3D
-	assert(target_session != null and target_session != source_session)
-	var target_player := target_session.player
-	assert(target_player.has_ability(PlayerAbility.DOUBLE_JUMP))
-	assert(not target_player.has_ability(PlayerAbility.WALL_JUMP))
-	assert(not target_player.has_ability(PlayerAbility.DASH))
-	var target_spawn_x := target_session.spawn_point.global_position.x
-	assert(target_player.is_transition_running())
-	assert(target_player.horizontal_speed > 0.0)
-	assert(
-		target_player.global_position.x > target_spawn_x + EPSILON,
-		"Destination player must already be running right while black lifts."
-	)
-	assert(target_player.is_physics_processing())
+	assert(game_root.current_level_definition.level_id == LEVEL_2_ID)
+	assert(game_root.current_world_definition.world_id == &"green_zone")
+	var interior := game_root.current_level as LevelSession3D
+	assert(interior != null and interior != approach)
+	var interior_player := interior.player
+	assert(interior_player.has_ability(PlayerAbility.DOUBLE_JUMP))
+	assert(not interior_player.has_ability(PlayerAbility.WALL_JUMP))
+	assert(not interior_player.has_ability(PlayerAbility.DASH))
+	assert(interior_player.is_transition_running())
+	assert(interior_player.global_position.x > interior.spawn_point.global_position.x + EPSILON)
+	assert(interior_player.is_physics_processing())
 
 	await create_timer(EXPECTED_DURATION + 0.1).timeout
-	assert(not target_player.is_transition_running())
-	assert(target_player.is_physics_processing())
+	assert(not interior_player.is_transition_running())
+	assert(interior_player.is_physics_processing())
+	assert(not store.has_completed(LEVEL_2_ID))
 
 	game_root.show_level_select()
 	game_root.load_developer_level(
-		_developer_definition(game_root, TARGET_LEVEL_ID)
+		_developer_definition(game_root, INTERIOR_REVIEW_ID)
 	)
 	await process_frame
 	assert(
 		not game_root.current_level.player.is_transition_running(),
-		"Direct menu loads must remain stationary; only a threshold owns a handoff."
+		"Direct review loads must remain stationary."
 	)
 
+	if FileAccess.file_exists(validation_save):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(validation_save))
 	game_root.free()
 	print(
-		"Matched level transition passed: cave hide, slide, run-in, then control."
+		"Matched transitions passed: Level 1 completion run, then Level 2 slide and interior run-in."
 	)
 	quit(0)
+
+
+func _assert_run_contract(transition: LevelTransition3D) -> void:
+	assert(is_equal_approx(transition.run_direction, EXPECTED_DIRECTION))
+	assert(is_equal_approx(transition.run_speed, EXPECTED_SPEED))
+	assert(is_equal_approx(transition.run_duration, EXPECTED_DURATION))
 
 
 func _developer_definition(game_root: Node, level_id: StringName) -> LevelDefinition:

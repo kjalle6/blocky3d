@@ -20,7 +20,7 @@ func _run() -> void:
 	)
 
 	var interior := load(
-		"res://resources/dev/level_2_interior_wip.tres"
+		"res://resources/dev/overgrown_coastal_ascent_interior_review.tres"
 	) as LevelDefinition
 	game_root.load_developer_level(interior)
 	await process_frame

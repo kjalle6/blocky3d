@@ -107,7 +107,9 @@ func _run() -> void:
 	# camera region travels 28 m, further than any earlier fixture.
 	await _validate_vertical_fixture(
 		game_root,
-		load("res://resources/dev/level_2_interior_wip.tres") as LevelDefinition,
+		load(
+			"res://resources/dev/overgrown_coastal_ascent_interior_review.tres"
+		) as LevelDefinition,
 		Vector3(58.88, 7.1, 0.0),
 		18.0
 	)

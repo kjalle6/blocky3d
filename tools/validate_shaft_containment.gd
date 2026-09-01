@@ -43,7 +43,7 @@ func _run() -> void:
 	root.add_child(watchdog)
 
 	var definition := load(
-		"res://resources/dev/level_2_interior_wip.tres"
+		"res://resources/dev/overgrown_coastal_ascent_interior_review.tres"
 	) as LevelDefinition
 	assert(definition != null)
 	var game_root := (load("res://scenes/app/game_root.tscn") as PackedScene).instantiate()
@@ -66,8 +66,8 @@ func _run() -> void:
 	var terrain := level.get_node("Platforms/RockShell") as PixelInteriorTerrain3D
 	var left_face_x := 68.0 * PixelPlatform3D.TILE_WORLD_SIZE
 	var right_face_x := 79.0 * PixelPlatform3D.TILE_WORLD_SIZE
-	assert(terrain.is_solid_cell(8, 67), "Shaft must have a left face above the corridor.")
-	assert(terrain.is_solid_cell(8, 79), "Shaft must have a right face above the corridor.")
+	assert(terrain.is_solid_cell(16, 67), "Shaft must have a left face above the corridor.")
+	assert(terrain.is_solid_cell(16, 79), "Shaft must have a right face above the corridor.")
 
 	var highest := await _climb(player, left_face_x + 0.36, -1.0)
 	highest = maxf(highest, await _climb(player, right_face_x - 0.36, 1.0))

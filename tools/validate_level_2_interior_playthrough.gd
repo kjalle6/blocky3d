@@ -12,7 +12,7 @@ func _init() -> void:
 
 func _run() -> void:
 	var definition := load(
-		"res://resources/dev/level_2_interior_wip.tres"
+		"res://resources/dev/overgrown_coastal_ascent_interior_review.tres"
 	) as LevelDefinition
 	if definition == null:
 		_fail("Level 2 interior definition did not load.")

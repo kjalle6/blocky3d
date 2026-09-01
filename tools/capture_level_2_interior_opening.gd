@@ -64,7 +64,9 @@ func _run() -> void:
 	root.add_child(game_root)
 	for frame in 6:
 		await process_frame
-	var definition := load("res://resources/dev/level_2_interior_wip.tres") as LevelDefinition
+	var definition := load(
+		"res://resources/dev/overgrown_coastal_ascent_interior_review.tres"
+	) as LevelDefinition
 	assert(definition != null)
 	game_root.load_developer_level(definition)
 	for frame in 8:

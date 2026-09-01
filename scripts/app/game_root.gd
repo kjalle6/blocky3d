@@ -5,7 +5,6 @@ extends Node
 @export var campaign: CampaignCatalog
 @export var developer_room_definition: LevelDefinition
 @export var developer_level_definitions: Array[LevelDefinition] = []
-@export var developer_hidden_level_definitions: Array[LevelDefinition] = []
 @export var level_button_style: StyleBox
 @export var persist_progression := true
 @export var developer_fresh_level_runs := true
@@ -176,14 +175,16 @@ func load_developer_level(definition: LevelDefinition) -> void:
 func _start_session(
 	definition: LevelDefinition,
 	world_definition: WorldDefinition,
-	initial_session_abilities: Array[StringName] = []
+	initial_session_abilities: Array[StringName] = [],
+	scene_override: PackedScene = null
 ) -> void:
 	_free_current_level()
 	_free_active_interstitial()
-	current_level = definition.scene.instantiate() as LevelSession3D
+	var session_scene := scene_override if scene_override != null else definition.scene
+	current_level = session_scene.instantiate() as LevelSession3D
 	assert(
 		current_level != null,
-		"%s must instantiate a LevelSession3D." % definition.scene.resource_path
+		"%s must instantiate a LevelSession3D." % session_scene.resource_path
 	)
 	current_level_definition = definition
 	current_world_definition = world_definition
@@ -321,11 +322,7 @@ func _ordered_developer_definitions() -> Array[LevelDefinition]:
 
 
 func _known_developer_definitions() -> Array[LevelDefinition]:
-	var definitions := _ordered_developer_definitions()
-	for definition in developer_hidden_level_definitions:
-		if definition != null and definition not in definitions:
-			definitions.append(definition)
-	return definitions
+	return _ordered_developer_definitions()
 
 
 func _move_level_focus(direction: int) -> void:
@@ -589,13 +586,10 @@ func _on_run_completed() -> void:
 		1.0,
 		fade_duration
 	)
-	var store := _progression_store()
-	if (
-		store != null
-		and current_level_definition != null
-		and current_world_definition != null
-	):
-		store.mark_level_completed(current_level_definition.level_id)
+	_mark_campaign_level_completed(
+		current_level_definition,
+		current_world_definition
+	)
 
 
 func _on_run_reset() -> void:
@@ -607,14 +601,21 @@ func _on_run_reset() -> void:
 ## fades back in. The player never sees two terrain grammars meet, which is the
 ## whole reason a doorway is a fade rather than a seam.
 func _on_transition_requested(
-	target: LevelDefinition,
+	target_level: LevelDefinition,
+	target_scene: PackedScene,
 	run_direction: float,
 	run_speed: float,
 	run_duration: float,
-	interstitial_scene: PackedScene
+	interstitial_scene: PackedScene,
+	completes_source_level: bool,
+	session_abilities: Array[StringName]
 ) -> void:
-	if target == null:
+	if target_level == null and target_scene == null:
 		return
+	var source_definition := current_level_definition
+	var source_world := current_world_definition
+	if completes_source_level:
+		_mark_campaign_level_completed(source_definition, source_world)
 	_transition_serial += 1
 	var transition_serial := _transition_serial
 	await _fade_to_black(TRANSITION_FADE_DURATION)
@@ -650,10 +651,34 @@ func _on_transition_requested(
 		if transition_serial != _transition_serial:
 			return
 		_free_active_interstitial()
-	if target in _known_developer_definitions():
-		load_developer_level(target)
+	if target_scene != null:
+		assert(
+			source_definition != null,
+			"A same-level scene transition requires an active level definition."
+		)
+		_start_session(
+			source_definition,
+			source_world,
+			_transition_entry_abilities(source_definition, session_abilities),
+			target_scene
+		)
+	elif target_level in _known_developer_definitions():
+		_start_session(
+			target_level,
+			null,
+			_transition_entry_abilities(target_level, session_abilities)
+		)
 	else:
-		load_level(target.level_id)
+		var target_world := campaign.find_world_for_level(target_level.level_id)
+		assert(
+			target_world != null,
+			"Transition target has no campaign world: %s" % target_level.level_id
+		)
+		_start_session(
+			target_level,
+			target_world,
+			_transition_entry_abilities(target_level, session_abilities)
+		)
 	if current_level != null and run_duration > 0.0:
 		current_level.player.begin_transition_run(
 			run_direction,
@@ -661,6 +686,26 @@ func _on_transition_requested(
 			run_duration
 		)
 	await _fade_from_black(TRANSITION_FADE_DURATION)
+
+
+func _mark_campaign_level_completed(
+	definition: LevelDefinition,
+	world_definition: WorldDefinition
+) -> void:
+	var store := _progression_store()
+	if store != null and definition != null and world_definition != null:
+		store.mark_level_completed(definition.level_id)
+
+
+func _transition_entry_abilities(
+	definition: LevelDefinition,
+	carried_abilities: Array[StringName]
+) -> Array[StringName]:
+	var abilities := definition.assumed_owned_abilities.duplicate()
+	for ability_id in carried_abilities:
+		if ability_id in definition.available_abilities and ability_id not in abilities:
+			abilities.append(ability_id)
+	return abilities
 
 
 func _fade_to_black(duration: float) -> void:

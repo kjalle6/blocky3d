@@ -4,7 +4,7 @@
 [ext_resource type="Resource" path="res://resources/presentation/backgrounds/green_zone_dusk.tres" id="10_dusk"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="2_platform"]
 [ext_resource type="Script" path="res://scripts/level/level_transition_3d.gd" id="3_transition"]
-[ext_resource type="Resource" path="res://resources/dev/level_2_interior_wip.tres" id="4_interior"]
+[ext_resource type="PackedScene" path="res://scenes/levels/overgrown_coastal_ascent_interior.tscn" id="4_interior"]
 [ext_resource type="Texture2D" path="res://assets/library/environment/structures/cave_entrances/cave_entrance_green_zone_native.png" id="5_cave"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/stone_small.png" id="6_stone_small"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/stone_medium.png" id="7_stone_medium"]
@@ -31,7 +31,7 @@ size = Vector3(64, 1, 8)
 [sub_resource type="BoxShape3D" id="Shape_threshold"]
 size = Vector3(1.28, 2.56, 2)
 
-[node name="Level2Wip" instance=ExtResource("1_base")]
+[node name="OvergrownCoastalAscent" instance=ExtResource("1_base")]
 
 [node name="Background" parent="." index="3"]
 profile = ExtResource("10_dusk")
@@ -371,7 +371,7 @@ render_priority = -9
 [node name="CaveThreshold" type="Area3D" parent="." index="12"]
 position = Vector3(37.44, 0.64, 0)
 script = ExtResource("3_transition")
-target_level = ExtResource("4_interior")
+target_scene = ExtResource("4_interior")
 interstitial_scene = ExtResource("24_slide_intro")
 source_exit_mode = 2
 run_destination_during_fade_in = true

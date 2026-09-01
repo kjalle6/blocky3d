@@ -1,11 +1,11 @@
 class_name LevelTransition3D
 extends Area3D
-## A doorway that hands the run to another level behind a fade.
+## A threshold that hands the run to another level or section behind a fade.
 ##
-## This is deliberately not a goal. A goal ends a run and marks progress; a
-## transition is a threshold inside a journey — running into a cave mouth, a
-## door, or a tunnel — where the space on the other side is authored as its own
-## scene rather than joined to this one geometrically.
+## Most transitions continue one journey without completing it. A campaign
+## boundary may explicitly complete its source level while preserving a matched
+## run into the next level, avoiding a completion overlay between connected
+## spaces.
 ##
 ## Joining two terrain grammars along a seam was the alternative, and it makes
 ## the boundary the hardest thing in the level. A fade makes it free.
@@ -18,7 +18,10 @@ enum SourceExitMode {
 	HIDE,
 }
 
+@export_category("Destination")
 @export var target_level: LevelDefinition
+@export var target_scene: PackedScene
+@export var completes_source_level := false
 @export_category("Interstitial")
 @export var interstitial_scene: PackedScene
 @export_category("Matched run handoff")
@@ -36,8 +39,17 @@ func _ready() -> void:
 
 func validation_errors() -> PackedStringArray:
 	var errors := PackedStringArray()
-	if target_level == null:
-		errors.append("Level transition requires a target level definition.")
+	if target_level == null and target_scene == null:
+		errors.append("Level transition requires a target level or target scene.")
+	elif target_level != null and target_scene != null:
+		errors.append("Level transition cannot target a level and scene together.")
+	if completes_source_level and target_level == null:
+		errors.append("Only a transition to another level can complete its source level.")
+	if target_scene != null:
+		var section := target_scene.instantiate()
+		if not section is LevelSession3D:
+			errors.append("Transition target scene must instantiate a LevelSession3D.")
+		section.free()
 	if interstitial_scene != null:
 		var interstitial := interstitial_scene.instantiate()
 		if not interstitial is LevelInterstitial3D:

@@ -1,10 +1,10 @@
-[gd_scene load_steps=53 format=3]
+[gd_scene load_steps=55 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="2_platform"]
 [ext_resource type="Resource" path="res://resources/presentation/platform_styles/shoreline_sand.tres" id="3_sand_style"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/pixel_patrol_enemy.tscn" id="4_enemy"]
-[ext_resource type="PackedScene" path="res://scenes/level/level_exit_trigger.tscn" id="5_goal"]
+[ext_resource type="Script" path="res://scripts/level/level_transition_3d.gd" id="5_transition"]
 [ext_resource type="PackedScene" path="res://scenes/pickups/double_jump_pickup.tscn" id="6_pickup"]
 [ext_resource type="PackedScene" path="res://scenes/level/level_checkpoint.tscn" id="7_checkpoint"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_water_strip_3d.gd" id="8_water"]
@@ -46,6 +46,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/tree_tire_swing.png" id="55_tree_tire_swing"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/skate_ramp_right.png" id="56_skate_ramp_right"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/skate_ramp_left.png" id="57_skate_ramp_left"]
+[ext_resource type="Resource" path="res://resources/campaign/level_02.tres" id="58_level_02"]
 
 [sub_resource type="BoxShape3D" id="Shape_kill_plane"]
 size = Vector3(230.4, 1, 8)
@@ -58,6 +59,9 @@ size = Vector3(14.08, 2.56, 2)
 
 [sub_resource type="BoxShape3D" id="Shape_green_rise"]
 size = Vector3(11.52, 3.84, 2)
+
+[sub_resource type="BoxShape3D" id="Shape_level_2_transition"]
+size = Vector3(1, 2.8, 1.2)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_clean_gate"]
 atlas = ExtResource("47_gate")
@@ -753,8 +757,20 @@ patrol_left_distance = 10.5
 patrol_right_distance = 5.1
 starts_moving_right = false
 
-[node name="Goal" parent="." index="25" instance=ExtResource("5_goal")]
+[node name="Level2Transition" type="Area3D" parent="." index="25"]
 position = Vector3(194.6, 0.64, 0)
+script = ExtResource("5_transition")
+target_level = ExtResource("58_level_02")
+completes_source_level = true
+source_exit_mode = 1
+run_destination_during_fade_in = true
+run_direction = 1.0
+run_speed = 8.0
+run_duration = 0.45
+
+[node name="Collision" type="CollisionShape3D" parent="Level2Transition" index="0"]
+position = Vector3(0, 1.4, 0)
+shape = SubResource("Shape_level_2_transition")
 
 [node name="WaterDeathSplash" type="Node3D" parent="." index="26"]
 script = ExtResource("23_water_splash_script")

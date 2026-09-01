@@ -1,5 +1,5 @@
 extends SceneTree
-## Architectural smoke test for the production World 1 / Level 1 campaign.
+## Architectural smoke test for the production World 1 campaign.
 
 
 func _init() -> void:
@@ -23,14 +23,14 @@ func _validate() -> void:
 	)
 	var world_heading := world_list.get_node("World01Heading") as Label
 	var level_01_button := world_list.get_node("World01Level01Button") as Button
+	var level_02_button := world_list.get_node("World01Level02Button") as Button
 	var developer_heading := world_list.get_node("DeveloperToolsHeading") as Label
 	var animation_lab_button := world_list.get_node("AnimationLabButton") as Button
 	var enclosed_lab_button := world_list.get_node(
 		"EnclosedTerrainLabButton"
 	) as Button
-	var level_2_wip_button := world_list.get_node("Level2WipButton") as Button
-	var level_2_interior_wip_button := world_list.get_node(
-		"Level2InteriorWipButton"
+	var level_2_interior_review_button := world_list.get_node(
+		"OvergrownCoastalAscentInteriorReviewButton"
 	) as Button
 	var level_2_slide_intro_lab_button := world_list.get_node(
 		"Level2SlideIntroLabButton"
@@ -42,24 +42,30 @@ func _validate() -> void:
 	assert(game_root.campaign.ordered_worlds().size() == 1)
 	var green_zone: WorldDefinition = game_root.campaign.find_world_by_id(&"green_zone")
 	assert(green_zone is WorldDefinition)
-	assert(green_zone.ordered_levels().size() == 1)
+	assert(green_zone.ordered_levels().size() == 2)
 	var arrival: LevelDefinition = game_root.campaign.find_by_id(&"arrival_shoreline")
 	assert(arrival is LevelDefinition)
 	assert(arrival.display_number == 1)
 	assert(level_01_button.text == "1  -  ARRIVAL / SHORELINE")
+	var level_2: LevelDefinition = game_root.campaign.find_by_id(
+		&"overgrown_coastal_ascent"
+	)
+	assert(level_2 is LevelDefinition)
+	assert(level_2.display_number == 2)
+	assert(level_02_button.text == "2  -  OVERGROWN COASTAL ASCENT")
 	assert(InputMap.has_action("dash"))
 	assert(InputMap.has_action("developer_fly_up"))
 	assert(InputMap.has_action("developer_fly_down"))
 	assert(developer_heading.text == "DEVELOPER TOOLS")
 	assert(animation_lab_button.text == "ANIMATION LAB")
 	assert(enclosed_lab_button.text == "ENCLOSED TERRAIN LAB")
-	assert(level_2_wip_button.text == "LEVEL 2 WIP")
-	assert(level_2_interior_wip_button.text == "LEVEL 2 INTERIOR WIP")
-	assert(level_2_slide_intro_lab_button.text == "LEVEL 2 SLIDE INTRO LAB")
 	assert(
-		world_list.get_node_or_null("Level2WipInteriorSnapshotButton") == null,
-		"The frozen Level 2 snapshot is transition-only and must not add a third menu entry."
+		level_2_interior_review_button.text
+		== "OVERGROWN COASTAL ASCENT INTERIOR REVIEW"
 	)
+	assert(level_2_slide_intro_lab_button.text == "LEVEL 2 SLIDE INTRO LAB")
+	assert(world_list.get_node_or_null("Level2WipButton") == null)
+	assert(world_list.get_node_or_null("Level2WipInteriorSnapshotButton") == null)
 	assert(world_list.get_node_or_null("ArrivalShorelineSliceButton") == null)
 	assert(level_01_button.has_focus(), "The selector should initially focus Level 1.")
 
@@ -100,8 +106,12 @@ func _validate() -> void:
 	assert(level.get_node("Platforms").get_child_count() == 15)
 	assert(level.get_node_or_null("ApproachPatrol") is StompableEnemy3D)
 	assert(level.get_node_or_null("DoubleJumpPickup") is AbilityPickup3D)
-	assert(level.get_node_or_null("Goal") is LevelGoal3D)
-	assert(not level.get_node("Goal") is PixelGoal3D)
+	var level_2_transition := level.get_node_or_null(
+		"Level2Transition"
+	) as LevelTransition3D
+	assert(level_2_transition != null)
+	assert(level_2_transition.target_level == level_2)
+	assert(level_2_transition.completes_source_level)
 	assert(InputMap.has_action("move_left"))
 	assert(InputMap.has_action("jump"))
 	assert(InputMap.has_action("attack"))
@@ -111,10 +121,10 @@ func _validate() -> void:
 	)
 
 	game_root.show_level_select()
-	level_2_wip_button.pressed.emit()
+	level_02_button.pressed.emit()
 	await process_frame
-	assert(game_root.current_level_definition.level_id == &"dev_level_2_wip")
-	assert(game_root.current_level.name == "DeveloperLevel2Wip")
+	assert(game_root.current_level_definition.level_id == &"overgrown_coastal_ascent")
+	assert(game_root.current_level.name == "World01Level02")
 
-	print("Project and production World 1 / Level 1 campaign validation passed.")
+	print("Project and production World 1 campaign validation passed.")
 	quit(0)

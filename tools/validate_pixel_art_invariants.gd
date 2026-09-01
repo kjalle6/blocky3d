@@ -15,12 +15,11 @@ extends SceneTree
 
 const CHECKED_LEVELS: Array[StringName] = [
 	&"arrival_shoreline",
+	&"overgrown_coastal_ascent",
 ]
 const CHECKED_DEVELOPER_LEVELS: Array[StringName] = [
 	&"dev_enclosed_terrain_lab",
-	&"dev_level_2_wip",
-	&"dev_level_2_wip_interior_snapshot",
-	&"dev_level_2_interior_wip",
+	&"dev_overgrown_coastal_ascent_interior_review",
 	&"dev_level_2_slide_intro_lab",
 	&"dev_animation_lab",
 ]

@@ -43,7 +43,7 @@ func _run() -> void:
 		await process_frame
 
 	var definition := load(
-		"res://resources/dev/level_2_interior_wip.tres"
+		"res://resources/dev/overgrown_coastal_ascent_interior_review.tres"
 	) as LevelDefinition
 	assert(definition != null)
 	game_root.load_developer_level(definition)

@@ -44,7 +44,7 @@ func _run() -> void:
 		&"hazard",
 		&"checkpoint",
 		&"pickup",
-		&"goal",
+		&"exit",
 	]:
 		if overlay.category_count(category) <= 0:
 			_fail("The collision overlay omitted category '%s'." % category)

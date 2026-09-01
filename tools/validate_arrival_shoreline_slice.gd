@@ -50,7 +50,8 @@ func _run() -> void:
 	assert(level.get_node("Platforms").get_child_count() == 15)
 	assert(level.get_node("Checkpoints").get_child_count() == 2)
 	assert(_scoped_group_count(level, &"melee_target") == 5)
-	assert(_scoped_group_count(level, &"level_goal") == 1)
+	assert(_scoped_group_count(level, &"level_goal") == 0)
+	assert(_scoped_group_count(level, &"level_transition") == 1)
 
 	_validate_tools_ui(game_root)
 	_validate_geometry(level)
@@ -366,12 +367,21 @@ func _validate_geometry(level: LevelSession3D) -> void:
 	assert(pickup_checkpoint.global_position == pickup.global_position)
 	assert(exit_checkpoint.route_index == 3)
 	assert(is_equal_approx(exit_checkpoint.global_position.y, _top(garden_exit)))
-	var goal := level.get_node("Goal") as LevelGoal3D
-	assert(not goal is PixelGoal3D)
-	assert(goal.global_position.x > exit_checkpoint.global_position.x)
-	assert(goal.global_position.x > _left(aerial_landing))
-	assert(goal.global_position.x < _right(aerial_landing))
-	assert(is_equal_approx(goal.global_position.y, _top(aerial_landing)))
+	var level_2_transition := level.get_node(
+		"Level2Transition"
+	) as LevelTransition3D
+	assert(level_2_transition != null)
+	assert(level_2_transition.validation_errors().is_empty())
+	assert(level_2_transition.target_level != null)
+	assert(level_2_transition.target_level.level_id == &"overgrown_coastal_ascent")
+	assert(level_2_transition.target_scene == null)
+	assert(level_2_transition.completes_source_level)
+	assert(level_2_transition.source_exit_mode == LevelTransition3D.SourceExitMode.RUN)
+	assert(level_2_transition.run_destination_during_fade_in)
+	assert(level_2_transition.global_position.x > exit_checkpoint.global_position.x)
+	assert(level_2_transition.global_position.x > _left(aerial_landing))
+	assert(level_2_transition.global_position.x < _right(aerial_landing))
+	assert(is_equal_approx(level_2_transition.global_position.y, _top(aerial_landing)))
 
 	var kill_plane := level.get_node("KillPlane") as Area3D
 	var kill_shape := kill_plane.get_node("Collision") as CollisionShape3D
@@ -601,28 +611,10 @@ func _validate_session(
 	assert(not player.is_dead())
 	assert(absf(player.global_position.x - 120.0) < 0.2)
 
-	var goal := level.get_node("Goal") as LevelGoal3D
 	var completion_fade := game_root.get_node("Interface/CompletionFade") as ColorRect
 	var completion_label := game_root.get_node("Interface/CompletionLabel") as Label
 	assert(not completion_fade.visible)
 	assert(not completion_label.visible)
-	player.reset_at(Transform3D(Basis.IDENTITY, goal.global_position + Vector3.UP * 0.7))
-	for frame in 4:
-		await physics_frame
-	assert(not player.is_physics_processing())
-	assert(completion_fade.visible)
-	assert(completion_label.visible)
-	# The fade is a 0.55 s tween, so wait on elapsed time rather than a frame
-	# count. Headless frames are uncapped, so twenty of them can pass in a
-	# couple of milliseconds and show no progress at all - which is what made
-	# this assertion flaky.
-	await create_timer(0.3).timeout
-	await process_frame
-	assert(
-		completion_fade.modulate.a > 0.2,
-		"The completion fade should have progressed after 0.3 s; alpha is %.3f."
-		% completion_fade.modulate.a
-	)
 
 	level._reset_run()
 	await physics_frame
@@ -642,6 +634,29 @@ func _validate_session(
 	assert(not (fresh_level.get_node("DoubleJumpPickup") as AbilityPickup3D).is_claimed())
 	for checkpoint in fresh_level.get_node("Checkpoints").get_children():
 		assert(not (checkpoint as LevelCheckpoint3D).is_activated())
+
+	var level_2_transition := fresh_level.get_node(
+		"Level2Transition"
+	) as LevelTransition3D
+	var fresh_player := fresh_level.player
+	level_2_transition._on_body_entered(fresh_player)
+	await physics_frame
+	assert(fresh_player.is_transition_running())
+	assert(fresh_player.horizontal_speed > 0.0)
+	assert(not completion_label.visible)
+	await create_timer(0.3).timeout
+	assert(completion_fade.visible)
+	assert(completion_fade.modulate.a > 0.2)
+	assert(not completion_label.visible)
+	await create_timer(0.35).timeout
+	assert(game_root.current_level_definition.level_id == &"overgrown_coastal_ascent")
+	assert(game_root.current_world_definition.world_id == &"green_zone")
+	assert(game_root.current_level != fresh_level)
+	assert(game_root.current_level.player.has_ability(PlayerAbility.DOUBLE_JUMP))
+	assert(game_root.current_level.player.is_transition_running())
+	assert(not completion_label.visible)
+	await create_timer(0.5).timeout
+	assert(not game_root.current_level.player.is_transition_running())
 
 
 func _assert_platform(

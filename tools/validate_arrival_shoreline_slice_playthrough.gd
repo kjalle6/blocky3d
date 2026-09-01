@@ -1,5 +1,5 @@
 extends SceneTree
-## Real-input technical traversal for the current Level 1 review slice.
+## Real-input technical traversal for Level 1 and its matched Level 2 handoff.
 ##
 ## This is a smoke test, not a difficulty judge. Its only job is to prove the
 ## route can be crossed with the intended ability and without teleports,
@@ -182,7 +182,7 @@ func _run() -> void:
 
 	for frame in MAXIMUM_FRAMES:
 		total_frames = frame + 1
-		if player.is_dead() or completion_label.visible:
+		if player.is_dead() or player.is_transition_running():
 			break
 
 		if release_attack:
@@ -293,8 +293,8 @@ func _run() -> void:
 		_fail("died", player, crossing_index, phase)
 		quit(1)
 		return
-	if not completion_label.visible:
-		_fail("did not reach the goal", player, crossing_index, phase)
+	if not player.is_transition_running():
+		_fail("did not reach the Level 2 transition", player, crossing_index, phase)
 		quit(1)
 		return
 
@@ -308,9 +308,18 @@ func _run() -> void:
 	assert(double_jump_count[0] >= 3)
 	assert(wrong_ability_count[0] == 0)
 	assert(death_count[0] == 0)
+	assert(not completion_label.visible)
+
+	await create_timer(0.65).timeout
+	assert(game_root.current_level_definition.level_id == &"overgrown_coastal_ascent")
+	assert(game_root.current_world_definition.world_id == &"green_zone")
+	assert(game_root.current_level != level)
+	assert(game_root.current_level.player.has_ability(PlayerAbility.DOUBLE_JUMP))
+	assert(game_root.current_level.player.is_transition_running())
+	assert(not completion_label.visible)
 
 	print(
-		"Arrival / Shoreline focused real-input traversal passed: %s"
+		"Arrival / Shoreline real-input traversal and Level 2 handoff passed: %s"
 		% ", ".join(landed_platforms)
 	)
 	_write_route_trace(route_trace, total_frames, attack_count)

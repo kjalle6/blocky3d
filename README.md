@@ -18,23 +18,24 @@ remain read-only design references.
 - Arrival / Shoreline is the first completed production campaign level. Its
   route runs from the animated shoreline through Green Threshold, Thorn Garden,
   and an open-air Double Jump rise to a safe tire-swing-tree clearing. The
-  completion trigger and fade are final Level 1 behavior rather than a temporary
-  construction boundary
-- Overgrown Coastal Ascent is complete and hands-on accepted in development
-  form, ready for production promotion. Two patrols guard its dusk approach; a
-  cave threshold leads through a short slide cutscene into the enclosed route,
-  which teaches Wall Jump and Dash before two hovering-machine chambers, a
-  Dash-required exit gauntlet, and a construction-lift departure
+  clearing now carries the player through a matched run-out/run-in transition
+  into Level 2, recording Level 1 completion without interrupting the journey
+  with a completion overlay
+- Overgrown Coastal Ascent is the second completed production campaign level.
+  Two patrols guard its dusk approach; a cave threshold leads through a short
+  slide cutscene into the enclosed route, which teaches Wall Jump and Dash
+  before two hovering-machine chambers, a Dash-required exit gauntlet, and a
+  construction-lift departure
 - The six earlier Green Zone prototype levels are deleted. Their movement
   contracts moved to permanent homes first: the Animation Lab for the ability
   kit, Arrival for camera stability, and the Level 2 interior for progression
   and background coverage
 - World 1 is being re-authored as approximately three substantial levels:
   Arrival / Shoreline, Overgrown Coastal Ascent, and Green Zone Finale
-- The production selector currently exposes Arrival / Shoreline. Development
-  entries expose Animation Lab, the enclosed-terrain construction proof, the
-  completed Level 2 route, its directly loadable interior review entry, and the
-  slide-intro lab until the finished level is promoted into the campaign
+- The World 1 production selector exposes Arrival / Shoreline and Overgrown
+  Coastal Ascent. Development entries retain Animation Lab, the enclosed-terrain
+  construction proof, the directly loadable Overgrown Coastal Ascent Interior
+  Review, and the slide-intro lab
 - A reusable profile-driven pixel-background rig provides native-scale,
   seam-safe horizontal coverage, authored coastal-to-green transitions, and
   stable framing during vertical camera travel. Level 2 actively uses authored

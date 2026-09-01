@@ -1,7 +1,9 @@
 extends SceneTree
 ## Structural and progression contract for the first production Level 2 slice.
 
-const DEFINITION_PATH := "res://resources/dev/level_2_interior_wip.tres"
+const DEFINITION_PATH := (
+	"res://resources/dev/overgrown_coastal_ascent_interior_review.tres"
+)
 ## Row in water_cave_lake.png where the lake surface begins, measured from the
 ## art: above it the crop is empty, below it is water.
 const WATERLINE_SOURCE_ROW := 203.0
@@ -115,10 +117,9 @@ func _run() -> void:
 		"The terrain face needs at least one source pixel of bottom coverage margin."
 	)
 
-	# The editable Interior WIP owns two localized lake-cavern vistas. Their X
+	# The direct interior review owns two localized lake-cavern vistas. Their X
 	# positions and every visual layer stay authored in world space; neither a
 	# jump nor the shaft climb may drag cave art vertically with the camera.
-	# The frozen transition snapshot deliberately has no such experiment.
 	_validate_water_vista(level, "MachineShaftWaterVista", 94.08, 30.88)
 	_validate_water_vista(level, "DualMachineShaftWaterVista", 120.96, 30.88)
 	var background := level.get_node("Background") as PixelBackgroundRig3D
@@ -348,7 +349,7 @@ func _run() -> void:
 				) % [gap_column, row]
 			)
 	# The gap stays open far past the ordinary camera framing. A distant solid
-	# cave roof bounds the WIP space, but it must remain harmless: the machine
+	# cave roof bounds the authored space, but it must remain harmless: the machine
 	# encounter does not force a surprise row of overhead spikes.
 	for gap_column in [73, 94]:
 		for row in [0, 2, 4]:

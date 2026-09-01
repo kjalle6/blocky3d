@@ -13,7 +13,7 @@ const ENEMY_CONTACT_COLOR := Color(1.0, 0.56, 0.22)
 const HAZARD_COLOR := Color(1.0, 0.18, 0.22)
 const CHECKPOINT_COLOR := Color(1.0, 0.9, 0.2)
 const PICKUP_COLOR := Color(0.72, 0.42, 1.0)
-const GOAL_COLOR := Color(0.3, 1.0, 0.38)
+const EXIT_COLOR := Color(0.3, 1.0, 0.38)
 const ATTACK_COLOR := Color(1.0, 0.55, 0.12)
 const OTHER_COLOR := Color(0.84, 0.86, 0.92)
 
@@ -112,8 +112,8 @@ func _collision_category(collision: CollisionShape3D) -> StringName:
 			return &"checkpoint"
 		if owner is AbilityPickup3D:
 			return &"pickup"
-		if owner is LevelGoal3D:
-			return &"goal"
+		if owner is LevelGoal3D or owner is LevelTransition3D:
+			return &"exit"
 		if owner is StaticBody3D:
 			return &"terrain"
 		owner = owner.get_parent()
@@ -138,8 +138,8 @@ func _category_color(category: StringName) -> Color:
 			return CHECKPOINT_COLOR
 		&"pickup":
 			return PICKUP_COLOR
-		&"goal":
-			return GOAL_COLOR
+		&"exit":
+			return EXIT_COLOR
 	return OTHER_COLOR
 
 

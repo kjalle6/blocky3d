@@ -27,7 +27,7 @@ scene tree is three-dimensional.
 | Application flow | `GameRoot`: active world container, interface container, and catalog-driven level selector |
 | Campaign content | `CampaignCatalog`, typed `WorldDefinition`, and typed `LevelDefinition` resources; no level-number behavior branches |
 | Level run state | `LevelSession3D`: player wiring, death, checkpoint respawn, full restart, and completion |
-| Level thresholds | `LevelTransition3D`: a doorway that hands the run to another level. `GameRoot` fades out, swaps the scene behind the black, and fades back in. Source exit and destination entrance presentation are authored separately: stop, run, or disappear into an occluding doorway on exit; optionally run while black lifts on entry. Direct level loads remain stationary. Not a goal: a goal ends a run and records progress, a threshold continues a journey into a separately authored space |
+| Level thresholds | `LevelTransition3D`: a doorway that hands the run to another scene or level. `GameRoot` fades out, swaps the scene behind the black, and fades back in. Source exit and destination entrance presentation are authored separately: stop, run, or disappear into an occluding doorway on exit; optionally run while black lifts on entry. Direct level loads remain stationary. A campaign threshold may set `completes_source_level` to record its source without showing the completion overlay, while a same-level `target_scene` handoff preserves the active level identity and run state |
 | Locomotion | `PlayerCharacter` plus typed `PlayerMovementConfig` tuning |
 | Route extent | `RouteExtent3D`: metadata describing the authored start and end of a level's route. Movement is plain +X; nothing projects onto a path |
 | Camera | `PixelSideCamera3D`, independent from player movement ownership |
@@ -114,7 +114,7 @@ Both readouts and the grid are unavailable when developer tools are disabled.
 
 F7 independently projects gameplay collision onto the side-scrolling plane.
 It distinguishes terrain, player body and hazard sensor, enemy body and contact
-sensor, lethal hazards, checkpoints, pickups, and goals. Melee damage regions
+sensor, lethal hazards, checkpoints, pickups, and goal/transition exits. Melee damage regions
 are drawn only while their corresponding attack is active. The overlay is a
 read-only visualization and does not modify physics layers, masks, or shapes.
 
@@ -216,9 +216,9 @@ narrow focus can therefore hold one shaft composition on X while a broader
 region continues to track its climb on Y; neither policy has to replace the
 other. The Level 2 interior uses that split for its Wall Jump shaft and its
 28.0 m upper-floor camera offset. The vertical region clamps there so an
-ordinary jump cannot move the whole upper cave shell. The completed build is
-awaiting catalog promotion. A second fixed region holds the lift-exit
-composition while the deck rises. Normal horizontal look-ahead resumes through
+ordinary jump cannot move the whole upper cave shell. A second fixed region
+holds the lift-exit composition while the deck rises. Normal horizontal
+look-ahead resumes through
 the camera's smoothing when the player exits the Wall Jump shaft. The separate
 height-window extension remains dormant until an approved composition needs
 fixed-scale depth, parallax, deliberate viewport cropping, and camera-height
@@ -414,14 +414,15 @@ use this to test later abilities independently, and the campaign levels use the
 same contract while introducing more than one ability within a substantial
 level where appropriate.
 
-The production `CampaignCatalog` currently contains the completed Arrival /
-Shoreline as the first Green Zone level. The six prototypes that proved the
-movement kit are deleted, their contracts having moved to the Animation Lab,
-Arrival, and the Level 2 interior. Overgrown Coastal Ascent is complete and
-accepted in development form; its next step is catalog promotion and the
-Level 1 handoff. The target campaign structure remains approximately three
-re-authored levels: Arrival / Shoreline, Overgrown Coastal Ascent, and Green
-Zone Finale.
+The production `CampaignCatalog` contains two completed Green Zone levels:
+Arrival / Shoreline and Overgrown Coastal Ascent. The six prototypes that
+proved the movement kit are deleted, their contracts having moved to the
+Animation Lab and those production levels. The target campaign structure
+remains approximately three re-authored levels, with Green Zone Finale still
+planned. `resources/campaign/level_02.tres` identifies Overgrown Coastal Ascent
+and loads `scenes/levels/overgrown_coastal_ascent.tscn`; its cave threshold
+continues into `scenes/levels/overgrown_coastal_ascent_interior.tscn` without
+creating another campaign identity.
 Missing future levels are not represented by fake scenes or disabled
 placeholder buttons. Development mode keeps all authored levels selectable.
 Production prerequisite/locking presentation is added only when campaign flow
@@ -507,15 +508,14 @@ low 48-pixel foam strip plays once at contact, preventing stacked effects.
 Both systems are presentation-only; explicit hazard areas continue to own
 death and reset behavior.
 
-Approved replacement levels enter `CampaignCatalog`. `GameRoot.developer_level_definitions` is
-reserved for tools and explicitly unfinished routes with a null world
-definition: the Animation Lab, the Enclosed Terrain Lab, the Level 2 WIP
-approach, the directly loadable Level 2 interior, and its slide-intro lab.
-Animation Lab remains the only one with in-room ability toggles. Level 2's
-approach now transitions into the live completed interior; the earlier frozen
-snapshot is obsolete and no longer defines an approval boundary. Promotion
-will move the full route into the campaign and retain only genuinely useful
-review labs in the developer list.
+Approved replacement levels enter `CampaignCatalog`.
+`GameRoot.developer_level_definitions` is reserved for tools and focused review
+fixtures with a null world definition: the Animation Lab, the Enclosed Terrain
+Lab, Overgrown Coastal Ascent Interior Review, and the slide-intro lab.
+Animation Lab remains the only one with in-room ability toggles. The production
+Level 2 approach uses a direct same-level `target_scene` handoff into its live
+interior; the developer Interior Review exists only to load that interior
+directly for inspection.
 
 ## Validation and visual review
 
@@ -526,7 +526,7 @@ Every lasting system receives focused validation. The current suite covers:
 - Animation Lab isolation, expanded geometry, immediate ability toggles,
   reset, and session-local ability policy;
 - campaign catalog integrity, versioned progress serialization, and
-  per-level ability filtering;
+  per-level ability filtering, including the two-level World 1 order;
 - fresh level-defined development entry state versus same-session restart
   retention;
 - output-pixel camera stability during long horizontal travel;
@@ -543,7 +543,7 @@ Every lasting system receives focused validation. The current suite covers:
   wall impact, attack priority, and Animation Lab contracts;
 - the completed Level 2 approach's native cave entrance, two broad patrol
   routes, continuous ground, slide interstitial, and ability-preserving
-  transition into the live interior;
+  same-level transition into the live interior;
 - the completed Level 2 interior's enclosed terrain, pickup order, Wall Jump
   shaft, Dash crossings, hovering hazards, checkpoints, waterline death and
   splash presentation, zoned cave background, regional grade, shared ceiling,
@@ -555,8 +555,8 @@ Every lasting system receives focused validation. The current suite covers:
   scenery, session-local Double Jump pickup, checkpoint/reset policy, Green
   Threshold and Thorn Garden geometry, open-air rise, concealed-spike reveal,
   bounded patrol lanes, typed dressing palette, half-pipe support/depth rules,
-  tire-swing-tree finish, invisible completion trigger, and focused real-input
-  completion;
+  tire-swing-tree finish, matched transition into Level 2, overlay-free source
+  completion, and focused real-input completion;
 - development F7 collision overlays, F10 measurement grid and player-feet /
   cursor coordinates, and F11 inspection-mode isolation, ability policy,
   collision restoration, and camera behavior;
@@ -619,7 +619,7 @@ and tire-swing-tree finish form the authored baseline. The rejected
 stitched-tree and folded-corridor experiments remain removed rather than hidden
 as production baggage.
 
-Overgrown Coastal Ascent is complete and accepted in development form. Its dusk
+Overgrown Coastal Ascent is the completed second production level. Its dusk
 approach carries two broad-roaming patrols into a matched cave threshold, short
 slide interstitial, and momentum-preserving interior run-in. The connected cave
 then carries a combat-and-spike recap, Double Jump rise, Wall Jump pickup and
@@ -638,8 +638,11 @@ first machine chamber offers above-air-Dash and below-ground-Dash routes; the
 second places two opposite-phase flyers in its outer thirds. The final cave
 lift waits for one continuous second of supported stillness, rises under fixed
 camera framing, and begins the one-second completion fade at 62 percent ascent.
-Production promotion and the Level 1 handoff are the only remaining Level 2
-milestone work.
+Arrival's final threshold marks Level 1 complete without showing its completion
+overlay, then uses matched run-out/run-in presentation to preserve momentum into
+the Level 2 approach. The cave threshold in turn uses a direct same-level scene
+handoff into the slide and interior, preserving the Level 2 identity and run
+state.
 
 Reusable height-aware background fades remain unused and opt-in; authored zone
 regions are active. Structural, visual, and regression automation owns
