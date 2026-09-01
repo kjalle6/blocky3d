@@ -20,6 +20,11 @@ remain read-only design references.
   and an open-air Double Jump rise to a safe tire-swing-tree clearing. The
   completion trigger and fade are final Level 1 behavior rather than a temporary
   construction boundary
+- Overgrown Coastal Ascent is complete and hands-on accepted in development
+  form, ready for production promotion. Two patrols guard its dusk approach; a
+  cave threshold leads through a short slide cutscene into the enclosed route,
+  which teaches Wall Jump and Dash before two hovering-machine chambers, a
+  Dash-required exit gauntlet, and a construction-lift departure
 - The six earlier Green Zone prototype levels are deleted. Their movement
   contracts moved to permanent homes first: the Animation Lab for the ability
   kit, Arrival for camera stability, and the Level 2 interior for progression
@@ -28,7 +33,8 @@ remain read-only design references.
   Arrival / Shoreline, Overgrown Coastal Ascent, and Green Zone Finale
 - The production selector currently exposes Arrival / Shoreline. Development
   entries expose Animation Lab, the enclosed-terrain construction proof, the
-  Level 2 cave approach, and the authored Level 2 interior opening
+  completed Level 2 route, its directly loadable interior review entry, and the
+  slide-intro lab until the finished level is promoted into the campaign
 - A reusable profile-driven pixel-background rig provides native-scale,
   seam-safe horizontal coverage, authored coastal-to-green transitions, and
   stable framing during vertical camera travel. Level 2 actively uses authored
@@ -52,20 +58,20 @@ remain read-only design references.
   outcrop, garden gates and hedges, the non-colliding skate half-pipe at the
   aerial takeoff, and the tire-swing-tree finish clearing
 - 1920x1080 presentation baseline
-- The first Overgrown Coastal Ascent interior slice is authored: a familiar
-  combat-and-spike recap leads through a Double Jump rise into a Wall Jump
-  shaft, a forced left turn for Dash, an immediate Dash-only return, and two
-  hovering-machine chambers. Its editable five-layer cave blend, regional
-  grade, localized water vistas, shared upper ceiling, and focused shaft camera
-  are hands-on accepted; the frozen transition snapshot remains unchanged
+- Overgrown Coastal Ascent's full interior is authored and accepted: the
+  familiar recap, Double Jump rise, Wall Jump shaft, left-turn Dash pickup,
+  Dash-only return, machine chambers, final enemy-and-spike run, and lift ending
+  share one coherent cave. Its five-layer lower/upper blend, regional grade,
+  water vistas, upper ceiling, focused shaft camera, and fixed lift framing are
+  part of that accepted presentation
 
 The living design and authoring documents are:
 
 - [`docs/GAME_DIRECTION.md`](docs/GAME_DIRECTION.md) — what the game is
 - [`docs/LEVEL_ROADMAP.md`](docs/LEVEL_ROADMAP.md) — the eleven legacy ideas,
   revised campaign spine, and next level
-- [`docs/LEVEL_2_VISUAL_BRIEF.md`](docs/LEVEL_2_VISUAL_BRIEF.md) — the accepted
-  editable cave presentation and its promotion boundary
+- [`docs/LEVEL_2_VISUAL_BRIEF.md`](docs/LEVEL_2_VISUAL_BRIEF.md) — the completed
+  Level 2 route and accepted visual contracts
 - [`docs/TECHNICAL_FOUNDATION.md`](docs/TECHNICAL_FOUNDATION.md) — architecture,
   gameplay contracts, asset pipeline, and validation
 - [`docs/SET_DRESSING_WORKFLOW.md`](docs/SET_DRESSING_WORKFLOW.md) — curated

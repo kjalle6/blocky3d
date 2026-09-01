@@ -1,0 +1,48 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/terrain/top.png" id="1_top"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/terrain/top_variant.png" id="2_top_variant"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/props/cave_rock1.png" id="8_rock_bank"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/props/cave_rock4.png" id="9_chute_end"]
+
+[node name="Level2SlideArrival" type="Node3D"]
+
+[node name="ChuteBed" type="Node3D" parent="."]
+position = Vector3(3.84, 0, 0)
+rotation = Vector3(0, 0, -0.488692)
+
+[node name="TopFar" type="Sprite3D" parent="ChuteBed"]
+position = Vector3(-4.48, -0.64, 1.09)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("1_top")
+shaded = false
+cast_shadow = 0
+render_priority = 2
+
+[node name="TopMiddleFar" type="Sprite3D" parent="ChuteBed"]
+position = Vector3(-3.2, -0.64, 1.09)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("2_top_variant")
+shaded = false
+cast_shadow = 0
+render_priority = 3
+
+[node name="RockBank" type="Sprite3D" parent="."]
+position = Vector3(-0.5, 2.64, 1.11)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("8_rock_bank")
+shaded = false
+cast_shadow = 0
+render_priority = 1
+
+[node name="ChuteEndRock" type="Sprite3D" parent="."]
+position = Vector3(0.46, 0.88, 1.13)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("9_chute_end")
+shaded = false
+cast_shadow = 0
+render_priority = 4

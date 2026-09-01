@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_interior_terrain_3d.gd" id="2_terrain"]
 [ext_resource type="Resource" path="res://resources/presentation/interior_styles/rock_underworks.tres" id="3_style"]
+[ext_resource type="Resource" path="res://resources/presentation/backgrounds/rock_underworks_cave_world_locked.tres" id="4_background"]
+[ext_resource type="PackedScene" path="res://scenes/presentation/cave_construction_lift.tscn" id="5_lift"]
 
 [sub_resource type="Environment" id="Environment_underworks"]
 background_mode = 1
@@ -24,7 +26,7 @@ route_start_x = 0.0
 route_end_x = 58.88
 
 [node name="Background" parent="." index="3"]
-visible = false
+profile = ExtResource("4_background")
 
 [node name="RockShell" type="StaticBody3D" parent="Platforms" index="0"]
 position = Vector3(0, -2.56, 0)
@@ -32,11 +34,14 @@ script = ExtResource("2_terrain")
 solid_rows = PackedStringArray("##############################################", "##############################################", "##############################################", "##############################################", "#########################...................##", "#########################...................##", "#########################...................##", "#########################...................##", "#########################...##################", "#########################...##################", "#########################...##################", "#########################...##################", "#########################...##################", "#########################...##################", "##.....................##...##################", "##.....................##...##################", "##..........................##################", "##..........................##################", "##############################################", "##############################################")
 style = ExtResource("3_style")
 
+[node name="CaveConstructionLift" parent="Props" index="0" instance=ExtResource("5_lift")]
+position = Vector3(33.92, 0, 0)
+
 [node name="SpawnPoint" parent="." index="8"]
-position = Vector3(4.48, 0.7, 0)
+position = Vector3(28.16, 0.7, 0)
 
 [node name="Player" parent="." index="9"]
-position = Vector3(4.48, 0.7, 0)
+position = Vector3(28.16, 0.7, 0)
 
 [node name="GameplayCamera" parent="." index="10"]
 look_ahead = 2.0

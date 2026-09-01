@@ -19,6 +19,8 @@ enum SourceExitMode {
 }
 
 @export var target_level: LevelDefinition
+@export_category("Interstitial")
+@export var interstitial_scene: PackedScene
 @export_category("Matched run handoff")
 @export var source_exit_mode: SourceExitMode = SourceExitMode.STOP
 @export var run_destination_during_fade_in := false
@@ -36,6 +38,13 @@ func validation_errors() -> PackedStringArray:
 	var errors := PackedStringArray()
 	if target_level == null:
 		errors.append("Level transition requires a target level definition.")
+	if interstitial_scene != null:
+		var interstitial := interstitial_scene.instantiate()
+		if not interstitial is LevelInterstitial3D:
+			errors.append(
+				"Transition interstitial must instantiate a LevelInterstitial3D."
+			)
+		interstitial.free()
 	if source_exit_mode == SourceExitMode.RUN or run_destination_during_fade_in:
 		if not is_equal_approx(absf(run_direction), 1.0):
 			errors.append("Matched transition direction must be -1 or 1.")

@@ -10,6 +10,8 @@ const TILE_PIXEL_SIZE := TILE_WORLD_SIZE / 32.0
 @export var style: PixelInteriorTerrainStyle
 @export var face_depth := 1.04
 @export var collision_depth := 2.0
+@export var hidden_face_region := Rect2i()
+@export_range(0, 4, 1) var visual_extension_rows_below := 0
 
 var _row_count := 0
 var _column_count := 0
@@ -37,6 +39,8 @@ func validation_errors() -> PackedStringArray:
 	if solid_rows.is_empty():
 		errors.append("Interior terrain requires at least one grid row.")
 		return errors
+	if hidden_face_region.size.x < 0 or hidden_face_region.size.y < 0:
+		errors.append("The hidden face region cannot have negative dimensions.")
 	var expected_width := solid_rows[0].length()
 	if expected_width <= 0:
 		errors.append("Interior terrain rows cannot be empty.")
@@ -97,9 +101,12 @@ func cell_center(row: int, column: int) -> Vector3:
 
 
 func _build_face() -> void:
-	for row in _row_count:
+	for row in _row_count + visual_extension_rows_below:
 		for column in _column_count:
-			if not is_solid_cell(row, column):
+			if (
+				not _is_face_solid_cell(row, column)
+				or _is_face_hidden(row, column)
+			):
 				continue
 			var sprite := Sprite3D.new()
 			sprite.name = "Tile_%02d_%02d" % [row, column]
@@ -112,37 +119,58 @@ func _build_face() -> void:
 			add_child(sprite)
 
 
+func _is_face_solid_cell(row: int, column: int) -> bool:
+	if is_solid_cell(row, column):
+		return true
+	return (
+		visual_extension_rows_below > 0
+		and row >= _row_count
+		and row < _row_count + visual_extension_rows_below
+		and column >= 0
+		and column < _column_count
+		and is_solid_cell(_row_count - 1, column)
+	)
+
+
+func _is_face_hidden(row: int, column: int) -> bool:
+	return (
+		hidden_face_region.size.x > 0
+		and hidden_face_region.size.y > 0
+		and hidden_face_region.has_point(Vector2i(column, row))
+	)
+
+
 func _texture_for_cell(row: int, column: int) -> Texture2D:
-	var exposed_top := not is_solid_cell(row - 1, column)
-	var exposed_bottom := not is_solid_cell(row + 1, column)
-	var exposed_left := not is_solid_cell(row, column - 1)
-	var exposed_right := not is_solid_cell(row, column + 1)
+	var exposed_top := not _is_face_solid_cell(row - 1, column)
+	var exposed_bottom := not _is_face_solid_cell(row + 1, column)
+	var exposed_left := not _is_face_solid_cell(row, column - 1)
+	var exposed_right := not _is_face_solid_cell(row, column + 1)
 	# A concave room corner belongs to the diagonally adjacent solid cell. Its
 	# four direct neighbours remain solid, so ordinary exposed-edge selection
 	# cannot see it. The source tiles cut the open quadrant into that solid cell
 	# and make the adjoining ceiling/wall or wall/floor art turn continuously.
 	if (
-		is_solid_cell(row, column + 1)
-		and is_solid_cell(row + 1, column)
-		and not is_solid_cell(row + 1, column + 1)
+		_is_face_solid_cell(row, column + 1)
+		and _is_face_solid_cell(row + 1, column)
+		and not _is_face_solid_cell(row + 1, column + 1)
 	):
 		return style.inner_top_left
 	if (
-		is_solid_cell(row, column - 1)
-		and is_solid_cell(row + 1, column)
-		and not is_solid_cell(row + 1, column - 1)
+		_is_face_solid_cell(row, column - 1)
+		and _is_face_solid_cell(row + 1, column)
+		and not _is_face_solid_cell(row + 1, column - 1)
 	):
 		return style.inner_top_right
 	if (
-		is_solid_cell(row, column + 1)
-		and is_solid_cell(row - 1, column)
-		and not is_solid_cell(row - 1, column + 1)
+		_is_face_solid_cell(row, column + 1)
+		and _is_face_solid_cell(row - 1, column)
+		and not _is_face_solid_cell(row - 1, column + 1)
 	):
 		return style.inner_bottom_left
 	if (
-		is_solid_cell(row, column - 1)
-		and is_solid_cell(row - 1, column)
-		and not is_solid_cell(row - 1, column - 1)
+		_is_face_solid_cell(row, column - 1)
+		and _is_face_solid_cell(row - 1, column)
+		and not _is_face_solid_cell(row - 1, column - 1)
 	):
 		return style.inner_bottom_right
 	if exposed_top and exposed_left:

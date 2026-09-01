@@ -125,6 +125,23 @@ func current_state() -> String:
 	return _state
 
 
+## Advances one explicitly authored presentation state without asking gameplay
+## to manufacture locomotion flags. Short in-engine cutscenes use this to pose
+## the same player art while no CharacterBody is reading input or collision.
+func tick_authored_state(
+	delta: float,
+	state: String,
+	facing_right: bool,
+	vertical_speed := 0.0
+) -> void:
+	assert(BODY_TEXTURES.has(state), "Unknown authored player state '%s'." % state)
+	set_state(state, false)
+	_elapsed += delta
+	_apply_frame(vertical_speed)
+	body.flip_h = not facing_right
+	weapon.flip_h = not facing_right
+
+
 func flash_damage() -> void:
 	if _flash_tween != null and _flash_tween.is_valid():
 		_flash_tween.kill()
@@ -161,7 +178,14 @@ func _apply_frame(vertical_speed: float) -> void:
 			_elapsed * FRAME_RATES[_state]
 		))
 		frame = AIR_DASH_FRAMES[step]
-	elif _state in ["double_jump", "dash", "attack", "run_attack", "hurt", "death"]:
+	elif _state in [
+		"double_jump",
+		"dash",
+		"attack",
+		"run_attack",
+		"hurt",
+		"death",
+	]:
 		frame = mini(count - 1, floori(_elapsed * FRAME_RATES[_state]))
 	else:
 		frame = floori(_elapsed * FRAME_RATES[_state]) % count

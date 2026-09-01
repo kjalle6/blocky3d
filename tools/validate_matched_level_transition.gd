@@ -1,11 +1,11 @@
 extends SceneTree
 ## Proves the Level 2 WIP cave handoff uses doorway-appropriate halves: the
-## source player disappears into the black cave mouth, the destination player
-## enters moving right, and ordinary input control resumes afterwards.
+## source player disappears into the black cave mouth, the slide interstitial
+## plays once, the destination player enters moving right, and ordinary input
+## control resumes afterwards.
 
 const SOURCE_LEVEL_ID: StringName = &"dev_level_2_wip"
-const TARGET_LEVEL_ID: StringName = &"dev_level_2_wip_interior_snapshot"
-const ACTIVE_INTERIOR_LEVEL_ID: StringName = &"dev_level_2_interior_wip"
+const TARGET_LEVEL_ID: StringName = &"dev_level_2_interior_wip"
 const EXPECTED_DIRECTION := 1.0
 const EXPECTED_SPEED := 8.0
 const EXPECTED_DURATION := 0.45
@@ -33,6 +33,11 @@ func _run() -> void:
 	var threshold := source_session.get_node("CaveThreshold") as LevelTransition3D
 	assert(threshold != null)
 	assert(threshold.validation_errors().is_empty())
+	assert(threshold.interstitial_scene != null)
+	assert(
+		threshold.interstitial_scene.resource_path
+		== "res://scenes/cutscenes/level_2_cave_slide_intro.tscn"
+	)
 	assert(threshold.source_exit_mode == LevelTransition3D.SourceExitMode.HIDE)
 	assert(threshold.run_destination_during_fade_in)
 	assert(is_equal_approx(threshold.run_direction, EXPECTED_DIRECTION))
@@ -46,7 +51,18 @@ func _run() -> void:
 	assert(is_zero_approx(source_player.horizontal_speed))
 	assert(not source_player.is_physics_processing())
 
-	await create_timer(0.5).timeout
+	await create_timer(1.0).timeout
+	assert(game_root.current_level == null)
+	var slide_intro := (
+		game_root.active_interstitial() as Level2CaveSlideIntro3D
+	)
+	assert(slide_intro != null)
+	assert(not slide_intro.has_finished())
+	assert(slide_intro.slide_progress() > 0.0)
+	assert(absf(slide_intro.terminal_horizontal_speed() - EXPECTED_SPEED) < 0.15)
+	slide_intro.skip_to_end()
+	await create_timer(0.3).timeout
+	assert(game_root.active_interstitial() == null)
 	assert(game_root.current_level_definition != null)
 	assert(game_root.current_level_definition.level_id == TARGET_LEVEL_ID)
 	var target_session := game_root.current_level as LevelSession3D
@@ -70,7 +86,7 @@ func _run() -> void:
 
 	game_root.show_level_select()
 	game_root.load_developer_level(
-		_developer_definition(game_root, ACTIVE_INTERIOR_LEVEL_ID)
+		_developer_definition(game_root, TARGET_LEVEL_ID)
 	)
 	await process_frame
 	assert(
@@ -79,7 +95,9 @@ func _run() -> void:
 	)
 
 	game_root.free()
-	print("Matched level transition passed: cave hide, run-in, then control.")
+	print(
+		"Matched level transition passed: cave hide, slide, run-in, then control."
+	)
 	quit(0)
 
 

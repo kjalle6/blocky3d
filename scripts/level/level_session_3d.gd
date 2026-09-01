@@ -8,13 +8,15 @@ signal transition_requested(
 	target: LevelDefinition,
 	run_direction: float,
 	run_speed: float,
-	run_duration: float
+	run_duration: float,
+	interstitial_scene: PackedScene
 )
 signal run_reset
 signal checkpoint_changed(route_index: int)
 signal ability_unlocked(ability_id: StringName)
 
 @export_range(0.0, 1.0, 0.01) var reset_delay := 0.18
+@export_range(0.2, 2.0, 0.05) var completion_fade_duration := 0.55
 
 @onready var route_extent: RouteExtent3D = %RouteExtent
 @onready var player: PlayerCharacter = %Player
@@ -99,6 +101,9 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("restart"):
+		if _completed or player.is_transition_running():
+			get_viewport().set_input_as_handled()
+			return
 		_reset_run()
 		camera.snap_to_target()
 		if background != null:
@@ -107,7 +112,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _on_player_died() -> void:
-	if _resetting:
+	if _resetting or _completed:
 		return
 	_resetting = true
 	_reset_request_serial += 1
@@ -137,9 +142,11 @@ func _on_transition_entered(transition: LevelTransition3D) -> void:
 	if transition == null:
 		return
 	var target := transition.target_level
-	if _completed or target == null:
+	if _completed or target == null or player.is_dead():
 		return
 	_completed = true
+	_reset_request_serial += 1
+	_resetting = false
 	match transition.source_exit_mode:
 		LevelTransition3D.SourceExitMode.RUN:
 			player.begin_transition_run(
@@ -160,7 +167,8 @@ func _on_transition_entered(transition: LevelTransition3D) -> void:
 		target,
 		transition.run_direction,
 		transition.run_speed,
-		destination_run_duration
+		destination_run_duration,
+		transition.interstitial_scene
 	)
 
 

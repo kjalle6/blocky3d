@@ -201,9 +201,8 @@ The view is presentation-only and contains no collision.
 `PixelCaveCeilingOverlay3D` owns the source artwork's rocky roof separately from
 those water openings. Level 2 lays out five mirrored panels on authored world X,
 locks their Y to the camera, and reveals them with the upper-zone influence. The
-overlay contains no water or collision. The editable Interior WIP combines that
-ceiling and the localized vistas with its five-layer global cave profile; the
-frozen transition snapshot remains unchanged.
+overlay contains no water or collision. The completed Level 2 interior combines
+that ceiling and the localized vistas with its five-layer global cave profile.
 
 World-locked global layers may request exact texture-height rows above or below
 their authored base through `world_repeat_above` and `world_repeat_below`. The
@@ -215,11 +214,12 @@ depth layers.
 Camera regions select vertical framing and horizontal focus independently. A
 narrow focus can therefore hold one shaft composition on X while a broader
 region continues to track its climb on Y; neither policy has to replace the
-other. The Level 2 WIP interior uses that split for its Wall Jump shaft and its
+other. The Level 2 interior uses that split for its Wall Jump shaft and its
 28.0 m upper-floor camera offset. The vertical region clamps there so an
-ordinary jump cannot move the whole upper cave shell. That WIP entry is not yet
-a cataloged production section. Normal horizontal look-ahead resumes through
-the camera's smoothing when the player exits the shaft. The separate
+ordinary jump cannot move the whole upper cave shell. The completed build is
+awaiting catalog promotion. A second fixed region holds the lift-exit
+composition while the deck rises. Normal horizontal look-ahead resumes through
+the camera's smoothing when the player exits the Wall Jump shaft. The separate
 height-window extension remains dormant until an approved composition needs
 fixed-scale depth, parallax, deliberate viewport cropping, and camera-height
 fades; runtime scaling of scenery remains excluded because it reads as zooming
@@ -417,9 +417,11 @@ level where appropriate.
 The production `CampaignCatalog` currently contains the completed Arrival /
 Shoreline as the first Green Zone level. The six prototypes that proved the
 movement kit are deleted, their contracts having moved to the Animation Lab,
-Arrival, and the Level 2 interior. The target campaign structure remains
-approximately three re-authored levels: Arrival / Shoreline, Overgrown Coastal
-Ascent, and Green Zone Finale.
+Arrival, and the Level 2 interior. Overgrown Coastal Ascent is complete and
+accepted in development form; its next step is catalog promotion and the
+Level 1 handoff. The target campaign structure remains approximately three
+re-authored levels: Arrival / Shoreline, Overgrown Coastal Ascent, and Green
+Zone Finale.
 Missing future levels are not represented by fake scenes or disabled
 placeholder buttons. Development mode keeps all authored levels selectable.
 Production prerequisite/locking presentation is added only when campaign flow
@@ -508,16 +510,12 @@ death and reset behavior.
 Approved replacement levels enter `CampaignCatalog`. `GameRoot.developer_level_definitions` is
 reserved for tools and explicitly unfinished routes with a null world
 definition: the Animation Lab, the Enclosed Terrain Lab, the Level 2 WIP
-approach, and the directly loadable Level 2 interior opening. Animation Lab
-remains the only one with in-room ability toggles.
-
-The Level 2 approach threshold targets a separate, hidden level definition
-whose scene is the frozen interior snapshot. The visible `Level 2 Interior WIP`
-definition targets the editable interior scene. Its accepted presentation
-therefore cannot silently change the baseline reached through `Level 2 WIP`;
-promoting a new baseline remains an explicit snapshot update.
-`GameRoot.developer_hidden_level_definitions` registers transition-only
-developer targets without exposing an extra selector button.
+approach, the directly loadable Level 2 interior, and its slide-intro lab.
+Animation Lab remains the only one with in-room ability toggles. Level 2's
+approach now transitions into the live completed interior; the earlier frozen
+snapshot is obsolete and no longer defines an approval boundary. Promotion
+will move the full route into the campaign and retain only genuinely useful
+review labs in the developer list.
 
 ## Validation and visual review
 
@@ -543,12 +541,14 @@ Every lasting system receives focused validation. The current suite covers:
   Double Jump interaction, and Animation Lab contracts;
 - Dash direction, burst speed, gravity suspension, charge, jump cancellation,
   wall impact, attack priority, and Animation Lab contracts;
-- the Level 2 WIP approach's native cave entrance, continuous ground, authored
-  cave handoff, frozen-snapshot boundary, and ability-preserving transition;
-- the editable Level 2 interior's enclosed terrain, pickup order, wall-jump
-  shaft, Dash crossing, hovering hazards, checkpoints, waterline death and
+- the completed Level 2 approach's native cave entrance, two broad patrol
+  routes, continuous ground, slide interstitial, and ability-preserving
+  transition into the live interior;
+- the completed Level 2 interior's enclosed terrain, pickup order, Wall Jump
+  shaft, Dash crossings, hovering hazards, checkpoints, waterline death and
   splash presentation, zoned cave background, regional grade, shared ceiling,
-  independent vertical and horizontal camera regions, containment, and full
+  independent vertical and horizontal camera regions, exit gauntlet, fixed lift
+  framing, stillness-gated departure, completion fade, containment, and
   real-input traversal;
 - production Arrival / Shoreline's catalog identity, typed sand style,
   synchronized animated water, collision-free travelling shore wave, grounded
@@ -568,13 +568,14 @@ Every lasting system receives focused validation. The current suite covers:
   depth, and a coverage guard that fails on any level scene the validator has
   not been told about;
 - the Level 2 cave approach: a native-resolution entrance that still matches its
-  4x art source pixel for pixel, its authored ground contact, and the enclosed
-  terrain lab's interior grammar;
-- the Level 2 interior opening: one-grid enclosed topology, pickup order,
+  4x art source pixel for pixel, authored ground contact, moving patrol bounds,
+  and the enclosed terrain lab's interior grammar;
+- the Level 2 interior: one-grid enclosed topology, pickup order,
   checkpoint policy, hazard dimensions, camera region, a validated 13.28 m
   17-spike Dash crossing beyond Double Jump reach, a 14.08 m
-  single- and dual-machine 14.08 m gaps, and a real-input traversal through
-  Double Jump, repeated Wall Jumps, and three Dashes.
+  single- and dual-machine gaps, the final Dash-required spike strip, enemy
+  placement, lift boarding/ascent/completion timing, and a real-input traversal
+  through Double Jump, repeated Wall Jumps, and Dashes.
 
 Graphical capture scripts render deterministic 1920x1080 review positions for
 all current levels. Visual changes are inspected in the running game;
@@ -618,25 +619,27 @@ and tire-swing-tree finish form the authored baseline. The rejected
 stitched-tree and folded-corridor experiments remain removed rather than hidden
 as production baggage.
 
-The Overgrown Coastal Ascent interior is underway. The isolated lab proved the
-reusable grid-driven terrain component, while the Level 2 WIP approach proves
-the matched doorway handoff. The editable interior now carries a connected
-combat-and-spike recap, Double Jump rise, Wall Jump pickup and shaft, forced
-left turn to the Dash pickup, 13.28 m Dash return crossing, and two hovering
-machine chambers. Its sustained shaft actively combines the reusable vertical
-camera region, capped at the 28.0 m upper-floor framing, with an independent
-horizontal focus that holds the shaft composition during rapid wall jumps.
+Overgrown Coastal Ascent is complete and accepted in development form. Its dusk
+approach carries two broad-roaming patrols into a matched cave threshold, short
+slide interstitial, and momentum-preserving interior run-in. The connected cave
+then carries a combat-and-spike recap, Double Jump rise, Wall Jump pickup and
+shaft, forced left turn to Dash, 13.28 m Dash return, two hovering-machine
+chambers, and a final enemy-and-spike gauntlet into the lift departure. The
+sustained shaft combines the reusable vertical camera region, capped at the
+28.0 m upper-floor framing, with an independent horizontal focus that holds the
+composition during rapid wall jumps.
 
-The editable presentation now uses a reversible five-layer smoky-lower to
-pale-upper cave blend, matching regional grade, localized water vistas, raised
-foreground roof, and shared upper ceiling. Hands-on review accepts those
-contracts in the Interior WIP; the frozen transition snapshot remains unchanged
-until explicit promotion. Green Zone enemy 5 remains a dedicated indestructible
+The presentation uses a reversible five-layer smoky-lower to pale-upper cave
+blend, matching regional grade, localized water vistas, raised foreground roof,
+and shared upper ceiling. Green Zone enemy 5 remains a dedicated indestructible
 flying-hazard archetype outside the `melee_target` and stomp contracts, with
 explicit lethal body/electric contact and deterministic reset behavior. The
-first machine chamber offers an above-air-Dash or below-ground-Dash route; the
-second places two opposite-phase flyers in its outer thirds. Gameplay stops at
-that chamber's landing.
+first machine chamber offers above-air-Dash and below-ground-Dash routes; the
+second places two opposite-phase flyers in its outer thirds. The final cave
+lift waits for one continuous second of supported stillness, rises under fixed
+camera framing, and begins the one-second completion fade at 62 percent ascent.
+Production promotion and the Level 1 handoff are the only remaining Level 2
+milestone work.
 
 Reusable height-aware background fades remain unused and opt-in; authored zone
 regions are active. Structural, visual, and regression automation owns

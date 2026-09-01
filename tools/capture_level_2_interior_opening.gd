@@ -4,8 +4,8 @@ extends SceneTree
 const OUTPUT_SIZE := Vector2i(1920, 1080)
 const OUTPUT_DIRECTORY := "res://build/previews/level_2_interior_opening"
 const GAMEPLAY_CAMERA_SIZE := 12.9375
-const OVERVIEW_CAMERA_SIZE := 82.0
-const OVERVIEW_CENTER := Vector3(71.68, 22.0, 0.0)
+const OVERVIEW_CAMERA_SIZE := 99.0
+const OVERVIEW_CENTER := Vector3(87.04, 22.0, 0.0)
 ## Each route is shown at the moment a player would actually take it, because
 ## that is what "visibly real" means for review. The machine rises to open the
 ## floor lane and drops to open the ceiling lane, so each frame is pinned to the
@@ -20,10 +20,14 @@ const BEAT_DUAL_MACHINE_PHASE := {
 	# opposite-direction timing window.
 	&"14_dual_machine_window": Vector2(0.125, 0.625),
 }
+const BEAT_LIFT_PHASE := {
+	# Level 2 waits through 62% of ascent, then its one-second fade is opaque.
+	&"19_cave_lift_departure": 0.914,
+}
 const REVIEW_BEATS := {
 	&"00_entry": Vector3(7.68, 0.7, 0.0),
 	&"01_recap": Vector3(22.4, 0.7, 0.0),
-	&"02_floating_ascent": Vector3(47.36, 5.18, 0.0),
+	&"02_floating_ascent": Vector3(45.44, 5.18, 0.0),
 	&"03_shaft_bottom": Vector3(60.16, 7.1, 0.0),
 	&"04_shaft_middle": Vector3(58.88, 17.0, 0.0),
 	&"04b_background_handoff": Vector3(58.88, 22.5, 0.0),
@@ -38,6 +42,10 @@ const REVIEW_BEATS := {
 	&"13_dual_machine_run_up": Vector3(107.52, 28.86, 0.0),
 	&"14_dual_machine_window": Vector3(120.96, 31.115, 0.0),
 	&"15_dual_chamber_landing": Vector3(132.0, 29.50, 0.0),
+	&"16_exit_gauntlet_run_up": Vector3(135.0, 28.86, 0.0),
+	&"17_exit_gauntlet_crossing": Vector3(152.56, 30.0, 0.0),
+	&"18_cave_lift_exit": Vector3(169.0, 28.86, 0.0),
+	&"19_cave_lift_departure": Vector3(171.60, 41.38, 0.0),
 }
 
 
@@ -95,6 +103,7 @@ func _run() -> void:
 
 	for beat_id in REVIEW_BEATS:
 		_pin_machine_phase(level, beat_id)
+		_pin_cave_lift(level, beat_id)
 		_set_diagnostic_tools(game_root, false)
 		game_root.get_node("Interface").visible = false
 		await _place_review_camera(level, REVIEW_BEATS[beat_id])
@@ -195,3 +204,12 @@ func _pin_machine_phase(level: LevelSession3D, beat_id: StringName) -> void:
 	for dual_machine in [dual_rising, dual_falling]:
 		dual_machine.reset_run()
 		dual_machine.set_physics_process(false)
+
+
+func _pin_cave_lift(level: LevelSession3D, beat_id: StringName) -> void:
+	var lift := level.get_node_or_null("Props/CaveLiftExit")
+	if lift == null:
+		return
+	lift.call("reset_run")
+	lift.call("preview_travel_progress", BEAT_LIFT_PHASE.get(beat_id, 0.0))
+	lift.set_physics_process(false)

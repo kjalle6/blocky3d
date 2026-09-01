@@ -6,11 +6,23 @@ const DEFINITION_PATH := "res://resources/dev/level_2_interior_wip.tres"
 ## art: above it the crop is empty, below it is water.
 const WATERLINE_SOURCE_ROW := 203.0
 const TILE_SIZE := PixelInteriorTerrain3D.TILE_WORLD_SIZE
+const EPSILON := 0.001
 const EXPECTED_DASH_SPIKE_WIDTH := 13.28
 const EXPECTED_DASH_SPIKE_LEFT_EDGE := 64.0
 const EXPECTED_DASH_SPIKE_CENTER := (
 	EXPECTED_DASH_SPIKE_LEFT_EDGE + EXPECTED_DASH_SPIKE_WIDTH * 0.5
 )
+const FLAT_CONTINUATION_LEFT_EDGE := 128.0
+const FLAT_CONTINUATION_RIGHT_EDGE := 174.08
+const EXIT_CHECKPOINT_X := 131.84
+const EXIT_APPROACH_ENEMY_X := 139.52
+const EXIT_SPIKE_LEFT_EDGE := 145.92
+const EXIT_SPIKE_WIDTH := 13.28
+const EXIT_SPIKE_CENTER := EXIT_SPIKE_LEFT_EDGE + EXIT_SPIKE_WIDTH * 0.5
+const EXIT_LANDING_ENEMY_X := 164.48
+const EXIT_LIFT_ORIGIN := Vector3(172.16, 28.16, 0.0)
+const COMPLETION_FADE_DURATION := 1.0
+const EXIT_CEILING_BOTTOM_Y := 42.24
 const DUAL_SHAFT_LEFT_EDGE := 89.0 * TILE_SIZE
 const DUAL_SHAFT_WIDTH := 11.0 * TILE_SIZE
 const DUAL_FLYER_INWARD_NUDGE := 0.32
@@ -47,10 +59,60 @@ func _run() -> void:
 	assert(terrain != null)
 	assert(terrain.validation_errors().is_empty())
 	assert(terrain.row_count() == 40)
-	assert(terrain.column_count() == 113)
+	assert(terrain.column_count() == 137)
 	assert(
 		terrain.collision_rectangle_count() == 9,
 		"collision rectangles: %d" % terrain.collision_rectangle_count()
+	)
+	assert(terrain.hidden_face_region == Rect2i(0, 29, 1, 9))
+	assert(terrain.visual_extension_rows_below == 1)
+	for hidden_row in range(29, 38):
+		assert(terrain.get_node_or_null("Tile_%02d_00" % hidden_row) == null)
+	assert(terrain.get_node_or_null("Tile_40_00") is Sprite3D)
+	assert(terrain.get_node_or_null("Tile_40_136") is Sprite3D)
+	assert(terrain.get_node_or_null("Tile_40_73") == null)
+	assert(terrain.get_node_or_null("Tile_40_94") == null)
+	assert(not terrain.is_solid_cell(40, 0))
+	var collision_bottom := INF
+	for child in terrain.get_children():
+		var collision := child as CollisionShape3D
+		if collision == null or not collision.shape is BoxShape3D:
+			continue
+		var box := collision.shape as BoxShape3D
+		collision_bottom = minf(
+			collision_bottom,
+			collision.global_position.y - box.size.y * 0.5
+		)
+	assert(is_equal_approx(collision_bottom, terrain.global_position.y))
+	var opening_camera := level.camera as PixelSideCamera3D
+	assert(opening_camera != null)
+	var opening_half_width := opening_camera.size * 16.0 / 9.0 * 0.5
+	var route_start_x := (
+		level.route_extent.global_position.x + level.route_extent.route_start_x
+	)
+	assert(is_equal_approx(opening_camera.minimum_center_x, 11.52))
+	assert(is_equal_approx(opening_camera.maximum_center_x, 162.56))
+	assert(is_equal_approx(
+		level.route_extent.route_end_x,
+		FLAT_CONTINUATION_RIGHT_EDGE
+	))
+	assert(
+		opening_camera.minimum_center_x - opening_half_width >= route_start_x,
+		"The opening camera must not reveal world behind the authored route start."
+	)
+	var rendered_terrain_bottom := (
+		terrain.global_position.y
+		- terrain.visual_extension_rows_below * TILE_SIZE
+	)
+	var opening_view_bottom := opening_camera.camera_height - opening_camera.size * 0.5
+	assert(
+		rendered_terrain_bottom <= opening_view_bottom,
+		"The terrain face must cover the camera below the playable floor."
+	)
+	assert(
+		opening_view_bottom - rendered_terrain_bottom
+		>= PixelInteriorTerrain3D.TILE_PIXEL_SIZE,
+		"The terrain face needs at least one source pixel of bottom coverage margin."
 	)
 
 	# The editable Interior WIP owns two localized lake-cavern vistas. Their X
@@ -216,8 +278,8 @@ func _run() -> void:
 			+ "before the player reaches the upper landing."
 		)
 	)
-	assert(upper_region.position.is_equal_approx(Vector3(94.08, 39.0, 0.0)))
-	assert(upper_region.size.is_equal_approx(Vector2(110.0, 22.0)))
+	assert(upper_region.position.is_equal_approx(Vector3(110.08, 39.0, 0.0)))
+	assert(upper_region.size.is_equal_approx(Vector2(142.0, 22.0)))
 	var lower_face_y := upper_region.global_position.y - upper_region.size.y * 0.5
 	var sample_x := upper_region.global_position.x
 	assert(is_zero_approx(background.zone_opacity_at(
@@ -312,7 +374,18 @@ func _run() -> void:
 	assert(not terrain.is_solid_cell(15, 79))
 	assert(not terrain.is_solid_cell(15, 88))
 	assert(not terrain.is_solid_cell(15, 100))
-	assert(terrain.is_solid_cell(13, 112), "The corridor must end in a back wall.")
+
+	# The abandoned aerial finale is gone. After the paired machines the cave
+	# continues as one level floor under the existing ceiling and camera, giving
+	# the next ending design a neutral baseline rather than inherited geometry.
+	for continuation_column in range(100, 136):
+		for open_row in range(5, 16):
+			assert(not terrain.is_solid_cell(open_row, continuation_column))
+		assert(terrain.is_solid_cell(16, continuation_column))
+	for boundary_row in range(5, 40):
+		assert(terrain.is_solid_cell(boundary_row, 136))
+	assert(is_equal_approx(100.0 * TILE_SIZE, FLAT_CONTINUATION_LEFT_EDGE))
+	assert(is_equal_approx(136.0 * TILE_SIZE, FLAT_CONTINUATION_RIGHT_EDGE))
 
 	var shaft_gap := (79.0 - 68.0) * TILE_SIZE
 	var dual_shaft_gap := (100.0 - 89.0) * TILE_SIZE
@@ -435,6 +508,28 @@ func _run() -> void:
 		assert(platform.validation_errors().is_empty())
 		assert(platform.solid_rows == PackedStringArray(["####"]))
 		assert(platform.position.is_equal_approx(expected_platform_positions[index]))
+	var ascent_enemy := level.get_node("AscentPlatform02Patrol") as StompableEnemy3D
+	assert(ascent_enemy != null)
+	assert(is_equal_approx(ascent_enemy.patrol_speed, 2.0))
+	assert(is_zero_approx(ascent_enemy.patrol_left_distance))
+	assert(is_zero_approx(ascent_enemy.patrol_right_distance))
+	var second_platform_top := (
+		ascent_platforms[1].position.y + PixelInteriorTerrain3D.TILE_WORLD_SIZE
+	)
+	assert(ascent_enemy.position.y - second_platform_top >= 0.38 - EPSILON)
+	assert(ascent_enemy.position.y - second_platform_top <= 0.42 + EPSILON)
+	var ascent_enemy_authored_x := (
+		ascent_enemy.authored_patrol_bounds_x().x
+		+ ascent_enemy.authored_patrol_bounds_x().y
+	) * 0.5
+	assert(
+		is_equal_approx(
+			ascent_enemy_authored_x,
+			ascent_platforms[1].position.x
+			+ PixelInteriorTerrain3D.TILE_WORLD_SIZE * 2.0
+		),
+		"The ascent enemy must begin at the centre of the second platform."
+	)
 	var wall_pickup := level.get_node("WallJumpPickup") as AbilityPickup3D
 	var dash_pickup := level.get_node("DashPickup") as AbilityPickup3D
 	var dash_crossing_spikes := level.get_node(
@@ -493,14 +588,194 @@ func _run() -> void:
 		) % [dash_spike_width, movement.ideal_double_jump_dash_distance()]
 	)
 
+	# The finale stays on the established upper floor: a short enemy run-up,
+	# one proven Dash-only spike row, a landing-side surprise patrol, and the
+	# cave lift. Nothing here is allowed to create a new platforming climb.
+	var exit_spikes := level.get_node(
+		"Hazards/ExitGauntletSpikes"
+	) as PixelSpikeRow3D
+	assert(exit_spikes != null)
+	assert(exit_spikes.position.is_equal_approx(
+		Vector3(EXIT_SPIKE_CENTER, 28.16, 0.0)
+	))
+	assert(is_equal_approx(exit_spikes.row_width, EXIT_SPIKE_WIDTH))
+	assert(is_equal_approx(
+		exit_spikes.position.x - exit_spikes.row_width * 0.5,
+		EXIT_SPIKE_LEFT_EDGE
+	))
+	assert(exit_spikes.get_node_or_null("Spike17") != null)
+	assert(exit_spikes.get_node_or_null("Spike18") == null)
+	assert(
+		exit_spikes.row_width > movement.ideal_double_jump_distance() + 1.4,
+		"The exit strip must still require Dash after Double Jump."
+	)
+	assert(
+		exit_spikes.row_width
+		< movement.ideal_double_jump_dash_distance() - 1.5,
+		"The exit strip must retain a fair Dash landing margin."
+	)
+
+	var exit_checkpoint := level.get_node(
+		"Checkpoints/CheckpointExitGauntletReady"
+	) as LevelCheckpoint3D
+	assert(exit_checkpoint != null)
+	assert(exit_checkpoint.route_index == 5)
+	assert(exit_checkpoint.position.is_equal_approx(
+		Vector3(EXIT_CHECKPOINT_X, 28.16, 0.0)
+	))
+
+	var exit_approach_enemy := level.get_node(
+		"ExitGauntletApproachPatrol"
+	) as StompableEnemy3D
+	var exit_landing_enemy := level.get_node(
+		"ExitGauntletLandingPatrol"
+	) as StompableEnemy3D
+	assert(exit_approach_enemy != null and exit_landing_enemy != null)
+	for exit_enemy in [exit_approach_enemy, exit_landing_enemy]:
+		assert(exit_enemy.position.y - 28.16 >= 0.38 - EPSILON)
+		assert(exit_enemy.position.y - 28.16 <= 0.42 + EPSILON)
+		assert(is_equal_approx(exit_enemy.patrol_speed, 2.0))
+		assert(is_equal_approx(exit_enemy.patrol_left_distance, 3.84))
+		assert(is_equal_approx(exit_enemy.patrol_right_distance, 3.84))
+	assert(exit_approach_enemy.starts_moving_right)
+	assert(not exit_landing_enemy.starts_moving_right)
+	var approach_bounds := exit_approach_enemy.authored_patrol_bounds_x()
+	var landing_bounds := exit_landing_enemy.authored_patrol_bounds_x()
+	assert(approach_bounds.is_equal_approx(Vector2(135.68, 143.36)))
+	assert(landing_bounds.is_equal_approx(Vector2(160.64, 168.32)))
+	var exit_enemy_body := (
+		exit_approach_enemy.get_node("BodyCollision") as CollisionShape3D
+	).shape as BoxShape3D
+	var player_shape := (
+		level.player.get_node("CollisionShape3D") as CollisionShape3D
+	).shape as BoxShape3D
+	assert(exit_enemy_body != null and player_shape != null)
+	var enemy_half_width := exit_enemy_body.size.x * 0.5
+	var player_half_width := player_shape.size.x * 0.5
+	assert(
+		EXIT_SPIKE_LEFT_EDGE - (approach_bounds.y + enemy_half_width)
+		>= 2.2 - EPSILON,
+		"The first patrol must leave enough floor to accelerate into the Dash."
+	)
+	assert(
+		(landing_bounds.x - enemy_half_width)
+		- (EXIT_SPIKE_LEFT_EDGE + EXIT_SPIKE_WIDTH) >= 1.08 - EPSILON,
+		"The surprise patrol must never body-block the player over the spikes."
+	)
+	var checkpoint_shape := (
+		exit_checkpoint.get_node("Trigger") as CollisionShape3D
+	).shape as BoxShape3D
+	assert(checkpoint_shape != null)
+	assert(
+		approach_bounds.x
+		- (
+			exit_checkpoint.position.x
+			+ checkpoint_shape.size.x * 0.5
+			+ player_half_width
+		)
+		> exit_approach_enemy.attack_trigger_distance,
+		"Every player position overlapping the retry checkpoint must be safe."
+	)
+
+	var lift := level.get_node("Props/CaveLiftExit") as Node3D
+	assert(lift != null)
+	assert(lift.position.is_equal_approx(EXIT_LIFT_ORIGIN))
+	assert(lift.has_method("validation_errors"))
+	assert((lift.call("validation_errors") as PackedStringArray).is_empty())
+	assert(level.get_node_or_null("Props/ServiceDoorExit") == null)
+	assert(lift.get_node_or_null("CaveMask") == null)
+	assert(is_zero_approx(float(lift.get("boarding_delay"))))
+	assert(is_equal_approx(float(lift.get("exit_trigger_progress")), 0.62))
+	assert(is_equal_approx(float(lift.get("exit_still_duration")), 1.0))
+	assert(lift.get("exit_goal_path") == NodePath("../../Goal"))
+	assert(is_equal_approx(level.completion_fade_duration, COMPLETION_FADE_DURATION))
+	var shaft_backdrop := lift.get_node("ShaftBackdrop") as MeshInstance3D
+	var shaft_mesh := shaft_backdrop.mesh as QuadMesh
+	assert(shaft_mesh != null)
+	assert(shaft_mesh.size.is_equal_approx(Vector2(3.84, 17.92)))
+	assert(is_equal_approx(
+		lift.global_position.x + shaft_mesh.size.x * 0.5,
+		FLAT_CONTINUATION_RIGHT_EDGE
+	))
+	var carriage := lift.get_node("Carriage") as AnimatableBody3D
+	var carriage_shape := (
+		carriage.get_node("Collision") as CollisionShape3D
+	).shape as BoxShape3D
+	var boarding_area := carriage.get_node("BoardingArea") as Area3D
+	var boarding_shape := (
+		boarding_area.get_node("Collision") as CollisionShape3D
+	).shape as BoxShape3D
+	assert(carriage_shape.size.is_equal_approx(Vector3(2.32, 0.18, 1.2)))
+	assert(boarding_shape.size.is_equal_approx(Vector3(2.16, 1.5, 1.1)))
+	var production_texture_paths := PackedStringArray([
+		"res://assets/art/interiors/rock_underworks/props/cave_lift/tower_top.png",
+		"res://assets/art/interiors/rock_underworks/props/cave_lift/tower_middle.png",
+		"res://assets/art/interiors/rock_underworks/props/cave_lift/tower_base.png",
+		"res://assets/art/interiors/rock_underworks/props/cave_lift/hoist.png",
+		"res://assets/art/interiors/rock_underworks/props/cave_lift/platform.png",
+		"res://assets/art/interiors/rock_underworks/props/cave_lift/guard_left.png",
+		"res://assets/art/interiors/rock_underworks/props/cave_lift/guard_right.png",
+	])
+	for texture_path in production_texture_paths:
+		assert(ResourceLoader.exists(texture_path))
+	for sprite in lift.find_children("*", "Sprite3D", true, false):
+		var lift_sprite := sprite as Sprite3D
+		assert(lift_sprite.texture != null)
+		assert(
+			lift_sprite.texture.resource_path.begins_with(
+				"res://assets/art/interiors/rock_underworks/props/cave_lift/"
+			),
+			"Production lift sprite still depends on the source-art catalog."
+		)
+
+	var goal := level.get_node("Goal") as LevelGoal3D
+	assert(goal != null and not goal is PixelGoal3D)
+	assert(goal.position.is_equal_approx(EXIT_LIFT_ORIGIN))
+	assert(not goal.trigger_on_body_entry)
+	var goal_shape := (
+		goal.get_node("Collision") as CollisionShape3D
+	).shape as BoxShape3D
+	assert(goal_shape != null and player_shape != null)
+	var first_boarding_overlap_x := (
+		lift.global_position.x
+		- boarding_shape.size.x * 0.5
+		- player_half_width
+	)
+	assert(
+		first_boarding_overlap_x - (landing_bounds.y + enemy_half_width)
+		>= 2.0 - EPSILON,
+		"The landing patrol must leave a clean final approach to the lift."
+	)
+	assert(level.get_node_or_null("FinaleCameraRegion") == null)
+	var lift_camera_region := level.get_node(
+		"LiftExitCameraRegion"
+	) as VerticalCameraRegion3D
+	assert(lift_camera_region != null)
+	assert(lift_camera_region.validation_errors().is_empty())
+	assert(lift_camera_region.position.is_equal_approx(Vector3(172.16, 35.2, 0.0)))
+	assert(lift_camera_region.size.is_equal_approx(Vector2(3.84, 17.92)))
+	assert(is_equal_approx(lift_camera_region.minimum_vertical_offset, 28.0))
+	assert(is_equal_approx(lift_camera_region.maximum_vertical_offset, 28.0))
+	assert(lift_camera_region.priority == 30)
+	assert(lift_camera_region.contains_world_position(
+		EXIT_LIFT_ORIGIN + Vector3(-0.56, 0.7, 0.0)
+	))
+	assert(lift_camera_region.contains_world_position(
+		EXIT_LIFT_ORIGIN + Vector3(-0.56, 13.5, 0.0)
+	))
+
 	var camera_region := level.get_node(
 		"ShaftCameraRegion"
 	) as VerticalCameraRegion3D
 	assert(camera_region != null)
 	assert(camera_region.validation_errors().is_empty())
+	assert(camera_region.position.is_equal_approx(Vector3(107.52, 0.0, 0.0)))
+	assert(camera_region.size.is_equal_approx(Vector2(133.12, 72.0)))
 	assert(camera_region.contains_world_position(Vector3(58.88, 18.0, 0)))
 	assert(camera_region.contains_world_position(Vector3(80.0, 28.86, 0)))
 	assert(camera_region.contains_world_position(Vector3(120.96, 28.86, 0)))
+	assert(camera_region.contains_world_position(Vector3(169.0, 28.86, 0)))
+	assert(camera_region.contains_world_position(EXIT_LIFT_ORIGIN + Vector3.UP * 0.7))
 	assert(
 		is_equal_approx(camera_region.maximum_vertical_offset, 28.0),
 		(
@@ -530,6 +805,10 @@ func _run() -> void:
 
 	# Contact probes make sure the authored art and collision agree at each beat.
 	assert(_blocked(level.player, Vector3(4.48, 0.7, 0), Vector3.DOWN))
+	assert(
+		_blocked(level.player, Vector3(1.64, 0.7, 0), Vector3.LEFT),
+		"Hiding the opening pillar must not remove its left-boundary collision."
+	)
 	assert(_blocked(level.player, Vector3(37.12, 3.26, 0), Vector3.DOWN))
 	assert(_blocked(level.player, Vector3(47.36, 5.18, 0), Vector3.DOWN))
 	assert(_blocked(level.player, Vector3(57.6, 7.1, 0), Vector3.DOWN))
@@ -540,6 +819,10 @@ func _run() -> void:
 	assert(_blocked(level.player, Vector3(105.0, 28.86, 0), Vector3.DOWN))
 	assert(_blocked(level.player, Vector3(110.0, 28.86, 0), Vector3.DOWN))
 	assert(_blocked(level.player, Vector3(132.0, 28.86, 0), Vector3.DOWN))
+	assert(_blocked(level.player, Vector3(148.0, 28.86, 0), Vector3.DOWN))
+	assert(_blocked(level.player, Vector3(160.0, 28.86, 0), Vector3.DOWN))
+	assert(_blocked(level.player, Vector3(169.0, 28.86, 0), Vector3.DOWN))
+	assert(_blocked(level.player, Vector3(173.0, 28.86, 0), Vector3.RIGHT * 2.0))
 	assert(
 		not _blocked(level.player, Vector3(94.08, 28.86, 0), Vector3.DOWN),
 		"The machine's shaft must be a real hole, not a floor with art removed."
@@ -555,9 +838,69 @@ func _run() -> void:
 	)
 	await _validate_vertical_background_behavior(level, background, camera_region)
 
+	# The broad area only notices a possible rider. Even fully on the left half,
+	# the player remains in control until standing still for one authored second;
+	# then the carriage owns their chosen offset while the slower fade begins.
+	for exit_enemy in [exit_approach_enemy, exit_landing_enemy]:
+		exit_enemy.set_physics_process(false)
+	var completion_state := {"reached": false}
+	level.run_completed.connect(func() -> void: completion_state.reached = true)
+	level.player.reset_at(Transform3D(
+		Basis.IDENTITY,
+		EXIT_LIFT_ORIGIN + Vector3(-0.56, 0.7, 0.0)
+	))
+	level.camera.snap_to_target()
+	for frame in 2:
+		await physics_frame
+	for frame in 30:
+		await physics_frame
+	assert(not completion_state.reached)
+	assert(level.player.is_physics_processing())
+	assert(is_zero_approx(carriage.position.y))
+	var locked_camera_position: Vector3 = level.camera.global_position
+	var rider_start_y: float = level.player.global_position.y
+	var carriage_start_y: float = carriage.global_position.y
+	for frame in 180:
+		await physics_frame
+	await process_frame
+	assert(completion_state.reached)
+	assert(not level.player.is_physics_processing())
+	assert(level.player.visible)
+	assert(level.player.pixel_visual.current_state() == "idle")
+	assert(carriage.position.y > 0.0)
+	assert(level.player.global_position.y > rider_start_y)
+	assert(is_equal_approx(
+		level.player.global_position.y - rider_start_y,
+		carriage.global_position.y - carriage_start_y
+	), "rider rise %.4f, carriage rise %.4f" % [
+		level.player.global_position.y - rider_start_y,
+		carriage.global_position.y - carriage_start_y,
+	])
+	assert(level.camera.global_position.is_equal_approx(locked_camera_position))
+	var fade_end_progress := (
+		float(lift.get("exit_trigger_progress"))
+		+ COMPLETION_FADE_DURATION / float(lift.get("travel_duration"))
+	)
+	var rise_before_black := float(lift.call(
+		"preview_height_for_progress",
+		fade_end_progress
+	))
+	var player_top_at_black := (
+		EXIT_LIFT_ORIGIN.y
+		+ 0.7
+		+ player_shape.size.y * 0.5
+		+ rise_before_black
+	)
+	assert(
+		player_top_at_black < EXIT_CEILING_BOTTOM_Y,
+		"The completion fade must be opaque before the lift reaches the solid ceiling."
+	)
+
 	print(
-		"Level 2 interior opening passed: recap, shaft, turnback, %.2f m Dash crossing."
-		% dash_spike_width
+		(
+			"Level 2 interior passed: recap, shaft, turnback, two %.2f m "
+			+ "Dash crossings, enemy exit gauntlet, cave-lift departure."
+		) % dash_spike_width
 	)
 	_completed = true
 	quit(0)
@@ -573,9 +916,9 @@ func _validate_upper_cave_ceiling(level: LevelSession3D) -> void:
 	assert(ceiling.validation_errors().is_empty())
 	assert(ceiling.zone_tag == &"upper")
 	assert(is_equal_approx(ceiling.vertical_offset, 0.02))
-	assert(ceiling.horizontal_panel_count == 5)
+	assert(ceiling.horizontal_panel_count == 7)
 	assert(is_equal_approx(ceiling.horizontal_panel_step, 23.04))
-	assert(is_equal_approx(ceiling.global_position.x, 92.16))
+	assert(is_equal_approx(ceiling.global_position.x, 93.44))
 	assert(ceiling.get_node_or_null("LakeAndRocks") == null)
 	assert(ceiling.get_node_or_null("DeepWaterFill") == null)
 	var expected_layers := {
@@ -615,16 +958,16 @@ func _validate_upper_cave_ceiling(level: LevelSession3D) -> void:
 			continue
 		ceiling_sprites.append(sprite)
 		var slot := roundi(sprite.position.x / ceiling.horizontal_panel_step)
-		assert(slot >= -2 and slot <= 2)
+		assert(slot >= -3 and slot <= 3)
 		assert(is_equal_approx(
 			sprite.position.x,
 			slot * ceiling.horizontal_panel_step
 		))
 		assert(sprite.flip_h == (abs(slot) % 2 == 1))
 		panel_counts[slot] = int(panel_counts.get(slot, 0)) + 1
-	assert(ceiling_sprites.size() == 10)
-	assert(panel_counts.size() == 5)
-	for slot in range(-2, 3):
+	assert(ceiling_sprites.size() == 14)
+	assert(panel_counts.size() == 7)
+	for slot in range(-3, 4):
 		assert(panel_counts.get(slot, 0) == 2)
 
 

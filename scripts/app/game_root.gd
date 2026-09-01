@@ -14,6 +14,8 @@ extends Node
 var current_level: LevelSession3D
 var current_level_definition: LevelDefinition
 var current_world_definition: WorldDefinition
+var _active_interstitial: LevelInterstitial3D
+var _transition_serial := 0
 var _level_buttons: Array[Button] = []
 var _gameplay_tools_visible := false
 var _developer_ability_panel_available := false
@@ -43,6 +45,7 @@ var _developer_collision_overlay_enabled := false
 var _completion_fade_tween: Tween
 
 const TRANSITION_FADE_DURATION := 0.45
+const INTERSTITIAL_EXIT_FADE_DURATION := 0.22
 
 
 func _ready() -> void:
@@ -176,6 +179,7 @@ func _start_session(
 	initial_session_abilities: Array[StringName] = []
 ) -> void:
 	_free_current_level()
+	_free_active_interstitial()
 	current_level = definition.scene.instantiate() as LevelSession3D
 	assert(
 		current_level != null,
@@ -224,7 +228,9 @@ func _start_session(
 
 
 func show_level_select() -> void:
+	_transition_serial += 1
 	_free_current_level()
+	_free_active_interstitial()
 	current_level_definition = null
 	current_world_definition = null
 	_gameplay_tools_visible = false
@@ -555,6 +561,18 @@ func _free_current_level() -> void:
 	developer_collision_legend.visible = false
 
 
+func _free_active_interstitial() -> void:
+	if _active_interstitial == null:
+		return
+	world.remove_child(_active_interstitial)
+	_active_interstitial.free()
+	_active_interstitial = null
+
+
+func active_interstitial() -> LevelInterstitial3D:
+	return _active_interstitial
+
+
 func _on_run_completed() -> void:
 	completion_label.visible = true
 	_reset_completion_fade()
@@ -562,11 +580,14 @@ func _on_run_completed() -> void:
 	_completion_fade_tween = create_tween()
 	_completion_fade_tween.set_trans(Tween.TRANS_SINE)
 	_completion_fade_tween.set_ease(Tween.EASE_IN_OUT)
+	var fade_duration := 0.55
+	if current_level != null:
+		fade_duration = current_level.completion_fade_duration
 	_completion_fade_tween.tween_property(
 		completion_fade,
 		"modulate:a",
 		1.0,
-		0.55
+		fade_duration
 	)
 	var store := _progression_store()
 	if (
@@ -589,11 +610,46 @@ func _on_transition_requested(
 	target: LevelDefinition,
 	run_direction: float,
 	run_speed: float,
-	run_duration: float
+	run_duration: float,
+	interstitial_scene: PackedScene
 ) -> void:
 	if target == null:
 		return
+	_transition_serial += 1
+	var transition_serial := _transition_serial
 	await _fade_to_black(TRANSITION_FADE_DURATION)
+	if transition_serial != _transition_serial:
+		return
+	if interstitial_scene != null:
+		_free_current_level()
+		var interstitial := (
+			interstitial_scene.instantiate() as LevelInterstitial3D
+		)
+		assert(
+			interstitial != null,
+			"Transition interstitial must instantiate a LevelInterstitial3D."
+		)
+		var interstitial_finished := [false]
+		interstitial.finished.connect(
+			func(_skipped: bool) -> void:
+				interstitial_finished[0] = true
+		)
+		_active_interstitial = interstitial
+		world.add_child(interstitial)
+		await _fade_from_black(TRANSITION_FADE_DURATION)
+		if transition_serial != _transition_serial:
+			return
+		while not interstitial_finished[0]:
+			if (
+				transition_serial != _transition_serial
+				or _active_interstitial != interstitial
+			):
+				return
+			await get_tree().process_frame
+		await _fade_to_black(INTERSTITIAL_EXIT_FADE_DURATION)
+		if transition_serial != _transition_serial:
+			return
+		_free_active_interstitial()
 	if target in _known_developer_definitions():
 		load_developer_level(target)
 	else:

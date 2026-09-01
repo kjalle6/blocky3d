@@ -65,9 +65,47 @@ func _run() -> void:
 	assert(room.player.has_ability(PlayerAbility.DOUBLE_JUMP))
 	assert(room.player.has_ability(PlayerAbility.WALL_JUMP))
 	assert(room.player.has_ability(PlayerAbility.DASH))
-	assert(not room.get_node("Background").visible)
+	assert(room.background.visible)
+	assert(
+		room.background.profile.profile_id
+		== &"rock_underworks_cave_world_locked"
+	)
 	assert(room.camera.vertical_follow_enabled)
 	assert(is_equal_approx(room.camera.maximum_vertical_offset, 12.8))
+
+	var lift := room.get_node("Props/CaveConstructionLift")
+	assert(lift != null)
+	assert(lift.has_method("validation_errors"))
+	assert((lift.call("validation_errors") as PackedStringArray).is_empty())
+	assert(
+		lift.get_node("Scaffold").find_children(
+			"Middle*", "Sprite3D", false, false
+		).size()
+		== 11
+	)
+	var carriage := lift.get_node("Carriage") as AnimatableBody3D
+	assert(carriage != null)
+	assert(carriage.get_node("Collision") is CollisionShape3D)
+	lift.call("preview_travel_progress", 0.5)
+	await physics_frame
+	assert(is_equal_approx(carriage.position.y, 6.4))
+	assert(is_equal_approx(float(lift.call("travel_progress")), 0.5))
+	var cable_mesh := (
+		(lift.get_node("Cables/LeftCable") as MeshInstance3D).mesh
+		as QuadMesh
+	)
+	assert(is_equal_approx(cable_mesh.size.y, 9.82))
+	lift.call("reset_run")
+	await physics_frame
+	assert(is_zero_approx(carriage.position.y))
+	lift.set("boarding_delay", 0.0)
+	lift.set("travel_duration", 0.08)
+	lift.set("return_delay", 10.0)
+	lift.call("begin_travel")
+	for frame in 10:
+		await physics_frame
+	assert(carriage.position.y > 12.7)
+	assert(not bool(lift.call("is_moving")))
 
 	# Test actual body motion against each important contact direction. These
 	# probes catch a room that looks enclosed but is missing a physical surface.

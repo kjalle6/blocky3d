@@ -35,8 +35,9 @@ func _run() -> void:
 
 	var player := level.player
 	var recap_enemy := level.get_node("RecapEnemy") as StompableEnemy3D
-	if recap_enemy == null:
-		_fail("Level 2 recap enemy is missing.")
+	var ascent_enemy := level.get_node("AscentPlatform02Patrol") as StompableEnemy3D
+	if recap_enemy == null or ascent_enemy == null:
+		_fail("A required Level 2 opening enemy is missing.")
 		return
 	for frame in 90:
 		if not player.is_transition_running():
@@ -47,6 +48,7 @@ func _run() -> void:
 	var jump_is_held := false
 	var attack_pressed := false
 	var recap_enemy_attacked := false
+	var ascent_enemy_attacked := false
 	var dash_pressed := false
 	var second_jump_requested := false
 	var dash_crossing_requested := false
@@ -155,6 +157,14 @@ func _run() -> void:
 
 			4:
 				_set_horizontal_input(1.0)
+				if (
+					not ascent_enemy_attacked
+					and absf(ascent_enemy.global_position.x - player.global_position.x) <= 1.2
+					and absf(ascent_enemy.global_position.y - player.global_position.y) <= 1.2
+				):
+					Input.action_press("attack")
+					attack_pressed = true
+					ascent_enemy_attacked = true
 				var landed_on_p2 := (
 					player.is_on_floor()
 					and player.global_position.x >= 41.9

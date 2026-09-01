@@ -1,0 +1,135 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/cutscene/level_2_cave_slide_intro_3d.gd" id="1_cutscene"]
+[ext_resource type="Script" path="res://scripts/camera/pixel_side_camera_3d.gd" id="2_camera"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_background_rig_3d.gd" id="3_background"]
+[ext_resource type="Resource" path="res://resources/presentation/backgrounds/rock_underworks_cave.tres" id="4_profile"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_region_grade_3d.gd" id="5_grade"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_player_visual_3d.gd" id="6_player_visual"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/terrain/top.png" id="7_top"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/effects/slide_dust.png" id="8_slide_dust"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/terrain/fill.png" id="9_fill"]
+
+[sub_resource type="Environment" id="Environment_cave_slide"]
+background_mode = 1
+background_color = Color(0.19, 0.185, 0.21, 1)
+ambient_light_source = 3
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.0
+
+[node name="Level2CaveSlideIntro" type="Node3D" groups=["generated_cutscene_presentation"]]
+script = ExtResource("1_cutscene")
+path_marker_paths = Array[NodePath]([NodePath("ChuteFloor/SlideEntry"), NodePath("ChuteFloor/SlideContact"), NodePath("ChuteFloor/SlideUpper"), NodePath("ChuteFloor/SlideMiddle"), NodePath("ChuteFloor/SlideLower"), NodePath("ChuteFloor/SlideExit")])
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+unique_name_in_owner = true
+environment = SubResource("Environment_cave_slide")
+
+[node name="Background" type="Node3D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("3_background")
+profile = ExtResource("4_profile")
+
+[node name="CaveRegionGrade" type="Node3D" parent="."]
+script = ExtResource("5_grade")
+world_environment_path = NodePath("../WorldEnvironment")
+background_path = NodePath("../Background")
+zone_tag = &"upper"
+dark_brightness = 0.74
+dark_saturation = 0.88
+dark_contrast = 1.04
+
+[node name="ChuteFloor" type="Node3D" parent="."]
+position = Vector3(14, 5.3, 0)
+rotation = Vector3(0, 0, -0.488692)
+
+[node name="Fill" type="Sprite3D" parent="ChuteFloor"]
+position = Vector3(0.64, -3.84, 0)
+scale = Vector3(39, 5, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("9_fill")
+shaded = false
+cast_shadow = 0
+render_priority = -20
+
+[node name="ChuteFloorRock" type="Sprite3D" parent="ChuteFloor"]
+unique_name_in_owner = true
+position = Vector3(0.64, -0.64, 0.04)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("7_top")
+shaded = false
+cast_shadow = 0
+render_priority = -19
+
+[node name="SlideEntry" type="Marker3D" parent="ChuteFloor"]
+position = Vector3(-10.5, 0.7, 0)
+
+[node name="SlideContact" type="Marker3D" parent="ChuteFloor"]
+position = Vector3(-8.5, 0.7, 0)
+
+[node name="SlideUpper" type="Marker3D" parent="ChuteFloor"]
+position = Vector3(-0.5, 0.7, 0)
+
+[node name="SlideMiddle" type="Marker3D" parent="ChuteFloor"]
+position = Vector3(7.5, 0.7, 0)
+
+[node name="SlideLower" type="Marker3D" parent="ChuteFloor"]
+position = Vector3(15.5, 0.7, 0)
+
+[node name="SlideExit" type="Marker3D" parent="ChuteFloor"]
+position = Vector3(23.5, 0.7, 0)
+
+[node name="Puppet" type="Node3D" parent="." groups=["cutscene_actor"]]
+unique_name_in_owner = true
+
+[node name="SlidePosePivot" type="Node3D" parent="Puppet"]
+unique_name_in_owner = true
+
+[node name="PixelVisual" type="Node3D" parent="Puppet/SlidePosePivot"]
+unique_name_in_owner = true
+position = Vector3(0, 0.5, 1.2)
+script = ExtResource("6_player_visual")
+
+[node name="Body" type="Sprite3D" parent="Puppet/SlidePosePivot/PixelVisual"]
+unique_name_in_owner = true
+pixel_size = 0.04375
+render_priority = 10
+
+[node name="Weapon" type="Sprite3D" parent="Puppet/SlidePosePivot/PixelVisual"]
+unique_name_in_owner = true
+position = Vector3(0, 0, 0.01)
+pixel_size = 0.04375
+render_priority = 11
+
+[node name="SlideDustTrail" type="Node3D" parent="."]
+unique_name_in_owner = true
+
+[node name="SlideDustPuff" type="Sprite3D" parent="SlideDustTrail"]
+unique_name_in_owner = true
+visible = false
+rotation = Vector3(0, 0, -0.488692)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("8_slide_dust")
+hframes = 4
+shaded = false
+cast_shadow = 0
+render_priority = 9
+
+[node name="CameraTarget" type="Marker3D" parent="."]
+unique_name_in_owner = true
+
+[node name="CutsceneCamera" type="Camera3D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_camera")
+current = true
+look_ahead = 1.2
+minimum_center_x = 6.47
+maximum_center_x = 36.3
+vertical_follow_enabled = true
+vertical_anchor_y = 0.7
+minimum_vertical_offset = 0.0
+maximum_vertical_offset = 10.4
+vertical_follow_response = 10.0

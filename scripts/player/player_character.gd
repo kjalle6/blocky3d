@@ -220,6 +220,8 @@ func stop_for_completion() -> void:
 	_dash_remaining = 0.0
 	velocity = Vector3.ZERO
 	horizontal_speed = 0.0
+	if pixel_visual != null:
+		pixel_visual.set_state("idle", true)
 	set_physics_process(false)
 
 

@@ -1,0 +1,28 @@
+Cave construction lift
+
+Promoted unchanged from the visible source-art catalog:
+- assets/library/tilesets/piratebay_zone/3 Objects/2 Tower/7.png
+  -> tower_top.png
+- assets/library/tilesets/piratebay_zone/3 Objects/2 Tower/8.png
+  -> tower_middle.png
+- assets/library/tilesets/piratebay_zone/3 Objects/2 Tower/9.png
+  -> tower_base.png
+- assets/library/environment/structures/doors_and_portals/4 Other/Rope_base1.png
+  -> hoist.png
+- assets/library/tilesets/industrial_zone/4 Animated objects/Platform.png
+  -> platform.png
+- assets/library/tilesets/industrial_zone/3 Objects/Fence1.png
+  -> guard_left.png
+- assets/library/tilesets/industrial_zone/3 Objects/Fence3.png
+  -> guard_right.png
+
+Source SHA-256:
+- tower_top.png: 4D8FC56BDAD005FCE993DDFD580E6E529381AB1C39B307AB985B5798F29B5A83
+- tower_middle.png: 54E6B2A3DF4E81E1D3DDE8FF71C52CBCC380C1C13997F4F1687FD636C5588F53
+- tower_base.png: 57C98C92E6DC69B60B8B78533DC98EAF9E33DBF52E985E1F863DB1ECC900D6AB
+- hoist.png: 8291B194EA4A17F256F36CC8FF90600C9ED4923239021ADE146FC908814D3CC2
+- platform.png: AA22C3A00A2AC63DE9B672DBC42543536EA1A1EE478ACBE7CF14E8FBAC073A38
+- guard_left.png: 1D6CBA23C313B7AB6F98044CD36E01691C26CDB798FBD73298FB32453AACCB8A
+- guard_right.png: DF72079B7900EBFF5C0163220141C98F6A2B045D5C331E33D21DBD394998B791
+
+Supplied license reference: https://craftpix.net/file-licenses/

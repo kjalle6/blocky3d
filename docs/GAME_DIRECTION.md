@@ -171,11 +171,12 @@ three re-authored levels:
 1. **Arrival / Shoreline** establishes running, jumping, gaps, spikes, enemies,
    stomping, knife combat, and fast restart, then introduces Double Jump.
 2. **Overgrown Coastal Ascent** begins with a brief Green Zone approach and then
-   enters an enclosed cavern, mine, tunnel, or collapsed underworks. Its
-   interior introduces Wall Jump and Dash through increasingly connected
-   movement. The isolated terrain-and-collision proof is complete, and the
-   editable interior now carries the authored cave treatment; promoting that
-   work into the frozen transition snapshot remains an explicit review boundary.
+   enters an enclosed cavern, mine, tunnel, or collapsed underworks through a
+   short slide-and-run-in cutscene. Its connected interior introduces Wall Jump
+   and Dash, escalates through two hovering-machine chambers and a final
+   enemy-and-spike gauntlet, then departs on a cave construction lift. The full
+   level and its authored cave treatment are complete and hands-on accepted;
+   only production catalog promotion and the Level 1 handoff remain.
 3. **Green Zone Finale** tests the complete movement kit, introduces moving
    saws and a small escalation of the enemy roster, then teaches a limited gun
    before a simple first boss.

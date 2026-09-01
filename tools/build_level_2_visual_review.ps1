@@ -38,7 +38,11 @@ $beats = @(
     '12_chamber_end',
     '13_dual_machine_run_up',
     '14_dual_machine_window',
-    '15_dual_chamber_landing'
+    '15_dual_chamber_landing',
+    '16_exit_gauntlet_run_up',
+    '17_exit_gauntlet_crossing',
+    '18_cave_lift_exit',
+    '19_cave_lift_departure'
 )
 $reviewPaths = @()
 foreach ($beat in $beats) {
@@ -57,8 +61,11 @@ foreach ($path in $reviewPaths) {
     -Columns 2 `
     -CellWidth 960 `
     -InputPaths $reviewPaths
-if ($LASTEXITCODE -ne 0) {
+if ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0) {
     throw "Level 2 review-sheet build failed with exit code $LASTEXITCODE."
+}
+if (-not (Test-Path -LiteralPath $outputPath -PathType Leaf)) {
+    throw "Level 2 review-sheet builder did not create: $outputPath"
 }
 
 Write-Output "Level 2 visual review sheet: $outputPath"

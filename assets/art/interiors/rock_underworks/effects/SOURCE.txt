@@ -1,0 +1,6 @@
+Pixel Effects pack
+
+Promoted unchanged from the visible source-art catalog:
+- assets/library/vfx/effects/1 Smoke/12.png -> slide_dust.png
+
+Supplied license reference: https://craftpix.net/file-licenses/

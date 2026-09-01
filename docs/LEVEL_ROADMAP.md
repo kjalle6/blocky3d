@@ -12,8 +12,10 @@ reference. Godot is canonical.
 
 ## Current implementation
 
-Arrival / Shoreline is the only production campaign entry, and Level 2's
-interior is in progress through the developer entries.
+Arrival / Shoreline is the only production campaign entry. Overgrown Coastal
+Ascent is complete and hands-on accepted through the developer entries; its
+next step is a structural promotion into World 1 and a continuous handoff from
+Level 1, not more level design.
 
 The six Green Zone prototype levels that preceded this are deleted. They were
 regression evidence for the movement kit, and that job is finished: every
@@ -40,7 +42,7 @@ larger cyberpunk setting.
 | Target level | Core arc | New capability | Status |
 | --- | --- | --- | --- |
 | 1: Arrival / Shoreline | Classic fundamentals grow into an aerial route | Double Jump | Complete and accepted; production baseline locked at commit `59a034b` |
-| 2: Overgrown Coastal Ascent | A brief Green Zone approach gives way to an enclosed cavern / underworks route | Wall Jump and Dash | In progress; opening route, two machine chambers, and editable upper-cave presentation built and reviewed |
+| 2: Overgrown Coastal Ascent | A brief Green Zone approach gives way to an enclosed cavern / underworks route | Wall Jump and Dash | Complete and accepted in development form; pending campaign promotion |
 | 3: Green Zone Finale | Full-kit mastery, saws, enemy escalation, gun lesson, and boss | Limited firearm | Planned concept |
 
 These are working titles. A level should be long enough to develop several
@@ -155,8 +157,9 @@ continuous space. Running into the cave mouth triggers a `LevelTransition3D`,
 the screen fades to black, the interior scene loads behind it, and the fade
 lifts. This is a decision rather than a convenience:
 
-- the outdoor approach is deliberately unfailable, so Level 2's real run and all
-  of its respawns begin at the cave mouth;
+- the outdoor approach is a short, low-stakes combat bridge whose two patrols
+  roam from the opening tree line to the cave mouth; the cave remains the
+  substantial route and escalation;
 - the player arrives straight out of Level 1 still running, so the approach is a
   bridge rather than an opening beat;
 - the black screen doubles as a time skip, which is what licenses the approach
@@ -168,27 +171,25 @@ lifts. This is a decision rather than a convenience:
 
 Matched thresholds author each half of that black screen separately. At the
 cave, the source player disappears into the mouth rather than running past its
-art, while the interior player is already running right when black lifts. Input
-returns when the entrance fade finishes. Other boundaries may run through both
-halves when their composition supports it; a direct menu or developer load
+art. The black then reveals a short downhill slide, lands inside the cave, and
+hands the player into the established rightward run with visible momentum.
+Input returns when the entrance fade finishes. A direct menu or developer load
 stays stationary. Continuous run-out/run-in remains the approved rule for the
-eventual Level 1-to-Level 2 cut, but that production connection stays unwired
-while Level 2 is a WIP.
+Level 1-to-Level 2 cut; wiring that connection is the promotion step that
+follows this completed-level checkpoint.
 
-`scenes/dev/level_2_wip.tscn` owns this handoff and its dressing. The
+`scenes/dev/level_2_wip.tscn` currently owns this handoff and its dressing. The
 approach uses the `green_zone_dusk` background; the interior owns its separate
 cave environment. `docs/LEVEL_2_VISUAL_BRIEF.md` is the source of truth for its
 accepted background zoning, regional grade, ceiling, and camera composition.
 
-The two development entries remain deliberately isolated. `Level 2 WIP` enters
-the frozen
-`overgrown_coastal_ascent_interior_snapshot.tscn`, preserving the accepted
-route below. `Level 2 Interior WIP` opens the editable
-`overgrown_coastal_ascent_interior.tscn`. Hands-on review accepts that editable
-scene's current cave presentation, while the frozen snapshot remains unchanged
-until an explicit promotion decision.
+The approach now enters the live
+`overgrown_coastal_ascent_interior.tscn`; the directly loadable Interior WIP
+remains only a review shortcut. The earlier frozen snapshot is no longer the
+handoff target. Hands-on review accepts the whole connected route, so promotion
+must preserve this build rather than re-stage it.
 
-The intended teaching arc remains:
+The completed teaching arc is:
 
 1. one familiar opening jump confirms ordinary control;
 2. the player enters the enclosed route before the main lesson begins;
@@ -197,11 +198,14 @@ The intended teaching arc remains:
    rhythm;
 5. increasingly offset shafts combine Wall Jump with saved Double Jump;
 6. Dash is introduced and immediately opens a crossing ordinary jumps cannot;
-7. the final sections combine enclosed walls, purposeful Dash runways, vertical
-   transfers, and flow encounters.
+7. the upper route escalates through one slow hovering-machine chamber and a
+   paired opposite-phase chamber;
+8. a final run places enemies on both sides of a Dash-required spike strip; and
+9. the player chooses a position on the cave lift, stands still for one second,
+   then rides upward until the level fades out.
 
-The first authored interior slice now implements steps 1-6 as one connected
-route. A low enclosed tunnel recaps an enemy and visible spikes, then three
+The interior implements the movement lessons as one connected route. A low
+enclosed tunnel recaps an enemy and visible spikes, then three
 separate unsupported platforms rise toward the shaft and require the owned
 Double Jump. The player collects Wall Jump at the shaft floor, climbs between
 two continuous walls, and meets a spiked right-hand cap that redirects them
@@ -210,8 +214,6 @@ the original left edge remains fixed and all four additions extend right. It is
 beyond the 11.79 m Double Jump envelope but comfortably inside the Double Jump
 plus Dash envelope, so the newly collected ability is required. Its following
 checkpoint is shifted clear of the widened hazard.
-This is still a WIP route slice with no completion trigger; human playtesting
-owns its difficulty and pacing before the route is extended.
 
 The machine shaft is now built at the end of that route. The corridor breaks for
 14.08 m, open floor to sky, with one hovering machine bobbing slowly in the gap;
@@ -222,15 +224,23 @@ closes both routes at once, which the structural validator asserts. Hands-on
 review accepts this first deliberately isolated, slow encounter. Later chambers
 may vary speed, phase, and count, one at a time.
 
-The immediate follow-up now repeats that exact 14.08 m chamber after another
+The immediate follow-up repeats that exact 14.08 m chamber after another
 12.8 m readable run-up. The gap is divided into equal horizontal thirds: one
 machine occupies each outer third with a small symmetric bias toward the empty
 middle, giving both ledges extra clearance. They begin half a bob cycle apart,
 so the left starts upward while the right starts downward. A checkpoint at the
-start of the runway preserves the
-encounter boundary. Technical traversal is guarded; human review owns whether
-the paired timing is readable and fun before anything is authored beyond its
-landing.
+start of the runway preserves the encounter boundary. Hands-on review accepts
+the timing and readability of both machine chambers.
+
+After their landing, a short readable run-up leads to the exit gauntlet. Two
+ground enemies bracket a spike strip whose width requires Dash, so the player
+must read enemy timing as part of the crossing rather than treating the finish
+as an empty victory corridor. The route ends at a cave construction lift. Mere
+proximity never steals control: the player must be fully supported by the deck
+and stand still for one continuous second before departure. The camera remains
+fixed while the lift rises, the ascent is visible, and the one-second completion
+fade reaches black before the physical ceiling. This lift departure is the
+accepted end of Level 2.
 
 The asset audit and enclosed-terrain lab established the production direction:
 a natural cavern or mine that can gradually reveal restrained buried
@@ -313,21 +323,24 @@ visually incoherent. The opt-in vertical camera region and the corridor/fold
 route language were both proven in isolation and then deliberately withheld from
 Level 1, leaving them for Level 2 to own.
 
-### Current production boundary: accepted Level 2 presentation
+### Completed Level 2 presentation
 
-The editable Interior WIP now owns the reviewed presentation through the
-paired-machine landing:
+The completed development build owns the reviewed presentation from the dusk
+approach through the lift departure:
 
 - a five-layer smoky lower cave that blends broadly into the pale upper cave;
 - a regional grade synchronized with that spatial handoff;
 - localized water vistas plus one shared upper rocky ceiling; and
 - independent horizontal shaft focus while the vertical camera follows the
-  Wall Jump climb.
+  Wall Jump climb;
+- a cave-slide interstitial and blended interior arrival; and
+- fixed lift framing that lets the machinery move while the composition stays
+  still.
 
 Deterministic captures, focused automation, and hands-on traversal accept this
-composition in the editable scene. The frozen transition snapshot remains
-unchanged. Do not promote it or extend gameplay beyond the paired-machine
-landing until the user explicitly chooses the next production step.
+composition and the finished route. The user has explicitly approved production
+promotion; promotion is a catalog/path/flow change and must not redesign the
+accepted level.
 
 ### Needed before the finale
 
@@ -427,10 +440,10 @@ around bot skill. Human review accepts the route gameplay and concealed hazard.
 Human review also accepts the finish clearing, completion fade, environmental
 dressing, and half-pipe composition. Commit `59a034b` is the Level 1 baseline.
 
-The Green Zone approach still targets the frozen Level 2 interior snapshot,
-while `Level 2 Interior WIP` targets the editable route. That route reaches the
-paired opposite-phase machine chamber; nothing beyond its landing is approved.
-Its background blend, regional grade, shared ceiling, water vistas, and focused
-Wall Jump camera are accepted in the editable scene. Level 1 remains locked,
-the frozen Level 2 snapshot remains unchanged until explicit promotion, and
-later gameplay waits for an explicit next-step decision.
+Overgrown Coastal Ascent is now complete and hands-on accepted in development
+form. Its dusk approach, two roaming patrols, cave-slide handoff, movement
+progression, machine chambers, exit gauntlet, background blend, regional grade,
+shared ceiling, water vistas, focused Wall Jump camera, and cave-lift departure
+form one finished level. The next milestone is explicitly authorized: promote
+that accepted build into World 1, retire the obsolete WIP/snapshot identities,
+and make Level 1 continue naturally into Level 2.

@@ -1,10 +1,10 @@
-[gd_scene load_steps=24 format=3]
+[gd_scene load_steps=26 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
 [ext_resource type="Resource" path="res://resources/presentation/backgrounds/green_zone_dusk.tres" id="10_dusk"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="2_platform"]
 [ext_resource type="Script" path="res://scripts/level/level_transition_3d.gd" id="3_transition"]
-[ext_resource type="Resource" path="res://resources/dev/level_2_wip_interior_snapshot.tres" id="4_interior"]
+[ext_resource type="Resource" path="res://resources/dev/level_2_interior_wip.tres" id="4_interior"]
 [ext_resource type="Texture2D" path="res://assets/library/environment/structures/cave_entrances/cave_entrance_green_zone_native.png" id="5_cave"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/stone_small.png" id="6_stone_small"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/stone_medium.png" id="7_stone_medium"]
@@ -22,6 +22,8 @@
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/bush_wild_full.png" id="20_bush_wild_full"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/bush_wild_left.png" id="21_bush_wild_left"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/tree_small_grounded.png" id="22_tree_small"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/pixel_patrol_enemy.tscn" id="23_enemy"]
+[ext_resource type="PackedScene" path="res://scenes/cutscenes/level_2_cave_slide_intro.tscn" id="24_slide_intro"]
 
 [sub_resource type="BoxShape3D" id="Shape_kill_plane"]
 size = Vector3(64, 1, 8)
@@ -370,6 +372,7 @@ render_priority = -9
 position = Vector3(37.44, 0.64, 0)
 script = ExtResource("3_transition")
 target_level = ExtResource("4_interior")
+interstitial_scene = ExtResource("24_slide_intro")
 source_exit_mode = 2
 run_destination_during_fade_in = true
 run_direction = 1.0
@@ -395,5 +398,18 @@ position = Vector3(19.2, -17.28, 0)
 
 [node name="Collision" parent="KillPlane" index="0"]
 shape = SubResource("Shape_kill_plane")
+
+[node name="ApproachPatrol" parent="." index="13" instance=ExtResource("23_enemy")]
+position = Vector3(15.36, -0.22, 0)
+patrol_speed = 1.7
+patrol_left_distance = 5.2
+patrol_right_distance = 20.8
+
+[node name="CaveRunPatrol" parent="." index="14" instance=ExtResource("23_enemy")]
+position = Vector3(28.16, -0.22, 0)
+patrol_speed = 1.7
+patrol_left_distance = 18.0
+patrol_right_distance = 8.0
+starts_moving_right = false
 
 [editable path="Player"]

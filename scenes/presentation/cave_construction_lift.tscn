@@ -1,0 +1,243 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="Script" path="res://scripts/presentation/cave_construction_lift_3d.gd" id="1_lift"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/props/cave_lift/tower_top.png" id="2_tower_top"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/props/cave_lift/tower_middle.png" id="3_tower_middle"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/props/cave_lift/tower_base.png" id="4_tower_base"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/props/cave_lift/hoist.png" id="5_hoist"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/props/cave_lift/platform.png" id="6_platform"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/props/cave_lift/guard_left.png" id="7_fence_left"]
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/props/cave_lift/guard_right.png" id="8_fence_right"]
+
+[sub_resource type="StandardMaterial3D" id="Material_shaft"]
+shading_mode = 0
+albedo_color = Color(0.027, 0.024, 0.045, 1)
+
+[sub_resource type="QuadMesh" id="Mesh_shaft"]
+material = SubResource("Material_shaft")
+size = Vector2(3.84, 17.92)
+
+[sub_resource type="StandardMaterial3D" id="Material_cable"]
+shading_mode = 0
+albedo_color = Color(0.235, 0.29, 0.38, 1)
+
+[sub_resource type="QuadMesh" id="Mesh_cable"]
+resource_local_to_scene = true
+material = SubResource("Material_cable")
+size = Vector2(0.08, 16.22)
+
+[sub_resource type="BoxShape3D" id="Shape_carriage"]
+size = Vector3(2.32, 0.18, 1.2)
+
+[sub_resource type="BoxShape3D" id="Shape_boarding"]
+size = Vector3(2.16, 1.5, 1.1)
+
+[node name="CaveConstructionLift" type="Node3D"]
+script = ExtResource("1_lift")
+
+[node name="ShaftBackdrop" type="MeshInstance3D" parent="."]
+position = Vector3(0, 8.96, 0.42)
+mesh = SubResource("Mesh_shaft")
+cast_shadow = 0
+
+[node name="Scaffold" type="Node3D" parent="."]
+
+[node name="Base" type="Sprite3D" parent="Scaffold"]
+position = Vector3(0, 0.64, 0.74)
+modulate = Color(0.8, 0.76, 0.82, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("4_tower_base")
+shaded = false
+cast_shadow = 0
+
+[node name="Middle01" type="Sprite3D" parent="Scaffold"]
+position = Vector3(0, 1.92, 0.74)
+modulate = Color(0.8, 0.76, 0.82, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("3_tower_middle")
+shaded = false
+cast_shadow = 0
+
+[node name="Middle02" type="Sprite3D" parent="Scaffold"]
+position = Vector3(0, 3.2, 0.74)
+modulate = Color(0.8, 0.76, 0.82, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("3_tower_middle")
+shaded = false
+cast_shadow = 0
+
+[node name="Middle03" type="Sprite3D" parent="Scaffold"]
+position = Vector3(0, 4.48, 0.74)
+modulate = Color(0.8, 0.76, 0.82, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("3_tower_middle")
+shaded = false
+cast_shadow = 0
+
+[node name="Middle04" type="Sprite3D" parent="Scaffold"]
+position = Vector3(0, 5.76, 0.74)
+modulate = Color(0.8, 0.76, 0.82, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("3_tower_middle")
+shaded = false
+cast_shadow = 0
+
+[node name="Middle05" type="Sprite3D" parent="Scaffold"]
+position = Vector3(0, 7.04, 0.74)
+modulate = Color(0.8, 0.76, 0.82, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("3_tower_middle")
+shaded = false
+cast_shadow = 0
+
+[node name="Middle06" type="Sprite3D" parent="Scaffold"]
+position = Vector3(0, 8.32, 0.74)
+modulate = Color(0.8, 0.76, 0.82, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("3_tower_middle")
+shaded = false
+cast_shadow = 0
+
+[node name="Middle07" type="Sprite3D" parent="Scaffold"]
+position = Vector3(0, 9.6, 0.74)
+modulate = Color(0.8, 0.76, 0.82, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("3_tower_middle")
+shaded = false
+cast_shadow = 0
+
+[node name="Middle08" type="Sprite3D" parent="Scaffold"]
+position = Vector3(0, 10.88, 0.74)
+modulate = Color(0.8, 0.76, 0.82, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("3_tower_middle")
+shaded = false
+cast_shadow = 0
+
+[node name="Middle09" type="Sprite3D" parent="Scaffold"]
+position = Vector3(0, 12.16, 0.74)
+modulate = Color(0.8, 0.76, 0.82, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("3_tower_middle")
+shaded = false
+cast_shadow = 0
+
+[node name="Middle10" type="Sprite3D" parent="Scaffold"]
+position = Vector3(0, 13.44, 0.74)
+modulate = Color(0.8, 0.76, 0.82, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("3_tower_middle")
+shaded = false
+cast_shadow = 0
+
+[node name="Middle11" type="Sprite3D" parent="Scaffold"]
+position = Vector3(0, 14.72, 0.74)
+modulate = Color(0.8, 0.76, 0.82, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("3_tower_middle")
+shaded = false
+cast_shadow = 0
+
+[node name="Top" type="Sprite3D" parent="Scaffold"]
+position = Vector3(0, 16, 0.74)
+modulate = Color(0.8, 0.76, 0.82, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("2_tower_top")
+shaded = false
+cast_shadow = 0
+
+[node name="HoistHead" type="Sprite3D" parent="Scaffold"]
+position = Vector3(0, 15.9, 0.9)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("5_hoist")
+shaded = false
+cast_shadow = 0
+render_priority = 2
+
+[node name="Cables" type="Node3D" parent="."]
+
+[node name="LeftCable" type="MeshInstance3D" parent="Cables"]
+position = Vector3(-0.38, 8.49, 0.82)
+mesh = SubResource("Mesh_cable")
+cast_shadow = 0
+
+[node name="RightCable" type="MeshInstance3D" parent="Cables"]
+position = Vector3(0.38, 8.49, 0.82)
+mesh = SubResource("Mesh_cable")
+cast_shadow = 0
+
+[node name="Carriage" type="AnimatableBody3D" parent="."]
+collision_layer = 1
+collision_mask = 1
+
+[node name="Visual" type="Node3D" parent="Carriage"]
+
+[node name="BackRailLeft" type="Sprite3D" parent="Carriage/Visual"]
+position = Vector3(-0.64, 0.64, 1.04)
+modulate = Color(0.86, 0.76, 0.78, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("7_fence_left")
+shaded = false
+cast_shadow = 0
+render_priority = 4
+
+[node name="BackRailRight" type="Sprite3D" parent="Carriage/Visual"]
+position = Vector3(0.64, 0.64, 1.041)
+modulate = Color(0.86, 0.76, 0.78, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("8_fence_right")
+shaded = false
+cast_shadow = 0
+render_priority = 5
+
+[node name="DeckLeft" type="Sprite3D" parent="Carriage/Visual"]
+position = Vector3(-0.64, -0.56, 1.28)
+modulate = Color(0.88, 0.78, 0.76, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("6_platform")
+hframes = 8
+frame = 0
+shaded = false
+cast_shadow = 0
+render_priority = 12
+
+[node name="DeckRight" type="Sprite3D" parent="Carriage/Visual"]
+position = Vector3(0.64, -0.56, 1.281)
+modulate = Color(0.88, 0.78, 0.76, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("6_platform")
+hframes = 8
+frame = 7
+shaded = false
+cast_shadow = 0
+render_priority = 13
+
+[node name="Collision" type="CollisionShape3D" parent="Carriage"]
+position = Vector3(0, -0.09, 0)
+shape = SubResource("Shape_carriage")
+
+[node name="BoardingArea" type="Area3D" parent="Carriage"]
+position = Vector3(0, 0.75, 0)
+collision_layer = 0
+collision_mask = 1
+
+[node name="Collision" type="CollisionShape3D" parent="Carriage/BoardingArea"]
+shape = SubResource("Shape_boarding")

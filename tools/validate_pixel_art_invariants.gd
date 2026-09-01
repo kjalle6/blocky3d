@@ -21,6 +21,7 @@ const CHECKED_DEVELOPER_LEVELS: Array[StringName] = [
 	&"dev_level_2_wip",
 	&"dev_level_2_wip_interior_snapshot",
 	&"dev_level_2_interior_wip",
+	&"dev_level_2_slide_intro_lab",
 	&"dev_animation_lab",
 ]
 ## Props that merely share an edge are not overlapping.
@@ -145,6 +146,7 @@ func _is_generated_presentation(node: Node) -> bool:
 		or node is PixelBackgroundRig3D
 		or node is PixelWaterStrip3D
 		or node is PixelShoreWave3D
+		or node is Level2CaveSlideIntro3D
 	)
 
 
