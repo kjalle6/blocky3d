@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/pickups/handgun_pickup_3d.gd" id="1_pickup"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/weapons/handgun_pickup.png" id="2_grounded"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/weapons/handgun_pickup_airborne.png" id="3_airborne"]
+
+[sub_resource type="BoxShape3D" id="Shape_collection"]
+size = Vector3(1.2, 0.8, 0.8)
+
+[node name="HandgunPickup" type="Area3D"]
+collision_layer = 0
+collision_mask = 1
+monitoring = false
+monitorable = false
+script = ExtResource("1_pickup")
+grounded_texture = ExtResource("2_grounded")
+airborne_texture = ExtResource("3_airborne")
+
+[node name="Visual" type="Sprite3D" parent="."]
+unique_name_in_owner = true
+position = Vector3(0, 0, 1.22)
+texture_filter = 0
+pixel_size = 0.045
+texture = ExtResource("2_grounded")
+shaded = false
+render_priority = 12
+
+[node name="CollectionShape" type="CollisionShape3D" parent="."]
+unique_name_in_owner = true
+position = Vector3(0, 0.22, 0)
+shape = SubResource("Shape_collection")
+disabled = true

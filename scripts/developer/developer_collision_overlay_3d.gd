@@ -110,7 +110,7 @@ func _collision_category(collision: CollisionShape3D) -> StringName:
 			return &"hazard"
 		if owner is LevelCheckpoint3D:
 			return &"checkpoint"
-		if owner is AbilityPickup3D:
+		if owner is AbilityPickup3D or owner.is_in_group("weapon_pickup"):
 			return &"pickup"
 		if owner is LevelGoal3D or owner is LevelTransition3D:
 			return &"exit"

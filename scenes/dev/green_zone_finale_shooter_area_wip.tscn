@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="2_platform"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" path="res://scenes/level/level_checkpoint.tscn" id="6_checkpoint"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/handgun_enemy.tscn" id="7_handgun_enemy"]
 [ext_resource type="Script" path="res://scripts/cutscene/green_zone_shooter_intro_3d.gd" id="8_shooter_intro"]
+[ext_resource type="PackedScene" path="res://scenes/pickups/handgun_pickup.tscn" id="9_handgun_pickup"]
 
 [sub_resource type="Environment" id="Environment_night"]
 background_mode = 1
@@ -152,6 +153,9 @@ starts_enabled = false
 starts_facing_right = true
 
 [node name="GunDropAnchor" type="Marker3D" parent="ShooterEncounterStaging" index="7"]
-position = Vector3(23.04, 0.3, 0)
+position = Vector3(23.04, 0.18, 0)
+
+[node name="HandgunPickup" parent="ShooterEncounterStaging/GunDropAnchor" index="0" instance=ExtResource("9_handgun_pickup")]
+source_enemy_path = NodePath("../../ShooterEnemyAnchor/HandgunEnemy")
 
 [editable path="Player"]

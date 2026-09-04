@@ -357,12 +357,29 @@ replaying the introduction, while a full section restart rearms the sequence at
 the shooter-area spawn. This introduces line-of-fire cover as ordinary world
 geometry rather than a new character stance or cover mechanic.
 
-The remainder of this milestone is the guaranteed physical gun drop, the
+The player uses the shooter's recovery opening to vault the cover and finish
+the encounter with the existing knife. That death now kicks one visible handgun
+through a short authored arc into the existing safe drop anchor. A second
+diagonal source pose keeps the airborne weapon crisp without rotating pixels;
+one small bounce ends at the exact grounded transform. The actor is pre-authored
+and resettable, so repeated damage cannot duplicate it and restarting during
+the arc cannot leave a delayed or lost reward. Collection is deliberately still
+disabled while the next milestone adds authoritative weapon ownership.
+
+The reward is authored independently of the shooter's baked-in dual-gun art.
+Its grounded and diagonal poses are the agreed
+`weapons/guns/2 Guns/2_1.png` and `2_2.png` pair. Player firing will keep this
+same pack family: the Biker gun-ready pose sheets, matching
+`3 Hands/1 Biker/2.png` hand layer, index-2 muzzle effects, and index-2
+projectiles belong to this weapon instead of being replaced by visually handy
+parts from an unrelated constructor set. Those supporting player assets remain
+library-only until collection and firing are implemented.
+
+The remainder of this milestone is collecting that physical reward, the
 player's two-slot weapon state, and the short safe firing lesson immediately
-after acquisition. The player uses the shooter's recovery opening to vault the
-cover and finish the encounter with the existing knife. The pickup, firing
-lesson, later full-kit practice, and boss all remain in this second section so
-the new firearm state does not need to cross another scene boundary.
+after acquisition. The pickup, firing lesson, later full-kit practice, and boss
+all remain in this second section so the new firearm state does not need to
+cross another scene boundary.
 
 Firearm Review Lab selected the three-beat dual-gun pattern as the production
 baseline. Each beat fires both guns together, producing two projectiles per beat
@@ -392,7 +409,7 @@ them. The currently selected slot owns the existing attack input. A switch
 requested during an attack resolves after that attack instead of interrupting
 its animation or hit timing. The gun auto-equips when first collected.
 
-The acquisition uses the available standalone pixel-gun art and gun-ready
+The acquisition uses the agreed complete pixel-gun family and its gun-ready
 Biker pose/hand layers; it is not represented by a text-only reward. A brief
 `1 KNIFE  2 GUN  WHEEL: SWITCH` hint accompanies the pickup. From then on, a
 small contextual two-slot display highlights the equipped weapon and shows the

@@ -137,12 +137,16 @@ func _run() -> void:
 	var shooter_visual := (
 		shooter.get_node("PixelVisual") as PixelHandgunEnemyVisual3D
 	)
+	var handgun_pickup := level.get_node(
+		"ShooterEncounterStaging/GunDropAnchor/HandgunPickup"
+	) as HandgunPickup3D
 	var panic_marks := shooter_visual.get_node("PanicMarks") as Sprite3D
 	var feedback := level.get_node("CombatFeedback") as CombatFeedback3D
 	assert(
 		intro != null
 		and shooter != null
 		and shooter_visual != null
+		and handgun_pickup != null
 		and panic_marks != null
 		and feedback != null
 	)
@@ -207,6 +211,23 @@ func _run() -> void:
 			break
 	assert(_impact_seen, "Shooter-intro capture never reached the cover impact.")
 	await _capture(level, "level_3_wip_shooter_intro_impact")
+
+	for frame in 240:
+		await physics_frame
+		if intro.has_completed():
+			break
+	assert(intro.has_completed(), "Shooter intro must finish before drop review.")
+	shooter.receive_melee_hit(level.player.global_position)
+	for frame in 10:
+		await physics_frame
+	assert(handgun_pickup.is_airborne())
+	await _capture(level, "level_3_wip_handgun_drop_airborne")
+	for frame in 90:
+		await physics_frame
+		if handgun_pickup.is_available():
+			break
+	assert(handgun_pickup.is_available())
+	await _capture(level, "level_3_wip_handgun_drop_settled")
 	quit(0)
 
 

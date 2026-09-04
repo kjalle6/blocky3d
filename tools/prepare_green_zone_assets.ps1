@@ -28,6 +28,8 @@ $assets = [ordered]@{
         "characters\1 Biker\Biker_doublejump.png"
     "characters/player_dash.png" =
         "characters\animations\1\Dash.png"
+    "characters/player_notice.png" =
+        "characters\animations\1\Angry.png"
     "characters/player_hurt.png" =
         "characters\1 Biker\Biker_hurt.png"
     "characters/player_death.png" =
@@ -60,6 +62,10 @@ $assets = [ordered]@{
         "enemies\green_zone_enemies\2\Hurt.png"
     "enemies/handgun_death.png" =
         "enemies\green_zone_enemies\2\Death.png"
+    "weapons/handgun_pickup.png" =
+        "weapons\guns\2 Guns\2_1.png"
+    "weapons/handgun_pickup_airborne.png" =
+        "weapons\guns\2 Guns\2_2.png"
     "projectiles/handgun_bullet.png" =
         "weapons\guns\5 Bullets\3.png"
     "effects/handgun_impact_spark.png" =

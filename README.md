@@ -42,8 +42,13 @@ remain read-only design references.
   ends at a fixed underground boundary at Y -3.78, where a subdued
   blue-grey cave backdrop rises into view during the open fall. One patrol, a
   5.12 m spike strip, and a long hazard-free 5.12 m two-wall Wall Jump shaft
-  merge back into the extended Green Zone shelf from underneath. The
-  shooter, gun, ending, and production promotion remain deliberately open
+  merge back into the extended Green Zone shelf from underneath. A same-level
+  fade handoff then enters the sealed shooter section, where the approved
+  mutual-surprise introduction runs the player to real cover before the live
+  three-beat shooter encounter. Killing that enemy with the existing knife now
+  produces one deterministic physical gun drop. Collection, player weapon
+  control, the firing lesson, boss, ending, and production promotion remain
+  deliberately open
 - The six earlier Green Zone prototype levels are deleted. Their movement
   contracts moved to permanent homes first: the Animation Lab for the ability
   kit, Arrival for camera stability, and the Level 2 interior for progression

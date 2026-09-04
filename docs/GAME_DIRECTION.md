@@ -127,6 +127,11 @@ first defeats one newly introduced armed Green Zone humanoid using the existing
 movement and melee kit; that specific enemy then guarantees the gun pickup. A
 safe, brief follow-up teaches firing before the player is under meaningful
 pressure.
+The fixed reward is selected independently of the weapons baked into the enemy
+art. Its two visible poses come from `weapons/guns/2 Guns/2_1.png` and
+`2_2.png`; the player implementation will keep that same numbered asset family
+with its Biker hand layer, gun-ready character poses, muzzle effects, and
+projectiles rather than substituting unrelated weapon components.
 The initial platformer-friendly aiming language is horizontal fire plus an
 upward diagonal shot; free mouse aim is not planned.
 Enemy ranged targeting is a separate language: production shooters may aim

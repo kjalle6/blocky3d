@@ -27,6 +27,10 @@
                                        "source":  "characters/animations/1/Dash.png",
                                        "sha256":  "db04422f1fbdcfe49bfbe9d7b4a8e506ccaf325a29a6086965181be983d8c87f"
                                    },
+    "characters/player_notice.png":  {
+                                         "source":  "characters/animations/1/Angry.png",
+                                         "sha256":  "1acb13edfc88d6d1ddc10fa1e488124486bb9f8b88252be8fa3ff48057b898b6"
+                                     },
     "characters/player_hurt.png":  {
                                        "source":  "characters/1 Biker/Biker_hurt.png",
                                        "sha256":  "e9eb068c4924e46d7c5a045f0196e33c60275b5c2f731933ea6821dbd5de2123"
@@ -91,6 +95,14 @@
                                       "source":  "enemies/green_zone_enemies/2/Death.png",
                                       "sha256":  "663b076df9d9e4c3e1cbaaa9e81a65852b48a22d98ef4ba527dd210b7f80c099"
                                   },
+    "weapons/handgun_pickup.png":  {
+                                       "source":  "weapons/guns/2 Guns/2_1.png",
+                                       "sha256":  "6c578dbbaaf1a8880bb26318aa544355ba93fe2acb5176996726a39c490e0db0"
+                                   },
+    "weapons/handgun_pickup_airborne.png":  {
+                                                "source":  "weapons/guns/2 Guns/2_2.png",
+                                                "sha256":  "715711b3dd2603f1f64eedac64673469033fa6733282070fa6063b059910a03d"
+                                            },
     "projectiles/handgun_bullet.png":  {
                                            "source":  "weapons/guns/5 Bullets/3.png",
                                            "sha256":  "83292c688e9ee56bb5ca8b434fdcf1e41db3c6e18ad7013219012b0e50f5468a"

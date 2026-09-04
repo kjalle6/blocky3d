@@ -348,10 +348,11 @@ each ability's resource ownership independent.
 
 ## Firearm and ammunition contract
 
-Player firearm acquisition, loadout, ammunition, and firing remain
-unimplemented. The approved shooter, projectile, impact feedback, and short
-introduction now run in the Level 3 WIP's sealed second section; Firearm Review
-Lab remains a temporary cadence comparison until the firearm loop is complete.
+Player firearm collection, ownership, loadout, ammunition, and firing remain
+unimplemented. The approved shooter, projectile, impact feedback, short
+introduction, and death-gated physical handgun drop now run in the Level 3
+WIP's sealed second section; Firearm Review Lab remains a temporary cadence
+comparison until the firearm loop is complete.
 The first approved player firearm remains a fixed weapon introduced shortly
 before the World 1 boss. Green Zone enemy 2 is the selected first shooter visual
 set; its death guarantees the gun pickup after an isolated encounter completed
@@ -388,6 +389,24 @@ with the existing movement and melee kit.
   for presentation, but settles at a deterministic safe position. Death,
   checkpoint, and restart behavior may not duplicate or permanently lose the
   one required pickup.
+- `HandgunPickup3D` owns that presentation without random physics. One hidden
+  scene-authored actor listens to the shooter's one-shot `defeated` signal,
+  switches to a diagonal source pose during a short deterministic arc, makes
+  one restrained bounce, and snaps to `GunDropAnchor`. It is a
+  `run_resettable` `weapon_pickup`, so a reset during flight cancels the motion
+  instead of leaving a delayed duplicate. Collection stays disabled until the
+  session-owned weapon-state milestone is implemented.
+- Shooter presentation and reward selection are explicitly independent. The
+  enemy keeps its approved baked-in dual-gun animation, while its death reveals
+  the fixed, unchanged `weapons/guns/2 Guns/2_1.png` and `2_2.png` reward. The
+  future player weapon keeps that same index-2 family: Biker's gun-ready base
+  poses, `3 Hands/1 Biker/2.png`, muzzle sheets
+  `4 Shoot_effects/2_1.png` and `2_2.png`, and projectile sprites
+  `5 Bullets/2.png` and `2_2.png`. These supporting files remain library-only
+  until player firing is implemented. Enemy art never implicitly selects or
+  changes the player's reward: the `2` in Green Zone enemy 2 is coincidental,
+  and its already approved projectile is independently promoted from
+  `5 Bullets/3.png`.
 - Ordinary authored collision may block projectiles and serve as cover. The
   first encounter uses one nearly player-height natural object; there is no
   crouch, cover button, or snap-to-cover state.
@@ -543,6 +562,11 @@ every downloaded pack from runtime scenes.
   before placing scenery.
 - Gameplay collision is authored separately from imported art.
 - Asset-pack folders record source families rather than usage restrictions.
+- Treat a numbered character, weapon, hand, muzzle-effect, and projectile set
+  as one coherent production family when the source pack supplies those
+  relationships. Verify the whole family before promoting one attractive
+  sprite. A file from a constructor or component directory is not finished
+  production art unless an explicit assembly task and visual review approve it.
 - Borrow across packs only through a deliberate palette, scale, silhouette, and
   local-composition decision.
 - Curate GUI frames, button states, font, cursors, and required icons into a
@@ -662,6 +686,9 @@ Every lasting system receives focused validation. The current suite covers:
   matching panic, aim recovery, first-shot camera whip and evade, full run to
   cover, cover-and-volley completion barrier, cover respawn, and
   shooter-section restart behavior;
+- the first shooter's one authored death-gated weapon actor, deterministic
+  two-pose kick and landing, duplicate guard, and reset cancellation both after
+  settlement and during flight;
 - campaign catalog integrity, versioned progress serialization, and
   per-level ability filtering, including the two-level World 1 order;
 - fresh level-defined development entry state versus same-session restart
@@ -811,9 +838,10 @@ cover rock to reveal the enemy's matching surprise. The enemy recovers first;
 its opening shot drives a quick camera return and sends the input-locked player
 all the way to genuine collision cover while the view widens back to gameplay.
 The cutscene releases only after both arrival and the full opening volley, and
-its local checkpoint prevents it replaying after death. Pickup, player firearm,
-firing lesson, later practice, and boss all remain future milestones inside this
-second section.
+its local checkpoint prevents it replaying after death. The required physical
+gun now kicks free and settles safely after the knife kill. Collection, player
+firearm control, the firing lesson, later practice, and the boss remain future
+milestones inside this second section.
 
 Reusable height-aware background fades remain unused and opt-in; authored zone
 regions are active. Structural, visual, and regression automation owns

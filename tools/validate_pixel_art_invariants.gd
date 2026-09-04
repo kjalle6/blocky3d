@@ -35,6 +35,7 @@ const EDGE_TOLERANCE := 0.01
 const ACTOR_GROUPS: PackedStringArray = [
 	"player_character",
 	"ability_pickup",
+	"weapon_pickup",
 	"level_goal",
 	"melee_target",
 	"level_checkpoint",
