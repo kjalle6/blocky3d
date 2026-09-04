@@ -1,6 +1,6 @@
 extends SceneTree
 ## Captures the Level 3 WIP lift arrival, ravine opener, deceptive drop, short
-## deep-cave encounter, and long Wall Jump return.
+## deep-cave encounter, long Wall Jump return, and the staged shooter blockout.
 
 const OUTPUT_SIZE := Vector2i(1920, 1080)
 const OUTPUT_DIRECTORY := "res://build/previews"
@@ -115,6 +115,12 @@ func _run() -> void:
 	for frame in 8:
 		await physics_frame
 	await _capture(level, "level_3_wip_wall_jump_exit")
+
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(181.76, 0.7, 0)))
+	level.camera.snap_to_target()
+	for frame in 8:
+		await physics_frame
+	await _capture(level, "level_3_wip_shooter_blockout")
 	quit(0)
 
 

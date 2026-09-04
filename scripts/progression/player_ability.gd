@@ -15,7 +15,7 @@ const ALL := [
 	DASH,
 ]
 
-## Abilities with a complete runtime implementation. The Animation Lab
+## Abilities with a complete runtime implementation. Firearm Review Lab
 ## definition must expose this exact set so new mechanics cannot omit tooling.
 const IMPLEMENTED := [
 	DOUBLE_JUMP,

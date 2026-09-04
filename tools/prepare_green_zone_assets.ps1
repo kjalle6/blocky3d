@@ -52,6 +52,20 @@ $assets = [ordered]@{
         "enemies\green_zone_enemies\5\Idle.png"
     "enemies/flyer_attack.png" =
         "enemies\green_zone_enemies\5\Attack.png"
+    "enemies/handgun_idle.png" =
+        "enemies\green_zone_enemies\2\Idle.png"
+    "enemies/handgun_attack.png" =
+        "enemies\green_zone_enemies\2\Attack.png"
+    "enemies/handgun_hurt.png" =
+        "enemies\green_zone_enemies\2\Hurt.png"
+    "enemies/handgun_death.png" =
+        "enemies\green_zone_enemies\2\Death.png"
+    "projectiles/handgun_bullet.png" =
+        "weapons\guns\5 Bullets\3.png"
+    "effects/handgun_impact_spark.png" =
+        "vfx\effects\3 Sparks\1.png"
+    "effects/handgun_impact_fragments.png" =
+        "vfx\effects\4 Particles\8.png"
     "goal/chest_open.png" =
         "tilesets\green_zone\4 Animated objects\Chest_open.png"
     "props/tree.png" =
@@ -94,6 +108,8 @@ $assets = [ordered]@{
         "tilesets\green_zone\3 Objects\Stones\3.png"
     "props/stone_flat.png" =
         "tilesets\green_zone\3 Objects\Stones\5.png"
+    "props/stone_cover.png" =
+        "tilesets\green_zone\3 Objects\Stones\6.png"
     "props/fence.png" =
         "tilesets\green_zone\3 Objects\Fence\3.png"
     "props/garden_gate_open.png" =
@@ -229,11 +245,15 @@ $licenses = [ordered]@{
         "characters\animations\License.txt"
     "licenses/green_zone_enemies.txt" =
         "enemies\green_zone_enemies\License.txt"
+    "licenses/guns.txt" =
+        "weapons\guns\License.txt"
     "licenses/green_zone_tileset.txt" =
         "tilesets\green_zone\license.txt"
     "licenses/beach_zone_tileset.txt" =
         "tilesets\beach_zone\license.txt"
     "licenses/water_effects.txt" =
+        "vfx\effects\license.txt"
+    "licenses/vfx_effects.txt" =
         "vfx\effects\license.txt"
     "licenses/rocks.txt" =
         "environment\rocks\License.txt"

@@ -81,8 +81,12 @@ func _ready() -> void:
 		combat_feedback.bind_player(player)
 
 	for node in get_tree().get_nodes_in_group("melee_target"):
-		if combat_feedback != null and is_ancestor_of(node) and node is StompableEnemy3D:
+		if combat_feedback == null or not is_ancestor_of(node):
+			continue
+		if node is StompableEnemy3D:
 			combat_feedback.bind_enemy(node as StompableEnemy3D)
+		elif node is HandgunEnemy3D:
+			combat_feedback.bind_handgun_enemy(node as HandgunEnemy3D)
 	for node in get_tree().get_nodes_in_group("level_transition"):
 		if is_ancestor_of(node) and node.has_signal("entered"):
 			node.entered.connect(_on_transition_entered)

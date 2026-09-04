@@ -149,5 +149,5 @@ func _run() -> void:
 
 	room.set_session_ability_enabled(PlayerAbility.WALL_JUMP, true)
 	assert(player.has_ability(PlayerAbility.WALL_JUMP))
-	print("Wall Jump movement and Animation Lab toggle validation passed.")
+	print("Wall Jump movement and Firearm Review Lab toggle validation passed.")
 	quit(0)

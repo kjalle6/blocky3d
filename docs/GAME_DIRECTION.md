@@ -129,6 +129,18 @@ safe, brief follow-up teaches firing before the player is under meaningful
 pressure.
 The initial platformer-friendly aiming language is horizontal fire plus an
 upward diagonal shot; free mouse aim is not planned.
+Enemy ranged targeting is a separate language: production shooters may aim
+directly toward the player through the full 360 degrees of the flat X/Y gameplay
+plane while keeping depth fixed. That does not expand the player's deliberately
+limited firearm controls.
+
+The introduction uses one solid natural object as honest projectile cover,
+without adding a crouch or snap-to-cover mechanic. The defeated shooter visibly
+drops the weapon into a guaranteed safe pickup position, and collecting it
+auto-equips it rather than presenting a text-only reward. Knife and gun form a
+two-slot loadout selected with `1`, `2`, the mouse wheel, or one gamepad cycle
+input. A small contextual weapon-and-ammo display appears only after the gun is
+earned and is intended to become part of the later character HUD.
 
 Ammunition is sparse and initially scoped to the authored level. Shooting is a
 tactical advantage, not a replacement for movement or melee. Running out of
@@ -196,15 +208,17 @@ three re-authored levels:
    armed humanoid shooter is introduced alone after that traversal recap;
    defeating it guarantees the gun pickup. Shooting is taught safely before it
    is mixed with the learned movement and enemy language, followed by a simple
-   first boss. The current WIP stops at the Wall Jump exit; the shooter, gun
-   lesson, and boss are not implemented yet. Moving saws were cut from this
-   level and reserved for a later campaign fit.
+   first boss. The current WIP extends beyond the Wall Jump exit into the
+   approved cover-encounter blockout, and a development-only shooter/projectile
+   proof runs in Firearm Review Lab. The live cutscene and encounter, gun pickup,
+   player firearm, lesson, and boss are not integrated yet. Moving saws were cut
+   from this level and reserved for a later campaign fit.
 
 The six short Godot prototype levels are deleted; they were regression
 evidence for these mechanics, not the final campaign structure. Their useful
 movement and progression contracts now run against active production levels,
-development levels, and the Animation Lab. Git remains the archive for the old
-layouts.
+development levels, and Firearm Review Lab (formerly Animation Lab). Git remains
+the archive for the old layouts.
 
 The eleven Python levels continue to supply ideas for hazards, route shapes,
 power-up placement, and experiments. Their coordinates, ordering, lives, orb

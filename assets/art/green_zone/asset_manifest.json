@@ -75,6 +75,34 @@
                                      "source":  "enemies/green_zone_enemies/5/Attack.png",
                                      "sha256":  "ac7201ca4575178f48e9f17ec4fc06e99d084b52fe3fb095db9bff1c326e6de4"
                                  },
+    "enemies/handgun_idle.png":  {
+                                     "source":  "enemies/green_zone_enemies/2/Idle.png",
+                                     "sha256":  "01250eac027b11ac1fdde94a32ca768f97f3015758c2d15dcd8157f75514685a"
+                                 },
+    "enemies/handgun_attack.png":  {
+                                       "source":  "enemies/green_zone_enemies/2/Attack.png",
+                                       "sha256":  "5c6dc226d974314e8767159294563b99bf2c9b3d7f14e6f93b3eb55b399dde56"
+                                   },
+    "enemies/handgun_hurt.png":  {
+                                     "source":  "enemies/green_zone_enemies/2/Hurt.png",
+                                     "sha256":  "bf7373fbc297a32b71bbfa8d353143a41ea8de252c2138d795c51010b1b4736c"
+                                 },
+    "enemies/handgun_death.png":  {
+                                      "source":  "enemies/green_zone_enemies/2/Death.png",
+                                      "sha256":  "663b076df9d9e4c3e1cbaaa9e81a65852b48a22d98ef4ba527dd210b7f80c099"
+                                  },
+    "projectiles/handgun_bullet.png":  {
+                                           "source":  "weapons/guns/5 Bullets/3.png",
+                                           "sha256":  "83292c688e9ee56bb5ca8b434fdcf1e41db3c6e18ad7013219012b0e50f5468a"
+                                       },
+    "effects/handgun_impact_spark.png":  {
+                                             "source":  "vfx/effects/3 Sparks/1.png",
+                                             "sha256":  "41028b42fb05a9b774ffad6c23627428febaa04f005455dbe3b0429e1fc4eb7a"
+                                         },
+    "effects/handgun_impact_fragments.png":  {
+                                                 "source":  "vfx/effects/4 Particles/8.png",
+                                                 "sha256":  "8e9e52f2fea62561251dd97ebf8004f4493ec28f5693d749f474d78e8d0e3210"
+                                             },
     "goal/chest_open.png":  {
                                 "source":  "tilesets/green_zone/4 Animated objects/Chest_open.png",
                                 "sha256":  "8d1834aa41d70e29805b1d3f5a4d1b9f24721b650e2e0239b46010bbe73531e6"
@@ -159,6 +187,10 @@
                                  "source":  "tilesets/green_zone/3 Objects/Stones/5.png",
                                  "sha256":  "e3614e6347c9010904ab4bc344d6de07cbeffb698dd62ec66d687cf13884e901"
                              },
+    "props/stone_cover.png":  {
+                                  "source":  "tilesets/green_zone/3 Objects/Stones/6.png",
+                                  "sha256":  "959fc01f747f893c790f52b8b7e607c0ee4fbd628cd4de9ffdb35ab188fe7f6a"
+                              },
     "props/fence.png":  {
                             "source":  "tilesets/green_zone/3 Objects/Fence/3.png",
                             "sha256":  "28e2f2df106c3bc7073bb3ba502172d8adac2baa787e9925b76cb52238a451a2"

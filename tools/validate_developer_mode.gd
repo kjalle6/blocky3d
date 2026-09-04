@@ -56,23 +56,23 @@ func _run() -> void:
 	game_root.load_developer_room()
 	await process_frame
 	var finale_session := game_root.current_level as LevelSession3D
-	_assert_complete_kit(finale_session, "Animation Lab entry")
+	_assert_complete_kit(finale_session, "Firearm Review Lab entry")
 
 	finale_session._reset_run()
 	await physics_frame
-	_assert_complete_kit(finale_session, "Animation Lab manual restart")
+	_assert_complete_kit(finale_session, "Firearm Review Lab manual restart")
 
 	finale_session.player.kill()
 	for frame in 40:
 		await physics_frame
 	assert(not finale_session.player.is_dead())
-	_assert_complete_kit(finale_session, "Animation Lab death reset")
+	_assert_complete_kit(finale_session, "Firearm Review Lab death reset")
 
 	game_root.show_level_select()
 	game_root.load_developer_room()
 	await process_frame
 	var fresh_finale_session := game_root.current_level as LevelSession3D
-	_assert_complete_kit(fresh_finale_session, "fresh Animation Lab reload")
+	_assert_complete_kit(fresh_finale_session, "fresh Firearm Review Lab reload")
 
 	game_root.free()
 	print("Fresh-per-level developer progression validation passed.")

@@ -3,13 +3,16 @@ extends SceneTree
 ## one aerial reset is available, release still shortens it, and horizontal
 ## momentum is never secretly replaced.
 ##
-## Runs in the Animation Lab, which is the declared home for ability contracts.
+## Runs in Firearm Review Lab, which retains the ability-contract fixtures.
 ## The lab grants the ability outright, so unlocking it is not tested here -
 ## that path belongs to the pickups in an authored level.
+
+var _finished := false
 
 
 func _init() -> void:
 	call_deferred("_run")
+	create_timer(12.0).timeout.connect(_on_watchdog_timeout)
 
 
 func _run() -> void:
@@ -35,9 +38,9 @@ func _run() -> void:
 				performed_count[0] += 1
 	)
 
-	# Run off the landing block's edge, then use coyote time. This remains the
+	# Run off the retained left boundary wall's top, then use coyote time. This remains the
 	# ground jump and must not consume the aerial jump.
-	player.reset_at(Transform3D(Basis.IDENTITY, Vector3(11.5, 1.83, 0)))
+	player.reset_at(Transform3D(Basis.IDENTITY, Vector3(0.64, 8.38, 0)))
 	for frame in 4:
 		await physics_frame
 	assert(player.is_on_floor())
@@ -46,7 +49,7 @@ func _run() -> void:
 		await physics_frame
 		if not player.is_on_floor():
 			break
-	assert(not player.is_on_floor(), "The test should have run off the landing block.")
+	assert(not player.is_on_floor(), "The test should have run off the boundary wall.")
 	Input.action_press("jump")
 	for frame in 2:
 		await physics_frame
@@ -99,5 +102,13 @@ func _run() -> void:
 	assert(player.aerial_jumps_remaining() == 1, "Landing should refresh Double Jump.")
 
 	game_root.free()
+	_finished = true
 	print("Double Jump movement contract validation passed.")
 	quit(0)
+
+
+func _on_watchdog_timeout() -> void:
+	if _finished:
+		return
+	push_error("Double Jump validator timed out after an earlier failure.")
+	quit(9)

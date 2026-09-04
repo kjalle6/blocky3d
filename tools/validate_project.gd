@@ -54,7 +54,7 @@ func _validate() -> void:
 	assert(InputMap.has_action("developer_fly_up"))
 	assert(InputMap.has_action("developer_fly_down"))
 	assert(developer_heading.text == "DEVELOPER TOOLS")
-	assert(animation_lab_button.text == "ANIMATION LAB")
+	assert(animation_lab_button.text == "FIREARM REVIEW LAB")
 	assert(level_design_lab_button.text == "LEVEL DESIGN LAB")
 	assert(level_3_wip_button.text == "LEVEL 3 WIP")
 	assert(game_root.campaign.find_by_id(&"dev_green_zone_finale_wip") == null)

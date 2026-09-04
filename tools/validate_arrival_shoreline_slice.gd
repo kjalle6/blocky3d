@@ -85,7 +85,7 @@ func _validate_tools_ui(game_root: Node) -> void:
 		not (game_root.get_node(
 			"Interface/DeveloperAbilityPanel"
 		) as Control).visible,
-		"Production Level 1 must not expose Animation Lab ability toggles."
+		"Production Level 1 must not expose Firearm Review Lab ability toggles."
 	)
 	_toggle_gameplay_tools(game_root)
 	assert(not instructions.visible)

@@ -25,7 +25,8 @@ It is not yet a production campaign entry.
 The six Green Zone prototype levels that preceded this are deleted. They were
 regression evidence for the movement kit, and that job is finished: every
 contract they proved now lives somewhere permanent. Movement, Double Jump, Wall
-Jump and Dash are validated in the Animation Lab, which is their declared home;
+Jump and Dash are validated in Firearm Review Lab, which retains the former
+Animation Lab's movement-contract role;
 camera pixel stability runs against Arrival; fresh-per-load progression and
 vertical background coverage run against the Level 2 interior, whose 28 m shaft
 is a longer climb than either prototype offered. Only one assertion did not
@@ -269,14 +270,20 @@ The finale is a payoff level, not another isolated movement lesson:
 2. recap learned jumping and Dash without prompts, beginning with one familiar
    ground patrol followed by two familiar flyers and another ground patrol;
 3. introduce exactly one new ordinary enemy in isolation: the armed humanoid
-   from `assets/library/enemies/green_zone_enemies/2/`, using readable ranged
-   attacks while the player still relies on movement and melee;
-4. guarantee the gun pickup when that shooter dies, making the weapon an earned
-   encounter reward rather than a random drop or unrelated floating pickup;
-5. teach basic shooting in a short safe situation, then combine the gun with
+   from `assets/library/enemies/green_zone_enemies/2/`, presented as a handgun
+   shooter using readable bursts while the player still relies on movement and
+   melee;
+4. make one nearly player-height Green Zone rock or similarly natural solid
+   object real projectile cover during that approach, with no crouch, cover
+   button, or snap-to-cover system;
+5. guarantee a physical gun pickup when that shooter dies: the weapon kicks
+   free, settles at a deterministic safe position, and cannot be lost to random
+   drop physics or skipped as unrelated floating loot;
+6. auto-equip the gun on contact, briefly show the weapon-switch controls, and
+   teach basic shooting in a short safe situation before combining the gun with
    the complete learned movement kit and familiar enemies;
-6. build one or more memorable full-kit sequences with recovery checkpoints;
-7. finish with a simple, readable first boss using movement, limited shooting,
+7. build one or more memorable full-kit sequences with recovery checkpoints;
+8. finish with a simple, readable first boss using movement, limited shooting,
    and viable melee openings.
 
 The current WIP implements the approved opening recap. The parked lift meets a
@@ -322,8 +329,54 @@ so the two materials meet without exposed cave columns beside the surface. A
 second checkpoint returns the player to the surface shelf at the current WIP
 endpoint.
 
-The shooter, projectiles, gun, ammo HUD, and boss remain unbuilt and separate
-build decisions after this point.
+The active build milestone now begins at this endpoint. It covers the isolated
+cover-based shooter encounter, its projectile behavior and impact feedback, the
+guaranteed physical gun drop, the player's two-slot weapon state, and the short
+safe firing lesson immediately after acquisition. The first enemy fires
+readable bursts across one genuine collision object; the player uses its
+recovery opening to cross the cover and finish the encounter with the existing
+knife. This introduces line-of-fire cover as ordinary world geometry rather
+than a new character stance or cover mechanic.
+
+Firearm Review Lab selected the three-beat dual-gun pattern as the production
+baseline. Each beat fires both guns together, producing two projectiles per beat
+and six across the burst. Its post-burst recovery gives the player enough time
+to vault the approved cover rock and close for a knife kill. The slower two-beat
+pattern remains only as a comparison fixture, not the intended encounter
+cadence. Presentation replays the clean forward-firing portion of the source
+animation and returns to idle before its downward muzzle-flash frames. This
+specific enemy does not use a full-body blinking or colour-pulse telegraph; its
+aiming posture, burst rhythm, and recovery carry the warning.
+
+Every handgun round now uses one surface-agnostic four-frame contact effect: a
+restrained spark with a tiny fragment layer, placed at the ray hit and oriented
+by the reported surface normal. Rock, terrain, and other colliders share it; the
+first firearm does not justify a material-response system.
+
+The current lab test fires horizontally to isolate cadence and readability.
+Before production integration, ranged enemies must aim toward the player through
+the full 360 degrees of the flat X/Y gameplay plane. This enemy-targeting
+requirement does not broaden the player firearm's planned horizontal and
+upward-diagonal controls.
+
+The loadout is deliberately small: slot `1` selects the knife, slot `2` selects
+the gun, the mouse wheel cycles slots, and one gamepad shoulder input cycles
+them. The currently selected slot owns the existing attack input. A switch
+requested during an attack resolves after that attack instead of interrupting
+its animation or hit timing. The gun auto-equips when first collected.
+
+The acquisition uses the available standalone pixel-gun art and gun-ready
+Biker pose/hand layers; it is not represented by a text-only reward. A brief
+`1 KNIFE  2 GUN  WHEEL: SWITCH` hint accompanies the pickup. From then on, a
+small contextual two-slot display highlights the equipped weapon and shows the
+gun's remaining ammunition. It is absent before the firearm exists and is
+authored as a reusable weapon-status component that can later move into the
+proper character HUD rather than becoming throwaway prototype UI. Full
+inventory, crafting, and weapon-menu work remain outside this milestone.
+
+The boss remains unbuilt and is a later build decision after the shooter,
+pickup, weapon switching, minimal HUD, and safe firing lesson are accepted in
+play.
 
 A literal moon was tested and rejected. The subtler moonlight-through-trees idea
 is deferred rather than worth delaying the level over; the dark forest treatment
@@ -422,8 +475,10 @@ the accepted level without redesigning it.
 5. Contextual ammo HUD that remains absent before a firearm is available.
 6. A boss-specific state machine using shared damage, reset, and projectile
    contracts rather than a giant universal boss controller.
-7. A development-only Combat Lab for enemy, melee, projectile, firearm, and boss
-   inspection. Animation Lab remains focused on player presentation.
+7. Firearm Review Lab, formerly Animation Lab, now owns focused shooter
+   animation, projectile cadence, and cover review while retaining its movement
+   and presentation regression fixtures. Add a broader Combat Lab only when boss
+   or multi-enemy inspection outgrows this focused room.
 
 ### Interface and optional systems
 
@@ -488,7 +543,7 @@ they are not rediscovered from scratch, not because anything is committed.
 A new player ability is not complete when it merely works in its introduction
 level. It must also:
 
-- be registered as implemented and exposed automatically in Animation Lab;
+- be registered as implemented and exposed automatically in Firearm Review Lab;
 - have an immediate lab-only on/off toggle that never changes campaign data;
 - retain its selected lab state through `R`;
 - expose its important animation states clearly in the lab;

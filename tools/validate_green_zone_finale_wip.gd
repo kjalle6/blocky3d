@@ -2,7 +2,8 @@ extends SceneTree
 ## Focused contract for Level 3's approved opening and first mastery turn: the
 ## parked Level 2 lift feeds one continuous ravine, then a deceptively narrow
 ## impossible gap drops safely into one short deep-cave encounter before a long,
-## hazard-free Wall Jump shaft returns to the night forest.
+## hazard-free Wall Jump shaft returns to the night forest and a staged surface
+## encounter blockout establishes the next shooter-and-cover beat.
 
 var _completed := false
 
@@ -48,9 +49,9 @@ func _run() -> void:
 	assert(level.name == "DeveloperGreenZoneFinaleWip")
 	assert(game_root.current_world_definition == null)
 	assert(level.route_extent.route_start_x == 0.0)
-	assert(level.route_extent.route_end_x == 171.52)
+	assert(level.route_extent.route_end_x == 212.48)
 	assert(is_equal_approx(level.camera.look_ahead, 4.48))
-	assert(is_equal_approx(level.camera.maximum_center_x, 160.0))
+	assert(is_equal_approx(level.camera.maximum_center_x, 200.96))
 	assert(level.background.profile.profile_id == &"green_zone_night")
 	assert(level.background.runtime_layer_count() == 7)
 	for background_index in 6:
@@ -156,6 +157,9 @@ func _run() -> void:
 	var upper_continuation := (
 		level.get_node("Platforms/UpperContinuationGround") as PixelPlatform3D
 	)
+	var shooter_ground := (
+		level.get_node("Platforms/ShooterEncounterGround") as PixelPlatform3D
+	)
 	var supports: Array[PixelPlatform3D] = [
 		lift_shelf,
 		double_jump_island,
@@ -165,6 +169,7 @@ func _run() -> void:
 		deceptive_takeoff,
 		far_side_surface,
 		upper_continuation,
+		shooter_ground,
 	]
 	for support in supports:
 		assert(support != null)
@@ -192,6 +197,11 @@ func _run() -> void:
 	assert(is_equal_approx(deceptive_gap, 20.48))
 	assert(deceptive_gap > movement.ideal_double_jump_dash_distance() + 2.5)
 	assert(deceptive_gap < movement.ideal_double_jump_dash_distance() + 4.0)
+	assert(is_equal_approx(_left(shooter_ground), _right(upper_continuation)))
+	assert(not upper_continuation.cap_right_edge)
+	assert(not shooter_ground.cap_left_edge)
+	assert(is_equal_approx(_right(shooter_ground), 212.48))
+	assert(is_equal_approx(shooter_ground.size.x, 40.96))
 
 	var spikes := level.get_node("Hazards/FinalLandingSpikes") as PixelSpikeRow3D
 	assert(spikes != null)
@@ -411,6 +421,68 @@ func _run() -> void:
 	assert(not deep_checkpoint.is_activated())
 	assert(not exit_checkpoint.is_activated())
 
+	var staging := level.get_node("ShooterEncounterStaging") as Node3D
+	assert(staging != null)
+	var intro_anchor := staging.get_node("IntroTriggerAnchor") as Marker3D
+	var player_cover_anchor := staging.get_node("PlayerCoverAnchor") as Marker3D
+	var respawn_anchor := staging.get_node("EncounterRespawnAnchor") as Marker3D
+	var reveal_anchor := staging.get_node("RevealCameraAnchor") as Marker3D
+	var shooter_anchor := staging.get_node("ShooterEnemyAnchor") as Marker3D
+	var drop_anchor := staging.get_node("GunDropAnchor") as Marker3D
+	assert(intro_anchor.global_position.is_equal_approx(Vector3(177.92, 0.7, 0)))
+	assert(player_cover_anchor.global_position.is_equal_approx(
+		Vector3(181.76, 0.7, 0)
+	))
+	assert(respawn_anchor.global_position.is_equal_approx(
+		player_cover_anchor.global_position
+	))
+	assert(reveal_anchor.global_position.is_equal_approx(Vector3(187.52, 2.7, 0)))
+	assert(shooter_anchor.global_position.is_equal_approx(Vector3(193.28, 0, 0)))
+	assert(drop_anchor.global_position.is_equal_approx(Vector3(192, 0.3, 0)))
+	assert(is_equal_approx(
+		intro_anchor.global_position.x - _right(upper_continuation),
+		6.4
+	))
+	assert(is_equal_approx(
+		shooter_anchor.global_position.x - intro_anchor.global_position.x,
+		15.36
+	))
+	assert(_right(shooter_ground) - shooter_anchor.global_position.x > 15.0)
+	_assert_support_below(level, player_cover_anchor.global_position, shooter_ground)
+	_assert_support_below(
+		level,
+		Vector3(shooter_anchor.global_position.x, 0.25, 0),
+		shooter_ground
+	)
+
+	var cover := level.get_node("Props/ShooterCover") as StaticBody3D
+	assert(cover != null)
+	assert(cover.global_position.is_equal_approx(Vector3(184.32, 0, 0)))
+	var cover_visual := cover.get_node("Visual") as Sprite3D
+	assert(cover_visual != null)
+	assert(cover_visual.texture.resource_path.ends_with("/props/stone_cover.png"))
+	assert(cover_visual.modulate.is_equal_approx(Color(0.66, 0.74, 0.86, 1)))
+	_assert_sprite_grounded(cover_visual, 0.0)
+	var tall_cover_shape := (
+		cover.get_node("TallCollision") as CollisionShape3D
+	).shape as BoxShape3D
+	var low_cover_shape := (
+		cover.get_node("LowCollision") as CollisionShape3D
+	).shape as BoxShape3D
+	assert(tall_cover_shape != null and low_cover_shape != null)
+	assert(tall_cover_shape.size.is_equal_approx(Vector3(1.6, 1.55, 1.2)))
+	assert(low_cover_shape.size.is_equal_approx(Vector3(1.2, 0.55, 1.2)))
+	_assert_wall(level, Vector3(181.76, 1.1, 0), Vector3.RIGHT * 5.0, cover)
+
+	var enemy_marker := (
+		shooter_anchor.get_node("HandgunEnemyMarker") as Sprite3D
+	)
+	assert(enemy_marker != null)
+	assert(enemy_marker.texture.resource_path.ends_with("/enemies/handgun_idle.png"))
+	assert(enemy_marker.hframes == 4)
+	assert(enemy_marker.flip_h)
+	_assert_sprite_grounded(enemy_marker, 0.0)
+
 	var deep_camera_region := level.get_node(
 		"DeepRouteCameraRegion"
 	) as VerticalCameraRegion3D
@@ -455,13 +527,14 @@ func _run() -> void:
 	) as PixelBackgroundRegion3D
 	assert(surface_region != null)
 	assert(surface_region.validation_errors().is_empty())
-	assert(surface_region.position.is_equal_approx(Vector3(85.76, 2.7, 0)))
-	assert(surface_region.size.is_equal_approx(Vector2(180.0, 8.0)))
+	assert(surface_region.position.is_equal_approx(Vector3(106.24, 2.7, 0)))
+	assert(surface_region.size.is_equal_approx(Vector2(220.96, 8.0)))
 	assert(surface_region.shows_zone(&"surface"))
 	assert(is_equal_approx(surface_region.weight_at(Vector3(4.0, 0.0, 0)), 1.0))
 	assert(is_equal_approx(surface_region.weight_at(Vector3(139.52, 0.0, 0)), 1.0))
 	assert(is_equal_approx(surface_region.weight_at(Vector3(139.52, -5.3, 0)), 0.5))
 	assert(is_zero_approx(surface_region.weight_at(Vector3(139.52, -25.6, 0))))
+	assert(is_equal_approx(surface_region.weight_at(Vector3(193.28, 0.0, 0)), 1.0))
 	assert(is_equal_approx(
 		level.background.zone_weight_at(&"surface", Vector3(139.52, 0.0, 0)),
 		1.0
@@ -530,13 +603,13 @@ func _run() -> void:
 
 	var kill_plane := level.get_node("KillPlane") as Area3D
 	assert(kill_plane != null)
-	assert(is_equal_approx(kill_plane.global_position.x, 85.76))
+	assert(is_equal_approx(kill_plane.global_position.x, 106.24))
 	assert(is_equal_approx(kill_plane.global_position.y, -32.0))
 	var kill_shape := (
 		kill_plane.get_node("Collision") as CollisionShape3D
 	).shape as BoxShape3D
 	assert(kill_shape != null)
-	assert(is_equal_approx(kill_shape.size.x, 192.0))
+	assert(is_equal_approx(kill_shape.size.x, 232.96))
 	var opening_kill_plane := level.get_node("OpeningRavineKillPlane") as Area3D
 	assert(opening_kill_plane != null)
 	assert(opening_kill_plane.global_position.is_equal_approx(
@@ -560,7 +633,7 @@ func _run() -> void:
 	print(
 		"Level 3 WIP passed: quick opener deaths, mixed run-up, deceptive "
 		+ "max-kit gap, committed-jump descent, deep enemy-and-spike pocket, dark "
-		+ "grade, and clean Wall Jump return."
+		+ "grade, clean Wall Jump return, and staged shooter-cover blockout."
 	)
 	_completed = true
 	quit(0)

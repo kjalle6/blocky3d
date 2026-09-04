@@ -100,7 +100,7 @@ func _collision_category(collision: CollisionShape3D) -> StringName:
 				if collision.get_parent() is Area3D
 				else &"player"
 			)
-		if owner is StompableEnemy3D:
+		if owner is StompableEnemy3D or owner.is_in_group("melee_target"):
 			return (
 				&"enemy_contact"
 				if collision.get_parent() is Area3D

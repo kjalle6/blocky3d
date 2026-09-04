@@ -7,7 +7,7 @@
 script = ExtResource("1_definition")
 level_id = &"dev_animation_lab"
 display_number = 1
-title = "Animation Lab"
-lesson = "A disposable room for inspecting player movement and animation transitions."
+title = "Firearm Review Lab"
+lesson = "Selected baseline: three quick dual-gun shots. Press T to compare the slower two-shot alternate."
 scene = ExtResource("2_scene")
 available_abilities = Array[StringName]([&"double_jump", &"wall_jump", &"dash"])

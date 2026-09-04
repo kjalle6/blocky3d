@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3]
+[gd_scene load_steps=26 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="2_platform"]
@@ -17,6 +17,8 @@
 [ext_resource type="Script" path="res://scripts/presentation/pixel_background_region_3d.gd" id="15_background_region"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_region_grade_3d.gd" id="16_region_grade"]
 [ext_resource type="Script" path="res://scripts/hazards/hazard_3d.gd" id="17_hazard"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/stone_cover.png" id="18_cover"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/enemies/handgun_idle.png" id="19_handgun_enemy"]
 
 [sub_resource type="Environment" id="Environment_night"]
 background_mode = 1
@@ -33,10 +35,16 @@ adjustment_saturation = 0.76
 size = Vector3(0.24, 12.8, 2)
 
 [sub_resource type="BoxShape3D" id="Shape_kill_plane"]
-size = Vector3(192, 1, 8)
+size = Vector3(232.96, 1, 8)
 
 [sub_resource type="BoxShape3D" id="Shape_opening_kill_plane"]
 size = Vector3(79.36, 1, 8)
+
+[sub_resource type="BoxShape3D" id="Shape_cover_tall"]
+size = Vector3(1.6, 1.55, 1.2)
+
+[sub_resource type="BoxShape3D" id="Shape_cover_low"]
+size = Vector3(1.2, 0.55, 1.2)
 
 [node name="GreenZoneFinaleWip" instance=ExtResource("1_base")]
 
@@ -45,7 +53,7 @@ environment = SubResource("Environment_night")
 
 [node name="RouteExtent" parent="." index="2"]
 route_start_x = 0.0
-route_end_x = 171.52
+route_end_x = 212.48
 
 [node name="Background" parent="." index="3"]
 profile = ExtResource("4_background")
@@ -114,15 +122,24 @@ position = Vector3(165.76, -3.2, 0)
 script = ExtResource("2_platform")
 size = Vector3(11.52, 6.4, 2)
 style = ExtResource("3_green_style")
+cap_right_edge = false
 cap_bottom_edge = false
 
-[node name="WipRightBoundary" type="StaticBody3D" parent="Platforms" index="9"]
-position = Vector3(171.64, 6.4, 0)
+[node name="ShooterEncounterGround" type="StaticBody3D" parent="Platforms" index="9"]
+position = Vector3(192, -3.2, 0)
+script = ExtResource("2_platform")
+size = Vector3(40.96, 6.4, 2)
+style = ExtResource("3_green_style")
+cap_left_edge = false
+cap_bottom_edge = false
+
+[node name="WipRightBoundary" type="StaticBody3D" parent="Platforms" index="10"]
+position = Vector3(212.6, 6.4, 0)
 
 [node name="Collision" type="CollisionShape3D" parent="Platforms/WipRightBoundary" index="0"]
 shape = SubResource("Shape_left_boundary")
 
-[node name="DeepRockShell" type="StaticBody3D" parent="Platforms" index="10"]
+[node name="DeepRockShell" type="StaticBody3D" parent="Platforms" index="11"]
 position = Vector3(107.52, -29.44, 0)
 script = ExtResource("12_terrain")
 solid_rows = PackedStringArray("..................................................", "..................................................", "..................................................", "..................................................", "..................................................", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", ".........................................#........", ".........................................#........", "...###############################################", "...###############################################", "...###############################################")
@@ -157,6 +174,26 @@ texture = ExtResource("7_bush")
 flip_h = true
 shaded = false
 
+[node name="ShooterCover" type="StaticBody3D" parent="Props" index="3"]
+position = Vector3(184.32, 0, 0)
+
+[node name="Visual" type="Sprite3D" parent="Props/ShooterCover" index="0"]
+position = Vector3(0, 0.88, 1.18)
+modulate = Color(0.66, 0.74, 0.86, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("18_cover")
+shaded = false
+render_priority = 9
+
+[node name="TallCollision" type="CollisionShape3D" parent="Props/ShooterCover" index="1"]
+position = Vector3(-0.48, 0.775, 0)
+shape = SubResource("Shape_cover_tall")
+
+[node name="LowCollision" type="CollisionShape3D" parent="Props/ShooterCover" index="2"]
+position = Vector3(0.75, 0.275, 0)
+shape = SubResource("Shape_cover_low")
+
 [node name="FinalLandingSpikes" parent="Hazards" index="0" instance=ExtResource("10_spikes")]
 position = Vector3(75.68, 0, 0)
 row_width = 7.36
@@ -187,10 +224,10 @@ fall_limit_y = -31.0
 [node name="GameplayCamera" parent="." index="10"]
 look_ahead = 4.48
 minimum_center_x = 11.52
-maximum_center_x = 160.0
+maximum_center_x = 200.96
 
 [node name="KillPlane" parent="." index="11"]
-position = Vector3(85.76, -32, 0)
+position = Vector3(106.24, -32, 0)
 
 [node name="Collision" parent="KillPlane" index="0"]
 shape = SubResource("Shape_kill_plane")
@@ -255,9 +292,9 @@ maximum_vertical_offset = -25.6
 priority = 20
 
 [node name="SurfaceBackgroundRegion" type="Node3D" parent="." index="20"]
-position = Vector3(85.76, 2.7, 0)
+position = Vector3(106.24, 2.7, 0)
 script = ExtResource("15_background_region")
-size = Vector2(180, 8)
+size = Vector2(220.96, 8)
 visible_zones = Array[StringName]([&"surface"])
 blend_margin = 8.0
 blend_exponent = 1.0
@@ -296,6 +333,36 @@ horizontal_speed = 4.0
 horizontal_phase = 0.25
 spark_period = 2.4
 spark_active = 0.6
+
+[node name="ShooterEncounterStaging" type="Node3D" parent="." index="25"]
+
+[node name="IntroTriggerAnchor" type="Marker3D" parent="ShooterEncounterStaging" index="0"]
+position = Vector3(177.92, 0.7, 0)
+
+[node name="PlayerCoverAnchor" type="Marker3D" parent="ShooterEncounterStaging" index="1"]
+position = Vector3(181.76, 0.7, 0)
+
+[node name="EncounterRespawnAnchor" type="Marker3D" parent="ShooterEncounterStaging" index="2"]
+position = Vector3(181.76, 0.7, 0)
+
+[node name="RevealCameraAnchor" type="Marker3D" parent="ShooterEncounterStaging" index="3"]
+position = Vector3(187.52, 2.7, 0)
+
+[node name="ShooterEnemyAnchor" type="Marker3D" parent="ShooterEncounterStaging" index="4"]
+position = Vector3(193.28, 0, 0)
+
+[node name="HandgunEnemyMarker" type="Sprite3D" parent="ShooterEncounterStaging/ShooterEnemyAnchor" index="0"]
+position = Vector3(0, 0.96, 1.2)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("19_handgun_enemy")
+hframes = 4
+flip_h = true
+shaded = false
+render_priority = 10
+
+[node name="GunDropAnchor" type="Marker3D" parent="ShooterEncounterStaging" index="5"]
+position = Vector3(192, 0.3, 0)
 
 [editable path="Player"]
 [editable path="Props/LevelStartLift"]

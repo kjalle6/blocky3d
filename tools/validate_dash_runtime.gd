@@ -168,5 +168,5 @@ func _run() -> void:
 	room.set_session_ability_enabled(PlayerAbility.DASH, true)
 	assert(player.has_ability(PlayerAbility.DASH))
 	assert(player.dash_available())
-	print("Dash movement and Animation Lab toggle validation passed.")
+	print("Dash movement and Firearm Review Lab toggle validation passed.")
 	quit(0)

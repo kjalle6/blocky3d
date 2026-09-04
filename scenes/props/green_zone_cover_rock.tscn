@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/stone_cover.png" id="1_cover"]
+
+[sub_resource type="BoxShape3D" id="Shape_cover_tall"]
+size = Vector3(1.6, 1.55, 1.2)
+
+[sub_resource type="BoxShape3D" id="Shape_cover_low"]
+size = Vector3(1.2, 0.55, 1.2)
+
+[node name="GreenZoneCoverRock" type="StaticBody3D"]
+
+[node name="Visual" type="Sprite3D" parent="."]
+position = Vector3(0, 0.88, 1.18)
+modulate = Color(0.66, 0.74, 0.86, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("1_cover")
+shaded = false
+render_priority = 9
+
+[node name="TallCollision" type="CollisionShape3D" parent="."]
+position = Vector3(-0.48, 0.775, 0)
+shape = SubResource("Shape_cover_tall")
+
+[node name="LowCollision" type="CollisionShape3D" parent="."]
+position = Vector3(0.75, 0.275, 0)
+shape = SubResource("Shape_cover_low")

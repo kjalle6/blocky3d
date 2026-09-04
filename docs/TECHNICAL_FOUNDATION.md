@@ -68,19 +68,20 @@ that loaded session, then reset when another level session is created.
 Disabling the mode restores the versioned persistent campaign behavior without
 changing level code.
 
-`GameRoot.developer_tools_enabled` adds separate Animation Lab and Level Design
-Lab entries to the selector. Both are development-only `LevelSession3D`
-fixtures, not campaign worlds or levels. Animation Lab test abilities are
-granted as session-local unlocks: they survive `R`, never enter the save payload,
-and never mark campaign completion. An in-room panel toggles each implemented
-ability immediately.
+`GameRoot.developer_tools_enabled` adds separate Firearm Review Lab and Level
+Design Lab entries to the selector. Both are development-only `LevelSession3D`
+fixtures, not campaign worlds or levels. Firearm Review Lab is the repurposed
+Animation Lab and retains its session-local test abilities: they survive `R`,
+never enter the save payload, and never mark campaign completion. Its in-room
+panel still toggles each implemented ability immediately.
 
-The room provides clear surfaces for triggering and inspecting idle, run,
-jump, Double Jump, wall contact, attack, landing, and transition timing
-without level hazards or scenery. It is an animation lab, not a mechanic
-course; gameplay feel and teaching are approved in authored levels.
+The room retains clear surfaces for triggering and inspecting idle, run, jump,
+Double Jump, wall contact, attack, landing, and transition timing, and now adds
+one isolated shooter, a real collision cover rock, and focused projectile
+cadence controls. It is a review fixture, not a mechanic course; gameplay feel
+and teaching are approved in authored levels.
 
-`PlayerAbility.IMPLEMENTED` is the tooling contract. The Animation Lab
+`PlayerAbility.IMPLEMENTED` is the tooling contract. The Firearm Review Lab
 definition and toggle panel must expose that exact set. A new ability is not
 finished until it can be enabled and disabled in the lab, survives a lab
 restart while enabled, and its important animation states can be triggered
@@ -124,11 +125,10 @@ sensor, lethal hazards, checkpoints, pickups, and goal/transition exits. Melee d
 are drawn only while their corresponding attack is active. The overlay is a
 read-only visualization and does not modify physics layers, masks, or shapes.
 
-A separate Combat Lab is planned before firearm and boss production. It will
-preview enemy behavior and animation, body/attack/hurt/stomp geometry, melee
-visual sets, projectiles, firearm poses and aim angles, ammo behavior, and boss
-states. It must remain development-only and must not become a substitute for
-testing complete encounters in authored levels.
+Firearm Review Lab now owns the focused first-shooter animation, projectile
+cadence, and cover proof. A broader Combat Lab should be added only when boss or
+multi-enemy inspection outgrows that room; it would remain development-only and
+must not substitute for testing complete encounters in authored levels.
 
 Useful later candidates are checkpoint warping and a freeze-world toggle for
 moving hazards and enemies. Add further tools only when a real authoring
@@ -348,29 +348,63 @@ each ability's resource ownership independent.
 
 ## Firearm and ammunition contract
 
-Firearms are planned, not currently implemented. Their first approved use is a
-fixed weapon introduced shortly before the World 1 boss. Green Zone enemy 2 is
-the selected first shooter visual set; its death guarantees the gun pickup after
-an isolated encounter completed with the existing movement and melee kit.
+Player firearm acquisition, loadout, ammunition, and firing remain
+unimplemented. A development-only shooter and projectile prototype now runs in
+Firearm Review Lab; it is not yet integrated into the Level 3 encounter. The
+first approved player firearm remains a fixed weapon introduced shortly before
+the World 1 boss. Green Zone enemy 2 is the selected first shooter visual set;
+its death guarantees the gun pickup after an isolated encounter completed with
+the existing movement and melee kit.
 
-- Melee and shooting remain distinct actions so obtaining a gun does not remove
-  the dependable close-range verb.
+- Knife and gun remain separately selectable slots so obtaining a gun does not
+  remove the dependable close-range verb. Slot `1` selects the knife, slot `2`
+  selects the gun, the mouse wheel cycles slots, and a gamepad shoulder input
+  cycles them. The equipped slot determines what the existing attack input
+  does.
+- A switch requested during an attack takes effect when that attack resolves;
+  it never truncates presentation or changes an already-active damage window.
 - Initial aim directions are route-horizontal and upward-diagonal. Free mouse
   aim and twin-stick behavior are outside the current direction.
+- Enemy targeting is independent of those player controls. Production ranged
+  enemies resolve a normalized direction toward the player through the full 360
+  degrees of the flat X/Y gameplay plane while keeping Z fixed. The projectile
+  prototype already accepts arbitrary directions; the current review shooter
+  fires horizontally only to isolate cadence and readability.
 - A firearm definition owns visual references, projectile choice, cadence,
   supported directions, and ammo cost; it does not own player locomotion.
 - Shooter presentation, ranged-enemy behavior, and projectile behavior remain
   separate contracts. The selected art does not define the AI.
-- The first shooter is a required authored encounter and its gun reward is
-  deterministic, not a loot roll. Death, checkpoint, and restart behavior may
-  not duplicate or permanently lose the one required pickup.
+- The selected first-shooter cadence is three quick dual-gun beats: two
+  simultaneous projectiles per beat, six per burst, followed by recovery long
+  enough to vault the encounter cover and close with the knife. The slower
+  two-beat mode remains in the lab for comparison only.
+- Shooter presentation replays the clean forward-firing portion of the source
+  animation and returns to idle before its downward muzzle-flash frames; the
+  source artwork itself remains unchanged. This first handgun enemy has no
+  full-body colour-pulse telegraph; its pose and timing provide the warning.
+- The first shooter is a required authored encounter and its gun reward is a
+  visible physical pickup, not a loot roll or text-only award. It may kick free
+  for presentation, but settles at a deterministic safe position. Death,
+  checkpoint, and restart behavior may not duplicate or permanently lose the
+  one required pickup.
+- Ordinary authored collision may block projectiles and serve as cover. The
+  first encounter uses one nearly player-height natural object; there is no
+  crouch, cover button, or snap-to-cover state.
 - Projectile appearance, collision, and damage geometry remain separate.
+- A projectile ray hit preserves its exact world position, surface normal, and
+  collider for presentation. `CombatFeedback3D` turns every handgun collision
+  into the same self-terminating four-frame spark-and-fragment effect and emits
+  the future `projectile_impact` audio cue. Material-specific impact routing is
+  deliberately outside this first firearm milestone.
 - Ammo is initially an authored run resource rather than a global stockpile.
 - Death, checkpoint respawn, manual restart, and encounter reset must each have
   an explicit deterministic ammo/pickup policy before the system is accepted.
 - Zero ammo cannot make an encounter impossible. Required damage always has a
   melee route or a deterministic replenishment rule.
-- The contextual ammo HUD is absent before the player has a firearm.
+- The firearm auto-equips on first pickup and briefly reveals the weapon-switch
+  controls. A contextual two-slot weapon display then highlights the equipped
+  knife or gun and shows remaining gun ammunition. It is absent before the
+  player has a firearm and must be reusable inside the later character HUD.
 
 Gun construction, crafting, inventories, skill trees, and permanent firearm
 progression are not current technical milestones. The asset library makes them
@@ -435,8 +469,8 @@ level where appropriate.
 
 The production `CampaignCatalog` contains two completed Green Zone levels:
 Arrival / Shoreline and Overgrown Coastal Ascent. The six prototypes that
-proved the movement kit are deleted, their contracts having moved to the
-Animation Lab and those production levels. The target campaign structure
+proved the movement kit are deleted, their contracts having moved to Firearm
+Review Lab and those production levels. The target campaign structure
 remains approximately three re-authored levels. Green Zone Finale now has a
 development-only WIP proving its parked lift-top spawn and opening ravine: one
 Double Jump gap, two Dash-required gaps, a Level 2-style paired vertical-flyer
@@ -454,8 +488,10 @@ from directly above instead of introducing bottom corners. The same uncapped
 deep row now finishes every Green Zone platform in this level, allowing the
 surface terrain to read as continuing into the underground backdrop. The two
 cave-wall faces are mirrored to match the Green Zone edges above them, making
-the separate terrain materials read as one joined structure. It is not yet
-catalogued as production.
+the separate terrain materials read as one joined structure. The WIP now extends
+from that exit into the approved continuous-ground shooter-encounter blockout,
+including its real cover rock and staging anchors. Live shooter behavior remains
+lab-only, and the level is not yet catalogued as production.
 `resources/campaign/level_02.tres`
 identifies Overgrown Coastal Ascent and loads
 `scenes/levels/overgrown_coastal_ascent.tscn`; its cave threshold
@@ -557,11 +593,11 @@ death and reset behavior.
 
 Approved replacement levels enter `CampaignCatalog`.
 `GameRoot.developer_level_definitions` is reserved for tools and focused review
-fixtures with a null world definition: Animation Lab, Level Design Lab, and the
-Green Zone Finale Level 3 WIP. Animation Lab remains the only one with in-room
-ability toggles; Level Design Lab is reserved for reusable layout, terrain, and
-fixture experiments. Level 3 WIP starts with the full current movement kit on a
-parked construction lift. Its isolated developer route now contains four
+fixtures with a null world definition: Firearm Review Lab, Level Design Lab, and
+the Green Zone Finale Level 3 WIP. Firearm Review Lab remains the only one with
+in-room ability toggles; Level Design Lab is reserved for reusable layout,
+terrain, and fixture experiments. Level 3 WIP starts with the full current
+movement kit on a parked construction lift. Its isolated developer route now contains four
 ground patrols, three hovering hazards, two spike rows, and three recovery
 checkpoints across the ravine opener and deep return, but no goal or production
 campaign identity. The deep slice lowers the player's authored fall-reset limit
@@ -571,8 +607,8 @@ quick deaths in the three earlier gaps without touching the intended drop.
 Level 3 WIP uses a spatial variation on Level 2's two-background structure. A
 restrained blue-grey cave composition is shown at three-times integer scale and
 world-locked vertically from Y -3.78 to Y -29.70. It meets six vertically
-world-locked night-forest tracks at the same boundary, so the cave rises from the bottom
-of the frame during the fall instead of dissolving the entire viewport. The
+world-locked night-forest tracks at the same boundary, so the cave rises from
+the bottom of the frame during the fall instead of dissolving the entire viewport. The
 existing `surface` zone now drives only the synchronized regional grade, which
 darkens the lower route without moving the authored background boundary. Reused
 rock-underworks terrain forms the floor and two-face Wall Jump shaft. The
@@ -587,10 +623,11 @@ without a separate selector entry.
 Every lasting system receives focused validation. The current suite covers:
 
 - application and world-grouped level-selector structure, including keyboard
-  navigation and the development-only Animation Lab, Level Design Lab, and
+  navigation and the development-only Firearm Review Lab, Level Design Lab, and
   Level 3 WIP;
-- Animation Lab isolation, expanded geometry, immediate ability toggles,
-  reset, and session-local ability policy;
+- Firearm Review Lab isolation, movement geometry, immediate ability toggles,
+  reset, session-local ability policy, shooter cadence, real projectile damage,
+  and collision-cover blocking;
 - Level Design Lab isolation and its retained cave-terrain and construction-lift
   prototyping fixtures;
 - Level 3 WIP isolation, full-kit entry state, parked lift-top spawn, grounded
@@ -610,9 +647,9 @@ Every lasting system receives focused validation. The current suite covers:
 - Double Jump coyote, momentum, release, consumption, landing-refresh, and
   animation contracts;
 - Wall Jump contact, slide, kick, same-wall lockout, opposite-wall refresh,
-  Double Jump interaction, and Animation Lab contracts;
+  Double Jump interaction, and Firearm Review Lab contracts;
 - Dash direction, burst speed, gravity suspension, charge, jump cancellation,
-  wall impact, attack priority, and Animation Lab contracts;
+  wall impact, attack priority, and Firearm Review Lab contracts;
 - the completed Level 2 approach's native cave entrance, two broad patrol
   routes, continuous ground, slide interstitial, and ability-preserving
   same-level transition into the live interior;
@@ -675,7 +712,7 @@ Before committing a gameplay milestone:
 ## Current baseline - 1 September 2026
 
 The movement, collision, enemy, checkpoint and restart behaviour that Prototype
-Levels 1-6 used to protect is now proven in the Animation Lab, Arrival, and the
+Levels 1-6 used to protect is now proven in Firearm Review Lab, Arrival, and the
 Level 2 interior. New abilities and systems must not silently change it.
 
 The typed world catalog and grouped selector, versioned progression payload,
@@ -733,13 +770,15 @@ descent into a short, darkened rock-underworks pocket. One further patrol and a
 5.12 m spike strip lead to a long, hazard-free 5.12 m two-wall Wall Jump shaft
 that returns to the surface. The night forest gives way at a fixed Y -3.78
 boundary to its dedicated subdued cave backdrop, then the spatial boundary
-falls away on the climb. The WIP stops there; firearms, shooter
-behavior, the gun lesson, and the boss remain future milestones.
+falls away on the climb. The WIP continues into the approved shooter-area
+blockout with its genuine collision cover rock and staging anchors. Working
+shooter/projectile cadence exists only in Firearm Review Lab; the live encounter
+and cutscene, pickup, player firearm, lesson, and boss remain future milestones.
 
 Reusable height-aware background fades remain unused and opt-in; authored zone
 regions are active. Structural, visual, and regression automation owns
 technical confidence, while hands-on human review remains the gate for
-presentation, difficulty, fairness, pacing, and feel. Firearms, bosses, Combat
-Lab, and the curated cyberpunk UI theme follow only when their campaign
-milestones require them. Moving saws are no longer a Level 3 prerequisite and
-remain reserved for a later level whose route benefits from them.
+presentation, difficulty, fairness, pacing, and feel. Player firearms, bosses, a
+broader Combat Lab, and the curated cyberpunk UI theme follow only when their
+campaign milestones require them. Moving saws are no longer a Level 3
+prerequisite and remain reserved for a later level whose route benefits from them.

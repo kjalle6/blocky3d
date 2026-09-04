@@ -1,7 +1,10 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="2_platform"]
+[ext_resource type="PackedScene" path="res://scenes/props/green_zone_cover_rock.tscn" id="3_cover"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/handgun_enemy.tscn" id="4_shooter"]
+[ext_resource type="Script" path="res://scripts/dev/firearm_review_lab_3d.gd" id="5_controller"]
 
 [sub_resource type="BoxShape3D" id="Shape_kill_plane"]
 size = Vector3(36, 1, 8)
@@ -27,15 +30,8 @@ position = Vector3(30.08, 3.84, 0)
 script = ExtResource("2_platform")
 size = Vector3(1.28, 7.68, 2)
 
-[node name="LandingBlock" type="StaticBody3D" parent="Platforms" index="3"]
-position = Vector3(12.8, 0.64, 0)
-script = ExtResource("2_platform")
-size = Vector3(3.84, 1.28, 2)
-
-[node name="HighBlock" type="StaticBody3D" parent="Platforms" index="4"]
-position = Vector3(22.4, 1.92, 0)
-script = ExtResource("2_platform")
-size = Vector3(3.84, 1.28, 2)
+[node name="CoverRock" parent="Props" index="0" instance=ExtResource("3_cover")]
+position = Vector3(16.64, 0, 0)
 
 [node name="SpawnPoint" parent="." index="8"]
 position = Vector3(2.56, 0.7, 0)
@@ -52,5 +48,29 @@ position = Vector3(15.36, -6, 0)
 
 [node name="Collision" parent="KillPlane" index="0"]
 shape = SubResource("Shape_kill_plane")
+
+[node name="HandgunEnemy" parent="." index="12" instance=ExtResource("4_shooter")]
+position = Vector3(25.6, 0.55, 0)
+detection_range = 13.0
+
+[node name="FirearmReviewController" type="Node" parent="." index="13"]
+script = ExtResource("5_controller")
+shooter_path = NodePath("../HandgunEnemy")
+mode_label_path = NodePath("../FirearmReviewInterface/ModeLabel")
+
+[node name="FirearmReviewInterface" type="CanvasLayer" parent="." index="14"]
+layer = 5
+
+[node name="ModeLabel" type="Label" parent="FirearmReviewInterface" index="0"]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 680.0
+offset_bottom = 142.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.42, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.025, 0.04, 0.96)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 18
+text = "FIREARM REVIEW LAB\nT: SWITCH PATTERN     R: RESET\nMODE: THREE DUAL SHOTS\nThree quick shots; both guns fire together each time.\nDodge the rounds or use the rock as real cover."
 
 [editable path="Player"]

@@ -1,7 +1,7 @@
 extends SceneTree
 ## Exercises the production player, collision, input, and full-run reset.
 ##
-## This runs in the Animation Lab rather than an authored level: the contract
+## This runs in Firearm Review Lab rather than an authored level: the contract
 ## being proven is the movement kit itself, which no piece of level geometry
 ## owns. The lab is the declared home for that - PlayerAbility.IMPLEMENTED is
 ## its contract - so the proof does not die with any level it happened to be

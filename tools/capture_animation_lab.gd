@@ -1,5 +1,5 @@
 extends SceneTree
-## Captures the disposable Animation Lab for visual review.
+## Captures the focused firearm comparison states in the former Animation Lab.
 
 
 func _init() -> void:
@@ -18,63 +18,52 @@ func _run() -> void:
 	game_root.load_developer_room()
 	for frame in 8:
 		await physics_frame
-	for frame in 4:
-		await process_frame
-	_capture("animation_lab_start")
-
 	var room := game_root.current_level as LevelSession3D
-	room.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(26.0, 0.7, 0)))
+	var shooter := room.get_node("HandgunEnemy") as HandgunEnemy3D
+	var controller := room.get_node("FirearmReviewController") as FirearmReviewLab3D
+	var combat_feedback := room.get_node("CombatFeedback") as CombatFeedback3D
+	var review_transform := room.player.global_transform
+	review_transform.origin = Vector3(14.72, 0.7, 0.0)
+	room.player.reset_at(review_transform)
 	room.camera.snap_to_target()
-	for frame in 8:
-		await process_frame
-	_capture("animation_lab_far_side")
 
-	room.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(28.35, 4.2, 0)))
-	room.player.velocity.y = -7.0
-	Input.action_press("move_right")
-	for frame in 60:
-		await physics_frame
-		if room.player.is_wall_sliding():
-			break
-	Input.action_release("move_right")
-	assert(room.player.is_wall_sliding(), "Wall-slide capture requires wall contact.")
-	room.camera.snap_to_target()
-	for frame in 4:
+	shooter.set_fire_pattern(HandgunEnemy3D.FirePattern.TWIN)
+	await combat_feedback.projectile_impact_presented
+	for frame in 3:
 		await process_frame
-	_capture("animation_lab_wall_slide")
-
-	room.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(8.0, 0.55, 0)))
-	for frame in 8:
-		await physics_frame
-	assert(room.player.is_on_floor(), "Ground Dash capture requires floor contact.")
-	assert(room.player._try_start_dash(1.0))
-	await physics_frame
-	room.camera.snap_to_target()
-	for frame in 2:
-		await process_frame
-	assert(not room.player.is_dash_airborne())
-	assert(room.player.pixel_visual.current_state() == "dash")
-	_capture("animation_lab_dash")
-
-	room.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(8.0, 5.0, 0)))
+	_capture("firearm_review_impact")
+	await _wait_for_shots(shooter, 4)
 	for frame in 3:
 		await physics_frame
-	assert(room.player._try_start_dash(1.0))
-	await physics_frame
-	room.camera.snap_to_target()
-	for frame in 2:
+	for frame in 3:
 		await process_frame
-	assert(room.player.is_dash_airborne())
-	assert(room.player.pixel_visual.current_state() == "air_dash")
-	assert(
-		room.player.pixel_visual.body.frame in PixelPlayerVisual3D.AIR_DASH_FRAMES
-	)
-	_capture("animation_lab_air_dash")
+	_capture("firearm_review_twin")
+
+	controller.toggle_fire_pattern()
+	await _wait_for_shots(shooter, 6)
+	for frame in 3:
+		await process_frame
+	_capture("firearm_review_triple")
+
+	for frame in 80:
+		await physics_frame
+	for frame in 3:
+		await process_frame
+	assert(not room.player.is_dead(), "Cover capture requires the player to remain protected.")
+	assert(shooter.active_projectile_count() == 0)
+	_capture("firearm_review_cover")
 	quit(0)
+
+
+func _wait_for_shots(shooter: HandgunEnemy3D, target_count: int) -> void:
+	var deadline := Time.get_ticks_msec() + 2500
+	while shooter.shots_fired_total() < target_count and Time.get_ticks_msec() < deadline:
+		await physics_frame
+	assert(shooter.shots_fired_total() >= target_count, "Shooter did not fire in time.")
 
 
 func _capture(file_name: String) -> void:
 	var image := root.get_texture().get_image()
-	assert(image != null, "Animation Lab capture requires a graphical renderer.")
+	assert(image != null, "Firearm Review Lab capture requires a graphical renderer.")
 	var error := image.save_png("res://build/previews/%s.png" % file_name)
-	assert(error == OK, "Could not save Animation Lab preview.")
+	assert(error == OK, "Could not save Firearm Review Lab preview.")
