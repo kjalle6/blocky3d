@@ -204,21 +204,33 @@ three re-authored levels:
    horizontal flyer crosses the entire joined platform over those spikes with
    only a slight vertical sway. A deceptively plausible gap then drops the
    player safely into a brief dark cave run before a long,
-   hazard-free two-wall Wall Jump shaft returns them to the surface. One new
-   armed humanoid shooter is introduced alone after that traversal recap;
-   defeating it guarantees the gun pickup. Shooting is taught safely before it
-   is mixed with the learned movement and enemy language, followed by a simple
-   first boss. The current WIP extends beyond the Wall Jump exit into the
-   approved cover-encounter blockout, and a development-only shooter/projectile
-   proof runs in Firearm Review Lab. The live cutscene and encounter, gun pickup,
-   player firearm, lesson, and boss are not integrated yet. Moving saws were cut
-   from this level and reserved for a later campaign fit.
+   hazard-free two-wall Wall Jump shaft returns them to the surface. A grounded
+   in-world threshold then fades to black, unloads that traversal scene, and
+   loads a sealed shooter area under black. Both authored scenes remain sections
+   of the same Green Zone Finale level and retain the learned movement kit, but
+   the new area owns its spawn and checkpoints; death and restart remain there,
+   and the unloaded route cannot be backtracked into. As the fade lifts, the
+   player runs into an isolated encounter with one new armed humanoid. The enemy
+   begins outside the close player framing: the player panics first, the camera
+   crosses the cover rock to reveal that the surprised enemy panics too, and
+   the enemy recovers first. Its opening muzzle flash whips the camera back and
+   sends the player all the way to real collision cover before control returns.
+   Defeating the shooter guarantees the gun pickup. Shooting is taught safely
+   before it is mixed with the learned movement and enemy language, followed by
+   a simple first boss. The gun pickup, player firearm, lesson, and boss all stay
+   in this second section and are not integrated yet. Moving saws were cut from
+   this level and reserved for a later campaign fit.
 
 The six short Godot prototype levels are deleted; they were regression
 evidence for these mechanics, not the final campaign structure. Their useful
 movement and progression contracts now run against active production levels,
 development levels, and Firearm Review Lab (formerly Animation Lab). Git remains
 the archive for the old layouts.
+
+Development labs are temporary, single-purpose review fixtures. Finish the
+feature they isolate, move lasting contracts to the production level or a
+focused validator, then delete the lab instead of repurposing it into an
+accumulating test room. A later experiment earns a fresh fixture of its own.
 
 The eleven Python levels continue to supply ideas for hazards, route shapes,
 power-up placement, and experiments. Their coordinates, ordering, lives, orb

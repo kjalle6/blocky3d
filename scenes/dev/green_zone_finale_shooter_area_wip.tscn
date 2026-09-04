@@ -1,0 +1,157 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="2_platform"]
+[ext_resource type="Resource" path="res://resources/presentation/platform_styles/green_zone.tres" id="3_green_style"]
+[ext_resource type="Resource" path="res://resources/presentation/backgrounds/green_zone_night.tres" id="4_background"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/stone_cover.png" id="5_cover"]
+[ext_resource type="PackedScene" path="res://scenes/level/level_checkpoint.tscn" id="6_checkpoint"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/handgun_enemy.tscn" id="7_handgun_enemy"]
+[ext_resource type="Script" path="res://scripts/cutscene/green_zone_shooter_intro_3d.gd" id="8_shooter_intro"]
+
+[sub_resource type="Environment" id="Environment_night"]
+background_mode = 1
+background_color = Color(0.002, 0.003, 0.008, 1)
+ambient_light_source = 3
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.0
+adjustment_enabled = true
+adjustment_brightness = 0.82
+adjustment_contrast = 1.05
+adjustment_saturation = 0.76
+
+[sub_resource type="BoxShape3D" id="Shape_boundary"]
+size = Vector3(0.24, 12.8, 2)
+
+[sub_resource type="BoxShape3D" id="Shape_kill_plane"]
+size = Vector3(60, 1, 8)
+
+[sub_resource type="BoxShape3D" id="Shape_cover_tall"]
+size = Vector3(1.6, 1.55, 1.2)
+
+[sub_resource type="BoxShape3D" id="Shape_cover_low"]
+size = Vector3(1.2, 0.55, 1.2)
+
+[sub_resource type="BoxShape3D" id="Shape_shooter_intro_trigger"]
+size = Vector3(2.56, 3.2, 1.2)
+
+[node name="GreenZoneFinaleShooterAreaWip" instance=ExtResource("1_base")]
+
+[node name="WorldEnvironment" parent="." index="1"]
+environment = SubResource("Environment_night")
+
+[node name="RouteExtent" parent="." index="2"]
+route_start_x = 0.0
+route_end_x = 40.96
+
+[node name="Background" parent="." index="3"]
+profile = ExtResource("4_background")
+
+[node name="ShooterEncounterGround" type="StaticBody3D" parent="Platforms" index="0"]
+position = Vector3(20.48, -3.2, 0)
+script = ExtResource("2_platform")
+size = Vector3(40.96, 6.4, 2)
+style = ExtResource("3_green_style")
+cap_bottom_edge = false
+
+[node name="LeftBoundary" type="StaticBody3D" parent="Platforms" index="1"]
+position = Vector3(-0.12, 6.4, 0)
+
+[node name="Collision" type="CollisionShape3D" parent="Platforms/LeftBoundary" index="0"]
+shape = SubResource("Shape_boundary")
+
+[node name="WipRightBoundary" type="StaticBody3D" parent="Platforms" index="2"]
+position = Vector3(41.08, 6.4, 0)
+
+[node name="Collision" type="CollisionShape3D" parent="Platforms/WipRightBoundary" index="0"]
+shape = SubResource("Shape_boundary")
+
+[node name="ShooterCover" type="StaticBody3D" parent="Props" index="0"]
+position = Vector3(15.36, 0, 0)
+
+[node name="Visual" type="Sprite3D" parent="Props/ShooterCover" index="0"]
+position = Vector3(0, 0.88, 1.18)
+modulate = Color(0.66, 0.74, 0.86, 1)
+texture_filter = 0
+pixel_size = 0.04
+texture = ExtResource("5_cover")
+shaded = false
+render_priority = 9
+
+[node name="TallCollision" type="CollisionShape3D" parent="Props/ShooterCover" index="1"]
+position = Vector3(-0.48, 0.775, 0)
+shape = SubResource("Shape_cover_tall")
+
+[node name="LowCollision" type="CollisionShape3D" parent="Props/ShooterCover" index="2"]
+position = Vector3(0.75, 0.275, 0)
+shape = SubResource("Shape_cover_low")
+
+[node name="EncounterCheckpoint" parent="Checkpoints" index="0" instance=ExtResource("6_checkpoint")]
+position = Vector3(12.8, 0, 0)
+route_index = 1
+
+[node name="SpawnPoint" parent="." index="8"]
+position = Vector3(0.64, 0.7, 0)
+
+[node name="Player" parent="." index="9"]
+position = Vector3(0.64, 0.7, 0)
+
+[node name="GameplayCamera" parent="." index="10"]
+look_ahead = 5.76
+minimum_center_x = 11.52
+maximum_center_x = 29.44
+
+[node name="KillPlane" parent="." index="11"]
+position = Vector3(20.48, -8, 0)
+
+[node name="Collision" parent="KillPlane" index="0"]
+shape = SubResource("Shape_kill_plane")
+
+[node name="ShooterEncounterStaging" type="Node3D" parent="." index="12"]
+
+[node name="ShooterIntro" type="Node3D" parent="ShooterEncounterStaging" index="0"]
+script = ExtResource("8_shooter_intro")
+level_session_path = NodePath("../..")
+player_path = NodePath("../../Player")
+camera_path = NodePath("../../GameplayCamera")
+trigger_path = NodePath("IntroTrigger")
+reveal_camera_anchor_path = NodePath("../RevealCameraAnchor")
+player_notice_anchor_path = NodePath("../PlayerNoticeAnchor")
+player_cover_anchor_path = NodePath("../PlayerCoverAnchor")
+shooter_path = NodePath("../ShooterEnemyAnchor/HandgunEnemy")
+encounter_checkpoint_path = NodePath("../../Checkpoints/EncounterCheckpoint")
+
+[node name="IntroTrigger" type="Area3D" parent="ShooterEncounterStaging/ShooterIntro" index="0"]
+position = Vector3(5.12, 1.6, 0)
+collision_layer = 0
+collision_mask = 1
+
+[node name="Collision" type="CollisionShape3D" parent="ShooterEncounterStaging/ShooterIntro/IntroTrigger" index="0"]
+shape = SubResource("Shape_shooter_intro_trigger")
+
+[node name="IntroTriggerAnchor" type="Marker3D" parent="ShooterEncounterStaging" index="1"]
+position = Vector3(5.12, 0.7, 0)
+
+[node name="PlayerNoticeAnchor" type="Marker3D" parent="ShooterEncounterStaging" index="2"]
+position = Vector3(9.6, 0.7, 0)
+
+[node name="PlayerCoverAnchor" type="Marker3D" parent="ShooterEncounterStaging" index="3"]
+position = Vector3(13.6, 0.7, 0)
+
+[node name="EncounterRespawnAnchor" type="Marker3D" parent="ShooterEncounterStaging" index="4"]
+position = Vector3(12.8, 0.7, 0)
+
+[node name="RevealCameraAnchor" type="Marker3D" parent="ShooterEncounterStaging" index="5"]
+position = Vector3(23.04, 2.7, 0)
+
+[node name="ShooterEnemyAnchor" type="Marker3D" parent="ShooterEncounterStaging" index="6"]
+position = Vector3(24.32, 0, 0)
+
+[node name="HandgunEnemy" parent="ShooterEncounterStaging/ShooterEnemyAnchor" index="0" instance=ExtResource("7_handgun_enemy")]
+starts_enabled = false
+starts_facing_right = true
+
+[node name="GunDropAnchor" type="Marker3D" parent="ShooterEncounterStaging" index="7"]
+position = Vector3(23.04, 0.3, 0)
+
+[editable path="Player"]

@@ -10,6 +10,8 @@ signal volley_completed(pattern: FirePattern, shot_count: int)
 enum FirePattern { TWIN, TRIPLE }
 enum CombatState { IDLE, TELEGRAPH, FIRING, RECOVERY, DEFEATED }
 
+@export var starts_enabled := true
+@export var starts_facing_right := false
 @export var fire_pattern := FirePattern.TRIPLE
 @export var projectile_scene: PackedScene = preload(
 	"res://scenes/projectiles/handgun_projectile.tscn"
@@ -37,6 +39,7 @@ enum CombatState { IDLE, TELEGRAPH, FIRING, RECOVERY, DEFEATED }
 
 var _initial_transform: Transform3D
 var _facing_sign := -1.0
+var _engagement_enabled := true
 var _state := CombatState.IDLE
 var _phase_remaining := 0.0
 var _sequence_shots_remaining := 0
@@ -48,6 +51,8 @@ var _completed_volleys_total := 0
 var _last_completed_volley_shot_count := 0
 var _defeated := false
 var _defeat_serial := 0
+var _holding_notice_pose := false
+var _holding_panic_pose := false
 var _active_projectiles: Array[HandgunProjectile3D] = []
 
 @onready var body_collision: CollisionShape3D = %BodyCollision
@@ -59,6 +64,8 @@ var _active_projectiles: Array[HandgunProjectile3D] = []
 
 func _ready() -> void:
 	_initial_transform = global_transform
+	_facing_sign = 1.0 if starts_facing_right else -1.0
+	_engagement_enabled = starts_enabled
 	add_to_group("run_resettable")
 	add_to_group("melee_target")
 	contact_area.body_entered.connect(_on_body_entered)
@@ -68,6 +75,16 @@ func _physics_process(delta: float) -> void:
 	_settle_on_floor(delta)
 	if _defeated:
 		pixel_visual.tick(delta, &"death", _facing_sign > 0.0)
+		return
+	if not _engagement_enabled:
+		if _holding_panic_pose:
+			pixel_visual.tick_panic(delta, _facing_sign > 0.0)
+		else:
+			pixel_visual.tick(
+				delta,
+				&"telegraph" if _holding_notice_pose else &"idle",
+				_facing_sign > 0.0
+			)
 		return
 	var player := get_tree().get_first_node_in_group("player_character") as PlayerCharacter
 	match _state:
@@ -100,6 +117,68 @@ func _physics_process(delta: float) -> void:
 func set_fire_pattern(next_pattern: FirePattern) -> void:
 	fire_pattern = next_pattern
 	reset_combat_cycle(true)
+
+
+func set_engagement_enabled(enabled: bool) -> void:
+	if _engagement_enabled == enabled:
+		if not enabled:
+			_holding_notice_pose = false
+			_holding_panic_pose = false
+			reset_combat_cycle(true)
+		return
+	_engagement_enabled = enabled
+	_holding_notice_pose = false
+	_holding_panic_pose = false
+	reset_combat_cycle(true)
+
+
+func engagement_enabled() -> bool:
+	return _engagement_enabled
+
+
+func begin_encounter(initial_telegraph_duration := -1.0) -> void:
+	var had_staged_pose := _holding_notice_pose or _holding_panic_pose
+	set_engagement_enabled(true)
+	if had_staged_pose:
+		_state = CombatState.TELEGRAPH
+		_phase_remaining = (
+			initial_telegraph_duration
+			if initial_telegraph_duration > 0.0
+			else telegraph_duration
+		)
+		pixel_visual.set_state(&"telegraph", true)
+
+
+func notice_player() -> void:
+	var player := get_tree().get_first_node_in_group("player_character") as PlayerCharacter
+	if player == null or player.is_dead():
+		return
+	_face_player(player)
+	_holding_notice_pose = not _engagement_enabled
+	_holding_panic_pose = false
+	pixel_visual.tick(
+		0.0,
+		&"telegraph" if _holding_notice_pose else &"idle",
+		_facing_sign > 0.0
+	)
+
+
+func panic_at_player() -> void:
+	var player := get_tree().get_first_node_in_group("player_character") as PlayerCharacter
+	if player == null or player.is_dead() or _engagement_enabled:
+		return
+	_face_player(player)
+	_holding_notice_pose = false
+	_holding_panic_pose = true
+	pixel_visual.tick_panic(0.0, _facing_sign > 0.0)
+
+
+func is_holding_panic_pose() -> bool:
+	return _holding_panic_pose
+
+
+func facing_direction() -> float:
+	return _facing_sign
 
 
 func current_fire_pattern() -> FirePattern:
@@ -198,12 +277,15 @@ func reset_run() -> void:
 	clear_active_projectiles()
 	global_transform = _initial_transform
 	velocity = Vector3.ZERO
-	_facing_sign = -1.0
+	_facing_sign = 1.0 if starts_facing_right else -1.0
 	_defeated = false
+	_holding_notice_pose = false
+	_holding_panic_pose = false
 	visible = true
 	body_collision.set_deferred("disabled", false)
 	contact_collision.set_deferred("disabled", false)
 	set_physics_process(true)
+	_engagement_enabled = starts_enabled
 	reset_combat_cycle(false)
 
 
@@ -219,7 +301,7 @@ func _settle_on_floor(delta: float) -> void:
 
 
 func _can_engage(player: PlayerCharacter) -> bool:
-	if player == null or player.is_dead():
+	if not _engagement_enabled or player == null or player.is_dead():
 		return false
 	var offset := player.global_position - global_position
 	return absf(offset.x) <= detection_range and absf(offset.y) <= vertical_tolerance
@@ -279,27 +361,37 @@ func _fire_next_dual_shot() -> void:
 
 
 func _fire_forward_beat() -> void:
+	var player := get_tree().get_first_node_in_group("player_character") as PlayerCharacter
+	var shot_direction := Vector3(_facing_sign, 0.0, 0.0)
+	if player != null and not player.is_dead():
+		var player_offset := player.global_position - global_position
+		player_offset.z = 0.0
+		if not player_offset.is_zero_approx():
+			shot_direction = player_offset.normalized()
+			if not is_zero_approx(shot_direction.x):
+				_facing_sign = 1.0 if shot_direction.x > 0.0 else -1.0
+	var lane_axis := Vector3(-shot_direction.y, shot_direction.x, 0.0)
 	var projectile_count := projectiles_per_fire_beat()
 	for index in projectile_count:
 		var centered_index := float(index) - float(projectile_count - 1) * 0.5
-		_spawn_projectile(centered_index * projectile_lane_spacing)
+		_spawn_projectile(
+			shot_direction,
+			lane_axis * centered_index * projectile_lane_spacing
+		)
 
 
-func _spawn_projectile(vertical_offset: float) -> void:
+func _spawn_projectile(shot_direction: Vector3, lane_offset: Vector3) -> void:
 	var projectile := projectile_scene.instantiate() as HandgunProjectile3D
 	assert(projectile != null, "HandgunEnemy3D requires a HandgunProjectile3D scene.")
 	get_parent().add_child(projectile)
 	projectile.global_position = global_position + Vector3(
 		absf(muzzle.position.x) * _facing_sign,
-		muzzle.position.y + vertical_offset,
+		muzzle.position.y,
 		0.0
-	)
+	) + lane_offset
 	projectile.speed = projectile_speed
 	projectile.maximum_distance = projectile_distance
-	# The review fixture intentionally isolates horizontal cadence. Production
-	# ranged enemies must replace this with a normalized player-facing X/Y vector;
-	# the projectile contract already accepts arbitrary directions.
-	projectile.launch(Vector3(_facing_sign, 0.0, 0.0), self)
+	projectile.launch(shot_direction, self)
 	projectile.expired.connect(_on_projectile_expired.bind(projectile))
 	_active_projectiles.append(projectile)
 	_current_volley_shots += 1

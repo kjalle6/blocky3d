@@ -1,13 +1,18 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/enemies/handgun_enemy_3d.gd" id="1_enemy"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_handgun_enemy_visual_3d.gd" id="2_visual"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/characters/player_notice.png" id="3_panic_marks"]
 
 [sub_resource type="BoxShape3D" id="Shape_body"]
 size = Vector3(0.72, 1.1, 0.72)
 
 [sub_resource type="BoxShape3D" id="Shape_contact"]
 size = Vector3(0.82, 1.18, 0.82)
+
+[sub_resource type="AtlasTexture" id="Atlas_panic_marks"]
+atlas = ExtResource("3_panic_marks")
+region = Rect2(261, 10, 9, 9)
 
 [node name="HandgunEnemy" type="CharacterBody3D"]
 script = ExtResource("1_enemy")
@@ -22,6 +27,14 @@ position = Vector3(0, 0.41, 1.2)
 pixel_size = 0.04
 render_priority = 10
 script = ExtResource("2_visual")
+
+[node name="PanicMarks" type="Sprite3D" parent="PixelVisual"]
+unique_name_in_owner = true
+visible = false
+position = Vector3(-0.4, 0.84, 0.01)
+pixel_size = 0.04
+render_priority = 11
+texture = SubResource("Atlas_panic_marks")
 
 [node name="Muzzle" type="Marker3D" parent="."]
 unique_name_in_owner = true

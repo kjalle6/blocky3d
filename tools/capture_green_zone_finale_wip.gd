@@ -1,9 +1,12 @@
 extends SceneTree
 ## Captures the Level 3 WIP lift arrival, ravine opener, deceptive drop, short
-## deep-cave encounter, long Wall Jump return, and the staged shooter blockout.
+## deep-cave encounter, long Wall Jump return, and the separate shooter area.
 
 const OUTPUT_SIZE := Vector2i(1920, 1080)
 const OUTPUT_DIRECTORY := "res://build/previews"
+const SHOOTER_AREA := preload("res://tools/level_3_shooter_area_fixture.gd")
+
+var _impact_seen := false
 
 
 func _init() -> void:
@@ -116,11 +119,94 @@ func _run() -> void:
 		await physics_frame
 	await _capture(level, "level_3_wip_wall_jump_exit")
 
-	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(181.76, 0.7, 0)))
+	level = SHOOTER_AREA.load_into(game_root)
+	for frame in 8:
+		await physics_frame
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(13.6, 0.7, 0)))
 	level.camera.snap_to_target()
 	for frame in 8:
 		await physics_frame
-	await _capture(level, "level_3_wip_shooter_blockout")
+	await _capture(level, "level_3_wip_shooter_encounter")
+
+	var intro := level.get_node(
+		"ShooterEncounterStaging/ShooterIntro"
+	) as GreenZoneShooterIntro3D
+	var shooter := level.get_node(
+		"ShooterEncounterStaging/ShooterEnemyAnchor/HandgunEnemy"
+	) as HandgunEnemy3D
+	var shooter_visual := (
+		shooter.get_node("PixelVisual") as PixelHandgunEnemyVisual3D
+	)
+	var panic_marks := shooter_visual.get_node("PanicMarks") as Sprite3D
+	var feedback := level.get_node("CombatFeedback") as CombatFeedback3D
+	assert(
+		intro != null
+		and shooter != null
+		and shooter_visual != null
+		and panic_marks != null
+		and feedback != null
+	)
+	_impact_seen = false
+	feedback.projectile_impact_presented.connect(
+		func(_position: Vector3, _normal: Vector3) -> void:
+			_impact_seen = true
+	)
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(3.84, 0.7, 0)))
+	intro.play_from_start_for_review()
+	for frame in 120:
+		await physics_frame
+		if intro.current_phase() == GreenZoneShooterIntro3D.Phase.PLAYER_NOTICE:
+			break
+	assert(
+		intro.current_phase() == GreenZoneShooterIntro3D.Phase.PLAYER_NOTICE,
+		"Shooter-intro capture never reached the player-notice beat."
+	)
+	for frame in 30:
+		await physics_frame
+		if level.player.pixel_visual.body.frame == 5:
+			break
+	assert(
+		intro.current_phase() == GreenZoneShooterIntro3D.Phase.PLAYER_NOTICE,
+		"Shooter-intro player reaction ended before frame 6."
+	)
+	assert(level.player.pixel_visual.body.frame == 5)
+	await _capture(level, "level_3_wip_shooter_intro_player_notice")
+
+	for frame in 120:
+		await physics_frame
+		if intro.current_phase() == GreenZoneShooterIntro3D.Phase.ENEMY_NOTICE:
+			break
+	assert(
+		intro.current_phase() == GreenZoneShooterIntro3D.Phase.ENEMY_NOTICE,
+		"Shooter-intro capture never reached the enemy-notice beat."
+	)
+	for frame in 30:
+		await physics_frame
+		if panic_marks.visible:
+			break
+	assert(
+		intro.current_phase() == GreenZoneShooterIntro3D.Phase.ENEMY_NOTICE,
+		"Shooter-intro enemy reaction ended before its panic mark."
+	)
+	assert(panic_marks.visible)
+	await _capture(level, "level_3_wip_shooter_intro_enemy_notice")
+
+	for frame in 60:
+		await physics_frame
+		if intro.current_phase() == GreenZoneShooterIntro3D.Phase.ENEMY_AIM:
+			break
+	assert(
+		intro.current_phase() == GreenZoneShooterIntro3D.Phase.ENEMY_AIM,
+		"Shooter-intro capture never reached the enemy-aim beat."
+	)
+	await _capture(level, "level_3_wip_shooter_intro_enemy_aim")
+
+	for frame in 240:
+		await physics_frame
+		if _impact_seen:
+			break
+	assert(_impact_seen, "Shooter-intro capture never reached the cover impact.")
+	await _capture(level, "level_3_wip_shooter_intro_impact")
 	quit(0)
 
 

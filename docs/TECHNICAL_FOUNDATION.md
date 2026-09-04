@@ -26,8 +26,8 @@ scene tree is three-dimensional.
 | --- | --- |
 | Application flow | `GameRoot`: active world container, interface container, and catalog-driven level selector |
 | Campaign content | `CampaignCatalog`, typed `WorldDefinition`, and typed `LevelDefinition` resources; no level-number behavior branches |
-| Level run state | `LevelSession3D`: player wiring, death, checkpoint respawn, full restart, and completion |
-| Level thresholds | `LevelTransition3D`: a doorway that hands the run to another scene or level. `GameRoot` fades out, swaps the scene behind the black, and fades back in. Source exit and destination entrance presentation are authored separately: stop, run, or disappear into an occluding doorway on exit; optionally run while black lifts on entry. Direct level loads remain stationary. A campaign threshold may set `completes_source_level` to record its source without showing the completion overlay, while a same-level `target_scene` handoff preserves the active level identity and run state |
+| Level run state | `LevelSession3D`: player wiring, death, section-local checkpoint respawn, full restart, and completion |
+| Level thresholds | `LevelTransition3D`: a doorway that hands the run to another scene or level. `GameRoot` fades out, swaps the scene behind the black, and fades back in. Source exit and destination entrance presentation are authored separately: stop, run, or disappear into an occluding doorway on exit; optionally run while black lifts on entry. Direct level loads remain stationary. A campaign threshold may set `completes_source_level` to record its source without showing the completion overlay. A same-level `target_scene` handoff preserves the active `LevelDefinition`, world identity, and explicitly carried ability state while replacing the source scene and `LevelSession3D`; the destination therefore owns its spawn and checkpoints |
 | Locomotion | `PlayerCharacter` plus typed `PlayerMovementConfig` tuning |
 | Route extent | `RouteExtent3D`: metadata describing the authored start and end of a level's route. Movement is plain +X; nothing projects onto a path |
 | Camera | `PixelSideCamera3D`, independent from player movement ownership |
@@ -349,12 +349,13 @@ each ability's resource ownership independent.
 ## Firearm and ammunition contract
 
 Player firearm acquisition, loadout, ammunition, and firing remain
-unimplemented. A development-only shooter and projectile prototype now runs in
-Firearm Review Lab; it is not yet integrated into the Level 3 encounter. The
-first approved player firearm remains a fixed weapon introduced shortly before
-the World 1 boss. Green Zone enemy 2 is the selected first shooter visual set;
-its death guarantees the gun pickup after an isolated encounter completed with
-the existing movement and melee kit.
+unimplemented. The approved shooter, projectile, impact feedback, and short
+introduction now run in the Level 3 WIP's sealed second section; Firearm Review
+Lab remains a temporary cadence comparison until the firearm loop is complete.
+The first approved player firearm remains a fixed weapon introduced shortly
+before the World 1 boss. Green Zone enemy 2 is the selected first shooter visual
+set; its death guarantees the gun pickup after an isolated encounter completed
+with the existing movement and melee kit.
 
 - Knife and gun remain separately selectable slots so obtaining a gun does not
   remove the dependable close-range verb. Slot `1` selects the knife, slot `2`
@@ -365,11 +366,11 @@ the existing movement and melee kit.
   it never truncates presentation or changes an already-active damage window.
 - Initial aim directions are route-horizontal and upward-diagonal. Free mouse
   aim and twin-stick behavior are outside the current direction.
-- Enemy targeting is independent of those player controls. Production ranged
-  enemies resolve a normalized direction toward the player through the full 360
-  degrees of the flat X/Y gameplay plane while keeping Z fixed. The projectile
-  prototype already accepts arbitrary directions; the current review shooter
-  fires horizontally only to isolate cadence and readability.
+- Enemy targeting is independent of those player controls. The production
+  shooter resolves a normalized direction toward the player through the full
+  360 degrees of the flat X/Y gameplay plane while keeping Z fixed. Paired
+  rounds offset along the perpendicular lane axis. The same-height lab fixture
+  therefore still reads as a horizontal cadence test without special behavior.
 - A firearm definition owns visual references, projectile choice, cadence,
   supported directions, and ammo cost; it does not own player locomotion.
 - Shooter presentation, ranged-enemy behavior, and projectile behavior remain
@@ -488,10 +489,23 @@ from directly above instead of introducing bottom corners. The same uncapped
 deep row now finishes every Green Zone platform in this level, allowing the
 surface terrain to read as continuing into the underground backdrop. The two
 cave-wall faces are mirrored to match the Green Zone edges above them, making
-the separate terrain materials read as one joined structure. The WIP now extends
-from that exit into the approved continuous-ground shooter-encounter blockout,
-including its real cover rock and staging anchors. Live shooter behavior remains
-lab-only, and the level is not yet catalogued as production.
+the separate terrain materials read as one joined structure. Just beyond that
+exit, a direct same-level `target_scene` threshold fades out and unloads the
+traversal scene. A sealed shooter-area scene loads behind black under the same
+Green Zone Finale definition with the full movement kit retained, but with its
+own spawn and checkpoint state. It contains the real cover rock, turned-away
+dormant enemy, ordered player-panic and enemy-panic close-ups, first-shot camera
+whip and run to cover, and post-introduction checkpoint. The cutscene-owned
+player notice uses the promoted six-frame reaction sheet as a deliberate
+1 -> 2 -> 1 -> 6 pose sequence and keeps the idle knife overlay frozen on frame
+1 to avoid a weapon pop. The enemy has no native reaction sheet, so its
+presentation uses idle frames 1 -> 2 -> 1 -> 1 and an `AtlasTexture` containing
+only the same nine overhead-mark pixels. The existing reveal marker becomes a
+phase-driven camera target: it eases between close-up centers, then returns
+size, target, look-ahead, and follow response without leaving a live tween that
+could survive reset. Its solid left boundary and the freed source scene make
+backtracking structurally impossible. The level is not yet catalogued as
+production.
 `resources/campaign/level_02.tres`
 identifies Overgrown Coastal Ascent and loads
 `scenes/levels/overgrown_coastal_ascent.tscn`; its cave threshold
@@ -594,13 +608,17 @@ death and reset behavior.
 Approved replacement levels enter `CampaignCatalog`.
 `GameRoot.developer_level_definitions` is reserved for tools and focused review
 fixtures with a null world definition: Firearm Review Lab, Level Design Lab, and
-the Green Zone Finale Level 3 WIP. Firearm Review Lab remains the only one with
-in-room ability toggles; Level Design Lab is reserved for reusable layout,
-terrain, and fixture experiments. Level 3 WIP starts with the full current
-movement kit on a parked construction lift. Its isolated developer route now contains four
-ground patrols, three hovering hazards, two spike rows, and three recovery
-checkpoints across the ravine opener and deep return, but no goal or production
-campaign identity. The deep slice lowers the player's authored fall-reset limit
+the Green Zone Finale Level 3 WIP. Labs are temporary and single-purpose: once
+their active experiment is integrated and their lasting contracts have moved,
+delete them rather than repurposing them; create a fresh fixture for a future
+experiment. Level 3 WIP starts with the full current movement kit on a parked
+construction lift. Across two authored scenes, its isolated developer route now
+contains four ground patrols, three hovering hazards, the live handgun shooter,
+two spike rows, and four recovery checkpoints, but no goal or production
+campaign identity. Its same-level handoff keeps the one Level 3 identity and
+movement abilities while giving the shooter scene its own spawn, local
+checkpoints, death, and restart lifecycle. The deep slice lowers the player's
+authored fall-reset limit
 to Y -31 and the global kill plane to Y -32 so the 25.6 m descent remains
 playable. A second kill plane stays at Y -8 across only X 0.00–79.36, preserving
 quick deaths in the three earlier gaps without touching the intended drop.
@@ -616,7 +634,10 @@ production Level 2 approach uses a direct
 same-level `target_scene` handoff into its live interior. Focused validators,
 captures, and probes load that interior scene directly under
 `resources/campaign/level_02.tres`, preserving its production Level 2 identity
-without a separate selector entry.
+without a separate selector entry. Level 3 WIP uses the same identity-preserving
+handoff pattern between its traversal and shooter scenes. Its destination begins
+a forward run while black lifts, and neither authored section receives a second
+selector entry or campaign identity.
 
 ## Validation and visual review
 
@@ -634,6 +655,13 @@ Every lasting system receives focused validation. The current suite covers:
   night scenery, measured ravine gaps, quick early-gap death planes, vertical
   flyers, patrol and spike placements, safe deep fall, rock terrain, regional
   grade, camera regions, checkpoints, and hazard-free two-wall return shaft;
+- Level 3's same-definition section handoff, including fade-out, source unload,
+  retained movement abilities, fresh destination spawn/checkpoint ownership,
+  left-side containment, and death/manual restart remaining in the shooter area;
+- the first shooter's fade-in approach, player close-up, pan to the enemy's
+  matching panic, aim recovery, first-shot camera whip and evade, full run to
+  cover, cover-and-volley completion barrier, cover respawn, and
+  shooter-section restart behavior;
 - campaign catalog integrity, versioned progress serialization, and
   per-level ability filtering, including the two-level World 1 order;
 - fresh level-defined development entry state versus same-session restart
@@ -770,10 +798,22 @@ descent into a short, darkened rock-underworks pocket. One further patrol and a
 5.12 m spike strip lead to a long, hazard-free 5.12 m two-wall Wall Jump shaft
 that returns to the surface. The night forest gives way at a fixed Y -3.78
 boundary to its dedicated subdued cave backdrop, then the spatial boundary
-falls away on the climb. The WIP continues into the approved shooter-area
-blockout with its genuine collision cover rock and staging anchors. Working
-shooter/projectile cadence exists only in Firearm Review Lab; the live encounter
-and cutscene, pickup, player firearm, lesson, and boss remain future milestones.
+falls away on the climb. A grounded threshold beyond the return now fades to
+black and unloads this traversal scene without completing Level 3. The sealed
+shooter scene loads behind black under the same level identity and with the
+learned abilities retained, but its fresh `LevelSession3D` owns all subsequent
+spawns, checkpoints, death, and restart. The removed source and solid left
+boundary prevent backtracking.
+
+The destination starts the player running as black lifts. A close player frame
+hides the dormant enemy, the player reacts, and the camera pans across the real
+cover rock to reveal the enemy's matching surprise. The enemy recovers first;
+its opening shot drives a quick camera return and sends the input-locked player
+all the way to genuine collision cover while the view widens back to gameplay.
+The cutscene releases only after both arrival and the full opening volley, and
+its local checkpoint prevents it replaying after death. Pickup, player firearm,
+firing lesson, later practice, and boss all remain future milestones inside this
+second section.
 
 Reusable height-aware background fades remain unused and opt-in; authored zone
 regions are active. Structural, visual, and regression automation owns

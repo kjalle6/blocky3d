@@ -13,6 +13,7 @@ const BODY_TEXTURES := {
 	"air_dash": preload("res://assets/art/green_zone/characters/player_dash.png"),
 	"attack": preload("res://assets/art/green_zone/characters/player_attack.png"),
 	"run_attack": preload("res://assets/art/green_zone/characters/player_run_attack.png"),
+	"notice": preload("res://assets/art/green_zone/characters/player_notice.png"),
 	"hurt": preload("res://assets/art/green_zone/characters/player_hurt.png"),
 	"death": preload("res://assets/art/green_zone/characters/player_death.png"),
 }
@@ -32,6 +33,7 @@ const FRAME_COUNTS := {
 	"air_dash": 6,
 	"attack": 6,
 	"run_attack": 6,
+	"notice": 6,
 	"hurt": 2,
 	"death": 6,
 }
@@ -45,10 +47,14 @@ const FRAME_RATES := {
 	"air_dash": 24.0,
 	"attack": 18.0,
 	"run_attack": 18.0,
+	"notice": 10.0,
 	"hurt": 8.0,
 	"death": 13.0,
 }
 const AIR_DASH_FRAMES := [1, 2, 3, 2, 3, 4]
+## One-indexed source intent: normal -> frame 2 -> normal -> frame 6. The
+## final pose carries the overhead "oh no" mark and holds until the first shot.
+const NOTICE_FRAMES := [0, 1, 0, 5]
 
 var _state := ""
 var _elapsed := 0.0
@@ -113,7 +119,12 @@ func set_state(next_state: String, force: bool) -> void:
 	body.texture = BODY_TEXTURES[_state]
 	body.hframes = FRAME_COUNTS[_state]
 	body.frame = 0
-	var weapon_state := _state if WEAPON_TEXTURES.has(_state) else ""
+	# The reaction sheet returns to the ordinary stance under its overhead mark.
+	# Keep the knife registered on its first idle frame instead of making it
+	# vanish for the half-second cutscene beat.
+	var weapon_state := "idle" if _state == "notice" else _state
+	if not WEAPON_TEXTURES.has(weapon_state):
+		weapon_state = ""
 	weapon.visible = not weapon_state.is_empty()
 	if weapon.visible:
 		weapon.texture = WEAPON_TEXTURES[weapon_state]
@@ -178,6 +189,11 @@ func _apply_frame(vertical_speed: float) -> void:
 			_elapsed * FRAME_RATES[_state]
 		))
 		frame = AIR_DASH_FRAMES[step]
+	elif _state == "notice":
+		var step := mini(NOTICE_FRAMES.size() - 1, floori(
+			_elapsed * FRAME_RATES[_state]
+		))
+		frame = NOTICE_FRAMES[step]
 	elif _state in [
 		"double_jump",
 		"dash",
@@ -191,4 +207,4 @@ func _apply_frame(vertical_speed: float) -> void:
 		frame = floori(_elapsed * FRAME_RATES[_state]) % count
 	body.frame = frame
 	if weapon.visible:
-		weapon.frame = mini(frame, weapon.hframes - 1)
+		weapon.frame = 0 if _state == "notice" else mini(frame, weapon.hframes - 1)

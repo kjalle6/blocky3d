@@ -404,6 +404,18 @@ func begin_transition_run(direction: float, speed: float, duration: float) -> vo
 	set_physics_process(true)
 
 
+func finish_transition_run() -> void:
+	_transition_run_remaining = 0.0
+	_transition_run_speed = 0.0
+	_transition_run_direction = _facing_sign
+	horizontal_speed = 0.0
+	velocity.x = 0.0
+	velocity.z = 0.0
+	set_physics_process(true)
+	if pixel_visual != null:
+		pixel_visual.set_state("idle", true)
+
+
 func is_transition_running() -> bool:
 	return _transition_run_remaining > 0.0
 

@@ -20,7 +20,9 @@ baseline. A development-only Level 3 WIP now proves Green Zone Finale's opening:
 the player begins on Level 2's construction lift at its upper landing and steps
 into a ravine traversal under the accepted dark-blue night forest, then falls
 safely into a short deep-cave interruption and Wall Jumps back to the surface.
-It is not yet a production campaign entry.
+A same-level fade threshold then hands the run to a sealed shooter-area scene,
+keeping the long traversal and the firearm arc as two authored sections of one
+level. It is not yet a production campaign entry.
 
 The six Green Zone prototype levels that preceded this are deleted. They were
 regression evidence for the movement kit, and that job is finished: every
@@ -329,14 +331,38 @@ so the two materials meet without exposed cave columns beside the surface. A
 second checkpoint returns the player to the surface shelf at the current WIP
 endpoint.
 
-The active build milestone now begins at this endpoint. It covers the isolated
-cover-based shooter encounter, its projectile behavior and impact feedback, the
-guaranteed physical gun drop, the player's two-slot weapon state, and the short
-safe firing lesson immediately after acquisition. The first enemy fires
-readable bursts across one genuine collision object; the player uses its
-recovery opening to cross the cover and finish the encounter with the existing
-knife. This introduces line-of-fire cover as ordinary world geometry rather
-than a new character stance or cover mechanic.
+The active build milestone now begins at this endpoint with a true authored
+section boundary rather than appending the whole firearm arc to the already long
+traversal scene. A grounded in-world threshold fades to black without completing
+the level, unloads the traversal scene, and loads a sealed shooter-area scene
+behind the black. Both scenes use the same Green Zone Finale `LevelDefinition`
+and preserve the unlocked movement abilities. The destination nevertheless owns
+a fresh local spawn and checkpoint chain; the source no longer exists, a solid
+left boundary seals the new route, and the player cannot run back. Death and
+manual restart after the handoff remain in the shooter section rather than
+returning to the ravine or Wall Jump route.
+
+The fade lifts over the player's continuing run into the isolated cover
+encounter. A close camera first excludes the turned-away enemy while the player
+notices the unseen threat through a sparse normal -> reaction frame 2 -> normal
+-> reaction frame 6 sequence. The camera then crosses the cover rock and finds
+the enemy making the same four-beat panic response with its own idle frames and
+the shared overhead mark. The enemy recovers first, raises both guns, and its
+opening muzzle flash triggers both a fast camera whip back and the input-locked
+player's collision-aware run all the way to the real cover rock. The camera
+widens back into gameplay during that run. Control returns only after both the
+player has reached cover and the three-beat opening burst has entered recovery.
+The section-local checkpoint then resumes a death safely behind cover without
+replaying the introduction, while a full section restart rearms the sequence at
+the shooter-area spawn. This introduces line-of-fire cover as ordinary world
+geometry rather than a new character stance or cover mechanic.
+
+The remainder of this milestone is the guaranteed physical gun drop, the
+player's two-slot weapon state, and the short safe firing lesson immediately
+after acquisition. The player uses the shooter's recovery opening to vault the
+cover and finish the encounter with the existing knife. The pickup, firing
+lesson, later full-kit practice, and boss all remain in this second section so
+the new firearm state does not need to cross another scene boundary.
 
 Firearm Review Lab selected the three-beat dual-gun pattern as the production
 baseline. Each beat fires both guns together, producing two projectiles per beat
@@ -353,11 +379,12 @@ restrained spark with a tiny fragment layer, placed at the ray hit and oriented
 by the reported surface normal. Rock, terrain, and other colliders share it; the
 first firearm does not justify a material-response system.
 
-The current lab test fires horizontally to isolate cadence and readability.
-Before production integration, ranged enemies must aim toward the player through
-the full 360 degrees of the flat X/Y gameplay plane. This enemy-targeting
-requirement does not broaden the player firearm's planned horizontal and
-upward-diagonal controls.
+The production shooter now resolves a normalized direction toward the player
+through the full 360 degrees of the flat X/Y gameplay plane. Its dual rounds use
+perpendicular lane offsets, so a same-height Firearm Review Lab setup remains a
+clean horizontal cadence test without a separate aiming mode. This
+enemy-targeting behavior does not broaden the player firearm's planned
+horizontal and upward-diagonal controls.
 
 The loadout is deliberately small: slot `1` selects the knife, slot `2` selects
 the gun, the mouse wheel cycles slots, and one gamepad shoulder input cycles
