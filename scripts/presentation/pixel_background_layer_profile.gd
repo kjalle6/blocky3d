@@ -24,6 +24,9 @@ enum HorizontalRepeat {
 }
 
 @export var texture: Texture2D
+## Integer enlargement for deliberately lower-resolution distant art. Keeping
+## this integral preserves hard pixel edges and a stable pixel grid.
+@export_range(1, 8, 1) var pixel_scale := 1
 @export var horizontal_policy := HorizontalPolicy.PARALLAX
 @export_range(0.0, 1.0, 0.01) var horizontal_parallax := 0.2
 @export var vertical_policy := VerticalPolicy.SCREEN_LOCKED

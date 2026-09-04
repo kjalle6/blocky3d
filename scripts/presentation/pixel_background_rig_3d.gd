@@ -118,9 +118,10 @@ func _update_layer(
 	visible_width: float
 ) -> void:
 	var layer := runtime.profile
-	var texture_width := float(layer.texture.get_width()) * profile.pixel_size
-	var texture_height := float(layer.texture.get_height()) * profile.pixel_size
-	var repeat_step := layer.repeat_step_pixels() * profile.pixel_size
+	var layer_pixel_size := profile.pixel_size * float(layer.pixel_scale)
+	var texture_width := float(layer.texture.get_width()) * layer_pixel_size
+	var texture_height := float(layer.texture.get_height()) * layer_pixel_size
+	var repeat_step := layer.repeat_step_pixels() * layer_pixel_size
 	var required_horizontal_copies := maxi(
 		3,
 		ceili(visible_width / repeat_step) + 2
@@ -222,6 +223,11 @@ func _ensure_copy_count(
 		sprite.name = "Copy%02d" % (runtime.copies.size() + 1)
 		sprite.texture = runtime.profile.texture
 		sprite.pixel_size = profile.pixel_size
+		sprite.scale = Vector3(
+			float(runtime.profile.pixel_scale),
+			float(runtime.profile.pixel_scale),
+			1.0
+		)
 		sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 		sprite.shaded = false
 		sprite.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF

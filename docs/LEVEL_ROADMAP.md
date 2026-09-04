@@ -299,19 +299,28 @@ This ravine is only the opening phrase of a deliberately long level. It stops
 on joined continuation ground before a 20.48 m gap that looks plausibly
 crossable but sits just beyond the combined Double Jump and Dash envelope. A
 committed attempt therefore becomes a consequence-free surprise descent rather
-than an obvious instruction to fall. The drop runs about 25.6 m beside a wall,
-so the player may control it with a Wall Slide or simply fall without taking
-damage. A separate shallow kill plane covers only the three earlier ravine gaps,
+than an obvious instruction to fall. The open drop runs about 25.6 m, with no
+hanging cave face beside it. The first three tiles of the deep floor are
+notched away beneath the takeoff: an honest, committed jump carries into the
+safe lower route, while stepping straight down continues to the kill plane
+instead of revealing the route for free.
+A separate shallow kill plane covers only the three earlier ravine gaps,
 so missing those crossings still resets quickly instead of borrowing the deep
 route's longer fall.
 
 The bottom deliberately stays brief. Reused Level 2 rock-underworks terrain
-frames one familiar ground enemy and one 5.12 m spike strip against a darkened
-version of the same night forest, then a recovery checkpoint feeds directly
-into a 5.12 m-wide two-wall shaft. Its long climb roughly matches the descent
-and contains no spikes or other hazards: this is a clean Wall Jump mastery beat,
-not a repeat of Level 2's trapped shaft. A second checkpoint returns the player
-to the surface shelf at the current WIP endpoint.
+frames one familiar ground enemy and one 5.12 m spike strip against a subdued
+blue-grey cave backdrop. Its upper edge meets the forest at Y -3.78:
+the forest therefore travels upward with the surface during the fall and the
+cave physically enters from the bottom of the frame instead of replacing the
+whole screen through a dissolve. A recovery checkpoint feeds directly into a
+5.12 m-wide two-wall shaft. Its long climb roughly matches the descent and
+contains no spikes or other hazards: this is a clean Wall Jump mastery beat, not
+a repeat of Level 2's trapped shaft. At the top, both Green Zone shelves extend
+one tile over the shaft walls while the cave tiles begin at their undersides,
+so the two materials meet without exposed cave columns beside the surface. A
+second checkpoint returns the player to the surface shelf at the current WIP
+endpoint.
 
 The shooter, projectiles, gun, ammo HUD, and boss remain unbuilt and separate
 build decisions after this point.

@@ -52,7 +52,61 @@ func _run() -> void:
 	assert(is_equal_approx(level.camera.look_ahead, 4.48))
 	assert(is_equal_approx(level.camera.maximum_center_x, 160.0))
 	assert(level.background.profile.profile_id == &"green_zone_night")
-	assert(level.background.runtime_layer_count() == 6)
+	assert(level.background.runtime_layer_count() == 7)
+	for background_index in 6:
+		var forest_layer := level.background.profile.layers[background_index]
+		assert(forest_layer.zone_tag.is_empty())
+		assert(not forest_layer.invert_zone_visibility)
+		assert(forest_layer.vertical_policy == 2)
+		assert(is_equal_approx(level.background.zone_opacity_at(
+			forest_layer,
+			Vector3(139.52, -25.6, 0)
+		), 1.0))
+	var cave_layer := level.background.profile.layers[6]
+	assert(cave_layer.zone_tag.is_empty())
+	assert(not cave_layer.invert_zone_visibility)
+	assert(cave_layer.texture.resource_path.ends_with(
+		"/cave_depth/cave_composite.png"
+	))
+	assert(cave_layer.pixel_scale == 3)
+	assert(is_equal_approx(cave_layer.horizontal_parallax, 0.08))
+	assert(cave_layer.vertical_policy == 2)
+	assert(cave_layer.world_repeat_below == 0)
+	assert(cave_layer.world_repeat_above == 0)
+	assert(is_equal_approx(cave_layer.offset_pixels.y, -486.0))
+	assert(cave_layer.tint.is_equal_approx(
+		Color(0.62, 0.69, 0.86, 1)
+	))
+	assert(is_equal_approx(level.background.zone_opacity_at(
+		cave_layer,
+		Vector3(139.52, -25.6, 0)
+	), 1.0))
+	var initial_camera_y := 2.7
+	var cave_panel_height := (
+		cave_layer.texture.get_height()
+		* level.background.profile.pixel_size
+		* float(cave_layer.pixel_scale)
+	)
+	var cave_boundary_y := (
+		initial_camera_y
+		+ cave_layer.offset_pixels.y * level.background.profile.pixel_size
+		+ cave_panel_height * 0.5
+	)
+	var forest_panel_height := (
+		level.background.profile.layers[0].texture.get_height()
+		* level.background.profile.pixel_size
+	)
+	var forest_boundary_y := initial_camera_y - forest_panel_height * 0.5
+	assert(is_equal_approx(forest_boundary_y, -3.78))
+	assert(is_equal_approx(cave_boundary_y, forest_boundary_y))
+	assert(is_equal_approx(cave_boundary_y - cave_panel_height, -29.7))
+	var night_environment := (
+		level.get_node("WorldEnvironment") as WorldEnvironment
+	).environment
+	assert(night_environment != null)
+	assert(night_environment.background_color.is_equal_approx(
+		Color(0.002, 0.003, 0.008, 1)
+	))
 	assert(is_equal_approx(level.player.fall_limit_y, -31.0))
 	for ability_id in PlayerAbility.IMPLEMENTED:
 		assert(level.player.has_ability(ability_id))
@@ -114,8 +168,11 @@ func _run() -> void:
 	]
 	for support in supports:
 		assert(support != null)
+		assert(not support.cap_bottom_edge)
 		assert(is_equal_approx(_top(support), 0.0))
 		_assert_support_below(level, Vector3(support.global_position.x, 0.25, 0), support)
+		var deep_bottom_tile := support.get_node("Tile_04_01") as Sprite3D
+		assert(deep_bottom_tile.texture == support.style.deep)
 
 	var movement := level.player.movement
 	var double_jump_gap := _left(double_jump_island) - _right(lift_shelf)
@@ -158,23 +215,61 @@ func _run() -> void:
 	assert(deep_terrain.column_count() == 50)
 	# The right shaft wall joins the floor, so the greedy collision builder
 	# claims that column first and splits the remaining floor into two pieces.
-	assert(deep_terrain.collision_rectangle_count() == 5)
-	# The hanging far face makes the failed jump read as a real drop, but opens
-	# two tiles above the floor so the bottom route flows into the shaft.
-	assert(deep_terrain.is_solid_cell(5, 18))
-	assert(deep_terrain.is_solid_cell(17, 18))
-	assert(not deep_terrain.is_solid_cell(18, 18))
+	assert(deep_terrain.collision_rectangle_count() == 4)
+	# The deceptive gap remains visually open all the way down; its former
+	# hanging far face is deliberately absent.
+	for row in 20:
+		assert(not deep_terrain.is_solid_cell(row, 18))
 	# The 5.12 m two-face shaft preserves the proven Level 2 Wall Jump rhythm.
-	assert(deep_terrain.is_solid_cell(0, 36))
+	for row in 5:
+		assert(not deep_terrain.is_solid_cell(row, 36))
+		assert(not deep_terrain.is_solid_cell(row, 41))
+	assert(deep_terrain.is_solid_cell(5, 36))
+	assert(deep_terrain.is_solid_cell(5, 41))
+	assert(deep_terrain.left_face_overrides == PackedVector2Array([Vector2(41, 5)]))
+	assert(deep_terrain.right_face_overrides.size() == 13)
+	for row in range(5, 18):
+		assert(deep_terrain.right_face_overrides.has(Vector2(36, row)))
+		var left_shaft_wall_tile := (
+			deep_terrain.get_node("Tile_%02d_36" % row) as Sprite3D
+		)
+		assert(left_shaft_wall_tile.texture == deep_terrain.style.right)
+	var left_shaft_attachment := deep_terrain.get_node("Tile_05_36") as Sprite3D
+	var right_shaft_attachment := deep_terrain.get_node("Tile_05_41") as Sprite3D
+	assert(left_shaft_attachment.texture == deep_terrain.style.right)
+	assert(right_shaft_attachment.texture == deep_terrain.style.left)
+	assert(deep_terrain.top_face_overrides == PackedVector2Array([
+		Vector2(41, 20),
+	]))
+	var right_floor_junction := deep_terrain.get_node("Tile_20_41") as Sprite3D
+	assert(right_floor_junction.texture == deep_terrain.style.top)
+	var left_green_attachment := far_side_surface.get_node("Tile_04_18") as Sprite3D
+	var right_green_attachment := (
+		upper_continuation.get_node("Tile_04_00") as Sprite3D
+	)
+	assert(left_green_attachment.texture == far_side_surface.style.deep_right)
+	assert(right_green_attachment.texture == upper_continuation.style.deep_left)
+	assert(is_zero_approx(left_green_attachment.rotation.z))
+	assert(is_zero_approx(right_green_attachment.rotation.z))
 	assert(deep_terrain.is_solid_cell(17, 36))
 	assert(not deep_terrain.is_solid_cell(18, 36))
-	assert(not deep_terrain.is_solid_cell(1, 41))
-	assert(deep_terrain.is_solid_cell(2, 41))
 	assert(deep_terrain.is_solid_cell(19, 41))
 	for column in deep_terrain.column_count():
-		assert(deep_terrain.is_solid_cell(20, column))
-		assert(deep_terrain.is_solid_cell(21, column))
-		assert(deep_terrain.is_solid_cell(22, column))
+		var expected_deep_floor := column >= 3
+		assert(deep_terrain.is_solid_cell(20, column) == expected_deep_floor)
+		assert(deep_terrain.is_solid_cell(21, column) == expected_deep_floor)
+		assert(deep_terrain.is_solid_cell(22, column) == expected_deep_floor)
+	var deep_floor_left_x := (
+		deep_terrain.global_position.x
+		+ 3.0 * PixelInteriorTerrain3D.TILE_WORLD_SIZE
+	)
+	assert(is_equal_approx(deep_floor_left_x, 111.36))
+	assert(
+		is_equal_approx(
+			deep_floor_left_x - _right(deceptive_takeoff),
+			PixelInteriorTerrain3D.TILE_WORLD_SIZE
+		)
+	)
 	var shaft_left_inner_x := (
 		deep_terrain.global_position.x
 		+ 37.0 * PixelInteriorTerrain3D.TILE_WORLD_SIZE
@@ -184,17 +279,13 @@ func _run() -> void:
 		+ 41.0 * PixelInteriorTerrain3D.TILE_WORLD_SIZE
 	)
 	assert(is_equal_approx(shaft_right_inner_x - shaft_left_inner_x, 5.12))
-	assert(is_equal_approx(_right(far_side_surface), shaft_left_inner_x - 1.28))
-	assert(is_equal_approx(_left(upper_continuation), shaft_right_inner_x + 1.28))
+	assert(is_equal_approx(far_side_surface.size.x, 24.32))
+	assert(is_equal_approx(upper_continuation.size.x, 11.52))
+	assert(is_equal_approx(_right(far_side_surface), shaft_left_inner_x))
+	assert(is_equal_approx(_left(upper_continuation), shaft_right_inner_x))
 	_assert_support_below(
 		level,
 		Vector3(127.0, -25.35, 0),
-		deep_terrain
-	)
-	_assert_wall(
-		level,
-		Vector3(129.9, -12.0, 0),
-		Vector3.RIGHT * 1.5,
 		deep_terrain
 	)
 	_assert_wall(
@@ -369,6 +460,7 @@ func _run() -> void:
 	assert(surface_region.shows_zone(&"surface"))
 	assert(is_equal_approx(surface_region.weight_at(Vector3(4.0, 0.0, 0)), 1.0))
 	assert(is_equal_approx(surface_region.weight_at(Vector3(139.52, 0.0, 0)), 1.0))
+	assert(is_equal_approx(surface_region.weight_at(Vector3(139.52, -5.3, 0)), 0.5))
 	assert(is_zero_approx(surface_region.weight_at(Vector3(139.52, -25.6, 0))))
 	assert(is_equal_approx(
 		level.background.zone_weight_at(&"surface", Vector3(139.52, 0.0, 0)),
@@ -467,7 +559,7 @@ func _run() -> void:
 
 	print(
 		"Level 3 WIP passed: quick opener deaths, mixed run-up, deceptive "
-		+ "max-kit gap, safe long descent, deep enemy-and-spike pocket, dark "
+		+ "max-kit gap, committed-jump descent, deep enemy-and-spike pocket, dark "
 		+ "grade, and clean Wall Jump return."
 	)
 	_completed = true

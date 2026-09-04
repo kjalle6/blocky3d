@@ -20,7 +20,7 @@
 
 [sub_resource type="Environment" id="Environment_night"]
 background_mode = 1
-background_color = Color(0.012, 0.025, 0.075, 1)
+background_color = Color(0.002, 0.003, 0.008, 1)
 ambient_light_source = 3
 ambient_light_color = Color(1, 1, 1, 1)
 ambient_light_energy = 0.0
@@ -55,6 +55,7 @@ position = Vector3(10.88, -3.2, 0)
 script = ExtResource("2_platform")
 size = Vector3(11.52, 6.4, 2)
 style = ExtResource("3_green_style")
+cap_bottom_edge = false
 
 [node name="LiftLeftBoundary" type="StaticBody3D" parent="Platforms" index="1"]
 position = Vector3(2.56, 6.4, 0)
@@ -67,12 +68,14 @@ position = Vector3(29.44, -3.2, 0)
 script = ExtResource("2_platform")
 size = Vector3(7.68, 6.4, 2)
 style = ExtResource("3_green_style")
+cap_bottom_edge = false
 
 [node name="DashIsland01" type="StaticBody3D" parent="Platforms" index="3"]
 position = Vector3(50.56, -3.2, 0)
 script = ExtResource("2_platform")
 size = Vector3(6.4, 6.4, 2)
 style = ExtResource("3_green_style")
+cap_bottom_edge = false
 
 [node name="DashIsland02" type="StaticBody3D" parent="Platforms" index="4"]
 position = Vector3(73.6, -3.2, 0)
@@ -80,6 +83,7 @@ script = ExtResource("2_platform")
 size = Vector3(11.52, 6.4, 2)
 style = ExtResource("3_green_style")
 cap_right_edge = false
+cap_bottom_edge = false
 
 [node name="ContinuationGround" type="StaticBody3D" parent="Platforms" index="5"]
 position = Vector3(89.6, -3.2, 0)
@@ -88,6 +92,7 @@ size = Vector3(20.48, 6.4, 2)
 style = ExtResource("3_green_style")
 cap_left_edge = false
 cap_right_edge = false
+cap_bottom_edge = false
 
 [node name="DeceptiveTakeoffGround" type="StaticBody3D" parent="Platforms" index="6"]
 position = Vector3(104.96, -3.2, 0)
@@ -95,18 +100,21 @@ script = ExtResource("2_platform")
 size = Vector3(10.24, 6.4, 2)
 style = ExtResource("3_green_style")
 cap_left_edge = false
+cap_bottom_edge = false
 
 [node name="FarSideSurface" type="StaticBody3D" parent="Platforms" index="7"]
-position = Vector3(142.08, -3.2, 0)
+position = Vector3(142.72, -3.2, 0)
 script = ExtResource("2_platform")
-size = Vector3(23.04, 6.4, 2)
+size = Vector3(24.32, 6.4, 2)
 style = ExtResource("3_green_style")
+cap_bottom_edge = false
 
 [node name="UpperContinuationGround" type="StaticBody3D" parent="Platforms" index="8"]
-position = Vector3(166.4, -3.2, 0)
+position = Vector3(165.76, -3.2, 0)
 script = ExtResource("2_platform")
-size = Vector3(10.24, 6.4, 2)
+size = Vector3(11.52, 6.4, 2)
 style = ExtResource("3_green_style")
+cap_bottom_edge = false
 
 [node name="WipRightBoundary" type="StaticBody3D" parent="Platforms" index="9"]
 position = Vector3(171.64, 6.4, 0)
@@ -117,8 +125,11 @@ shape = SubResource("Shape_left_boundary")
 [node name="DeepRockShell" type="StaticBody3D" parent="Platforms" index="10"]
 position = Vector3(107.52, -29.44, 0)
 script = ExtResource("12_terrain")
-solid_rows = PackedStringArray("....................................#.............", "....................................#.............", "....................................#....#........", "....................................#....#........", "....................................#....#........", "..................#.................#....#........", "..................#.................#....#........", "..................#.................#....#........", "..................#.................#....#........", "..................#.................#....#........", "..................#.................#....#........", "..................#.................#....#........", "..................#.................#....#........", "..................#.................#....#........", "..................#.................#....#........", "..................#.................#....#........", "..................#.................#....#........", "..................#.................#....#........", ".........................................#........", ".........................................#........", "##################################################", "##################################################", "##################################################")
+solid_rows = PackedStringArray("..................................................", "..................................................", "..................................................", "..................................................", "..................................................", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", ".........................................#........", ".........................................#........", "...###############################################", "...###############################################", "...###############################################")
 style = ExtResource("13_rock_style")
+left_face_overrides = PackedVector2Array(41, 5)
+right_face_overrides = PackedVector2Array(36, 5, 36, 6, 36, 7, 36, 8, 36, 9, 36, 10, 36, 11, 36, 12, 36, 13, 36, 14, 36, 15, 36, 16, 36, 17)
+top_face_overrides = PackedVector2Array(41, 20)
 
 [node name="LevelStartLift" parent="Props" index="0" instance=ExtResource("5_lift")]
 position = Vector3(4, -12.8, 0)

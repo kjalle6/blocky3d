@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="PixelBackgroundProfile" load_steps=15 format=3]
+[gd_resource type="Resource" script_class="PixelBackgroundProfile" load_steps=17 format=3]
 
 [ext_resource type="Script" path="res://scripts/presentation/pixel_background_profile.gd" id="1_profile"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_background_layer_profile.gd" id="2_layer"]
@@ -8,11 +8,23 @@
 [ext_resource type="Texture2D" path="res://assets/library/backgrounds/forests_and_trees/5/4.png" id="6_mid_trees"]
 [ext_resource type="Texture2D" path="res://assets/library/backgrounds/forests_and_trees/5/5.png" id="7_near_trees"]
 [ext_resource type="Texture2D" path="res://assets/library/backgrounds/forests_and_trees/5/6.png" id="8_canopy"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/cave_depth/cave_composite.png" id="9_cave"]
+
+[sub_resource type="Resource" id="Layer_cave"]
+script = ExtResource("2_layer")
+texture = ExtResource("9_cave")
+pixel_scale = 3
+horizontal_parallax = 0.08
+vertical_policy = 2
+depth = -4.7
+offset_pixels = Vector2(0, -486)
+tint = Color(0.62, 0.69, 0.86, 1)
 
 [sub_resource type="Resource" id="Layer_sky"]
 script = ExtResource("2_layer")
 texture = ExtResource("3_sky")
 horizontal_parallax = 0.02
+vertical_policy = 2
 depth = -5.8
 tint = Color(0.14, 0.24, 0.46, 1)
 
@@ -20,6 +32,7 @@ tint = Color(0.14, 0.24, 0.46, 1)
 script = ExtResource("2_layer")
 texture = ExtResource("4_far_haze")
 horizontal_parallax = 0.05
+vertical_policy = 2
 depth = -5.6
 tint = Color(0.2, 0.42, 0.66, 0.74)
 
@@ -27,6 +40,7 @@ tint = Color(0.2, 0.42, 0.66, 0.74)
 script = ExtResource("2_layer")
 texture = ExtResource("5_far_trees")
 horizontal_parallax = 0.09
+vertical_policy = 2
 depth = -5.4
 tint = Color(0.22, 0.38, 0.6, 0.8)
 
@@ -34,6 +48,7 @@ tint = Color(0.22, 0.38, 0.6, 0.8)
 script = ExtResource("2_layer")
 texture = ExtResource("6_mid_trees")
 horizontal_parallax = 0.14
+vertical_policy = 2
 depth = -5.2
 tint = Color(0.27, 0.34, 0.54, 0.88)
 
@@ -41,6 +56,7 @@ tint = Color(0.27, 0.34, 0.54, 0.88)
 script = ExtResource("2_layer")
 texture = ExtResource("7_near_trees")
 horizontal_parallax = 0.2
+vertical_policy = 2
 depth = -5.0
 tint = Color(0.25, 0.29, 0.46, 0.94)
 
@@ -48,10 +64,11 @@ tint = Color(0.25, 0.29, 0.46, 0.94)
 script = ExtResource("2_layer")
 texture = ExtResource("8_canopy")
 horizontal_parallax = 0.28
+vertical_policy = 2
 depth = -4.8
 tint = Color(0.23, 0.24, 0.38, 1)
 
 [resource]
 script = ExtResource("1_profile")
 profile_id = &"green_zone_night"
-layers = Array[ExtResource("2_layer")]([SubResource("Layer_sky"), SubResource("Layer_far_haze"), SubResource("Layer_far_trees"), SubResource("Layer_mid_trees"), SubResource("Layer_near_trees"), SubResource("Layer_canopy")])
+layers = Array[ExtResource("2_layer")]([SubResource("Layer_sky"), SubResource("Layer_far_haze"), SubResource("Layer_far_trees"), SubResource("Layer_mid_trees"), SubResource("Layer_near_trees"), SubResource("Layer_canopy"), SubResource("Layer_cave")])

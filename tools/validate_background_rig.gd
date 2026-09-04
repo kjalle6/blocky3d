@@ -63,7 +63,8 @@ func _run() -> void:
 			var current_phase := _layer_world_phase(background, cloud_index)
 			var repeat_step := (
 				background.profile.layers[cloud_index].repeat_step_pixels()
-				* background.profile.pixel_size
+					* background.profile.pixel_size
+					* float(background.profile.layers[cloud_index].pixel_scale)
 			)
 			var phase_error := absf(
 				current_phase - cloud_world_phases[cloud_index]
@@ -94,7 +95,11 @@ func _run() -> void:
 	var visible_width := camera.size * WIDE_OUTPUT_SIZE.x / WIDE_OUTPUT_SIZE.y
 	for layer_index in background.runtime_layer_count():
 		var layer := background.profile.layers[layer_index]
-		var repeat_step := layer.repeat_step_pixels() * background.profile.pixel_size
+		var repeat_step := (
+			layer.repeat_step_pixels()
+			* background.profile.pixel_size
+			* float(layer.pixel_scale)
+		)
 		var required_copies := maxi(3, ceili(visible_width / repeat_step) + 2)
 		assert(
 			background.runtime_copies(layer_index).size() >= required_copies,
@@ -290,7 +295,9 @@ func _assert_horizontal_coverage(
 				continue
 			visible_copies.append(sprite)
 			var world_width := (
-				float(sprite.texture.get_width()) * sprite.pixel_size
+				float(sprite.texture.get_width())
+				* sprite.pixel_size
+				* sprite.scale.x
 			)
 			var screen_left := camera.unproject_position(
 				sprite.global_position - Vector3(world_width * 0.5, 0.0, 0.0)
@@ -344,7 +351,11 @@ func _layer_world_phase(
 	layer_index: int
 ) -> float:
 	var layer := background.profile.layers[layer_index]
-	var repeat_step := layer.repeat_step_pixels() * background.profile.pixel_size
+	var repeat_step := (
+		layer.repeat_step_pixels()
+		* background.profile.pixel_size
+		* float(layer.pixel_scale)
+	)
 	var copies := background.runtime_copies(layer_index)
 	assert(not copies.is_empty())
 	return fposmod(copies[0].global_position.x, repeat_step)

@@ -35,11 +35,15 @@ remain read-only design references.
   more ground enemy free-roams from the spike strip's far edge to the final
   ledge, while a faster flyer sweeps the entire joined platform over those
   spikes with only a slight vertical sway. That mixed recap leads
-  into a plausible but deliberately unreachable 20.48 m gap that drops the
-  player safely about 25.6 m into a short rock-underworks pocket. One patrol, a
+  into a plausible but deliberately unreachable 20.48 m gap. A committed jump
+  carries the player safely about 25.6 m into a short rock-underworks pocket,
+  while the first three lower-floor tiles are cut away beneath the takeoff so
+  a straight step into the gap still falls to the kill plane. The forest
+  ends at a fixed underground boundary at Y -3.78, where a subdued
+  blue-grey cave backdrop rises into view during the open fall. One patrol, a
   5.12 m spike strip, and a long hazard-free 5.12 m two-wall Wall Jump shaft
-  carry the route back to the surface. The shooter, gun, ending, and production
-  promotion remain deliberately open
+  merge back into the extended Green Zone shelf from underneath. The
+  shooter, gun, ending, and production promotion remain deliberately open
 - The six earlier Green Zone prototype levels are deleted. Their movement
   contracts moved to permanent homes first: the Animation Lab for the ability
   kit, Arrival for camera stability, and the Level 2 interior for progression

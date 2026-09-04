@@ -29,6 +29,13 @@ func _run() -> void:
 	deep_platform.queue_free()
 	await process_frame
 
+	var open_bottom := await _platform(enhanced, 5, true, false)
+	_assert_tile(open_bottom, 4, 0, enhanced.deep_left)
+	_assert_tile(open_bottom, 4, 1, enhanced.deep)
+	_assert_tile(open_bottom, 4, 2, enhanced.deep_right)
+	open_bottom.queue_free()
+	await process_frame
+
 	var shallow_platform := await _platform(enhanced, 2)
 	_assert_row(shallow_platform, 0, enhanced.top)
 	_assert_row(shallow_platform, 1, enhanced.body)
@@ -59,7 +66,8 @@ func _run() -> void:
 func _platform(
 	platform_style: PixelPlatformStyle,
 	rows: int,
-	capped := true
+	capped := true,
+	bottom_capped := true
 ) -> PixelPlatform3D:
 	var platform := PixelPlatform3D.new()
 	platform.name = "RendererProbe"
@@ -72,6 +80,7 @@ func _platform(
 	platform.collision_enabled = false
 	platform.cap_left_edge = capped
 	platform.cap_right_edge = capped
+	platform.cap_bottom_edge = bottom_capped
 	root.add_child(platform)
 	await process_frame
 	return platform

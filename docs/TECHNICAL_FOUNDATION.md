@@ -444,7 +444,18 @@ patrol, a second ground enemy, a final spike-side landing, then another patrol
 with a faster horizontal flyer across the joined continuation ground. The same
 WIP adds a 20.48 m deceptive gap, safe 25.6 m fall, short deep-cave patrol and
 5.12 m spike strip, then a hazard-free 5.12 m two-wall Wall Jump shaft back to
-the surface. It is not yet catalogued as production.
+the surface. The drop has no hanging cave face. A three-tile (3.84 m) notch
+under the takeoff starts the deep floor at world X 111.36, so a committed jump
+reaches the safe route while a straight vertical drop reaches the kill plane.
+The shaft's cave walls begin
+under one-tile Green Zone shelf extensions at Y -6.40. The two Green Zone
+underside junctions repeat the ordinary `deep_right` and `deep_left` side tiles
+from directly above instead of introducing bottom corners. The same uncapped
+deep row now finishes every Green Zone platform in this level, allowing the
+surface terrain to read as continuing into the underground backdrop. The two
+cave-wall faces are mirrored to match the Green Zone edges above them, making
+the separate terrain materials read as one joined structure. It is not yet
+catalogued as production.
 `resources/campaign/level_02.tres`
 identifies Overgrown Coastal Ascent and loads
 `scenes/levels/overgrown_coastal_ascent.tscn`; its cave threshold
@@ -515,6 +526,15 @@ terrain uses the tileset's calm dark deep fill before its authored bottom cap.
 Exposed and joined side caps remain explicit. This prevents root/body art from
 forming fake horizontal stripes when terrain becomes deeper.
 
+Tile joins follow the source tileset's existing visual roles. Reuse the ordinary
+side, deep, or floor tile that already matches the required connection, and use
+its authored mirror on the opposite side. Do not rotate a corner tile merely to
+move one edge: rotating it also moves the filled quadrant and creates false
+notches. When terrain or an underground background visibly continues below a
+platform, leave its bottom uncapped and finish with the normal deep row. Where a
+wall meets that floor, use the same regular floor-top tile as its neighbours
+unless the design specifically calls for a decorative corner.
+
 The shoreline's generated transition finishes beneath a restrained half-tile
 Green Zone rise with two adjoining, non-overlapping colliders. A scaled mossy
 outcrop covers the full biome seam without dominating the screen. Curated low
@@ -548,9 +568,15 @@ campaign identity. The deep slice lowers the player's authored fall-reset limit
 to Y -31 and the global kill plane to Y -32 so the 25.6 m descent remains
 playable. A second kill plane stays at Y -8 across only X 0.00–79.36, preserving
 quick deaths in the three earlier gaps without touching the intended drop.
-The current night-forest profile stays continuous while a regional grade
-darkens it below the surface, and reused rock-underworks terrain forms the floor
-and two-face Wall Jump shaft. The production Level 2 approach uses a direct
+Level 3 WIP uses a spatial variation on Level 2's two-background structure. A
+restrained blue-grey cave composition is shown at three-times integer scale and
+world-locked vertically from Y -3.78 to Y -29.70. It meets six vertically
+world-locked night-forest tracks at the same boundary, so the cave rises from the bottom
+of the frame during the fall instead of dissolving the entire viewport. The
+existing `surface` zone now drives only the synchronized regional grade, which
+darkens the lower route without moving the authored background boundary. Reused
+rock-underworks terrain forms the floor and two-face Wall Jump shaft. The
+production Level 2 approach uses a direct
 same-level `target_scene` handoff into its live interior. Focused validators,
 captures, and probes load that interior scene directly under
 `resources/campaign/level_02.tres`, preserving its production Level 2 identity
@@ -705,8 +731,10 @@ final landing. Its next 20.48 m gap intentionally exceeds the complete movement
 envelope without advertising failure: a missed crossing becomes a safe 25.6 m
 descent into a short, darkened rock-underworks pocket. One further patrol and a
 5.12 m spike strip lead to a long, hazard-free 5.12 m two-wall Wall Jump shaft
-that returns to the surface. The WIP stops there; firearms, shooter behavior,
-the gun lesson, and the boss remain future milestones.
+that returns to the surface. The night forest gives way at a fixed Y -3.78
+boundary to its dedicated subdued cave backdrop, then the spatial boundary
+falls away on the climb. The WIP stops there; firearms, shooter
+behavior, the gun lesson, and the boss remain future milestones.
 
 Reusable height-aware background fades remain unused and opt-in; authored zone
 regions are active. Structural, visual, and regression automation owns

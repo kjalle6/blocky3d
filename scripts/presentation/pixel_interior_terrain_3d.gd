@@ -12,6 +12,13 @@ const TILE_PIXEL_SIZE := TILE_WORLD_SIZE / 32.0
 @export var collision_depth := 2.0
 @export var hidden_face_region := Rect2i()
 @export_range(0, 4, 1) var visual_extension_rows_below := 0
+@export_category("Visual tile overrides")
+## Cell coordinates are authored as (column, row). These overrides let a
+## terrain edge visually continue into neighbouring geometry that lives in a
+## separate node and therefore cannot be discovered from solid_rows.
+@export var left_face_overrides := PackedVector2Array()
+@export var right_face_overrides := PackedVector2Array()
+@export var top_face_overrides := PackedVector2Array()
 
 var _row_count := 0
 var _column_count := 0
@@ -58,6 +65,12 @@ func validation_errors() -> PackedStringArray:
 					"Interior row %d column %d uses '%s'; only '#' and '.' are valid."
 					% [row_index, column, cell]
 				)
+	for cell_position in left_face_overrides:
+		_validate_face_override(errors, cell_position, "left")
+	for cell_position in right_face_overrides:
+		_validate_face_override(errors, cell_position, "right")
+	for cell_position in top_face_overrides:
+		_validate_face_override(errors, cell_position, "top")
 	return errors
 
 
@@ -141,6 +154,13 @@ func _is_face_hidden(row: int, column: int) -> bool:
 
 
 func _texture_for_cell(row: int, column: int) -> Texture2D:
+	var cell_position := Vector2(column, row)
+	if top_face_overrides.has(cell_position):
+		return style.top
+	if left_face_overrides.has(cell_position):
+		return style.left
+	if right_face_overrides.has(cell_position):
+		return style.right
 	var exposed_top := not _is_face_solid_cell(row - 1, column)
 	var exposed_bottom := not _is_face_solid_cell(row + 1, column)
 	var exposed_left := not _is_face_solid_cell(row, column - 1)
@@ -190,6 +210,35 @@ func _texture_for_cell(row: int, column: int) -> Texture2D:
 	if exposed_right:
 		return style.right
 	return _subtle_variant(style.fill, style.fill_variants, row, column, 17)
+
+
+func _validate_face_override(
+	errors: PackedStringArray,
+	cell_position: Vector2,
+	face_name: String
+) -> void:
+	var column := roundi(cell_position.x)
+	var row := roundi(cell_position.y)
+	if not is_equal_approx(cell_position.x, float(column)) \
+		or not is_equal_approx(cell_position.y, float(row)):
+		errors.append(
+			"Interior %s-face override %s must use integer cell coordinates."
+			% [face_name, cell_position]
+		)
+		return
+	if not is_solid_cell(row, column):
+		errors.append(
+			"Interior %s-face override at column %d row %d must target a solid cell."
+			% [face_name, column, row]
+		)
+	if (
+		face_name == "left"
+		and right_face_overrides.has(cell_position)
+	):
+		errors.append(
+			"Interior cell at column %d row %d cannot force both side faces."
+			% [column, row]
+		)
 
 
 func _subtle_variant(

@@ -1,0 +1,13 @@
+Parallax Cave Backgrounds
+
+Source archive:
+D:\GodotProjects\blocky3dassets\backgrounds\parallax_cave_backgrounds_pngs\Parallax_Backgrounds_Cave.zip
+
+Promoted file retains its original pixels:
+- 0.png -> cave_composite.png
+
+The flattened composition is intentionally used as one restrained panel. Its
+three-times integer display scale covers the short Level 3 descent without
+vertically repeating the pack's much smaller source canvas.
+
+Supplied license reference: https://craftpix.net/file-licenses/

@@ -80,6 +80,12 @@ func _run() -> void:
 		await physics_frame
 	await _capture(level, "level_3_wip_deceptive_gap")
 
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(127.0, -4.0, 0)))
+	level.camera.snap_to_target()
+	for frame in 8:
+		await physics_frame
+	await _capture(level, "level_3_wip_background_boundary")
+
 	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(127.0, -12.0, 0)))
 	level.camera.snap_to_target()
 	for frame in 8:
@@ -97,6 +103,12 @@ func _run() -> void:
 	for frame in 8:
 		await physics_frame
 	await _capture(level, "level_3_wip_wall_jump_bottom")
+
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(157.44, -7.0, 0)))
+	level.camera.snap_to_target()
+	for frame in 8:
+		await physics_frame
+	await _capture(level, "level_3_wip_wall_jump_material_join")
 
 	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(165.12, 0.7, 0)))
 	level.camera.snap_to_target()

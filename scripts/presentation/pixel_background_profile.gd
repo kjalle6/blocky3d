@@ -42,5 +42,5 @@ func panel_size_world() -> Vector2:
 			return Vector2(
 				layer.texture.get_width(),
 				layer.texture.get_height()
-			) * pixel_size
+			) * pixel_size * float(layer.pixel_scale)
 	return Vector2.ZERO

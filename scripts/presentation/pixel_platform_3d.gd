@@ -17,6 +17,7 @@ const DEFAULT_STYLE: PixelPlatformStyle = preload(
 @export_category("Joined terrain")
 @export var cap_left_edge := true
 @export var cap_right_edge := true
+@export var cap_bottom_edge := true
 
 
 func _ready() -> void:
@@ -102,7 +103,7 @@ func _tile_for(row: int, column: int, rows: int, columns: int) -> Texture2D:
 			column,
 			columns
 		)
-	if row == rows - 1 and style.has_bottom_row():
+	if row == rows - 1 and style.has_bottom_row() and cap_bottom_edge:
 		return _edge_tile(
 			style.bottom_left,
 			style.bottom,
