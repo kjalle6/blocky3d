@@ -46,9 +46,12 @@ remain read-only design references.
   fade handoff then enters the sealed shooter section, where the approved
   mutual-surprise introduction runs the player to real cover before the live
   three-beat shooter encounter. Killing that enemy with the existing knife now
-  produces one deterministic physical gun drop. Collection, player weapon
-  control, the firing lesson, boss, ending, and production promotion remain
-  deliberately open
+  produces one deterministic physical gun drop. Collecting it gives the player
+  a session-local two-slot knife/handgun loadout, auto-equips the pack-1 pistol,
+  and enables mouse aiming within a 180-degree forward arc (accepted handgun milestone). Keyboard/gamepad retain
+  horizontal/upward-diagonal fire. Select weapons with `1`, `2`, the
+  mouse wheel, or gamepad RB for switching. Ammo, the safe firing lesson, boss,
+  ending, and production promotion remain deliberately open
 - The six earlier Green Zone prototype levels are deleted. Their movement
   contracts moved to permanent homes first: the Animation Lab for the ability
   kit, Arrival for camera stability, and the Level 2 interior for progression
@@ -69,9 +72,9 @@ remain read-only design references.
 - The intended finale starts by recapping the current movement and enemy
   language with one ground patrol followed by two flyers and another patrol,
   then proves the full traversal kit through the surprise descent and Wall Jump
-  return. One new armed Green Zone humanoid will then introduce ranged attacks;
-  defeating that enemy guarantees the gun pickup. A combined
-  movement-and-shooting stretch leads to the simple first boss while melee
+  return. One new armed Green Zone humanoid then introduces ranged attacks;
+  defeating that enemy guarantees the now-collectible first gun. A combined
+  movement-and-shooting stretch will lead to the simple first boss while melee
   remains viable. Moving saws were cut from this level and remain available for
   a later campaign fit
 - Typed world catalog and world-grouped mouse or `W`/`S` + `Enter` level

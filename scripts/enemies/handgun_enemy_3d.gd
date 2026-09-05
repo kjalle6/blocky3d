@@ -243,6 +243,10 @@ func receive_melee_hit(source_position: Vector3) -> void:
 	_defeat(source_position, null)
 
 
+func receive_projectile_hit(source_position: Vector3) -> void:
+	receive_melee_hit(source_position)
+
+
 func play_impact_flash() -> void:
 	pixel_visual.flash_impact()
 

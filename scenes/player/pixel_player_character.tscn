@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/player_character.gd" id="1_player"]
 [ext_resource type="Resource" path="res://resources/player/default_movement.tres" id="2_movement"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_player_visual_3d.gd" id="3_visual"]
+[ext_resource type="Script" path="res://scripts/weapons/player_handgun_3d.gd" id="4_handgun"]
+[ext_resource type="Resource" path="res://resources/weapons/first_handgun.tres" id="5_handgun_definition"]
 
 [sub_resource type="BoxShape3D" id="Shape_player"]
 size = Vector3(0.72, 1.1, 0.72)
@@ -33,6 +35,39 @@ position = Vector3(0, 0, 0.01)
 pixel_size = 0.04375
 render_priority = 11
 
+[node name="Gun" type="Sprite3D" parent="PixelVisual"]
+unique_name_in_owner = true
+visible = false
+position = Vector3(0, 0, -0.02)
+texture_filter = 0
+pixel_size = 0.04375
+shaded = false
+render_priority = 8
+
+[node name="GunGrip" type="Sprite3D" parent="PixelVisual"]
+unique_name_in_owner = true
+visible = false
+position = Vector3(0, 0, -0.01)
+texture_filter = 0
+pixel_size = 0.04375
+shaded = false
+render_priority = 9
+
+[node name="ShotEffect" type="Sprite3D" parent="PixelVisual"]
+unique_name_in_owner = true
+visible = false
+position = Vector3(0, 0, 0.03)
+texture_filter = 0
+pixel_size = 0.04375
+hframes = 6
+shaded = false
+render_priority = 13
+
+[node name="PlayerHandgun" type="Node3D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("4_handgun")
+definition = ExtResource("5_handgun_definition")
+
 [node name="HazardContact" type="Area3D" parent="." groups=["player_hazard_contact"]]
 collision_layer = 2
 collision_mask = 0
@@ -41,3 +76,5 @@ monitoring = false
 [node name="Collision" type="CollisionShape3D" parent="HazardContact"]
 position = Vector3(0, -0.4, 0)
 shape = SubResource("Shape_hazard_contact")
+
+[connection signal="shot_fired" from="PlayerHandgun" to="PixelVisual" method="_on_player_handgun_shot_fired"]

@@ -63,11 +63,37 @@ $assets = [ordered]@{
     "enemies/handgun_death.png" =
         "enemies\green_zone_enemies\2\Death.png"
     "weapons/handgun_pickup.png" =
-        "weapons\guns\2 Guns\2_1.png"
+        "weapons\guns_pack_1\2 Guns\4_1.png"
     "weapons/handgun_pickup_airborne.png" =
-        "weapons\guns\2 Guns\2_2.png"
+        "weapons\guns_pack_1\2 Guns\4_2.png"
+    # Pack 1 pistol 4 uses Body1 with its resting arm and one complete
+    # firing-arm overlay (3/4). Pack 2 contains the longer weapons.
+    "characters/player_handgun_idle_one_hand.png" =
+        "weapons\guns_pack_1\1 Characters\1 Biker\Idle1.png"
+    "characters/player_handgun_walk_one_hand.png" =
+        "weapons\guns_pack_1\1 Characters\1 Biker\Walk1.png"
+    "characters/player_handgun_run_one_hand.png" =
+        "weapons\guns_pack_1\1 Characters\1 Biker\Run1.png"
+    "characters/player_handgun_jump_one_hand.png" =
+        "weapons\guns_pack_1\1 Characters\1 Biker\Jump1.png"
+    "weapons/player_handgun_grip_horizontal.png" =
+        "weapons\guns_pack_1\3 Hands\1 Biker\3.png"
+    "weapons/player_handgun_grip_diagonal.png" =
+        "weapons\guns_pack_1\3 Hands\1 Biker\4.png"
+    "weapons/player_handgun_horizontal.png" =
+        "weapons\guns_pack_1\2 Guns\4_1.png"
+    "weapons/player_handgun_diagonal.png" =
+        "weapons\guns_pack_1\2 Guns\4_2.png"
+    "effects/player_handgun_shot_horizontal.png" =
+        "weapons\guns_pack_1\4 Shoot_effects\2_1.png"
+    "effects/player_handgun_shot_diagonal.png" =
+        "weapons\guns_pack_1\4 Shoot_effects\2_2.png"
+    "projectiles/player_handgun_bullet_horizontal.png" =
+        "weapons\guns_pack_1\5 Bullets\2.png"
+    "projectiles/player_handgun_bullet_diagonal.png" =
+        "weapons\guns_pack_1\5 Bullets\2_2.png"
     "projectiles/handgun_bullet.png" =
-        "weapons\guns\5 Bullets\3.png"
+        "weapons\guns_pack_2\5 Bullets\3.png"
     "effects/handgun_impact_spark.png" =
         "vfx\effects\3 Sparks\1.png"
     "effects/handgun_impact_fragments.png" =
@@ -251,8 +277,10 @@ $licenses = [ordered]@{
         "characters\animations\License.txt"
     "licenses/green_zone_enemies.txt" =
         "enemies\green_zone_enemies\License.txt"
+    "licenses/guns_pack_2.txt" =
+        "weapons\guns_pack_2\License.txt"
     "licenses/guns.txt" =
-        "weapons\guns\License.txt"
+        "weapons\guns_pack_1\License.txt"
     "licenses/green_zone_tileset.txt" =
         "tilesets\green_zone\license.txt"
     "licenses/beach_zone_tileset.txt" =

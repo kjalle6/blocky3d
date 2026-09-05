@@ -17,6 +17,8 @@ signal transition_requested(
 signal run_reset
 signal checkpoint_changed(route_index: int)
 signal ability_unlocked(ability_id: StringName)
+signal weapon_acquired(weapon_id: StringName)
+signal weapon_ownership_changed(owned_weapon_ids: Array[StringName])
 
 @export_range(0.0, 1.0, 0.01) var reset_delay := 0.18
 @export_range(0.2, 2.0, 0.05) var completion_fade_duration := 0.55
@@ -37,6 +39,7 @@ var _reset_request_serial := 0
 var _definition: LevelDefinition
 var _progression_store: ProgressionStore
 var _session_unlocked_abilities: Array[StringName] = []
+var _session_owned_weapon_ids: Array[StringName] = [PlayerWeapon.KNIFE]
 var _developer_inspection_enabled := false
 var _developer_measurement_grid: DeveloperMeasurementGrid3D
 var _developer_collision_overlay: DeveloperCollisionOverlay3D
@@ -97,6 +100,9 @@ func _ready() -> void:
 		if is_ancestor_of(node) and node.has_signal("activated"):
 			node.activated.connect(_on_checkpoint_activated)
 	for node in get_tree().get_nodes_in_group("ability_pickup"):
+		if is_ancestor_of(node) and node.has_method("bind_to_level_session"):
+			node.call("bind_to_level_session", self)
+	for node in get_tree().get_nodes_in_group("weapon_pickup"):
 		if is_ancestor_of(node) and node.has_method("bind_to_level_session"):
 			node.call("bind_to_level_session", self)
 
@@ -200,6 +206,7 @@ func _reset_run(clear_checkpoint := true) -> void:
 	_reset_request_serial += 1
 	_resetting = false
 	if clear_checkpoint:
+		_clear_session_weapons_for_restart()
 		_active_checkpoint_index = -1
 		_active_respawn_transform = _initial_spawn_transform
 		for node in get_tree().get_nodes_in_group("level_checkpoint"):
@@ -216,6 +223,7 @@ func _reset_world() -> void:
 		if is_ancestor_of(node) and node.has_method("reset_run"):
 			node.call("reset_run")
 	player.reset_at(_active_respawn_transform)
+	player.configure_weapon_ownership(_session_owned_weapon_ids)
 	run_reset.emit()
 
 
@@ -347,6 +355,34 @@ func set_session_ability_enabled(ability_id: StringName, enabled: bool) -> void:
 
 func is_session_ability_enabled(ability_id: StringName) -> bool:
 	return ability_id in _session_unlocked_abilities
+
+
+func acquire_weapon(weapon_id: StringName) -> bool:
+	if not PlayerWeapon.is_known(weapon_id):
+		push_error("Level requested unknown weapon '%s'." % weapon_id)
+		return false
+	if weapon_id in _session_owned_weapon_ids:
+		return false
+	_session_owned_weapon_ids.append(weapon_id)
+	player.configure_weapon_ownership(_session_owned_weapon_ids, weapon_id)
+	weapon_ownership_changed.emit(owned_weapon_ids())
+	weapon_acquired.emit(weapon_id)
+	return true
+
+
+func owns_weapon(weapon_id: StringName) -> bool:
+	return weapon_id in _session_owned_weapon_ids
+
+
+func owned_weapon_ids() -> Array[StringName]:
+	return _session_owned_weapon_ids.duplicate()
+
+
+func _clear_session_weapons_for_restart() -> void:
+	if _session_owned_weapon_ids == [PlayerWeapon.KNIFE]:
+		return
+	_session_owned_weapon_ids.assign([PlayerWeapon.KNIFE])
+	weapon_ownership_changed.emit(owned_weapon_ids())
 
 
 func _apply_ability_policy() -> void:

@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="FirearmDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/weapons/firearm_definition.gd" id="1_definition"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/player_handgun_projectile.tscn" id="2_projectile"]
+
+[resource]
+script = ExtResource("1_definition")
+weapon_id = &"handgun"
+display_name = "HANDGUN"
+projectile_scene = ExtResource("2_projectile")
+fire_interval = 0.28
+projectile_speed = 13.0
+projectile_distance = 26.0
+horizontal_direction = Vector2(1, 0)
+upward_direction = Vector2(0.707107, 0.707107)
+horizontal_muzzle_offset = Vector2(0.83125, 0.71875)
+upward_muzzle_offset = Vector2(0.6125, 1.1125)

@@ -21,6 +21,9 @@ func bind_player(player: PlayerCharacter) -> void:
 	var callback := _on_player_damage.bind(player)
 	if not player.damage_received.is_connected(callback):
 		player.damage_received.connect(callback)
+	var projectile_callback := _on_handgun_projectile_fired
+	if not player.projectile_fired.is_connected(projectile_callback):
+		player.projectile_fired.connect(projectile_callback)
 
 
 func bind_enemy(enemy: StompableEnemy3D) -> void:

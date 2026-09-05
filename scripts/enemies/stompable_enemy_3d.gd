@@ -163,6 +163,10 @@ func receive_melee_hit(_source_position: Vector3) -> void:
 	get_tree().create_timer(0.6).timeout.connect(_finish_defeat)
 
 
+func receive_projectile_hit(source_position: Vector3) -> void:
+	receive_melee_hit(source_position)
+
+
 func is_defeated() -> bool:
 	return _defeated
 

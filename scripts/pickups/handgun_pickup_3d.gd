@@ -21,6 +21,7 @@ enum DropState { LOCKED, KICKING, BOUNCING, AVAILABLE, CLAIMED }
 @export_range(0.0, 0.5, 0.01) var bounce_height := 0.1
 
 var _source_enemy: HandgunEnemy3D
+var _session: LevelSession3D
 var _landing_transform: Transform3D
 var _kick_start := Vector3.ZERO
 var _elapsed := 0.0
@@ -100,9 +101,14 @@ func set_collection_enabled(enabled: bool) -> void:
 	_set_collection_active(enabled and _state == DropState.AVAILABLE)
 
 
+func bind_to_level_session(session: LevelSession3D) -> void:
+	_session = session
+	set_collection_enabled(true)
+	if _session.owns_weapon(PlayerWeapon.HANDGUN):
+		mark_claimed()
+
+
 func mark_claimed() -> void:
-	if _state != DropState.AVAILABLE:
-		return
 	_state = DropState.CLAIMED
 	visible = false
 	_set_collection_active(false)
@@ -110,7 +116,10 @@ func mark_claimed() -> void:
 
 
 func reset_run() -> void:
-	_reset_presentation()
+	if _session != null and _session.owns_weapon(PlayerWeapon.HANDGUN):
+		mark_claimed()
+	else:
+		_reset_presentation()
 
 
 func _on_source_defeated(_impact_position: Vector3) -> void:
@@ -166,9 +175,16 @@ func _on_body_entered(body: Node3D) -> void:
 		not _collection_active
 		or _state != DropState.AVAILABLE
 		or not body is PlayerCharacter
+		or _session == null
+		or body != _session.player
 	):
 		return
-	collection_requested.emit(self, body as PlayerCharacter)
+	var player := body as PlayerCharacter
+	collection_requested.emit(self, player)
+	if _session.acquire_weapon(PlayerWeapon.HANDGUN):
+		mark_claimed()
+	elif _session.owns_weapon(PlayerWeapon.HANDGUN):
+		mark_claimed()
 
 
 func _reset_presentation() -> void:

@@ -39,6 +39,7 @@ var _developer_collision_overlay_enabled := false
 @onready var developer_measurement_label: Label = %DeveloperMeasurementLabel
 @onready var developer_cursor_coordinate_label: Label = %DeveloperCursorCoordinateLabel
 @onready var developer_collision_legend: Label = %DeveloperCollisionLegend
+@onready var weapon_status_hud: WeaponStatusHUD = %WeaponStatusHUD
 @onready var completion_fade: ColorRect = %CompletionFade
 
 var _completion_fade_tween: Tween
@@ -205,6 +206,7 @@ func _start_session(
 	current_level.transition_requested.connect(_on_transition_requested)
 	current_level.run_reset.connect(_on_run_reset)
 	current_level.ability_unlocked.connect(_on_ability_unlocked)
+	weapon_status_hud.bind_session(current_level)
 	var session_heading := definition.heading()
 	if world_definition == null:
 		session_heading = "DEVELOPER TOOLS / %s" % definition.title.to_upper()
@@ -544,6 +546,7 @@ func _progression_store() -> ProgressionStore:
 
 
 func _free_current_level() -> void:
+	weapon_status_hud.unbind_session()
 	if current_level == null:
 		return
 	world.remove_child(current_level)

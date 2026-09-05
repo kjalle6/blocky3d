@@ -96,15 +96,63 @@
                                       "sha256":  "663b076df9d9e4c3e1cbaaa9e81a65852b48a22d98ef4ba527dd210b7f80c099"
                                   },
     "weapons/handgun_pickup.png":  {
-                                       "source":  "weapons/guns/2 Guns/2_1.png",
-                                       "sha256":  "6c578dbbaaf1a8880bb26318aa544355ba93fe2acb5176996726a39c490e0db0"
+                                       "source":  "weapons/guns_pack_1/2 Guns/4_1.png",
+                                       "sha256":  "780c8cc949bdf32de32cdee3c679ace8a33d3bf22c7e38d52a42b96efb9ef96f"
                                    },
     "weapons/handgun_pickup_airborne.png":  {
-                                                "source":  "weapons/guns/2 Guns/2_2.png",
-                                                "sha256":  "715711b3dd2603f1f64eedac64673469033fa6733282070fa6063b059910a03d"
+                                                "source":  "weapons/guns_pack_1/2 Guns/4_2.png",
+                                                "sha256":  "540304bd06016f495ce3d79ca8df7e43ebe91456e1db7f4083e2897a9032d6e5"
                                             },
+    "characters/player_handgun_idle_one_hand.png":  {
+                                                        "source":  "weapons/guns_pack_1/1 Characters/1 Biker/Idle1.png",
+                                                        "sha256":  "559cad9c257cc4f5aeda7e04b2b04c461eaeca4aa9d905fc86654880365f1472"
+                                                    },
+    "characters/player_handgun_walk_one_hand.png":  {
+                                                        "source":  "weapons/guns_pack_1/1 Characters/1 Biker/Walk1.png",
+                                                        "sha256":  "3c29b83aeeb8e22a341db9cf1b75f9928e16e6322a9075e2bd7b49483c8580ca"
+                                                    },
+    "characters/player_handgun_run_one_hand.png":  {
+                                                       "source":  "weapons/guns_pack_1/1 Characters/1 Biker/Run1.png",
+                                                       "sha256":  "62dbfaa07ea50d8365faacd1438d83db06c626529cb01438ae114ba6da8f21b8"
+                                                   },
+    "characters/player_handgun_jump_one_hand.png":  {
+                                                        "source":  "weapons/guns_pack_1/1 Characters/1 Biker/Jump1.png",
+                                                        "sha256":  "e055a9c90f3dd45eadf7b1e7d4a602de126823432edc3e590d745db9204a744f"
+                                                    },
+    "weapons/player_handgun_grip_horizontal.png":  {
+                                                       "source":  "weapons/guns_pack_1/3 Hands/1 Biker/3.png",
+                                                       "sha256":  "14becf51db4b1632af145793a6d7fc9405789f8cfc3bd49c98a1c7f91c855ca8"
+                                                   },
+    "weapons/player_handgun_grip_diagonal.png":  {
+                                                     "source":  "weapons/guns_pack_1/3 Hands/1 Biker/4.png",
+                                                     "sha256":  "34c12cc2199f19c1766db29b23ee23ae5746056580656cd93e87093272cc0f58"
+                                                 },
+    "weapons/player_handgun_horizontal.png":  {
+                                                  "source":  "weapons/guns_pack_1/2 Guns/4_1.png",
+                                                  "sha256":  "780c8cc949bdf32de32cdee3c679ace8a33d3bf22c7e38d52a42b96efb9ef96f"
+                                              },
+    "weapons/player_handgun_diagonal.png":  {
+                                                "source":  "weapons/guns_pack_1/2 Guns/4_2.png",
+                                                "sha256":  "540304bd06016f495ce3d79ca8df7e43ebe91456e1db7f4083e2897a9032d6e5"
+                                            },
+    "effects/player_handgun_shot_horizontal.png":  {
+                                                       "source":  "weapons/guns_pack_1/4 Shoot_effects/2_1.png",
+                                                       "sha256":  "de854dec3f1375535bc7a7fab830eddc23a3ab04902871cd5923621f44ac0f1f"
+                                                   },
+    "effects/player_handgun_shot_diagonal.png":  {
+                                                     "source":  "weapons/guns_pack_1/4 Shoot_effects/2_2.png",
+                                                     "sha256":  "09b73f99fa7d099843f3e95c3418c0ed9f9361832e75829a12676b2dd8ae57e2"
+                                                 },
+    "projectiles/player_handgun_bullet_horizontal.png":  {
+                                                             "source":  "weapons/guns_pack_1/5 Bullets/2.png",
+                                                             "sha256":  "44c45aa91d58e48e60c932b27bf1ceced377655e0b4e25fe2623ebfff6fe946d"
+                                                         },
+    "projectiles/player_handgun_bullet_diagonal.png":  {
+                                                           "source":  "weapons/guns_pack_1/5 Bullets/2_2.png",
+                                                           "sha256":  "c1f2df9f5d43326929b2051046951e6c231740e0ab29ac373dac9292bdd7aaa6"
+                                                       },
     "projectiles/handgun_bullet.png":  {
-                                           "source":  "weapons/guns/5 Bullets/3.png",
+                                           "source":  "weapons/guns_pack_2/5 Bullets/3.png",
                                            "sha256":  "83292c688e9ee56bb5ca8b434fdcf1e41db3c6e18ad7013219012b0e50f5468a"
                                        },
     "effects/handgun_impact_spark.png":  {

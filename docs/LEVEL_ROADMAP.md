@@ -363,23 +363,22 @@ through a short authored arc into the existing safe drop anchor. A second
 diagonal source pose keeps the airborne weapon crisp without rotating pixels;
 one small bounce ends at the exact grounded transform. The actor is pre-authored
 and resettable, so repeated damage cannot duplicate it and restarting during
-the arc cannot leave a delayed or lost reward. Collection is deliberately still
-disabled while the next milestone adds authoritative weapon ownership.
+the arc cannot leave a delayed or lost reward. Collection now hands the reward
+to authoritative session-local weapon ownership. Death and checkpoint respawn
+preserve it, while a full section restart clears the gun and deterministically
+rearms the shooter and drop.
 
-The reward is authored independently of the shooter's baked-in dual-gun art.
-Its grounded and diagonal poses are the agreed
-`weapons/guns/2 Guns/2_1.png` and `2_2.png` pair. Player firing will keep this
-same pack family: the Biker gun-ready pose sheets, matching
-`3 Hands/1 Biker/2.png` hand layer, index-2 muzzle effects, and index-2
-projectiles belong to this weapon instead of being replaced by visually handy
-parts from an unrelated constructor set. Those supporting player assets remain
-library-only until collection and firing are implemented.
+The reward now uses compact pistol 4 from `weapons/guns_pack_1`, replacing
+the longer gun previously sourced from pack 2. Pickup, HUD, and held weapon
+share its horizontal/diagonal art. The player uses Biker set-1 bodies and
+single firing-arm overlays `3.png`/`4.png`, with frame-specific shoulder
+registration and matching muzzle effects/projectiles. The user has accepted the pistol pose, mouse aiming, and slower backpedal.
 
-The remainder of this milestone is collecting that physical reward, the
-player's two-slot weapon state, and the short safe firing lesson immediately
-after acquisition. The pickup, firing lesson, later full-kit practice, and boss
-all remain in this second section so the new firearm state does not need to
-cross another scene boundary.
+The physical reward, player's two-slot weapon state, and basic firing contract
+are implemented. The remaining milestones are the short safe firing lesson
+immediately after acquisition. That lesson, later full-kit practice, and boss all
+remain in this second section so the new firearm state does not need to cross
+another scene boundary.
 
 Firearm Review Lab selected the three-beat dual-gun pattern as the production
 baseline. Each beat fires both guns together, producing two projectiles per beat
@@ -411,15 +410,15 @@ its animation or hit timing. The gun auto-equips when first collected.
 
 The acquisition uses the agreed complete pixel-gun family and its gun-ready
 Biker pose/hand layers; it is not represented by a text-only reward. A brief
-`1 KNIFE  2 GUN  WHEEL: SWITCH` hint accompanies the pickup. From then on, a
-small contextual two-slot display highlights the equipped weapon and shows the
-gun's remaining ammunition. It is absent before the firearm exists and is
-authored as a reusable weapon-status component that can later move into the
-proper character HUD rather than becoming throwaway prototype UI. Full
-inventory, crafting, and weapon-menu work remain outside this milestone.
+`1 KNIFE  2 GUN  WHEEL / RB: SWITCH` hint accompanies the pickup. From then on,
+a small contextual two-slot display highlights the equipped weapon. It is absent
+before the firearm exists and intentionally contains no ammunition display until
+ammo appearance and drop behavior are designed. The reusable component can later
+move into the proper character HUD rather than becoming throwaway prototype UI.
+Full inventory, crafting, and weapon-menu work remain outside this milestone.
 
-The boss remains unbuilt and is a later build decision after the shooter,
-pickup, weapon switching, minimal HUD, and safe firing lesson are accepted in
+The boss remains unbuilt and is a later build decision after the current pickup,
+weapon switching, minimal no-ammo HUD, and safe firing lesson are accepted in
 play.
 
 A literal moon was tested and rejected. The subtler moonlight-through-trees idea
@@ -514,9 +513,11 @@ the accepted level without redesigning it.
 3. A deterministic death-gated gun pickup contract: the selected shooter always
    awards it, never through chance, and cannot be bypassed while still advancing
    the route.
-4. A firearm resource describing visuals, ammunition, cadence, projectile, and
-   supported aiming directions without owning player movement.
-5. Contextual ammo HUD that remains absent before a firearm is available.
+4. A firearm resource describing cadence, projectile, muzzle placement, range,
+   and supported aiming directions without owning player movement or inventing
+   an ammunition policy.
+5. A contextual weapon HUD that remains absent before a firearm is available;
+   ammunition presentation is a separate pending design decision.
 6. A boss-specific state machine using shared damage, reset, and projectile
    contracts rather than a giant universal boss controller.
 7. Firearm Review Lab, formerly Animation Lab, now owns focused shooter

@@ -22,6 +22,22 @@ func _init() -> void:
 	_configure_action("restart", 0.2, [
 		_key(KEY_R), _joy_button(JOY_BUTTON_Y),
 	])
+	_configure_action("weapon_slot_1", 0.2, [
+		_key(KEY_1),
+	])
+	_configure_action("weapon_slot_2", 0.2, [
+		_key(KEY_2),
+	])
+	_configure_action("weapon_cycle_next", 0.2, [
+		_mouse_button(MOUSE_BUTTON_WHEEL_DOWN),
+		_joy_button(JOY_BUTTON_RIGHT_SHOULDER),
+	])
+	_configure_action("weapon_cycle_previous", 0.2, [
+		_mouse_button(MOUSE_BUTTON_WHEEL_UP),
+	])
+	_configure_action("aim_up", 0.2, [
+		_key(KEY_W), _key(KEY_UP), _joy_axis(JOY_AXIS_LEFT_Y, -1.0),
+	])
 	_configure_action("developer_fly_up", 0.2, [
 		_key(KEY_W), _key(KEY_UP), _key(KEY_SPACE),
 	])

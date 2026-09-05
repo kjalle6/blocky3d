@@ -1,13 +1,17 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/enemies/stompable_enemy_3d.gd" id="1_enemy"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_enemy_visual_3d.gd" id="2_visual"]
+[ext_resource type="Script" path="res://scripts/combat/projectile_hurtbox_3d.gd" id="3_projectile_hurtbox"]
 
 [sub_resource type="BoxShape3D" id="Shape_body"]
 size = Vector3(0.72, 0.76, 0.72)
 
 [sub_resource type="BoxShape3D" id="Shape_contact"]
 size = Vector3(0.82, 0.88, 0.82)
+
+[sub_resource type="BoxShape3D" id="Shape_projectile_hurtbox"]
+size = Vector3(0.72, 2, 0.72)
 
 [node name="PixelPatrolEnemy" type="CharacterBody3D"]
 script = ExtResource("1_enemy")
@@ -30,3 +34,13 @@ monitoring = true
 [node name="ContactCollision" type="CollisionShape3D" parent="ContactArea"]
 unique_name_in_owner = true
 shape = SubResource("Shape_contact")
+
+[node name="ProjectileHurtbox" type="Area3D" parent="."]
+position = Vector3(0, 0.64, 0)
+collision_layer = 4
+collision_mask = 0
+monitoring = false
+script = ExtResource("3_projectile_hurtbox")
+
+[node name="Collision" type="CollisionShape3D" parent="ProjectileHurtbox"]
+shape = SubResource("Shape_projectile_hurtbox")

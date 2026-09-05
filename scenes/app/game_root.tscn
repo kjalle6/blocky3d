@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scripts/app/game_root.gd" id="1_app"]
 [ext_resource type="Resource" path="res://resources/campaign/main_campaign.tres" id="2_campaign"]
@@ -6,6 +6,7 @@
 [ext_resource type="Resource" path="res://resources/dev/level_design_lab.tres" id="4_level_design_lab"]
 [ext_resource type="Script" path="res://scripts/campaign/level_definition.gd" id="5_level_definition"]
 [ext_resource type="Resource" path="res://resources/dev/green_zone_finale_wip.tres" id="6_green_zone_finale_wip"]
+[ext_resource type="PackedScene" path="res://scenes/ui/weapon_status_hud.tscn" id="7_weapon_status_hud"]
 
 [sub_resource type="StyleBoxFlat" id="Style_panel"]
 bg_color = Color(0.03, 0.045, 0.075, 0.9)
@@ -151,6 +152,9 @@ theme_override_colors/font_outline_color = Color(0.02, 0.025, 0.04, 0.96)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 15
 text = "HITBOXES  BLUE terrain  CYAN player  MAGENTA enemy  RED lethal\nORANGE contact/attacks  YELLOW checkpoints  PURPLE pickups  GREEN exits"
+
+[node name="WeaponStatusHUD" parent="Interface" instance=ExtResource("7_weapon_status_hud")]
+unique_name_in_owner = true
 
 [node name="CompletionFade" type="ColorRect" parent="Interface"]
 unique_name_in_owner = true

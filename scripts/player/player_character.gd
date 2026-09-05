@@ -12,8 +12,11 @@ signal death_started(kind: StringName, world_position: Vector3)
 signal attack_connected(target: Node3D)
 signal damage_received(source_position: Vector3)
 signal ability_performed(ability_id: StringName)
+signal weapon_equipped(weapon_id: StringName)
+signal projectile_fired(projectile: HandgunProjectile3D)
 
 @export var movement: PlayerMovementConfig
+@export_range(0.2, 1.0, 0.05) var handgun_backpedal_speed_ratio := 0.65
 @export var fall_limit_y := -8.0
 @export_range(0.05, 1.0, 0.01) var attack_duration := 0.34
 @export_range(0.0, 1.0, 0.01) var attack_impact_time := 0.13
@@ -32,6 +35,11 @@ var _descending_before_slide := false
 var _facing_sign := 1.0
 var _attack_remaining := 0.0
 var _attack_hit_applied := false
+var _active_attack_weapon_id: StringName = &""
+var _active_attack_aim_up := false
+var _owned_weapon_ids: Array[StringName] = [PlayerWeapon.KNIFE]
+var _equipped_weapon_id: StringName = PlayerWeapon.KNIFE
+var _pending_weapon_id: StringName = &""
 var _available_abilities: Array[StringName] = []
 var _active_abilities: Array[StringName] = []
 var _aerial_jumps_remaining := 0
@@ -55,6 +63,7 @@ var _normal_hazard_contact_layer := 0
 
 @onready var pixel_visual: PixelPlayerVisual3D = get_node_or_null("PixelVisual") as PixelPlayerVisual3D
 @onready var hazard_contact: Area3D = get_node("HazardContact") as Area3D
+@onready var player_handgun: PlayerHandgun3D = %PlayerHandgun
 
 
 func _ready() -> void:
@@ -91,6 +100,7 @@ func _physics_process(delta: float) -> void:
 		_refresh_dash()
 	if Input.is_action_just_pressed("dash"):
 		_try_start_dash(input_axis)
+	_update_weapon_selection_input()
 	_update_attack(delta)
 	if (
 		not is_dashing()
@@ -119,6 +129,8 @@ func _physics_process(delta: float) -> void:
 				else movement.ground_deceleration
 			)
 		var target_speed := input_axis * movement.maximum_speed
+		if grounded and player_handgun.is_retreating(input_axis):
+			target_speed *= handgun_backpedal_speed_ratio
 		horizontal_speed = move_toward(horizontal_speed, target_speed, acceleration * delta)
 
 	_wall_sliding = (
@@ -192,6 +204,8 @@ func kill(kind: StringName = DEATH_KIND_GENERIC) -> void:
 	_death_kind = kind
 	_dash_remaining = 0.0
 	_dash_available = false
+	_cancel_active_attack(false)
+	_pending_weapon_id = &""
 	velocity = Vector3.ZERO
 	horizontal_speed = 0.0
 	if pixel_visual != null:
@@ -241,6 +255,9 @@ func reset_at(spawn_transform: Transform3D) -> void:
 	_jump_buffer_remaining = 0.0
 	_attack_remaining = 0.0
 	_attack_hit_applied = false
+	_active_attack_weapon_id = &""
+	_active_attack_aim_up = false
+	_pending_weapon_id = &""
 	_double_jump_visual_remaining = 0.0
 	_wall_contact_direction = 0.0
 	_last_wall_contact_direction = 0.0
@@ -343,6 +360,63 @@ func is_attacking() -> bool:
 	return _attack_remaining > 0.0
 
 
+func is_melee_attacking() -> bool:
+	return is_attacking() and _active_attack_weapon_id == PlayerWeapon.KNIFE
+
+
+func active_attack_weapon_id() -> StringName:
+	return _active_attack_weapon_id
+
+
+func equipped_weapon_id() -> StringName:
+	return _equipped_weapon_id
+
+
+func owned_weapon_ids() -> Array[StringName]:
+	return _owned_weapon_ids.duplicate()
+
+
+func owns_weapon(weapon_id: StringName) -> bool:
+	return weapon_id in _owned_weapon_ids
+
+
+func configure_weapon_ownership(
+	owned_weapon_ids: Array[StringName],
+	auto_equip_weapon_id: StringName = &""
+) -> void:
+	_owned_weapon_ids.assign([PlayerWeapon.KNIFE])
+	for weapon_id in owned_weapon_ids:
+		if (
+			PlayerWeapon.is_known(weapon_id)
+			and weapon_id not in _owned_weapon_ids
+		):
+			_owned_weapon_ids.append(weapon_id)
+	if (
+		not auto_equip_weapon_id.is_empty()
+		and auto_equip_weapon_id in _owned_weapon_ids
+	):
+		request_weapon(auto_equip_weapon_id)
+	elif _equipped_weapon_id not in _owned_weapon_ids:
+		_equip_weapon(PlayerWeapon.KNIFE)
+	if (
+		not _pending_weapon_id.is_empty()
+		and _pending_weapon_id not in _owned_weapon_ids
+	):
+		_pending_weapon_id = &""
+	_update_weapon_presentation()
+
+
+func request_weapon(weapon_id: StringName) -> bool:
+	if not PlayerWeapon.is_known(weapon_id) or weapon_id not in _owned_weapon_ids:
+		return false
+	if is_attacking():
+		_pending_weapon_id = weapon_id
+		return true
+	_pending_weapon_id = &""
+	_equip_weapon(weapon_id)
+	return true
+
+
 func developer_melee_bounds() -> Rect2:
 	var minimum_x := global_position.x
 	if _facing_sign < 0.0:
@@ -371,6 +445,9 @@ func set_developer_inspection_enabled(enabled: bool) -> void:
 	_transition_run_speed = 0.0
 	_attack_remaining = 0.0
 	_attack_hit_applied = false
+	_active_attack_weapon_id = &""
+	_active_attack_aim_up = false
+	_pending_weapon_id = &""
 	_wall_sliding = false
 	floor_snap_length = 0.0 if enabled else movement.floor_snap_length
 	_apply_developer_inspection_collision()
@@ -397,6 +474,9 @@ func begin_transition_run(direction: float, speed: float, duration: float) -> vo
 	_dash_remaining = 0.0
 	_attack_remaining = 0.0
 	_attack_hit_applied = false
+	_active_attack_weapon_id = &""
+	_active_attack_aim_up = false
+	_pending_weapon_id = &""
 	_wall_sliding = false
 	_wall_jump_control_lock_remaining = 0.0
 	horizontal_speed = _transition_run_direction * _transition_run_speed
@@ -470,19 +550,56 @@ func play_damage_flash() -> void:
 
 func _update_attack(delta: float) -> void:
 	if is_dashing():
-		_attack_remaining = 0.0
-		_attack_hit_applied = false
+		_cancel_active_attack(true)
 		return
 	if Input.is_action_just_pressed("attack") and _attack_remaining <= 0.0:
 		_attack_remaining = attack_duration
 		_attack_hit_applied = false
+		_active_attack_weapon_id = _equipped_weapon_id
+		_active_attack_aim_up = (
+			_active_attack_weapon_id == PlayerWeapon.HANDGUN
+			and Input.is_action_pressed("aim_up")
+		)
 	if _attack_remaining <= 0.0:
+		_apply_pending_weapon()
 		return
 	_attack_remaining = maxf(0.0, _attack_remaining - delta)
 	var elapsed := attack_duration - _attack_remaining
 	if not _attack_hit_applied and elapsed >= attack_impact_time:
 		_attack_hit_applied = true
-		_perform_melee_hit()
+		_perform_active_attack_impact()
+	if _attack_remaining <= 0.0:
+		_finish_active_attack()
+
+
+func _perform_active_attack_impact() -> void:
+	if _active_attack_weapon_id == PlayerWeapon.HANDGUN:
+		var projectile := player_handgun.fire(
+			_facing_sign,
+			_active_attack_aim_up,
+			self
+		)
+		if projectile != null:
+			projectile_fired.emit(projectile)
+		return
+	_perform_melee_hit()
+
+
+func _finish_active_attack() -> void:
+	_attack_remaining = 0.0
+	_attack_hit_applied = false
+	_active_attack_weapon_id = &""
+	_active_attack_aim_up = false
+	_apply_pending_weapon()
+
+
+func _cancel_active_attack(apply_pending: bool) -> void:
+	_attack_remaining = 0.0
+	_attack_hit_applied = false
+	_active_attack_weapon_id = &""
+	_active_attack_aim_up = false
+	if apply_pending:
+		_apply_pending_weapon()
 
 
 func _perform_melee_hit() -> void:
@@ -582,8 +699,7 @@ func _try_start_dash(input_axis: float) -> bool:
 	_facing_sign = _dash_direction
 	_dash_remaining = movement.dash_duration
 	_dash_available = false
-	_attack_remaining = 0.0
-	_attack_hit_applied = false
+	_cancel_active_attack(true)
 	_wall_jump_control_lock_remaining = 0.0
 	_wall_contact_direction = 0.0
 	_wall_sliding = false
@@ -633,6 +749,7 @@ func _update_wall_contact() -> void:
 func _update_pixel_visual(delta: float) -> void:
 	if pixel_visual == null:
 		return
+	_update_weapon_presentation()
 	pixel_visual.tick(
 		delta,
 		is_on_floor(),
@@ -644,5 +761,72 @@ func _update_pixel_visual(delta: float) -> void:
 		_double_jump_visual_remaining > 0.0,
 		_wall_sliding,
 		is_dashing(),
-		is_dash_airborne()
+		is_dash_airborne(),
+		player_handgun.is_retreating(horizontal_speed)
+	)
+	player_handgun.update_mouse_aim(_facing_sign)
+
+
+func _update_weapon_selection_input() -> void:
+	if Input.is_action_just_pressed("weapon_slot_1"):
+		request_weapon(PlayerWeapon.KNIFE)
+		return
+	if Input.is_action_just_pressed("weapon_slot_2"):
+		request_weapon(PlayerWeapon.HANDGUN)
+		return
+	if Input.is_action_just_pressed("weapon_cycle_next"):
+		_cycle_weapon(1)
+		return
+	if Input.is_action_just_pressed("weapon_cycle_previous"):
+		_cycle_weapon(-1)
+
+
+func _cycle_weapon(direction: int) -> void:
+	if _owned_weapon_ids.size() <= 1:
+		return
+	var cycle_from := (
+		_pending_weapon_id
+		if not _pending_weapon_id.is_empty()
+		else _equipped_weapon_id
+	)
+	var current_index := _owned_weapon_ids.find(cycle_from)
+	if current_index < 0:
+		current_index = 0
+	var next_index := posmod(current_index + direction, _owned_weapon_ids.size())
+	request_weapon(_owned_weapon_ids[next_index])
+
+
+func _apply_pending_weapon() -> void:
+	if _pending_weapon_id.is_empty():
+		return
+	var requested_weapon := _pending_weapon_id
+	_pending_weapon_id = &""
+	if requested_weapon in _owned_weapon_ids:
+		_equip_weapon(requested_weapon)
+
+
+func _equip_weapon(weapon_id: StringName) -> void:
+	if weapon_id == _equipped_weapon_id:
+		_update_weapon_presentation()
+		return
+	_equipped_weapon_id = weapon_id
+	_update_weapon_presentation()
+	weapon_equipped.emit(_equipped_weapon_id)
+
+
+func _update_weapon_presentation() -> void:
+	if pixel_visual == null:
+		return
+	var presentation_aim_up := (
+		_active_attack_aim_up
+		if _active_attack_weapon_id == PlayerWeapon.HANDGUN
+		else (
+			_equipped_weapon_id == PlayerWeapon.HANDGUN
+			and Input.is_action_pressed("aim_up")
+		)
+	)
+	pixel_visual.set_weapon_presentation(
+		_equipped_weapon_id,
+		_active_attack_weapon_id,
+		presentation_aim_up
 	)

@@ -34,9 +34,9 @@ scene tree is three-dimensional.
 | Player presentation | `PixelPlayerVisual3D`, separate from movement and gameplay collision |
 | Enemy behavior | Focused enemy scenes/scripts with separate body, stomp, attack, hurt, and presentation contracts |
 | Hazards | Reusable hazard areas; spike art and damage geometry remain independently authored |
-| Player combat | Focused melee and future firearm owners that request movement-compatible actions without owning locomotion |
+| Player combat | Focused melee and firearm owners that request movement-compatible actions without owning locomotion |
 | Projectiles | Reusable projectile contract with explicitly authored allegiance, collision, speed, damage, lifetime, and reset behavior |
-| Firearms and ammo | Intended typed firearm data plus run-scoped ammo state; neither belongs in level geometry scripts |
+| Firearms and ammo | Typed firearm data plus session-local ownership and selection are implemented; ammunition is deliberately deferred until its appearance and drop policy are designed |
 | Boss encounters | Boss-specific state machines using shared damage, projectile, feedback, and deterministic-reset contracts |
 | Feedback | Replaceable presentation owner for flashes, hit pause, and future named audio cues |
 | Progression | `ProgressionStore` owns versioned `GameProgress` save data and permanent ability ownership |
@@ -348,11 +348,13 @@ each ability's resource ownership independent.
 
 ## Firearm and ammunition contract
 
-Player firearm collection, ownership, loadout, ammunition, and firing remain
-unimplemented. The approved shooter, projectile, impact feedback, short
-introduction, and death-gated physical handgun drop now run in the Level 3
-WIP's sealed second section; Firearm Review Lab remains a temporary cadence
-comparison until the firearm loop is complete.
+Player firearm collection, session ownership, two-slot selection, presentation,
+and firing are implemented. Ammunition is deliberately not implemented yet: no
+counter, hidden reserve, infinite-ammo marker, pickup, depletion, or drop rule
+exists. The approved shooter, projectile, impact feedback, short introduction,
+death-gated physical handgun drop, and collectible player handgun now run in the
+Level 3 WIP's sealed second section; Firearm Review Lab remains a temporary
+cadence comparison until the firearm lesson is complete.
 The first approved player firearm remains a fixed weapon introduced shortly
 before the World 1 boss. Green Zone enemy 2 is the selected first shooter visual
 set; its death guarantees the gun pickup after an isolated encounter completed
@@ -365,15 +367,28 @@ with the existing movement and melee kit.
   does.
 - A switch requested during an attack takes effect when that attack resolves;
   it never truncates presentation or changes an already-active damage window.
-- Initial aim directions are route-horizontal and upward-diagonal. Free mouse
-  aim and twin-stick behavior are outside the current direction.
+- Mouse aim projects the cursor onto the X/Y gameplay plane and clamps to
+  90 degrees above/below cursor-selected facing. A 0.13-world-unit horizontal
+  tolerance retains facing near the player centre. This visual/firearm facing
+  is separate from locomotion facing, preserving dash, wall-jump, and knife
+  directions. The crosshair shows the actual
+  muzzle ray; arm, gun, flash, and projectile origin share shoulder rotation.
+  Keyboard/gamepad retain horizontal and upward-diagonal aiming. The native
+  cursor returns when aiming stops, on pause, and when the HUD exits.
+- Grounded retreat with mouse-aimed handgun uses 65% of normal maximum speed
+  and the pack-1 Biker `Walk1.png` sheet played backward. The six-frame cycle
+  advances by distance travelled (1.5 frames per world unit). Forward movement,
+  aerial control, dash, wall jumps, and knife movement retain their tuning.
+- The muzzle flash samples a 4x8 region from frames 0, 2, and 4 of the existing
+  horizontal pack texture for 75 ms, replacing its full 48-pixel streak.
 - Enemy targeting is independent of those player controls. The production
   shooter resolves a normalized direction toward the player through the full
   360 degrees of the flat X/Y gameplay plane while keeping Z fixed. Paired
   rounds offset along the perpendicular lane axis. The same-height lab fixture
   therefore still reads as a horizontal cadence test without special behavior.
-- A firearm definition owns visual references, projectile choice, cadence,
-  supported directions, and ammo cost; it does not own player locomotion.
+- A firearm definition owns projectile choice, cadence, supported directions,
+  muzzle offsets, speed, and range; it does not own player locomotion or a future
+  ammunition economy.
 - Shooter presentation, ranged-enemy behavior, and projectile behavior remain
   separate contracts. The selected art does not define the AI.
 - The selected first-shooter cadence is three quick dual-gun beats: two
@@ -394,19 +409,21 @@ with the existing movement and melee kit.
   switches to a diagonal source pose during a short deterministic arc, makes
   one restrained bounce, and snaps to `GunDropAnchor`. It is a
   `run_resettable` `weapon_pickup`, so a reset during flight cancels the motion
-  instead of leaving a delayed duplicate. Collection stays disabled until the
-  session-owned weapon-state milestone is implemented.
-- Shooter presentation and reward selection are explicitly independent. The
-  enemy keeps its approved baked-in dual-gun animation, while its death reveals
-  the fixed, unchanged `weapons/guns/2 Guns/2_1.png` and `2_2.png` reward. The
-  future player weapon keeps that same index-2 family: Biker's gun-ready base
-  poses, `3 Hands/1 Biker/2.png`, muzzle sheets
-  `4 Shoot_effects/2_1.png` and `2_2.png`, and projectile sprites
-  `5 Bullets/2.png` and `2_2.png`. These supporting files remain library-only
-  until player firing is implemented. Enemy art never implicitly selects or
-  changes the player's reward: the `2` in Green Zone enemy 2 is coincidental,
-  and its already approved projectile is independently promoted from
-  `5 Bullets/3.png`.
+  instead of leaving a delayed duplicate. On contact it asks `LevelSession3D`
+  for the one authoritative acquisition, becomes claimed, and auto-equips the
+  handgun. Death/checkpoint respawn preserves that session ownership and keeps
+  the reward claimed; a full section restart clears ownership and rearms the
+  shooter and drop together.
+- The reward and player rig use pistol 4 from `weapons/guns_pack_1`:
+  `2 Guns/4_1.png` and `4_2.png`, Biker set-1 idle/run/jump bodies,
+  single firing-arm overlays `3.png`/`4.png`, index-2 muzzle effects, and
+  index-2 bullets. The body's other arm remains visible. Per-frame grip
+  offsets register the firing arm to the shoulder; gun, flash, and projectile
+  origin follow the same offset. Keyboard diagonal art uses pixel flips; mouse
+  aim rotates the horizontal rig with nearest filtering. Mouse aiming and the slower backpedal have user visual/feel acceptance.
+  Enemy dual-gun art remains unchanged, and its existing bullet is explicitly
+  preserved from `weapons/guns_pack_2/5 Bullets/3.png`. Both source packs stay
+  in separate folders because their relative filenames overlap.
 - Ordinary authored collision may block projectiles and serve as cover. The
   first encounter uses one nearly player-height natural object; there is no
   crouch, cover button, or snap-to-cover state.
@@ -416,15 +433,15 @@ with the existing movement and melee kit.
   into the same self-terminating four-frame spark-and-fragment effect and emits
   the future `projectile_impact` audio cue. Material-specific impact routing is
   deliberately outside this first firearm milestone.
-- Ammo is initially an authored run resource rather than a global stockpile.
-- Death, checkpoint respawn, manual restart, and encounter reset must each have
-  an explicit deterministic ammo/pickup policy before the system is accepted.
+- Ammo appearance, ownership scope, capacity, depletion, pickup, drop, and reset
+  behavior remain an explicit design discussion after the no-ammo gun controls
+  are accepted. None is implied by the current firearm resource or HUD.
 - Zero ammo cannot make an encounter impossible. Required damage always has a
   melee route or a deterministic replenishment rule.
 - The firearm auto-equips on first pickup and briefly reveals the weapon-switch
   controls. A contextual two-slot weapon display then highlights the equipped
-  knife or gun and shows remaining gun ammunition. It is absent before the
-  player has a firearm and must be reusable inside the later character HUD.
+  knife or gun. It is absent before the player has a firearm, contains no ammo
+  fiction, and remains reusable inside the later character HUD.
 
 Gun construction, crafting, inventories, skill trees, and permanent firearm
 progression are not current technical milestones. The asset library makes them
@@ -839,14 +856,21 @@ its opening shot drives a quick camera return and sends the input-locked player
 all the way to genuine collision cover while the view widens back to gameplay.
 The cutscene releases only after both arrival and the full opening volley, and
 its local checkpoint prevents it replaying after death. The required physical
-gun now kicks free and settles safely after the knife kill. Collection, player
-firearm control, the firing lesson, later practice, and the boss remain future
-milestones inside this second section.
+gun now kicks free and settles safely after the knife kill. It can be collected
+once for session-local ownership, auto-equips, and uses the exact source-family
+arm-free body, one complete directional grip, gun, muzzle, and projectile
+layers. `1` and `2`
+select knife or gun;
+the mouse wheel and gamepad RB cycle; a switch requested during an attack waits
+for that action to resolve. The first gun supports forward-cone mouse aiming and keyboard/gamepad horizontal or upward-diagonal fire
+into ordinary cover and explicit enemy projectile hurtboxes. Its contextual
+two-slot HUD intentionally contains no ammo display. Ammo design, the firing
+lesson, later practice, and the boss remain future milestones in this section.
 
 Reusable height-aware background fades remain unused and opt-in; authored zone
 regions are active. Structural, visual, and regression automation owns
 technical confidence, while hands-on human review remains the gate for
-presentation, difficulty, fairness, pacing, and feel. Player firearms, bosses, a
+presentation, difficulty, fairness, pacing, and feel. Ammunition, bosses, a
 broader Combat Lab, and the curated cyberpunk UI theme follow only when their
 campaign milestones require them. Moving saws are no longer a Level 3
 prerequisite and remain reserved for a later level whose route benefits from them.

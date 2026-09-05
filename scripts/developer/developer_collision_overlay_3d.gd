@@ -166,7 +166,7 @@ func _add_dynamic_attack_regions(
 	mesh: ImmediateMesh,
 	edges: Array[Dictionary]
 ) -> void:
-	if _level.player.is_attacking():
+	if _level.player.is_melee_attacking():
 		_add_rect(mesh, edges, _level.player.developer_melee_bounds(), ATTACK_COLOR)
 		_dynamic_attack_region_count += 1
 	for node in _level.find_children("*", "StompableEnemy3D", true, false):

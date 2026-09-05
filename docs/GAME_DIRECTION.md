@@ -127,13 +127,17 @@ first defeats one newly introduced armed Green Zone humanoid using the existing
 movement and melee kit; that specific enemy then guarantees the gun pickup. A
 safe, brief follow-up teaches firing before the player is under meaningful
 pressure.
-The fixed reward is selected independently of the weapons baked into the enemy
-art. Its two visible poses come from `weapons/guns/2 Guns/2_1.png` and
-`2_2.png`; the player implementation will keep that same numbered asset family
-with its Biker hand layer, gun-ready character poses, muzzle effects, and
-projectiles rather than substituting unrelated weapon components.
-The initial platformer-friendly aiming language is horizontal fire plus an
-upward diagonal shot; free mouse aim is not planned.
+The fixed reward uses pistol 4 from `weapons/guns_pack_1/2 Guns/4_1.png`
+and `4_2.png`. Its player rig uses the same pack's Biker set-1 body, single
+firing-arm overlay `3.png`/`4.png`, muzzle effects, and projectiles. The body
+supplies the other arm. The current pistol composition, mouse aiming, and backpedal have been accepted.
+The enemy retains its existing baked-in dual-gun art.
+Mouse aim uses a visible crosshair within a 180-degree forward arc (90 degrees
+above and below horizontal). With mouse aim active, the cursor selects facing,
+allowing targets on either side. A small centre tolerance prevents vertical-aim
+flicker. Movement remains independent, including retreating fire. The firing arm and
+gun rotate together around the shoulder, with nearest texture filtering.
+Keyboard/gamepad retain horizontal fire and the upward-diagonal aim input.
 Enemy ranged targeting is a separate language: production shooters may aim
 directly toward the player through the full 360 degrees of the flat X/Y gameplay
 plane while keeping depth fixed. That does not expand the player's deliberately
@@ -144,14 +148,16 @@ without adding a crouch or snap-to-cover mechanic. The defeated shooter visibly
 drops the weapon into a guaranteed safe pickup position, and collecting it
 auto-equips it rather than presenting a text-only reward. Knife and gun form a
 two-slot loadout selected with `1`, `2`, the mouse wheel, or one gamepad cycle
-input. A small contextual weapon-and-ammo display appears only after the gun is
-earned and is intended to become part of the later character HUD.
+input. A small contextual weapon display appears only after the gun is earned,
+contains no premature ammo fiction, and is intended to become part of the later
+character HUD.
 
-Ammunition is sparse and initially scoped to the authored level. Shooting is a
-tactical advantage, not a replacement for movement or melee. Running out of
-ammunition must never make a boss or level impossible: melee remains viable,
-and melee openings may replenish a small amount of ammunition when an encounter
-needs that safety valve.
+Ammunition is deliberately not implemented yet. Its visual language, capacity,
+ownership scope, depletion, pickups, drops, and reset behavior will be chosen as
+one explicit design decision after the no-ammo firearm controls are reviewed.
+Whatever that decision becomes, shooting remains a tactical advantage rather
+than a replacement for movement or melee, and zero ammo cannot make a boss or
+level impossible.
 
 The gun constructor, crafting layouts, advanced weapon icons, and skill-tree
 assets are future options only. They are not approved gameplay systems. If a
@@ -220,10 +226,12 @@ three re-authored levels:
    crosses the cover rock to reveal that the surprised enemy panics too, and
    the enemy recovers first. Its opening muzzle flash whips the camera back and
    sends the player all the way to real collision cover before control returns.
-   Defeating the shooter guarantees the gun pickup. Shooting is taught safely
-   before it is mixed with the learned movement and enemy language, followed by
-   a simple first boss. The gun pickup, player firearm, lesson, and boss all stay
-   in this second section and are not integrated yet. Moving saws were cut from
+   Defeating the shooter guarantees the collectible gun, which now auto-equips
+   into a two-slot knife/handgun loadout and supports horizontal or
+   upward-diagonal fire. Shooting is taught safely before it is mixed with the
+   learned movement and enemy language, followed by a simple first boss. The
+   lesson, ammunition decision, and boss all stay in this second section and are
+   not integrated yet. Moving saws were cut from
    this level and reserved for a later campaign fit.
 
 The six short Godot prototype levels are deleted; they were regression
