@@ -21,6 +21,10 @@ signal weapon_acquired(weapon_id: StringName)
 signal weapon_ownership_changed(owned_weapon_ids: Array[StringName])
 
 @export_range(0.0, 1.0, 0.01) var reset_delay := 0.18
+## Optional water-death sound to finish before respawning; other deaths use reset_delay.
+@export var water_death_audio_path: NodePath
+## Positive values use a fixed water-only delay instead of waiting for the clip tail.
+@export_range(0.0, 10.0, 0.05) var water_respawn_delay := 0.0
 @export_range(0.2, 2.0, 0.05) var completion_fade_duration := 0.55
 
 @onready var route_extent: RouteExtent3D = %RouteExtent
@@ -130,7 +134,18 @@ func _on_player_died() -> void:
 	_resetting = true
 	_reset_request_serial += 1
 	var request_serial := _reset_request_serial
-	await get_tree().create_timer(reset_delay).timeout
+	var water_audio: AudioStreamPlayer
+	var death_delay := reset_delay
+	if player.death_kind() == PlayerCharacter.DEATH_KIND_WATER:
+		if water_respawn_delay > 0.0:
+			death_delay = water_respawn_delay
+		else:
+			water_audio = get_node_or_null(water_death_audio_path) as AudioStreamPlayer
+	await get_tree().create_timer(death_delay).timeout
+	while is_instance_valid(water_audio) and water_audio.playing:
+		if request_serial != _reset_request_serial:
+			return
+		await get_tree().process_frame
 	if request_serial != _reset_request_serial:
 		return
 	_reset_world()

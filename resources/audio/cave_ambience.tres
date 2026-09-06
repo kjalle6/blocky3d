@@ -1,0 +1,9 @@
+[gd_resource type="Resource" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/audio/cave_ambience_settings.gd" id="1"]
+[ext_resource type="AudioStream" path="res://assets/audio/ambience/nox_cave_drips_loop.wav" id="2"]
+
+[resource]
+script = ExtResource("1")
+recording = ExtResource("2")
+recording_configured = true

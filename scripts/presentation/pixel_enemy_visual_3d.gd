@@ -10,6 +10,11 @@ const TEXTURES := {
 const FRAME_COUNTS := {"idle": 4, "walk": 6, "attack": 6, "death": 6}
 const FRAME_RATES := {"idle": 6.0, "walk": 10.0, "attack": 10.0, "death": 10.0}
 
+## Optional square-frame sprite sheets for another patrol character.
+@export var animation_textures: Dictionary[String, Texture2D] = {}
+@export var attack_frame_rate := 10.0
+@export var body_center_offset_pixels := 0.0
+
 var _state := ""
 var _elapsed := 0.0
 var _flash_tween: Tween
@@ -25,10 +30,12 @@ func _ready() -> void:
 func tick(delta: float, next_state: String, facing_right: bool) -> void:
 	set_state(next_state, false)
 	_elapsed += delta
-	var count: int = FRAME_COUNTS[_state]
-	var next_frame := floori(_elapsed * FRAME_RATES[_state])
-	frame = mini(count - 1, next_frame) if _state == "death" else next_frame % count
+	var count: int = hframes
+	var rate: float = attack_frame_rate if _state == "attack" else FRAME_RATES[_state]
+	var next_frame := floori(_elapsed * rate)
+	frame = mini(count - 1, next_frame) if _state in ["death", "attack"] else next_frame % count
 	flip_h = not facing_right
+	position.x = body_center_offset_pixels * pixel_size * (1.0 if facing_right else -1.0)
 
 
 func set_state(next_state: String, force: bool) -> void:
@@ -36,8 +43,8 @@ func set_state(next_state: String, force: bool) -> void:
 		return
 	_state = next_state
 	_elapsed = 0.0
-	texture = TEXTURES[_state]
-	hframes = FRAME_COUNTS[_state]
+	texture = animation_textures.get(_state, TEXTURES[_state])
+	hframes = texture.get_width() / texture.get_height() if animation_textures.has(_state) else FRAME_COUNTS[_state]
 	frame = 0
 
 

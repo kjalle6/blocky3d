@@ -3,6 +3,8 @@ extends Resource
 ## Visual skin for a collision-first pixel platform. Gameplay dimensions stay
 ## on PixelPlatform3D's shared 1.28 m grid; this resource changes art only.
 
+@export_enum("silent", "grass", "sand", "cave") var footstep_surface := "grass"
+
 @export var top_left: Texture2D
 @export var top: Texture2D
 @export var top_right: Texture2D

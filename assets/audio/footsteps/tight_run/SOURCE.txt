@@ -1,0 +1,6 @@
+Derived from the original NOX CC0 grass Run 08/10/11 files in the parent folder.
+Original pitch and attack retained. Each clip ends at 0.22s, with a linear
+amplitude fade from 0.16s to 0.22s, before the next 0.25s running foot contact.
+Generated with FFmpeg: atrim=duration=0.22,afade=t=out:st=0.16:d=0.06
+Output is 48 kHz mono 16-bit PCM for Godot WAV compatibility. Originals are preserved in the parent
+folder; their provenance and hashes are recorded in ../sources.json.

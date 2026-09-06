@@ -1,10 +1,13 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/player_character.gd" id="1_player"]
 [ext_resource type="Resource" path="res://resources/player/default_movement.tres" id="2_movement"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_player_visual_3d.gd" id="3_visual"]
 [ext_resource type="Script" path="res://scripts/weapons/player_handgun_3d.gd" id="4_handgun"]
 [ext_resource type="Resource" path="res://resources/weapons/first_handgun.tres" id="5_handgun_definition"]
+
+[ext_resource type="Script" path="res://scripts/presentation/player_footsteps.gd" id="6_footsteps"]
+[ext_resource type="Script" path="res://scripts/presentation/player_jump_audio.gd" id="7_jump_audio"]
 
 [sub_resource type="BoxShape3D" id="Shape_player"]
 size = Vector3(0.72, 1.1, 0.72)
@@ -78,3 +81,9 @@ position = Vector3(0, -0.4, 0)
 shape = SubResource("Shape_hazard_contact")
 
 [connection signal="shot_fired" from="PlayerHandgun" to="PixelVisual" method="_on_player_handgun_shot_fired"]
+
+[node name="Footsteps" type="Node" parent="."]
+script = ExtResource("6_footsteps")
+
+[node name="JumpAudio" type="Node" parent="."]
+script = ExtResource("7_jump_audio")

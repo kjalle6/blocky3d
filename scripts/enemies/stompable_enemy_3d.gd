@@ -22,6 +22,8 @@ const MINIMUM_PATROL_PROGRESS_RATIO := 0.25
 @export_range(0.0, 1.0, 0.01) var attack_impact_time := 0.38
 @export_range(0.0, 2.0, 0.05) var attack_cooldown := 0.65
 @export_range(0.1, 2.0, 0.05) var attack_vertical_tolerance := 0.9
+## Optional rolling attack; ordinary walking enemies remain stationary.
+@export_range(0.0, 10.0, 0.1) var attack_move_speed := 0.0
 
 var _direction := 1.0
 var _defeated := false
@@ -222,11 +224,18 @@ func _try_start_attack() -> bool:
 	_attack_damage_applied = false
 	if pixel_visual != null:
 		pixel_visual.set_state("attack", true)
+		pixel_visual.tick(0.0, "attack", _direction > 0.0)
 	return true
 
 
 func _tick_attack(delta: float) -> void:
 	velocity = Vector3.ZERO
+	if attack_move_speed > 0.0:
+		# Use the same ledge probe as patrol, and let solid collisions stop us.
+		if _has_floor_ahead():
+			velocity.x = attack_move_speed * _direction
+		velocity.y = -gravity * delta
+		move_and_slide()
 	_attack_remaining = maxf(0.0, _attack_remaining - delta)
 	var elapsed := attack_duration - _attack_remaining
 	if not _attack_damage_applied and elapsed >= attack_impact_time:

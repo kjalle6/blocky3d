@@ -81,6 +81,10 @@ func _run() -> void:
 	for ability_id in PlayerAbility.IMPLEMENTED:
 		assert(shooter_area.player.has_ability(ability_id))
 	assert(shooter_area.player.is_transition_running())
+	# A scene swap completes during idle processing. Allow a full physics tick
+	# before requiring displacement; an idle frame need not contain one.
+	await physics_frame
+	await physics_frame
 	assert(
 		shooter_area.player.global_position.x
 		> shooter_area.spawn_point.global_position.x

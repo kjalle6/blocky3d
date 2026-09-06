@@ -14,6 +14,9 @@ signal damage_received(source_position: Vector3)
 signal ability_performed(ability_id: StringName)
 signal weapon_equipped(weapon_id: StringName)
 signal projectile_fired(projectile: HandgunProjectile3D)
+signal ground_jump_started
+signal landed(impact_speed: float)
+signal movement_reset
 
 @export var movement: PlayerMovementConfig
 @export_range(0.2, 1.0, 0.05) var handgun_backpedal_speed_ratio := 0.65
@@ -167,7 +170,10 @@ func _physics_process(delta: float) -> void:
 	velocity.x = horizontal_speed
 	velocity.z = 0.0
 	_descending_before_slide = velocity.y < -0.5
+	var vertical_speed_before_slide := velocity.y
 	move_and_slide()
+	if not grounded and is_on_floor():
+		landed.emit(maxf(0.0, -vertical_speed_before_slide))
 	_update_wall_contact()
 	if is_dashing() and is_on_wall():
 		_finish_dash(true)
@@ -281,6 +287,7 @@ func reset_at(spawn_transform: Transform3D) -> void:
 		pixel_visual.reset_feedback()
 		pixel_visual.set_state("idle", true)
 	_apply_developer_inspection_collision()
+	movement_reset.emit()
 
 
 func is_dead() -> bool:
@@ -454,6 +461,7 @@ func set_developer_inspection_enabled(enabled: bool) -> void:
 	set_physics_process(true)
 	if pixel_visual != null:
 		pixel_visual.set_state("idle", true)
+	movement_reset.emit()
 
 
 func is_developer_inspection_enabled() -> bool:
@@ -621,6 +629,7 @@ func _perform_melee_hit() -> void:
 func _perform_ground_jump() -> void:
 	if is_dashing():
 		_finish_dash()
+	ground_jump_started.emit()
 	velocity.y = movement.jump_velocity
 	_coyote_remaining = 0.0
 	_jump_buffer_remaining = 0.0

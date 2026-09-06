@@ -1,0 +1,10 @@
+NOX SOUND Nature Essentials - Ambiance_Cave_Drips_Loop_Stereo.wav
+Copied unchanged from:
+D:/GodotProjects/blocky3dassets/audio/Sounds/Nature_Essentials_NOX_SOUND/Ambiance_Cave_Drips_Loop_Stereo.wav
+Runtime source: nox_cave_drips_loop.wav
+SHA256: 02FFFBB6B85710C48CD8BCD5762DF2382C03E181E1360C0AAD2C484A1984A566
+Original: 24-bit PCM WAV, 48000 Hz stereo, 29.99875 seconds.
+Source levels measured with ffmpeg volumedetect: mean -32.2 dB, peak -18.4 dB.
+Playback: entire recording looped at original pitch, initial gain -6 dB.
+No trim, normalization, or additional reverb. Room entry/exit fades take 0.4s.
+Gain and enable state are adjustable/savable through the audio tuning panel.

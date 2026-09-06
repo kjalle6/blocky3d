@@ -1,0 +1,178 @@
+{
+  "sand_dirt_004.ogg": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Dirt\\Steps_dirt-004.ogg",
+    "sha256": "a7ab440c1982ae4c26952b4ea86509a4429628934a7aabe5c5748ef119297596"
+  },
+  "sand_gravel_001.ogg": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Gravel\\Steps_gravel-001.ogg",
+    "sha256": "18a53a8e3768ee5a24978eed73b0d06912ea7dcc536729c8ab5ba7293e5e4ccf"
+  },
+  "grass_alt_4.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footstep_alt_4.wav",
+    "sha256": "7b5396a7d47896afb75cb27543bf113666f45d7c7def53c12ce050f7bdb9960d"
+  },
+  "sand_gravel_006.ogg": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Gravel\\Steps_gravel-006.ogg",
+    "sha256": "764b1611050f06e5587d3da8cfea447fb38a7a2f4d295555441af1d2d586b75c"
+  },
+  "grass_walk_01.wav": {
+    "source": "D:/GodotProjects/blocky3dassets/audio/Sounds/Antons_Footsteps_FS_Grass/Antons_Footsteps_FS_Grass_Walk_01.wav",
+    "sha256": "3db46be2e74737589b32a77c15288a9b09f1775a08d489ec25f2d4bc59fab956"
+  },
+  "nox_grass_run_08.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Run\\Footsteps_Grass_Run_08.wav",
+    "sha256": "8d4fec654c0400710d05934bbf56107f0beb6438d94a6770f5805db7976fb053"
+  },
+  "nox_grass_walk_07.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Walk\\Footsteps_Walk_Grass_Mono_07.wav",
+    "sha256": "e9062892ef53f7faec2cf928d2901eba368fc1dd7c674b3b75b2e4d4c656503a"
+  },
+  "nox_grass_run_10.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Run\\Footsteps_Grass_Run_10.wav",
+    "sha256": "e3241a63df358ab73ad567e6603861c05a296e1a1b278ff550e3783af37fa40e"
+  },
+  "nox_grass_run_11.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Run\\Footsteps_Grass_Run_11.wav",
+    "sha256": "c7b2c100a63833a0281a2991fedbf4b8848810619931d23464edbbf1a3934842"
+  },
+  "nox_grass_walk_06.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Walk\\Footsteps_Walk_Grass_Mono_06.wav",
+    "sha256": "9ed771b0933a60e299b9f638cf6fd6f0a72cf101f0aa28c9da145e2a2b7567fe"
+  },
+  "nox_grass_walk_04.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Walk\\Footsteps_Walk_Grass_Mono_04.wav",
+    "sha256": "c9ce406b3d21b8f185092529ea9bfc8e14c4e412869b37fc1f6b62348e971bb2"
+  },
+  "nox_grass_jump_start_01.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Jump\\Footsteps_Grass_Jump_Start_01.wav",
+    "sha256": "5719dd4878180645bfe3c13ef7b7fe3d49bde173dcf3bdfe0a6ede692a5e3138"
+  },
+  "nox_grass_jump_start_02.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Jump\\Footsteps_Grass_Jump_Start_02.wav",
+    "sha256": "fea4cfe5c515ebd542336eb0595c5c5046ca9f2a0e8ce19bece740ff39fdf182"
+  },
+  "nox_grass_jump_start_03.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Jump\\Footsteps_Grass_Jump_Start_03.wav",
+    "sha256": "1650a216616c5b8c20f50e8a2ffc527d7727b16ad720f7b7e27f7a2cece9115c"
+  },
+  "nox_grass_jump_start_04.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Jump\\Footsteps_Grass_Jump_Start_04.wav",
+    "sha256": "9f472e8537347016f32fac002db58d7b24dbedfed6f1b85be0d7b208a08e4b77"
+  },
+  "nox_grass_jump_start_05.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Jump\\Footsteps_Grass_Jump_Start_05.wav",
+    "sha256": "77c7b6e7bd3f11f24482fb67926bff0cbb9eb59732fce24964bc13ea8758c31a"
+  },
+  "nox_grass_jump_start_06.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Jump\\Footsteps_Grass_Jump_Start_06.wav",
+    "sha256": "aa1f158611113c74cbd404136fe92567a27ae33405565f4424477fd28b8b6e6a"
+  },
+  "nox_grass_jump_start_07.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Jump\\Footsteps_Grass_Jump_Start_07.wav",
+    "sha256": "bd6113706880f72b2e3bc7e5a9134dd112d557e4fd2ce420095b8eceb359c7ac"
+  },
+  "nox_grass_jump_start_08.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Jump\\Footsteps_Grass_Jump_Start_08.wav",
+    "sha256": "1de53465f47dfbed2001bda880a65a3695e1ade1da4965962cda7e114af9896e"
+  },
+  "nox_grass_jump_start_09.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Jump\\Footsteps_Grass_Jump_Start_09.wav",
+    "sha256": "2546ef1462d8219962b81900d82e4a27fa08423daf622fea879265492a61775e"
+  },
+  "nox_grass_jump_start_10.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Jump\\Footsteps_Grass_Jump_Start_10.wav",
+    "sha256": "059b96b839a0cde1fc6102498d0587476456bac19069484d6a3643857d0a0f4c"
+  },
+  "nox_grass_jump_land_01.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Jump\\Footsteps_Grass_Jump_Land_01.wav",
+    "sha256": "d0cb8f8ab412b135361414ecf74edec204b932d6761ee5c2adaf6f569ff67357"
+  },
+  "nox_grass_jump_land_02.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Jump\\Footsteps_Grass_Jump_Land_02.wav",
+    "sha256": "dcdf66937550de2d29906818d373673ae9053966551ce69b2737b6b0c406faf3"
+  },
+  "nox_grass_jump_land_03.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Jump\\Footsteps_Grass_Jump_Land_03.wav",
+    "sha256": "baeacefcf8b1106a9788942745e8f75365575b256da8c69f8b24499049a39b97"
+  },
+  "nox_grass_jump_land_04.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Jump\\Footsteps_Grass_Jump_Land_04.wav",
+    "sha256": "2152b6824cd1bf1fcf38c6193980e76d89d5a75f36e5e9483d3e317980fc36b5"
+  },
+  "nox_grass_jump_land_05.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Jump\\Footsteps_Grass_Jump_Land_05.wav",
+    "sha256": "3ea3b0db33e12bdcae35b80e074c6fda73df3697e2765769d0241a80e5efa44c"
+  },
+  "nox_grass_jump_land_06.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Jump\\Footsteps_Grass_Jump_Land_06.wav",
+    "sha256": "a97d02c2aaf1392bc030c8541f1b8d2458399ec3080ee9a3ccf3591f08147049"
+  },
+  "nox_grass_jump_land_07.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Jump\\Footsteps_Grass_Jump_Land_07.wav",
+    "sha256": "45d178c727048e2415f2811d8f6920c0e0256991128ae57364a5bf17e8527c61"
+  },
+  "nox_grass_jump_land_08.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Jump\\Footsteps_Grass_Jump_Land_08.wav",
+    "sha256": "18ac2d5761e988bdab99b5fe265fb700c012bb8a878e1ac7eaec00a8d2c5f873"
+  },
+  "nox_grass_jump_land_09.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Jump\\Footsteps_Grass_Jump_Land_09.wav",
+    "sha256": "f6309ead5e0b506e4721d48c0eb1b2ff9462f0f040338b73699e2ca6e2874841"
+  },
+  "nox_grass_jump_land_10.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Grass\\Footsteps_Grass_Jump\\Footsteps_Grass_Jump_Land_10.wav",
+    "sha256": "39a615bff5b4f2d4d09ee7e8d2dacb5d680f88caeb74fc424fc2343d62196182"
+  },
+  "nox_sand_walk_01.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Sand\\Footsteps_Sand_Walk\\Footsteps_Sand_Walk_01.wav",
+    "sha256": "babd2df42b28eb830e14932a5299c76725b402acefb6592963dcfd75ced9fe2d"
+  },
+  "nox_sand_walk_06.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Sand\\Footsteps_Sand_Walk\\Footsteps_Sand_Walk_06.wav",
+    "sha256": "46c68d6c758e52db3dc504a92e3aedfaf7500d5c0db77681e62055bd21cd6f3a"
+  },
+  "nox_sand_walk_02.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Sand\\Footsteps_Sand_Walk\\Footsteps_Sand_Walk_02.wav",
+    "sha256": "3bc1c79f428cea16dd1bc7d46b017385548b4b356ca58d1f217c1d16e880c5e6"
+  },
+  "nox_sand_jump_start_01.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Sand\\Footsteps_Sand_Jump\\Footsteps_Sand_Jump_Start_01.wav",
+    "sha256": "d90003ff6202b19f08f0187dbf332b690b1ed3938f5cfba08ee4dc681c91c491"
+  },
+  "nox_sand_jump_start_02.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Sand\\Footsteps_Sand_Jump\\Footsteps_Sand_Jump_Start_02.wav",
+    "sha256": "c3acb2795c088a7c0b342640131a3f834f4a76c33ec1aa89fda46e4551b26ad2"
+  },
+  "nox_sand_jump_start_03.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Sand\\Footsteps_Sand_Jump\\Footsteps_Sand_Jump_Start_03.wav",
+    "sha256": "d945069fb48d7d0716214efce16534ac98121585b68933c14cf720d48d2e082b"
+  },
+  "nox_sand_jump_start_04.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Sand\\Footsteps_Sand_Jump\\Footsteps_Sand_Jump_Start_04.wav",
+    "sha256": "b1bf917d0b00043a8948816c446c6e3c8b404c4e8f5d2ac338c1d7f8e58dbcd0"
+  },
+  "nox_sand_jump_start_05.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Sand\\Footsteps_Sand_Jump\\Footsteps_Sand_Jump_Start_05.wav",
+    "sha256": "3c4781ad7d01bb7de1fe8560b14ab800ba21fe185164a21ba7df01acce72d7a1"
+  },
+  "nox_sand_jump_land_01.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Sand\\Footsteps_Sand_Jump\\Footsteps_Sand_Jump_Land_01.wav",
+    "sha256": "50e08a803643c3b4e6d1e5823eb80fd4c4720c96a2a62080ffdb284b942248f6"
+  },
+  "nox_sand_jump_land_02.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Sand\\Footsteps_Sand_Jump\\Footsteps_Sand_Jump_Land_02.wav",
+    "sha256": "3282e56dd2468cbed03e4fda182b312155c1c6e5dca258ee703db10fc400037a"
+  },
+  "nox_sand_jump_land_03.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Sand\\Footsteps_Sand_Jump\\Footsteps_Sand_Jump_Land_03.wav",
+    "sha256": "24e07a949fad9f69600e1de459be3d25be6763b3bbdf0e468a59baf35571b5d0"
+  },
+  "nox_sand_jump_land_04.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Sand\\Footsteps_Sand_Jump\\Footsteps_Sand_Jump_Land_04.wav",
+    "sha256": "4f890100b5f3091be5d5a25a198e294965dd98b57156288e64e634fc7be44086"
+  },
+  "nox_sand_jump_land_05.wav": {
+    "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Footsteps_Essentials_NOX_SOUND\\Footsteps_Sand\\Footsteps_Sand_Jump\\Footsteps_Sand_Jump_Land_05.wav",
+    "sha256": "a2dc3437d573a4be8bc733a8e1d38f2628d03a2218904379030d95e7d762c9bc"
+  }
+}

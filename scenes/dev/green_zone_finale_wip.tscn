@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3]
+[gd_scene load_steps=26 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="2_platform"]
@@ -19,6 +19,7 @@
 [ext_resource type="Script" path="res://scripts/hazards/hazard_3d.gd" id="17_hazard"]
 [ext_resource type="Script" path="res://scripts/level/level_transition_3d.gd" id="18_transition"]
 [ext_resource type="PackedScene" path="res://scenes/dev/green_zone_finale_shooter_area_wip.tscn" id="19_shooter_area"]
+[ext_resource type="Script" path="res://scripts/audio/audio_environment_region_3d.gd" id="20_audio_region"]
 
 [sub_resource type="Environment" id="Environment_night"]
 background_mode = 1
@@ -130,6 +131,7 @@ shape = SubResource("Shape_left_boundary")
 
 [node name="DeepRockShell" type="StaticBody3D" parent="Platforms" index="10"]
 position = Vector3(107.52, -29.44, 0)
+metadata/footstep_surface = &"underground"
 script = ExtResource("12_terrain")
 solid_rows = PackedStringArray("..................................................", "..................................................", "..................................................", "..................................................", "..................................................", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", "....................................#....#........", ".........................................#........", ".........................................#........", "...###############################################", "...###############################################", "...###############################################")
 style = ExtResource("13_rock_style")
@@ -314,6 +316,11 @@ run_duration = 0.9
 
 [node name="Collision" type="CollisionShape3D" parent="ShooterAreaTransition" index="0"]
 shape = SubResource("Shape_shooter_area_transition")
+
+[node name="UndergroundAudioRegion" type="Node3D" parent="." index="26"]
+position = Vector3(139.52, -15.36, 0)
+script = ExtResource("20_audio_region")
+size = Vector2(64, 28.16)
 
 [editable path="Player"]
 [editable path="Props/LevelStartLift"]

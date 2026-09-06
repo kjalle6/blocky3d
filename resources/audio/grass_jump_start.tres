@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=12 format=3]
+[ext_resource type="Script" path="res://scripts/audio/footstep_sound_bank.gd" id="1"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_01.wav" id="2"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_02.wav" id="3"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_03.wav" id="4"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_04.wav" id="5"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_05.wav" id="6"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_06.wav" id="7"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_07.wav" id="8"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_08.wav" id="9"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_09.wav" id="10"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_10.wav" id="11"]
+[resource]
+script = ExtResource("1")
+surface = &"grass"
+gait = &"jump_start"
+clips = Array[AudioStream]([ExtResource("2"), ExtResource("3"), ExtResource("4"), ExtResource("5"), ExtResource("6"), ExtResource("7"), ExtResource("8"), ExtResource("9"), ExtResource("10"), ExtResource("11")])
+labels = PackedStringArray("01", "02", "03", "04", "05", "06", "07", "08", "09", "10")

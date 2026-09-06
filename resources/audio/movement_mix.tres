@@ -1,0 +1,232 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_walk_07.wav" id="1_smm20"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_walk_06.wav" id="2_4qu4u"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_walk_04.wav" id="3_wvywj"]
+[ext_resource type="Script" path="res://scripts/audio/footstep_sound_bank.gd" id="4_7su0t"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_walk_01.wav" id="5_kjaw5"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_walk_02.wav" id="6_8kipa"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_01.wav" id="7_4vfwr"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_02.wav" id="8_yrp8y"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_03.wav" id="9_x75ia"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_04.wav" id="10_sl60v"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_05.wav" id="11_n6eqj"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_06.wav" id="12_xipc6"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_07.wav" id="13_37t10"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_08.wav" id="14_22nab"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_09.wav" id="15_32178"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_10.wav" id="16_4odbq"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_land_01.wav" id="17_f1uu0"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_land_02.wav" id="18_0wjvh"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_land_03.wav" id="19_rc2t5"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_land_04.wav" id="20_jfjs8"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_land_05.wav" id="21_4y82o"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_land_06.wav" id="22_swhmb"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_land_07.wav" id="23_wrk46"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_land_08.wav" id="24_hft4q"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_land_09.wav" id="25_rvbl7"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_land_10.wav" id="26_tt2gb"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_jump_start_01.wav" id="27_kqdsv"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_jump_start_02.wav" id="28_3kqwm"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_jump_start_03.wav" id="29_l6eoa"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_jump_start_04.wav" id="30_eo4if"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_jump_start_05.wav" id="31_3is6m"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_jump_land_01.wav" id="32_kxcfg"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_jump_land_02.wav" id="33_beiln"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_jump_land_03.wav" id="34_3d2fu"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_jump_land_04.wav" id="35_63n0b"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_jump_land_05.wav" id="36_6s815"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_Mud_Walk_04_09291debf71c.res" id="37_6p5m5"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_Mud_Walk_05_a012fc7a07a5.res" id="38_nsxpx"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_Mud_Walk_09_74ca31f68774.res" id="39_cqhql"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_Mud_Walk_10_cef7d31e563b.res" id="40_so54k"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_DirtyGround_Jump_Start_01_df2f22d985b9.res" id="41_i2q5j"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_DirtyGround_Jump_Start_02_25120cba4606.res" id="42_6nnql"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_DirtyGround_Jump_Land_03_faf4dffd2676.res" id="43_vsfuw"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_DirtyGround_Jump_Land_01_8410ac424767.res" id="44_5icuc"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_DirtyGround_Jump_Land_02_c8074c7f284f.res" id="45_pc4ng"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_DirtyGround_Jump_Start_03_acac9421e6c9.res" id="46_jxivu"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_Mud_Jump_Land_01_2c26d198ac49.res" id="47_4f054"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_Mud_Jump_Land_02_f38ea98da2ed.res" id="48_0egy3"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_Mud_Jump_Land_03_14b697797cac.res" id="49_ysuwx"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_Mud_Jump_Land_04_eab914eb4810.res" id="50_xj7ac"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_Mud_Jump_Land_05_990019f6bda2.res" id="51_o4vq3"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_DirtyGround_Jump_Start_01_df2f22d985b9.res" id="52_xy82y"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_DirtyGround_Jump_Start_02_25120cba4606.res" id="53_0joh3"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_DirtyGround_Jump_Start_03_acac9421e6c9.res" id="54_42l0f"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_Mud_Jump_Land_01_2c26d198ac49.res" id="55_2m0st"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_Mud_Jump_Land_02_f38ea98da2ed.res" id="56_wrqv7"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_Mud_Jump_Land_03_14b697797cac.res" id="57_fecip"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_Mud_Jump_Land_04_eab914eb4810.res" id="58_3h1yv"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_Mud_Jump_Land_05_990019f6bda2.res" id="59_n4x4e"]
+[ext_resource type="AudioStream" path="res://assets/audio/ambience/nox_cave_drips_loop.wav" id="60_0rkxj"]
+[ext_resource type="Script" path="res://scripts/audio/cave_ambience_settings.gd" id="61_xohpe"]
+[ext_resource type="Script" path="res://scripts/audio/cave_reverb_settings.gd" id="62_cctxl"]
+[ext_resource type="Script" path="res://scripts/audio/movement_audio_settings.gd" id="63_b3x62"]
+[ext_resource type="AudioStream" path="res://assets/audio/tuned/Ambiance_Cave_Dark_Loop_Stereo_2db110a3db4b.res" id="64_5tvqq"]
+
+[sub_resource type="Resource" id="Resource_756si"]
+script = ExtResource("4_7su0t")
+surface = &"grass"
+gait = &"run"
+clips = Array[AudioStream]([ExtResource("1_smm20"), ExtResource("2_4qu4u"), ExtResource("3_wvywj")])
+labels = PackedStringArray("07", "06", "04")
+volume_db = -13.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_cf8vf"]
+script = ExtResource("4_7su0t")
+surface = &"grass"
+gait = &"walk"
+clips = Array[AudioStream]([ExtResource("1_smm20"), ExtResource("2_4qu4u"), ExtResource("3_wvywj")])
+labels = PackedStringArray("07", "06", "04")
+volume_db = -13.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_i1s0x"]
+script = ExtResource("4_7su0t")
+surface = &"sand"
+gait = &"any"
+clips = Array[AudioStream]([ExtResource("5_kjaw5"), ExtResource("6_8kipa")])
+labels = PackedStringArray("NOX Sand Walk 01", "NOX Sand Walk 02")
+foot_indices = {
+"left": 0,
+"right": 1
+}
+volume_db = -19.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_t4kil"]
+script = ExtResource("4_7su0t")
+surface = &"grass"
+gait = &"jump_start"
+clips = Array[AudioStream]([ExtResource("7_4vfwr"), ExtResource("8_yrp8y"), ExtResource("9_x75ia"), ExtResource("10_sl60v"), ExtResource("11_n6eqj"), ExtResource("12_xipc6"), ExtResource("13_37t10"), ExtResource("14_22nab"), ExtResource("15_32178"), ExtResource("16_4odbq")])
+labels = PackedStringArray("01", "02", "03", "04", "05", "06", "07", "08", "09", "10")
+volume_db = -13.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_o4fn6"]
+script = ExtResource("4_7su0t")
+surface = &"grass"
+gait = &"jump_land"
+clips = Array[AudioStream]([ExtResource("17_f1uu0"), ExtResource("18_0wjvh"), ExtResource("19_rc2t5"), ExtResource("20_jfjs8"), ExtResource("21_4y82o"), ExtResource("22_swhmb"), ExtResource("23_wrk46"), ExtResource("24_hft4q"), ExtResource("25_rvbl7"), ExtResource("26_tt2gb")])
+labels = PackedStringArray("01", "02", "03", "04", "05", "06", "07", "08", "09", "10")
+volume_db = -15.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_jcuks"]
+script = ExtResource("4_7su0t")
+surface = &"sand"
+gait = &"jump_start"
+clips = Array[AudioStream]([ExtResource("27_kqdsv"), ExtResource("28_3kqwm"), ExtResource("29_l6eoa"), ExtResource("30_eo4if"), ExtResource("31_3is6m")])
+labels = PackedStringArray("01", "02", "03", "04", "05")
+volume_db = -22.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_nebq8"]
+script = ExtResource("4_7su0t")
+surface = &"sand"
+gait = &"jump_land"
+clips = Array[AudioStream]([ExtResource("32_kxcfg"), ExtResource("33_beiln"), ExtResource("34_3d2fu"), ExtResource("35_63n0b"), ExtResource("36_6s815")])
+labels = PackedStringArray("01", "02", "03", "04", "05")
+volume_db = -26.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_prcjf"]
+script = ExtResource("4_7su0t")
+surface = &"cave"
+gait = &"step"
+clips = Array[AudioStream]([ExtResource("37_6p5m5"), ExtResource("38_nsxpx"), ExtResource("39_cqhql"), ExtResource("40_so54k")])
+labels = PackedStringArray("Footsteps_Mud_Walk_04", "Footsteps_Mud_Walk_05", "Footsteps_Mud_Walk_09", "Footsteps_Mud_Walk_10")
+volume_db = -15.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_3m618"]
+script = ExtResource("4_7su0t")
+surface = &"cave"
+gait = &"jump_start"
+clips = Array[AudioStream]([ExtResource("41_i2q5j"), ExtResource("42_6nnql"), ExtResource("43_vsfuw")])
+labels = PackedStringArray("Footsteps_DirtyGround_Jump_Start_01", "Footsteps_DirtyGround_Jump_Start_02", "Footsteps_DirtyGround_Jump_Land_03")
+volume_db = -16.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_5o23j"]
+script = ExtResource("4_7su0t")
+surface = &"cave"
+gait = &"jump_land"
+clips = Array[AudioStream]([ExtResource("44_5icuc"), ExtResource("45_pc4ng"), ExtResource("46_jxivu"), ExtResource("47_4f054"), ExtResource("48_0egy3"), ExtResource("49_ysuwx"), ExtResource("50_xj7ac"), ExtResource("51_o4vq3")])
+labels = PackedStringArray("Footsteps_DirtyGround_Jump_Land_01", "Footsteps_DirtyGround_Jump_Land_02", "Footsteps_DirtyGround_Jump_Start_03", "Footsteps_Mud_Jump_Land_01", "Footsteps_Mud_Jump_Land_02", "Footsteps_Mud_Jump_Land_03", "Footsteps_Mud_Jump_Land_04", "Footsteps_Mud_Jump_Land_05")
+volume_db = -20.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_yckqk"]
+script = ExtResource("4_7su0t")
+surface = &"underground"
+gait = &"step"
+clips = Array[AudioStream]([ExtResource("37_6p5m5"), ExtResource("38_nsxpx"), ExtResource("39_cqhql"), ExtResource("40_so54k")])
+labels = PackedStringArray("Footsteps_Mud_Walk_04", "Footsteps_Mud_Walk_05", "Footsteps_Mud_Walk_09", "Footsteps_Mud_Walk_10")
+volume_db = -17.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_c315f"]
+script = ExtResource("4_7su0t")
+surface = &"underground"
+gait = &"jump_start"
+clips = Array[AudioStream]([ExtResource("52_xy82y"), ExtResource("53_0joh3"), ExtResource("54_42l0f")])
+labels = PackedStringArray("Footsteps_DirtyGround_Jump_Start_01", "Footsteps_DirtyGround_Jump_Start_02", "Footsteps_DirtyGround_Jump_Start_03")
+volume_db = -30.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_jeieu"]
+script = ExtResource("4_7su0t")
+surface = &"underground"
+gait = &"jump_land"
+clips = Array[AudioStream]([ExtResource("55_2m0st"), ExtResource("56_wrqv7"), ExtResource("57_fecip"), ExtResource("58_3h1yv"), ExtResource("59_n4x4e")])
+labels = PackedStringArray("Footsteps_Mud_Jump_Land_01", "Footsteps_Mud_Jump_Land_02", "Footsteps_Mud_Jump_Land_03", "Footsteps_Mud_Jump_Land_04", "Footsteps_Mud_Jump_Land_05")
+volume_db = -24.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_4eide"]
+script = ExtResource("61_xohpe")
+recording = ExtResource("60_0rkxj")
+recording_configured = true
+
+[sub_resource type="Resource" id="Resource_i5875"]
+script = ExtResource("62_cctxl")
+amount = 0.35
+room_size = 0.85
+damping = 0.15
+
+[sub_resource type="Resource" id="Resource_lpbcc"]
+script = ExtResource("61_xohpe")
+recording = ExtResource("64_5tvqq")
+recording_configured = true
+volume_db = -13.0
+
+[sub_resource type="Resource" id="Resource_f5l1y"]
+script = ExtResource("62_cctxl")
+amount = 0.25
+room_size = 0.7
+damping = 0.5
+
+[resource]
+script = ExtResource("63_b3x62")
+banks = {
+"cave/jump_land": SubResource("Resource_5o23j"),
+"cave/jump_start": SubResource("Resource_3m618"),
+"cave/step": SubResource("Resource_prcjf"),
+"grass/jump_land": SubResource("Resource_o4fn6"),
+"grass/jump_start": SubResource("Resource_t4kil"),
+"grass/run": SubResource("Resource_756si"),
+"grass/walk": SubResource("Resource_cf8vf"),
+"sand/jump_land": SubResource("Resource_nebq8"),
+"sand/jump_start": SubResource("Resource_jcuks"),
+"sand/step": SubResource("Resource_i1s0x"),
+"underground/jump_land": SubResource("Resource_jeieu"),
+"underground/jump_start": SubResource("Resource_c315f"),
+"underground/step": SubResource("Resource_yckqk")
+}
+cave_reverb = SubResource("Resource_i5875")
+cave_ambience = SubResource("Resource_4eide")
+underground_reverb = SubResource("Resource_f5l1y")
+underground_ambience = SubResource("Resource_lpbcc")

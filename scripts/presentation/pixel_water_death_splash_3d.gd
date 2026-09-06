@@ -13,12 +13,20 @@ extends Node3D
 @export var surface_source_offset := 0.0
 @export_range(1, 16, 1) var frame_count := 6
 @export_range(1.0, 30.0, 0.5) var frame_rate := 12.0
+## Skip an authored clip's quiet lead-in without altering its source audio.
+@export_range(0.0, 5.0, 0.01) var audio_start_seconds := 0.0
+## Zero lets the full clip play. Duration is measured from water entry.
+@export_range(0.0, 5.0, 0.01) var audio_duration_seconds := 0.0
+@export_range(0.0, 0.5, 0.01) var audio_fade_seconds := 0.1
 
 var _player: PlayerCharacter
 var _elapsed := 0.0
 var _active := false
+var _audio_tween: Tween
+var _audio_volume_db := 0.0
 
 @onready var sprite: Sprite3D = $Sprite
+@onready var splash_audio: AudioStreamPlayer = get_node_or_null("Audio") as AudioStreamPlayer
 
 
 func _ready() -> void:
@@ -36,6 +44,8 @@ func _ready() -> void:
 	sprite.shaded = false
 	sprite.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_player.death_started.connect(_on_death_started)
+	if splash_audio != null:
+		_audio_volume_db = splash_audio.volume_db
 	set_process(false)
 
 
@@ -58,6 +68,18 @@ func is_playing() -> bool:
 func _on_death_started(kind: StringName, world_position: Vector3) -> void:
 	if kind != PlayerCharacter.DEATH_KIND_WATER:
 		return
+	if splash_audio != null:
+		if _audio_tween != null and _audio_tween.is_valid():
+			_audio_tween.kill()
+		splash_audio.volume_db = _audio_volume_db
+		splash_audio.play(audio_start_seconds)
+		if audio_duration_seconds > 0.0:
+			var fade_duration := minf(audio_fade_seconds, audio_duration_seconds)
+			_audio_tween = create_tween()
+			_audio_tween.tween_interval(audio_duration_seconds - fade_duration)
+			if fade_duration > 0.0:
+				_audio_tween.tween_property(splash_audio, "volume_linear", 0.0, fade_duration)
+			_audio_tween.tween_callback(splash_audio.stop)
 	_player.visible = false
 	global_position = Vector3(
 		world_position.x,

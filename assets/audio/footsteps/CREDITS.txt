@@ -1,0 +1,20 @@
+Sand candidates: Footsteps sounds by Dryoma
+Accepted grass steps: Footsteps_Walk_Grass_Mono_07/06/04 for running and walking.
+Accepted grass jumps: Footsteps_Grass_Jump_Start_01-10 and Jump_Land_01-10.
+Sand jump audition: Footsteps_Sand_Jump_Start_01-05 and Jump_Land_01-05.
+Accepted sand steps: Footsteps_Sand_Walk_01/02, assigned to left/right feet.
+Copied unchanged; Sand Walk 06 remains an earlier candidate.
+Earlier grass run candidates: Footsteps_Grass_Run_08/10/11.
+NOX Sound, Essentials Series, CC0. Copied unchanged.
+https://nox-sound-design.itch.io/essentials-series-sfx-nox-sound
+
+New grass audition: Antons_Footsteps_FS_Grass_Walk_01.wav, copied unchanged
+from the user's Antons_Footsteps_FS_Grass folder. Source URL/license pending.
+
+https://dryoma.itch.io/footsteps-sounds
+CC BY 4.0: https://creativecommons.org/licenses/by/4.0/
+Source audio unchanged. Gravel 006 is the previously accepted sand sound,
+retained for comparison with NOX Sand Walk 01/02; Dirt 004 is an earlier candidate.
+
+Grass candidate: Footstep_alt_4.wav, Craftpix audio pack 7.
+See craftpix_license.txt.

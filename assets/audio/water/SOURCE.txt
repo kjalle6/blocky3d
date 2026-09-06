@@ -1,0 +1,9 @@
+Audition: heavy-water-splash.mp3
+Copied unchanged from D:/GodotProjects/blocky3dassets/audio/Sounds/Water/heavy-water-splash.mp3
+SHA256: E3F17E46119AF296ADBA4A3296C2051C28D49BC51A38AE2852F68FC941AC585E
+Embedded MP3 artist/album metadata identifies www.fesliyanstudios.com.
+Exact source page and license have not yet been supplied.
+Playback: original pitch, -10 dB, once on beach water entry, starting at 0.30s
+to skip the quiet lead-in (first signal above -35 dB measured at 0.331s).
+Full playback, no fade-out. Beach water respawn occurs 1.7s after impact,
+without waiting for the silent end of the clip.

@@ -10,6 +10,7 @@
 
 [resource]
 script = ExtResource("1_style")
+footstep_surface = "sand"
 top_left = ExtResource("2_top_left")
 top = ExtResource("3_top")
 top_right = ExtResource("4_top_right")

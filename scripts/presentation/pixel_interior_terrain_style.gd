@@ -1,5 +1,6 @@
 class_name PixelInteriorTerrainStyle
 extends Resource
+@export_enum("silent", "grass", "sand", "cave") var footstep_surface := "cave"
 ## Nine-slice presentation skin for a connected grid of solid interior cells.
 ## Gameplay collision is generated from the same grid by PixelInteriorTerrain3D.
 

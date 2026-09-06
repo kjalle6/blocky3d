@@ -49,7 +49,7 @@ func _run() -> void:
 	assert(is_zero_approx(level.camera.rotation.x))
 	assert(level.get_node("Platforms").get_child_count() == 15)
 	assert(level.get_node("Checkpoints").get_child_count() == 2)
-	assert(_scoped_group_count(level, &"melee_target") == 5)
+	assert(_scoped_group_count(level, &"melee_target") == 6)
 	assert(_scoped_group_count(level, &"level_goal") == 0)
 	assert(_scoped_group_count(level, &"level_transition") == 1)
 
@@ -310,6 +310,7 @@ func _validate_geometry(level: LevelSession3D) -> void:
 		["ApproachPatrol", approach, 1.7],
 		["ThresholdLandingPatrol", threshold_landing, 1.7],
 		["ThornWallPatrol", wall, 1.7],
+		["SkateRampPatrol", garden_exit, 2.0],
 		["AerialDipPatrol", aerial_dip, 1.7],
 		["AerialLandingPatrol", aerial_landing, 1.7],
 	]
@@ -321,6 +322,14 @@ func _validate_geometry(level: LevelSession3D) -> void:
 		assert(absf(enemy.global_position.y - (_top(support) + 0.38)) < 0.02)
 		assert(enemy.global_position.x > _left(support))
 		assert(enemy.global_position.x < _right(support))
+	var skater := level.get_node("SkateRampPatrol") as StompableEnemy3D
+	assert(is_zero_approx(skater.patrol_left_distance))
+	assert(is_zero_approx(skater.patrol_right_distance))
+	assert(skater.pixel_visual.animation_textures.size() == 4)
+	skater.pixel_visual.set_state("attack", true)
+	assert(skater.pixel_visual.hframes == 4)
+	skater.pixel_visual.set_state("walk", true)
+	assert(skater.pixel_visual.hframes == 6)
 	var aerial_dip_enemy := level.get_node(
 		"AerialDipPatrol"
 	) as StompableEnemy3D
@@ -580,9 +589,23 @@ func _validate_session(
 	assert(player.is_dead())
 	assert(player.death_kind() == PlayerCharacter.DEATH_KIND_WATER)
 	assert(water_splash.is_playing())
-	for frame in 40:
+	assert(water_splash.splash_audio != null)
+	assert(water_splash.splash_audio.playing)
+	assert(water_splash.splash_audio.stream.get_length() > 0.0)
+	var splash_start_volume := water_splash.splash_audio.volume_linear
+	var splash_faded := false
+	var water_wait_started := Time.get_ticks_msec()
+	for frame in 240:
 		await physics_frame
+		if water_splash.splash_audio.playing and water_splash.splash_audio.volume_linear < splash_start_volume * 0.8:
+			splash_faded = true
+		if not player.is_dead():
+			break
 	assert(not player.is_dead())
+	assert(not splash_faded, "Current splash audition should play without a fade.")
+	var water_wait_seconds := float(Time.get_ticks_msec() - water_wait_started) / 1000.0
+	assert(water_wait_seconds >= 1.5 and water_wait_seconds < 2.0,
+		"Beach water respawn should take 1.7 seconds, not wait for the silent clip tail.")
 	assert(absf(player.global_position.x - 1.8) < 0.2)
 
 	player.reset_at(Transform3D(Basis.IDENTITY, Vector3(36.2, 1.34, 0)))

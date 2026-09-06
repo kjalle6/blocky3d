@@ -37,6 +37,7 @@ size = Vector3(200, 1, 8)
 
 [node name="OvergrownCoastalAscentInterior" instance=ExtResource("1_base")]
 completion_fade_duration = 1.0
+metadata/audio_environment = &"cave"
 
 [node name="WorldEnvironment" parent="." index="1"]
 environment = SubResource("Environment_underworks")

@@ -17,6 +17,7 @@ ambient_light_energy = 0.0
 size = Vector3(64, 1, 8)
 
 [node name="LevelDesignLab" instance=ExtResource("1_base")]
+metadata/audio_environment = &"cave"
 
 [node name="WorldEnvironment" parent="." index="1"]
 environment = SubResource("Environment_underworks")

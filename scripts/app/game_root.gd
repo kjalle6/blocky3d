@@ -21,6 +21,9 @@ var _developer_ability_panel_available := false
 var _developer_inspection_enabled := false
 var _developer_measurement_grid_enabled := false
 var _developer_collision_overlay_enabled := false
+var audio_tuning_panel: CanvasLayer
+var cave_ambience: AudioStreamPlayer
+var _audio_tools_button: Button
 
 @onready var world: Node3D = %World
 @onready var instructions: PanelContainer = %Instructions
@@ -58,7 +61,24 @@ func _ready() -> void:
 	ability_tutorial_timer.timeout.connect(_hide_ability_tutorial)
 	developer_mode_label.visible = developer_fresh_level_runs
 	_build_world_list()
+	_build_audio_tools()
+	cave_ambience = preload("res://scripts/audio/cave_ambience_player.gd").new()
+	cave_ambience.name = "CaveAmbience"
+	add_child(cave_ambience)
 	show_level_select()
+
+
+func _build_audio_tools() -> void:
+	audio_tuning_panel = preload("res://scripts/developer/audio_tuning_panel.gd").new()
+	add_child(audio_tuning_panel)
+	audio_tuning_panel.closed.connect(func() -> void: _set_gameplay_tools_visible(false))
+	_audio_tools_button = Button.new()
+	_audio_tools_button.text = "Audio tuning…"
+	_audio_tools_button.position = Vector2(20, 190)
+	_audio_tools_button.custom_minimum_size = Vector2(200, 44)
+	_audio_tools_button.add_theme_font_size_override("font_size", 20)
+	get_node("Interface").add_child(_audio_tools_button)
+	_audio_tools_button.pressed.connect(audio_tuning_panel.open_panel)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -392,6 +412,8 @@ func _set_gameplay_tools_visible(visible: bool) -> void:
 
 func _apply_gameplay_tools_visibility() -> void:
 	instructions.visible = _gameplay_tools_visible
+	if _audio_tools_button != null:
+		_audio_tools_button.visible = _gameplay_tools_visible and developer_tools_enabled
 	developer_ability_panel.visible = (
 		_gameplay_tools_visible
 		and _developer_ability_panel_available
@@ -546,12 +568,15 @@ func _progression_store() -> ProgressionStore:
 
 
 func _free_current_level() -> void:
+	if audio_tuning_panel != null:
+		audio_tuning_panel.close_panel()
 	weapon_status_hud.unbind_session()
 	if current_level == null:
 		return
 	world.remove_child(current_level)
 	current_level.free()
 	current_level = null
+	preload("res://scripts/audio/movement_audio_mix.gd").clear_gameplay_tails()
 	_developer_inspection_enabled = false
 	_developer_measurement_grid_enabled = false
 	_developer_collision_overlay_enabled = false

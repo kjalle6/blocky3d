@@ -1,0 +1,3 @@
+Source: assets/library/enemies/green_zone_enemies/3
+Craftpix Green Zone enemies pack. Selected Idle, Walk, Attack, and Death
+sprite sheets copied unchanged; see the source pack's license.txt.

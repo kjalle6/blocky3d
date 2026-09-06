@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=5 format=3]
+[ext_resource type="Script" path="res://scripts/audio/footstep_sound_bank.gd" id="1"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_walk_07.wav" id="2"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_walk_06.wav" id="3"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_walk_04.wav" id="4"]
+[resource]
+script = ExtResource("1")
+surface = &"grass"
+gait = &"walk"
+clips = Array[AudioStream]([ExtResource("2"), ExtResource("3"), ExtResource("4")])
+labels = PackedStringArray("07", "06", "04")

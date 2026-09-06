@@ -1,5 +1,6 @@
 class_name PixelPlayerVisual3D
 extends Node3D
+signal footstep_contact(contact: Dictionary)
 ## Presentation-only state machine. Gameplay decides the state; this component
 ## owns strip selection and frame timing for the body and equipped weapon.
 
@@ -17,6 +18,11 @@ const BODY_TEXTURES := {
 	"notice": preload("res://assets/art/green_zone/characters/player_notice.png"),
 	"hurt": preload("res://assets/art/green_zone/characters/player_hurt.png"),
 	"death": preload("res://assets/art/green_zone/characters/player_death.png"),
+}
+const FOOTSTEP_TRACKS := {
+	"run": preload("res://resources/audio/markers/player_run.tres"),
+	"run_attack": preload("res://resources/audio/markers/player_run.tres"),
+	"backpedal": preload("res://resources/audio/markers/player_backpedal.tres"),
 }
 const WEAPON_TEXTURES := {
 	"idle": preload("res://assets/art/green_zone/characters/weapon_idle.png"),
@@ -74,7 +80,7 @@ const FRAME_COUNTS := {
 const FRAME_RATES := {
 	"backpedal": 1.5, # Frames per world unit travelled, rather than per second.
 	"idle": 8.0,
-	"run": 12.0,
+	"run": 10.0,
 	"jump": 8.0,
 	"double_jump": 14.0,
 	"wall_slide": 0.0,
@@ -113,6 +119,9 @@ const HANDGUN_GRIP_OFFSETS := {
 
 var _state := ""
 var _elapsed := 0.0
+var _run_elapsed := 0.0
+var _walk_elapsed := 0.0
+var _contact_serial := 0
 var _flash_tween: Tween
 var _equipped_weapon_id: StringName = KNIFE_WEAPON_ID
 var _active_attack_weapon_id: StringName = &""
@@ -191,15 +200,37 @@ func tick(
 	elif absf(horizontal_speed) > 0.15:
 		desired_state = "backpedal" if backpedalling else "run"
 	set_state(desired_state, false)
+	var previous_cursor := _footstep_cursor()
+	if _state in ["run", "run_attack"]:
+		_run_elapsed += delta
+	elif _state == "backpedal":
+		_walk_elapsed += delta * absf(horizontal_speed)
 	_elapsed += delta * absf(horizontal_speed) if _state == "backpedal" else delta
 	_apply_frame(vertical_speed)
 	_apply_facing(facing_right)
+	if grounded and absf(horizontal_speed) > 0.15 and FOOTSTEP_TRACKS.has(_state):
+		var rate: float = FRAME_RATES["run"] if _state != "backpedal" else absf(horizontal_speed) * FRAME_RATES["backpedal"]
+		for contact in FOOTSTEP_TRACKS[_state].contacts_between(previous_cursor, _footstep_cursor()):
+			_contact_serial += 1
+			contact["id"] = _contact_serial
+			contact["state"] = _state
+			contact["age_seconds"] = contact.age_frames / rate
+			footstep_contact.emit(contact)
 	_advance_handgun_shot(delta)
+
+
+func _footstep_cursor() -> float:
+	return _walk_elapsed * FRAME_RATES["backpedal"] if _state == "backpedal" else _run_elapsed * FRAME_RATES["run"]
 
 
 func set_state(next_state: String, force: bool) -> void:
 	if not force and next_state == _state:
 		return
+	# Pause the stride through grounded stops and knife swings. Rapid tapping
+	# resumes the same cycle instead of repeatedly planting the first foot.
+	if force or next_state not in ["idle", "run", "run_attack", "backpedal"]:
+		_run_elapsed = 0.0
+		_walk_elapsed = 0.0
 	_state = next_state
 	_elapsed = 0.0
 	_refresh_weapon_layers(0)
@@ -256,6 +287,8 @@ func tick_authored_state(
 	assert(BODY_TEXTURES.has(state), "Unknown authored player state '%s'." % state)
 	set_state(state, false)
 	_elapsed += delta
+	if _state in ["run", "run_attack"]:
+		_run_elapsed += delta
 	_apply_frame(vertical_speed)
 	_apply_facing(facing_right)
 	_advance_handgun_shot(delta)
@@ -282,8 +315,10 @@ func reset_feedback() -> void:
 func _apply_frame(vertical_speed: float) -> void:
 	var count: int = FRAME_COUNTS[_state]
 	var frame := 0
-	if _state == "backpedal":
-		frame = count - 1 - (floori(_elapsed * FRAME_RATES[_state]) % count)
+	if _state in ["run", "run_attack"]:
+		frame = floori(_run_elapsed * FRAME_RATES["run"]) % count
+	elif _state == "backpedal":
+		frame = count - 1 - (floori(_walk_elapsed * FRAME_RATES[_state]) % count)
 	elif _state == "jump":
 		if vertical_speed > 7.0:
 			frame = 0
@@ -319,6 +354,8 @@ func _apply_frame(vertical_speed: float) -> void:
 	body.frame = frame
 	if weapon.visible:
 		weapon.frame = 0 if _state == "notice" else mini(frame, weapon.hframes - 1)
+		if _state == "run_attack":
+			weapon.frame = mini(weapon.hframes - 1, floori(_elapsed * FRAME_RATES["run_attack"]))
 
 
 func _refresh_weapon_layers(preserved_frame: int) -> void:
@@ -382,6 +419,10 @@ func _refresh_weapon_layers(preserved_frame: int) -> void:
 
 func _apply_facing(facing_right: bool) -> void:
 	_facing_right = facing_right
+	# The torso is centered near source x=13 on the 48px canvas.
+	# Translate the complete rig so the body, not the extended weapon, sits
+	# over the centered gameplay collision shape.
+	position.x = (11.0 if facing_right else -11.0) * body.pixel_size
 	var flip_horizontal := not facing_right
 	body.flip_h = flip_horizontal
 	weapon.flip_h = flip_horizontal

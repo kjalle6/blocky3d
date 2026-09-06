@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=4 format=3]
+[ext_resource type="Script" path="res://scripts/audio/footstep_sound_bank.gd" id="1"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/sand_gravel_006.ogg" id="2"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/sand_dirt_004.ogg" id="3"]
+[resource]
+script = ExtResource("1")
+surface = &"sand"
+gait = &"any"
+clips = Array[AudioStream]([ExtResource("2"), ExtResource("3")])
+labels = PackedStringArray("Gravel 006", "Dirt 004")
+volume_db = -13.0
