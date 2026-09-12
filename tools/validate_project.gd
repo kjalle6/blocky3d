@@ -35,6 +35,7 @@ func _validate() -> void:
 	var gun_encounter_button := world_list.get_node(
 		"GreenZoneFinaleWipGunEncounterButton"
 	) as Button
+	var sandbox_button := world_list.get_node("LevelDesignerSandboxButton") as Button
 
 	assert(game_root.campaign is CampaignCatalog, "GameRoot requires typed campaign data.")
 	assert(game_root.campaign.validation_errors().is_empty(), "Campaign data must validate.")
@@ -61,6 +62,7 @@ func _validate() -> void:
 	assert(level_design_lab_button.text == "LEVEL DESIGN LAB")
 	assert(level_3_wip_button.text == "LEVEL 3 WIP")
 	assert(gun_encounter_button.text == "LEVEL 3 - GUN ENCOUNTER")
+	assert(sandbox_button.text == "LEVEL DESIGNER SANDBOX")
 	assert(game_root.campaign.find_by_id(&"dev_green_zone_finale_wip") == null)
 	assert(world_list.get_node_or_null("World01Level03Button") == null)
 	assert(world_list.get_node_or_null("EnclosedTerrainLabButton") == null)
@@ -80,7 +82,7 @@ func _validate() -> void:
 	menu_up.pressed = true
 	game_root._unhandled_input(menu_up)
 	assert(
-		gun_encounter_button.has_focus(),
+		sandbox_button.has_focus(),
 		"W should wrap Level 1 to the final developer entry."
 	)
 	var menu_down := InputEventKey.new()
@@ -164,6 +166,46 @@ func _validate() -> void:
 	await process_frame
 	assert(game_root.current_level.scene_file_path == level_3.scene.resource_path)
 	assert(game_root.current_level.get_node_or_null("ShooterAreaTransition") != null)
+
+	# The empty workspace has its own developer entry and never becomes a
+	# campaign level. Existing number shortcuts above must keep their meaning.
+	game_root.show_level_select()
+	sandbox_button.pressed.emit()
+	await process_frame
+	assert(game_root.current_level_definition.level_id == &"dev_level_designer_sandbox")
+	game_root.show_level_select()
+	var menu_seven := InputEventKey.new()
+	menu_seven.physical_keycode = KEY_7
+	menu_seven.pressed = true
+	game_root._unhandled_input(menu_seven)
+	await process_frame
+	var sandbox := game_root.current_level as LevelSession3D
+	assert(game_root.current_level_definition.level_id == &"dev_level_designer_sandbox")
+	assert(game_root.current_level_definition.validation_errors().is_empty())
+	assert(game_root.current_world_definition == null)
+	assert(game_root.campaign.find_by_id(&"dev_level_designer_sandbox") == null)
+	for ability_id in PlayerAbility.IMPLEMENTED:
+		assert(sandbox.player.has_ability(ability_id))
+	for frame in 12:
+		await physics_frame
+	assert(sandbox.player.is_on_floor(), "The sandbox spawn must settle safely on its floor.")
+	# Check real collision at both ends and the middle of the long floor.
+	for fraction in [0.05, 0.5, 0.95]:
+		var origin := Vector3(sandbox.route_extent.length() * fraction, 0.7, 0.0)
+		assert(sandbox.player.test_move(Transform3D(Basis.IDENTITY, origin), Vector3.DOWN))
+		assert(not sandbox.player.test_move(
+			Transform3D(Basis.IDENTITY, origin), Vector3.UP * 100.0
+		), "The sandbox must leave overhead space empty.")
+	sandbox.player.position = Vector3(160.0, 100.0, 0.0)
+	sandbox.camera.snap_to_target()
+	assert(not sandbox.camera.is_position_behind(sandbox.player.global_position))
+	assert(sandbox.camera.is_position_in_frustum(sandbox.player.global_position))
+	var restart := InputEventAction.new()
+	restart.action = &"restart"
+	restart.pressed = true
+	sandbox._unhandled_input(restart)
+	assert(sandbox.player.global_position.is_equal_approx(sandbox.spawn_point.global_position))
+	assert(sandbox.camera.is_position_in_frustum(sandbox.player.global_position))
 
 	print("Project and production World 1 campaign validation passed.")
 	quit(0)

@@ -5,7 +5,7 @@ const SCENE_PATH := "res://scenes/levels/overgrown_coastal_ascent.tscn"
 ## The scene renders the native export; the 4x enlargement is kept only as the
 ## art source, and the two must stay pixel-identical under that scale.
 const CAVE_PATH := (
-	"res://assets/library/environment/structures/cave_entrances/"
+	"res://assets/art/green_zone/props/"
 	+ "cave_entrance_green_zone_native.png"
 )
 const CAVE_SOURCE_PATH := (

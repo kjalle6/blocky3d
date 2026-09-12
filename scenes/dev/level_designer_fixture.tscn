@@ -1,0 +1,59 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="2_platform"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/pixel_skater_enemy.tscn" id="3_enemy"]
+[ext_resource type="PackedScene" path="res://scenes/hazards/pixel_spike_row.tscn" id="4_spikes"]
+[ext_resource type="PackedScene" path="res://scenes/level/level_checkpoint.tscn" id="5_checkpoint"]
+
+[sub_resource type="BoxShape3D" id="Shape_kill"]
+size = Vector3(90, 1, 8)
+
+[node name="LevelDesignerFixture" instance=ExtResource("1_base")]
+metadata/layout_section = "designer_fixture"
+
+[node name="RouteExtent" parent="." index="2"]
+route_end_x = 76.8
+
+[node name="Foundation" type="StaticBody3D" parent="Platforms" index="0"]
+position = Vector3(38.4, -2.56, 0)
+script = ExtResource("2_platform")
+size = Vector3(76.8, 5.12, 2)
+metadata/layout_locked = "Test foundation"
+
+[node name="Platform" type="StaticBody3D" parent="Platforms" index="1"]
+position = Vector3(20.48, 1.92, 0)
+script = ExtResource("2_platform")
+size = Vector3(5.12, 1.28, 2)
+metadata/layout_id = "fixture_platform"
+metadata/layout_kind = "platform"
+metadata/layout_removable = true
+
+[node name="Spikes" parent="Hazards" index="0" instance=ExtResource("4_spikes")]
+position = Vector3(40.96, 0, 0)
+metadata/layout_id = "fixture_spikes"
+metadata/layout_kind = "spikes"
+
+[node name="Checkpoint" parent="Checkpoints" index="0" instance=ExtResource("5_checkpoint")]
+position = Vector3(28.16, 0, 0)
+route_index = 1
+metadata/layout_id = "fixture_checkpoint"
+metadata/layout_kind = "checkpoint"
+
+[node name="GameplayCamera" parent="." index="10"]
+maximum_center_x = 65.28
+vertical_follow_enabled = true
+maximum_vertical_offset = 40.96
+
+[node name="KillPlane" parent="." index="11"]
+position = Vector3(38.4, -8, 0)
+
+[node name="Collision" parent="KillPlane" index="0"]
+shape = SubResource("Shape_kill")
+
+[node name="Skater" parent="." index="12" instance=ExtResource("3_enemy")]
+position = Vector3(33.28, 0.55, 0)
+patrol_left_distance = 2.56
+patrol_right_distance = 2.56
+metadata/layout_id = "fixture_skater"
+metadata/layout_kind = "enemy"

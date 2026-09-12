@@ -168,14 +168,25 @@ func muzzle_world_position(gun_index: int) -> Vector3:
 	return to_global(Vector3((source.x - 24.0) * facing, 24.0 - source.y, 0.0) * pixel_size)
 
 
+func aimed_muzzle_world_position(gun_index: int, direction: Vector3, facing_right: bool) -> Vector3:
+	# Inspect a prospective shot without starting recoil or changing its pose.
+	var source: Vector2 = MUZZLE_PIXELS[_aim_frame_for(direction)][gun_index]
+	var facing := 1.0 if facing_right else -1.0
+	return to_global(Vector3((source.x - 24.0) * facing, 24.0 - source.y, 0.0) * pixel_size)
+
+
 func _select_aim(direction: Vector3, facing_right: bool) -> void:
-	var elevation := atan2(direction.y, absf(direction.x))
-	_aim_frame = AIM_FORWARD
-	if elevation > DIAGONAL_AIM_THRESHOLD:
-		_aim_frame = AIM_UP
-	elif elevation < -DIAGONAL_AIM_THRESHOLD:
-		_aim_frame = AIM_DOWN
+	_aim_frame = _aim_frame_for(direction)
 	flip_h = not facing_right
+
+
+func _aim_frame_for(direction: Vector3) -> int:
+	var elevation := atan2(direction.y, absf(direction.x))
+	if elevation > DIAGONAL_AIM_THRESHOLD:
+		return AIM_UP
+	elif elevation < -DIAGONAL_AIM_THRESHOLD:
+		return AIM_DOWN
+	return AIM_FORWARD
 
 
 func is_shot_playing() -> bool:

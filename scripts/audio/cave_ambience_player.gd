@@ -20,6 +20,10 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	var game := get_parent()
+	if game.get("level_designer") != null and game.level_designer.is_editing():
+		stop()
+		_presence = 0.0
+		return
 	var panel: CanvasLayer = game.audio_tuning_panel
 	var environment: StringName = &"outdoors"
 	if panel != null and panel.is_open:

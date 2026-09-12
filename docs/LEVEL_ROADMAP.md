@@ -10,19 +10,55 @@ bank for routes, hazards, power-up placement, and experiments. The Unreal
 prototype at `D:\UnrealProjects\Blocky3D` is a secondary visual and layout
 reference. Godot is canonical.
 
-## Next development milestone: in-game level editor
+## Accepted development milestone: level designer and friendly fire
 
-The agreed next task is a developer mode for moving and resizing supported
-platforms, enemies, hazards, and ordinary triggers while testing the game,
-with undo/revert and permanent saving. It will also expose walking-enemy patrol
-limits and grow into a terrain palette for building platforms.
+Accepted and approved for commit on 2026-09-12. This milestone is complete;
+future designer additions need a new request.
+
+The current terrain workflow is **Build → zone → block**. New terrain uses one
+persistent click/drag block brush, including the existing six sand pieces under
+Beach. Separate rectangle-building controls have been removed from the UI;
+existing platforms remain editable. This replaces the earlier split between
+Platforms and Terrain tiles in the browser.
+
+The latest approved addition is the **complete Green Zone terrain and prop
+catalog**, with a zone dropdown in the full browser and quick sidebar. It adds
+96 individual tiles (72 solid, 24 scenery), 78 static props, and 5 animated
+scenery choices. Tiles can be painted and replaced on the grid, with one undo
+per stroke. Packs are organized by zone and can be used in any supported level;
+background selection is deferred. Future packs can follow the same pattern.
+
+The user accepted the right-click menu and requested the next usability step:
+an **Add objects** browser with picture cards and click-to-place previews.
+It now covers blocks, enemies, hazards, extra checkpoints, and
+decorations across the game sections and developer labs. The sandbox remains
+empty until the user adds objects. Original scripted assemblies stay protected.
+See [the current workflow](LEVEL_DESIGNER.md).
+
+The original first version established movement, resizing, patrol controls,
+group selection, Test/Undo/Revert/Save, and seven editable Level 3 outdoor
+objects. The browser extends that foundation with typed additions across the
+current game sections. Open **F1 → Level designer → Add objects…** in a level;
+menu entry 7 is still the empty place to experiment.
 
 The user and Codex design levels together; Codex builds the initial layout,
 camera setup, and connections, then the user fine-tunes through play. All
-scripted sequences remain with Codex for now. Begin with one proven
-edit/test/save/reload cycle before extending support across the levels.
+scripted sequences remain with Codex for now. The edit/test/save/reload cycle
+has been validated before extending support across the levels.
 See [the agreed scope and acceptance gate](DEVELOPER_LEVEL_EDITOR_PLAN.md).
-This is planned work; no level editor has been implemented yet.
+The plan records four completed stages, beginning with a save/reload proof.
+Per-section saving, separate edit/test state, protected scripts, and basic
+save/recovery safeguards remain essential. Cave painting, broad diagnostics,
+complex hazard controls, and editing every existing object are deferred.
+The user expects few further caves. The smaller scope was agreed and the plan
+updated before implementation. Hands-on review has accepted the implemented
+workflow; deferred features are not prerequisites for continuing game work.
+
+**Level Designer Sandbox** is now a separate developer menu entry (shortcut 7):
+a flat grass floor 256 tiles wide, with 128 tiles of vertical camera travel and
+all movement abilities unlocked. F10 shows the grid, F11 enables free flight,
+and R resets the run. This is the user's empty workspace for the designer;
+keep automated fixture objects separate. The older cave Level Design Lab remains.
 
 ## Current implementation
 
@@ -399,8 +435,8 @@ baseline. Each beat fires both guns together, producing two projectiles per beat
 and six across the burst. Its post-burst recovery gives the player enough time
 to vault the approved cover rock and close for a knife kill. The slower two-beat
 pattern remains only as a comparison fixture, not the intended encounter
-cadence. Presentation replays the clean forward-firing portion of the source
-animation and returns to idle before its downward muzzle-flash frames. This
+cadence. Presentation uses the source's forward/upward/downward aim poses,
+with a brief firing flash, recoil, and return to aim for each beat. This
 specific enemy does not use a full-body blinking or colour-pulse telegraph; its
 aiming posture, burst rhythm, and recovery carry the warning.
 
@@ -409,12 +445,19 @@ restrained spark with a tiny fragment layer, placed at the ray hit and oriented
 by the reported surface normal. Rock, terrain, and other colliders share it; the
 first firearm does not justify a material-response system.
 
-The production shooter now resolves a normalized direction toward the player
-through the full 360 degrees of the flat X/Y gameplay plane. Its dual rounds use
-perpendicular lane offsets, so a same-height Firearm Review Lab setup remains a
-clean horizontal cadence test without a separate aiming mode. This
-enemy-targeting behavior does not broaden the player firearm's planned
-horizontal and upward-diagonal controls.
+The production shooter resolves a normalized direction toward the player
+through the full 360 degrees of the flat X/Y gameplay plane. Its two rounds
+originate at the actual barrels of the selected aim pose. The player has the
+accepted mouse aiming and facing controls, including shooting during a double jump.
+
+Enemy bullets now deal normal damage to other enemies. Before releasing each
+paired beat, a gunner checks both barrel paths and holds fire if a teammate is
+the first target in either lane. It keeps aiming and retries without consuming
+the beat or playing a false flash/sound. A teammate behind the player or behind
+solid cover does not block the shot. Released bullets remain dangerous if an
+enemy moves into them, and survive their shooter's defeat; run/encounter resets
+still clear them. Melee and indestructible hazards retain their existing rules.
+The user accepted this friendly-fire behavior on 2026-09-12.
 
 The loadout is deliberately small: slot `1` selects the knife, slot `2` selects
 the gun, the mouse wheel cycles slots, and one gamepad shoulder input cycles
@@ -611,6 +654,11 @@ level. It must also:
 - receive focused runtime validation and hands-on feel testing.
 
 ## Current milestone
+
+The level designer and friendly-fire checkpoint is accepted. Full validation
+passed 46/47; only the known Level 2 stage-10 traversal failure remains. The
+next implementation is for the user to choose. The remaining Level 3 campaign
+work includes the safe firing lesson, ammo policy, later practice, and boss.
 
 Arrival / Shoreline is now the production campaign's Level 1. The shoreline,
 Green Threshold, Thorn Garden, open-air Double Jump rise, final landing fight,

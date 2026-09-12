@@ -42,6 +42,9 @@ var _attack_damage_applied := false
 func _ready() -> void:
 	_initial_transform = global_transform
 	_direction = 1.0 if starts_moving_right else -1.0
+	if preload("res://scripts/developer/level_layout_preview.gd").is_preview(self):
+		if pixel_visual != null: pixel_visual.tick(0.0, "idle", starts_moving_right)
+		return
 	add_to_group("run_resettable")
 	add_to_group("melee_target")
 	contact_area.body_entered.connect(_on_body_entered)

@@ -1,0 +1,43 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="2_platform"]
+
+[sub_resource type="BoxShape3D" id="Shape_kill_plane"]
+size = Vector3(391.68, 1, 8)
+
+[node name="LevelDesignerSandbox" instance=ExtResource("1_base")]
+reset_delay = 0.18
+metadata/layout_section = "sandbox"
+
+[node name="RouteExtent" parent="." index="2"]
+route_start_x = 0.0
+route_end_x = 327.68
+
+[node name="Floor" type="StaticBody3D" parent="Platforms" index="0"]
+position = Vector3(163.84, -2.56, 0)
+script = ExtResource("2_platform")
+size = Vector3(327.68, 5.12, 2)
+metadata/layout_locked = "Sandbox foundation — build platforms above it."
+
+[node name="SpawnPoint" parent="." index="8"]
+position = Vector3(12.8, 0.7, 0)
+
+[node name="Player" parent="." index="9"]
+position = Vector3(12.8, 0.7, 0)
+
+[node name="GameplayCamera" parent="." index="10"]
+minimum_center_x = 11.52
+maximum_center_x = 316.16
+vertical_follow_enabled = true
+vertical_anchor_y = 0.7
+minimum_vertical_offset = 0.0
+maximum_vertical_offset = 163.84
+
+[node name="KillPlane" parent="." index="11"]
+position = Vector3(163.84, -8, 0)
+
+[node name="Collision" parent="KillPlane" index="0"]
+shape = SubResource("Shape_kill_plane")
+
+[editable path="Player"]

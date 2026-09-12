@@ -1,0 +1,182 @@
+{
+  "beach_tile_top_left": {
+    "name": "Sand top left",
+    "zone": "Beach",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/shoreline/tiles/top_left.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "surface": "sand",
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid sand block. Click or drag to build; right-click or Esc finishes the brush."
+  },
+  "beach_tile_top": {
+    "name": "Sand top",
+    "zone": "Beach",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/shoreline/tiles/top.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "surface": "sand",
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid sand block. Click or drag to build; right-click or Esc finishes the brush."
+  },
+  "beach_tile_top_right": {
+    "name": "Sand top right",
+    "zone": "Beach",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/shoreline/tiles/top_right.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "surface": "sand",
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid sand block. Click or drag to build; right-click or Esc finishes the brush."
+  },
+  "beach_tile_body_left": {
+    "name": "Sand left edge",
+    "zone": "Beach",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/shoreline/tiles/body_left.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "surface": "sand",
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid sand block. Click or drag to build; right-click or Esc finishes the brush."
+  },
+  "beach_tile_body": {
+    "name": "Sand fill",
+    "zone": "Beach",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/shoreline/tiles/body.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "surface": "sand",
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid sand block. Click or drag to build; right-click or Esc finishes the brush."
+  },
+  "beach_tile_body_right": {
+    "name": "Sand right edge",
+    "zone": "Beach",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/shoreline/tiles/body_right.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "surface": "sand",
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid sand block. Click or drag to build; right-click or Esc finishes the brush."
+  }
+}

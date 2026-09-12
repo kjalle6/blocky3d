@@ -12,6 +12,7 @@ enum FirePattern { TWIN, TRIPLE }
 enum CombatState { IDLE, TELEGRAPH, FIRING, RECOVERY, DEFEATED }
 
 const RECOVERY_AIM_HOLD := 0.12
+const BLOCKED_SHOT_RECHECK := 0.08
 
 @export var starts_enabled := true
 @export var starts_facing_right := false
@@ -58,6 +59,9 @@ func _ready() -> void:
 	_initial_transform = global_transform
 	_facing_sign = 1.0 if starts_facing_right else -1.0
 	_engagement_enabled = starts_enabled
+	if preload("res://scripts/developer/level_layout_preview.gd").is_preview(self):
+		pixel_visual.tick(0.0, &"idle", starts_facing_right)
+		return
 	add_to_group("run_resettable")
 	add_to_group("melee_target")
 	contact_area.body_entered.connect(_on_body_entered)
@@ -351,9 +355,28 @@ func _fire_next_dual_shot() -> void:
 	if _sequence_shots_remaining <= 0:
 		return
 	_shot_direction = _resolve_shot_direction()
+	if _teammate_blocks_shot(_shot_direction):
+		# Keep aiming; do not spend a beat or play a false flash/gunshot. Once the
+		# lane opens the pending beat continues with a fresh aim at the player.
+		pixel_visual.set_aim_direction(_shot_direction, _facing_sign > 0.0)
+		_sequence_shot_timer = BLOCKED_SHOT_RECHECK
+		return
 	pixel_visual.begin_shot(_shot_direction, _facing_sign > 0.0)
 	_sequence_shots_remaining -= 1
 	_sequence_shot_timer = active_shot_interval()
+
+
+func _teammate_blocks_shot(direction: Vector3) -> bool:
+	var excluded := HandgunProjectile3D.source_exclusions(self)
+	for gun_index in projectiles_per_fire_beat():
+		var start := pixel_visual.aimed_muzzle_world_position(gun_index, direction, _facing_sign > 0.0)
+		start.z = global_position.z
+		var hit := HandgunProjectile3D.cast_shot(get_world_3d().direct_space_state, start,
+			start + direction * projectile_distance, 1 | HandgunProjectile3D.ENEMY_HURTBOX_LAYER, excluded)
+		var collider: Object = hit.get("collider")
+		if collider != null and collider.has_method("receive_projectile_hit"):
+			return true
+	return false
 
 
 func _resolve_shot_direction() -> Vector3:
@@ -427,7 +450,8 @@ func _defeat(impact_position: Vector3, stomping_player: PlayerCharacter) -> void
 	_state = CombatState.DEFEATED
 	_defeat_serial += 1
 	var request_serial := _defeat_serial
-	clear_active_projectiles()
+	# A released bullet remains dangerous after its shooter dies. Run reset,
+	# encounter reset, and scene teardown still clear outstanding projectiles.
 	body_collision.set_deferred("disabled", true)
 	contact_collision.set_deferred("disabled", true)
 	pixel_visual.flash_impact()

@@ -71,6 +71,7 @@ region = Rect2(1, 2, 33, 60)
 filter_clip = true
 
 [node name="ArrivalShoreline" instance=ExtResource("1_base")]
+metadata/layout_section = "arrival_shoreline"
 water_death_audio_path = NodePath("WaterDeathSplash/Audio")
 water_respawn_delay = 1.7
 

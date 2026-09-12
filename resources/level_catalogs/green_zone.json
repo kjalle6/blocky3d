@@ -1,0 +1,3471 @@
+{
+  "gz_tile_01": {
+    "name": "Grass tile 01",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_01.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_02": {
+    "name": "Grass tile 02",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_02.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_03": {
+    "name": "Grass tile 03",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_03.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        30,
+        0
+      ],
+      [
+        32,
+        2
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_04": {
+    "name": "Stone tile 04",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_04.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_05": {
+    "name": "Grass tile 05",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_05.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        30,
+        0
+      ],
+      [
+        32,
+        2
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_06": {
+    "name": "Grass tile 06",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_06.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        2,
+        32
+      ],
+      [
+        0,
+        30
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_07": {
+    "name": "Grass tile 07",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_07.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_08": {
+    "name": "Grass tile 08",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_08.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        30,
+        0
+      ],
+      [
+        32,
+        2
+      ],
+      [
+        32,
+        30
+      ],
+      [
+        30,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_09": {
+    "name": "Stone tile 09",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_09.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_10": {
+    "name": "Stone tile 10",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_10.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_11": {
+    "name": "Stone tile 11",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_11.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_12": {
+    "name": "Stone tile 12",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_12.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        30,
+        0
+      ],
+      [
+        32,
+        2
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_13": {
+    "name": "Stone tile 13",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_13.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_14": {
+    "name": "Stone tile 14",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_14.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_15": {
+    "name": "Stone tile 15",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_15.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_16": {
+    "name": "Stone tile 16",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_16.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_17": {
+    "name": "Stone tile 17",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_17.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_18": {
+    "name": "Grass tile 18",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_18.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        30,
+        0
+      ],
+      [
+        32,
+        2
+      ],
+      [
+        32,
+        30
+      ],
+      [
+        30,
+        32
+      ],
+      [
+        2,
+        32
+      ],
+      [
+        0,
+        30
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_19": {
+    "name": "Stone tile 19",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_19.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_20": {
+    "name": "Stone tile 20",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_20.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_21": {
+    "name": "Stone tile 21",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_21.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        2,
+        32
+      ],
+      [
+        0,
+        30
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_22": {
+    "name": "Stone tile 22",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_22.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_23": {
+    "name": "Stone tile 23",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_23.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        30,
+        0
+      ],
+      [
+        32,
+        2
+      ],
+      [
+        32,
+        30
+      ],
+      [
+        30,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_24": {
+    "name": "Stone tile 24",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_24.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_25": {
+    "name": "Stone tile 25",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_25.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        2,
+        32
+      ],
+      [
+        0,
+        30
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_26": {
+    "name": "Stone tile 26",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_26.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_27": {
+    "name": "Stone tile 27",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_27.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_28": {
+    "name": "Stone tile 28",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_28.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        30
+      ],
+      [
+        30,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_29": {
+    "name": "Stone tile 29",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_29.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        30
+      ],
+      [
+        30,
+        32
+      ],
+      [
+        2,
+        32
+      ],
+      [
+        0,
+        30
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_30": {
+    "name": "Stone tile 30",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_30.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        30,
+        0
+      ],
+      [
+        32,
+        2
+      ],
+      [
+        32,
+        30
+      ],
+      [
+        30,
+        32
+      ],
+      [
+        2,
+        32
+      ],
+      [
+        0,
+        30
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_31": {
+    "name": "Stone tile 31",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_31.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_32": {
+    "name": "Stone tile 32",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_32.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_33": {
+    "name": "Stone tile 33",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_33.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_34": {
+    "name": "Stone tile 34",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_34.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_35": {
+    "name": "Stone tile 35",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_35.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_36": {
+    "name": "Stone tile 36",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_36.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_37": {
+    "name": "Stone tile 37",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_37.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_38": {
+    "name": "Stone tile 38",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_38.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_39": {
+    "name": "Stone tile 39",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_39.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_40": {
+    "name": "Stone tile 40",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_40.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_41": {
+    "name": "Stone tile 41",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_41.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_42": {
+    "name": "Grass slope tile 42",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_42.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        32,
+        31
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_43": {
+    "name": "Grass slope tile 43",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_43.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        31
+      ],
+      [
+        31,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_44": {
+    "name": "Stone tile 44",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_44.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        9,
+        32
+      ],
+      [
+        4,
+        27
+      ],
+      [
+        0,
+        19
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_45": {
+    "name": "Stone tile 45",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_45.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_46": {
+    "name": "Stone tile 46",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_46.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        30,
+        0
+      ],
+      [
+        32,
+        2
+      ],
+      [
+        32,
+        15
+      ],
+      [
+        28,
+        24
+      ],
+      [
+        24,
+        31
+      ],
+      [
+        23,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_47": {
+    "name": "Stone tile 47",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_47.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        30,
+        0
+      ],
+      [
+        32,
+        2
+      ],
+      [
+        32,
+        15
+      ],
+      [
+        28,
+        24
+      ],
+      [
+        24,
+        31
+      ],
+      [
+        23,
+        32
+      ],
+      [
+        9,
+        32
+      ],
+      [
+        4,
+        27
+      ],
+      [
+        0,
+        19
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_48": {
+    "name": "Stone tile 48",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_48.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        30,
+        0
+      ],
+      [
+        32,
+        2
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_49": {
+    "name": "Grass tile 49",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_49.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        31,
+        32
+      ],
+      [
+        1,
+        30
+      ],
+      [
+        0,
+        29
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_50": {
+    "name": "Grass tile 50",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_50.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_51": {
+    "name": "Grass tile 51",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_51.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        30,
+        0
+      ],
+      [
+        32,
+        2
+      ],
+      [
+        32,
+        27
+      ],
+      [
+        31,
+        28
+      ],
+      [
+        27,
+        31
+      ],
+      [
+        4,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_52": {
+    "name": "Grass tile 52",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_52.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        30,
+        0
+      ],
+      [
+        32,
+        2
+      ],
+      [
+        32,
+        27
+      ],
+      [
+        31,
+        28
+      ],
+      [
+        27,
+        31
+      ],
+      [
+        21,
+        31
+      ],
+      [
+        1,
+        30
+      ],
+      [
+        0,
+        29
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_53": {
+    "name": "Stone tile 53",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_53.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_54": {
+    "name": "Stone tile 54",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_54.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_55": {
+    "name": "Stone tile 55",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_55.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_56": {
+    "name": "Stone tile 56",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_56.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        9,
+        32
+      ],
+      [
+        4,
+        27
+      ],
+      [
+        0,
+        19
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_57": {
+    "name": "Stone tile 57",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_57.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_58": {
+    "name": "Stone tile 58",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_58.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        15
+      ],
+      [
+        28,
+        24
+      ],
+      [
+        24,
+        31
+      ],
+      [
+        23,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_59": {
+    "name": "Stone tile 59",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_59.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        15
+      ],
+      [
+        28,
+        24
+      ],
+      [
+        24,
+        29
+      ],
+      [
+        23,
+        30
+      ],
+      [
+        12,
+        32
+      ],
+      [
+        9,
+        32
+      ],
+      [
+        4,
+        27
+      ],
+      [
+        0,
+        19
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_60": {
+    "name": "Stone tile 60",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_60.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_61": {
+    "name": "Stone tile 61",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_61.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_62": {
+    "name": "Stone tile 62",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_62.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_63": {
+    "name": "Stone tile 63",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_63.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_64": {
+    "name": "Stone tile 64",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_64.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_65": {
+    "name": "Stone tile 65",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_65.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_66": {
+    "name": "Stone tile 66",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_66.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_67": {
+    "name": "Stone tile 67",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_67.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        2,
+        32
+      ],
+      [
+        0,
+        30
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_68": {
+    "name": "Stone tile 68",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_68.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        30
+      ],
+      [
+        30,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_69": {
+    "name": "Stone tile 69",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_69.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        2,
+        32
+      ],
+      [
+        0,
+        30
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_70": {
+    "name": "Stone tile 70",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_70.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        30
+      ],
+      [
+        30,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_71": {
+    "name": "Stone tile 71",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_71.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_72": {
+    "name": "Stone tile 72",
+    "zone": "Green Zone",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_72.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [
+      [
+        0,
+        0
+      ],
+      [
+        30,
+        0
+      ],
+      [
+        32,
+        2
+      ],
+      [
+        32,
+        32
+      ],
+      [
+        0,
+        32
+      ]
+    ],
+    "description": "Solid terrain. Click or drag to paint on the tile grid. Shift keeps the brush active."
+  },
+  "gz_tile_73": {
+    "name": "Scenery tile 73",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_73.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_74": {
+    "name": "Scenery tile 74",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_74.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_75": {
+    "name": "Scenery tile 75",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_75.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_76": {
+    "name": "Scenery tile 76",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_76.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_77": {
+    "name": "Scenery tile 77",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_77.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_78": {
+    "name": "Scenery tile 78",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_78.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_79": {
+    "name": "Scenery tile 79",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_79.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_80": {
+    "name": "Scenery tile 80",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_80.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_81": {
+    "name": "Scenery tile 81",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_81.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_82": {
+    "name": "Scenery tile 82",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_82.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_83": {
+    "name": "Scenery tile 83",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_83.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_84": {
+    "name": "Scenery tile 84",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_84.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_85": {
+    "name": "Scenery tile 85",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_85.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_86": {
+    "name": "Scenery tile 86",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_86.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_87": {
+    "name": "Scenery tile 87",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_87.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_88": {
+    "name": "Scenery tile 88",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_88.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_89": {
+    "name": "Scenery tile 89",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_89.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_90": {
+    "name": "Scenery tile 90",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_90.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_91": {
+    "name": "Scenery tile 91",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_91.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_92": {
+    "name": "Scenery tile 92",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_92.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_93": {
+    "name": "Scenery tile 93",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_93.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_94": {
+    "name": "Scenery tile 94",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_94.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_95": {
+    "name": "Scenery tile 95",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_95.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_tile_96": {
+    "name": "Scenery tile 96",
+    "zone": "Green Zone",
+    "category": "Scenery tiles",
+    "kind": "tile",
+    "image": "res://assets/art/green_zone/catalog/tiles/tile_96.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": false,
+    "polygon": [],
+    "description": "Background silhouette. Paint on the tile grid; players and bullets pass through it."
+  },
+  "gz_prop_benches_1": {
+    "name": "Bench 1",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/benches/1.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_benches_2": {
+    "name": "Bench 2",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/benches/2.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_benches_3": {
+    "name": "Bench 3",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/benches/3.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_benches_4": {
+    "name": "Bench 4",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/benches/4.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_bushes_1": {
+    "name": "Bush 1",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/bushes/1.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_bushes_10": {
+    "name": "Bush 10",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/bushes/10.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_bushes_11": {
+    "name": "Bush 11",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/bushes/11.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_bushes_12": {
+    "name": "Bush 12",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/bushes/12.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_bushes_13": {
+    "name": "Bush 13",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/bushes/13.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_bushes_14": {
+    "name": "Bush 14",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/bushes/14.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_bushes_15": {
+    "name": "Bush 15",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/bushes/15.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_bushes_16": {
+    "name": "Bush 16",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/bushes/16.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_bushes_17": {
+    "name": "Bush 17",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/bushes/17.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_bushes_18": {
+    "name": "Bush 18",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/bushes/18.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_bushes_19": {
+    "name": "Bush 19",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/bushes/19.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_bushes_2": {
+    "name": "Bush 2",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/bushes/2.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_bushes_20": {
+    "name": "Bush 20",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/bushes/20.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_bushes_3": {
+    "name": "Bush 3",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/bushes/3.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_bushes_4": {
+    "name": "Bush 4",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/bushes/4.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_bushes_5": {
+    "name": "Bush 5",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/bushes/5.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_bushes_6": {
+    "name": "Bush 6",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/bushes/6.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_bushes_7": {
+    "name": "Bush 7",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/bushes/7.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_bushes_8": {
+    "name": "Bush 8",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/bushes/8.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_bushes_9": {
+    "name": "Bush 9",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/bushes/9.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_fence_1": {
+    "name": "Fence 1",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/fence/1.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_fence_2": {
+    "name": "Fence 2",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/fence/2.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_fence_2_1": {
+    "name": "Fence 2_1",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/fence/2_1.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_fence_3": {
+    "name": "Fence 3",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/fence/3.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_fence_4": {
+    "name": "Fence 4",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/fence/4.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_fence_4_1": {
+    "name": "Fence 4_1",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/fence/4_1.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_fence_5": {
+    "name": "Fence 5",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/fence/5.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_fence_6": {
+    "name": "Fence 6",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/fence/6.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_fence_7": {
+    "name": "Fence 7",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/fence/7.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_fountain_1": {
+    "name": "Fountain 1",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/fountain/1.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_fountain_2": {
+    "name": "Fountain 2",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/fountain/2.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_grass_1": {
+    "name": "Grass tuft 1",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/grass/1.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_grass_10": {
+    "name": "Grass tuft 10",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/grass/10.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_grass_11": {
+    "name": "Grass tuft 11",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/grass/11.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_grass_12": {
+    "name": "Grass tuft 12",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/grass/12.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_grass_13": {
+    "name": "Grass tuft 13",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/grass/13.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_grass_14": {
+    "name": "Grass tuft 14",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/grass/14.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_grass_15": {
+    "name": "Grass tuft 15",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/grass/15.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_grass_2": {
+    "name": "Grass tuft 2",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/grass/2.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_grass_3": {
+    "name": "Grass tuft 3",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/grass/3.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_grass_4": {
+    "name": "Grass tuft 4",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/grass/4.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_grass_5": {
+    "name": "Grass tuft 5",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/grass/5.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_grass_6": {
+    "name": "Grass tuft 6",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/grass/6.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_grass_7": {
+    "name": "Grass tuft 7",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/grass/7.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_grass_8": {
+    "name": "Grass tuft 8",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/grass/8.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_grass_9": {
+    "name": "Grass tuft 9",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/grass/9.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_leaf_1": {
+    "name": "Leaves 1",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/leaf/1.png",
+    "anchor": "air",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_leaf_2": {
+    "name": "Leaves 2",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/leaf/2.png",
+    "anchor": "air",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_leaf_3": {
+    "name": "Leaves 3",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/leaf/3.png",
+    "anchor": "air",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_leaf_4": {
+    "name": "Leaves 4",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/leaf/4.png",
+    "anchor": "air",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_leaf_5": {
+    "name": "Leaves 5",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/leaf/5.png",
+    "anchor": "air",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_leaf_6": {
+    "name": "Leaves 6",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/leaf/6.png",
+    "anchor": "air",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_other_box": {
+    "name": "Box",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/other/Box.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_other_garbage_can1": {
+    "name": "Bin 1",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/other/Garbage_Can1.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_other_garbage_can2": {
+    "name": "Bin 2",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/other/Garbage_Can2.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_other_ladder1": {
+    "name": "Ladder 1",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/other/Ladder1.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_other_ladder2": {
+    "name": "Ladder 2",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/other/Ladder2.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_other_ramp1": {
+    "name": "Ramp 1",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/other/Ramp1.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_other_ramp2": {
+    "name": "Ramp 2",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/other/Ramp2.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_other_rapm3": {
+    "name": "Ramp 3",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/other/Rapm3.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_other_skateboard1": {
+    "name": "Skateboard 1",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/other/Skateboard1.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_other_skateboard2": {
+    "name": "Skateboard 2",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/other/Skateboard2.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_other_skateboard3": {
+    "name": "Skateboard 3",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/other/Skateboard3.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_other_skateboard4": {
+    "name": "Skateboard 4",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/other/Skateboard4.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_other_tree1": {
+    "name": "Tree 1",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/other/Tree1.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_other_tree2": {
+    "name": "Tree 2",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/other/Tree2.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_other_tree3": {
+    "name": "Tree 3",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/other/Tree3.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_other_tree4": {
+    "name": "Tree 4",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/other/Tree4.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_stones_1": {
+    "name": "Stone 1",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/stones/1.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_stones_2": {
+    "name": "Stone 2",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/stones/2.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_stones_3": {
+    "name": "Stone 3",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/stones/3.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_stones_4": {
+    "name": "Stone 4",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/stones/4.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_stones_5": {
+    "name": "Stone 5",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/stones/5.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_prop_stones_6": {
+    "name": "Stone 6",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/props/stones/6.png",
+    "anchor": "ground",
+    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+  },
+  "gz_animated_card": {
+    "name": "Animated card",
+    "zone": "Green Zone",
+    "category": "Animated scenery",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/animated/Card.png",
+    "anchor": "ground",
+    "frames": 8,
+    "frame_width": 24,
+    "fps": 8,
+    "loop": true,
+    "frame_region": [
+      5,
+      5,
+      12,
+      14
+    ],
+    "description": "Animated scenery only; it does not grant items or end the level. Loops during play."
+  },
+  "gz_animated_money": {
+    "name": "Animated money",
+    "zone": "Green Zone",
+    "category": "Animated scenery",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/animated/Money.png",
+    "anchor": "ground",
+    "frames": 6,
+    "frame_width": 24,
+    "fps": 8,
+    "loop": true,
+    "frame_region": [
+      3,
+      3,
+      17,
+      16
+    ],
+    "description": "Animated scenery only; it does not grant items or end the level. Loops during play."
+  },
+  "gz_animated_skateboard": {
+    "name": "Animated skateboard",
+    "zone": "Green Zone",
+    "category": "Animated scenery",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/animated/Skateboard.png",
+    "anchor": "ground",
+    "frames": 9,
+    "frame_width": 32,
+    "fps": 10,
+    "loop": true,
+    "frame_region": [
+      3,
+      7,
+      26,
+      17
+    ],
+    "description": "Animated scenery only; it does not grant items or end the level. Loops during play."
+  },
+  "gz_animated_fountain": {
+    "name": "Animated fountain",
+    "zone": "Green Zone",
+    "category": "Animated scenery",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/animated/Fountain.png",
+    "anchor": "ground",
+    "frames": 4,
+    "frame_width": 72,
+    "fps": 8,
+    "loop": true,
+    "frame_region": [
+      4,
+      3,
+      64,
+      69
+    ],
+    "description": "Animated scenery only; it does not grant items or end the level. Loops during play."
+  },
+  "gz_animated_chest_open": {
+    "name": "Chest opening",
+    "zone": "Green Zone",
+    "category": "Animated scenery",
+    "kind": "decoration",
+    "image": "res://assets/art/green_zone/catalog/animated/Chest_open.png",
+    "anchor": "ground",
+    "frames": 7,
+    "frame_width": 32,
+    "fps": 8,
+    "loop": false,
+    "frame_region": [
+      0,
+      0,
+      30,
+      22
+    ],
+    "description": "Animated scenery only; it does not grant items or end the level. Opens once when the level starts, then stays open."
+  }
+}

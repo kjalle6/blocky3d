@@ -99,6 +99,7 @@ var _camera_whip_elapsed := 0.0
 
 
 func _ready() -> void:
+	if preload("res://scripts/developer/level_layout_preview.gd").is_preview(self): return
 	var errors := validation_errors()
 	assert(
 		errors.is_empty(),

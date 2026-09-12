@@ -2,12 +2,12 @@
 
 [ext_resource type="Script" path="res://scripts/presentation/pixel_background_profile.gd" id="1_profile"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_background_layer_profile.gd" id="2_layer"]
-[ext_resource type="Texture2D" path="res://assets/library/backgrounds/forests_and_trees/5/1.png" id="3_sky"]
-[ext_resource type="Texture2D" path="res://assets/library/backgrounds/forests_and_trees/5/2.png" id="4_far_haze"]
-[ext_resource type="Texture2D" path="res://assets/library/backgrounds/forests_and_trees/5/3.png" id="5_far_trees"]
-[ext_resource type="Texture2D" path="res://assets/library/backgrounds/forests_and_trees/5/4.png" id="6_mid_trees"]
-[ext_resource type="Texture2D" path="res://assets/library/backgrounds/forests_and_trees/5/5.png" id="7_near_trees"]
-[ext_resource type="Texture2D" path="res://assets/library/backgrounds/forests_and_trees/5/6.png" id="8_canopy"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/night/1.png" id="3_sky"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/night/2.png" id="4_far_haze"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/night/3.png" id="5_far_trees"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/night/4.png" id="6_mid_trees"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/night/5.png" id="7_near_trees"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/night/6.png" id="8_canopy"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/background/cave_depth/cave_composite.png" id="9_cave"]
 
 [sub_resource type="Resource" id="Layer_cave"]

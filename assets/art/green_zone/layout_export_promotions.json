@@ -1,0 +1,37 @@
+[
+  {
+    "source": "assets/library/backgrounds/forests_and_trees/5/1.png",
+    "production": "assets/art/green_zone/background/night/1.png",
+    "sha256": "3EAA02FA160C1FFF9248A5F42BF243192C72CD0133F36EDDB449253DEA5B400E"
+  },
+  {
+    "source": "assets/library/backgrounds/forests_and_trees/5/2.png",
+    "production": "assets/art/green_zone/background/night/2.png",
+    "sha256": "79C67045E514516F1E50C7863E96264CEBD32843522564A4406A3516E711787C"
+  },
+  {
+    "source": "assets/library/backgrounds/forests_and_trees/5/3.png",
+    "production": "assets/art/green_zone/background/night/3.png",
+    "sha256": "46D345AB214C4E61F571A451AB2531A08301BF00A96D4E9FCF93B0F9707DD87B"
+  },
+  {
+    "source": "assets/library/backgrounds/forests_and_trees/5/4.png",
+    "production": "assets/art/green_zone/background/night/4.png",
+    "sha256": "D104808883DCC3556560A385C7490BFE97A189DD9080ED2809F47130AD5EED1F"
+  },
+  {
+    "source": "assets/library/backgrounds/forests_and_trees/5/5.png",
+    "production": "assets/art/green_zone/background/night/5.png",
+    "sha256": "4AF98353E12A5E52BD7AFDC1C5B735E65EFB65A9045B87388754BD499AE2D2EA"
+  },
+  {
+    "source": "assets/library/backgrounds/forests_and_trees/5/6.png",
+    "production": "assets/art/green_zone/background/night/6.png",
+    "sha256": "CA1E08F61E10F1696FD5A4D2A86D742394E0A6D9AA3686004899608A9BFAC6D2"
+  },
+  {
+    "source": "assets/library/environment/structures/cave_entrances/cave_entrance_green_zone_native.png",
+    "production": "assets/art/green_zone/props/cave_entrance_green_zone_native.png",
+    "sha256": "F194A36D749FCB62BB00708921E222C5A90B6A193B10B27E6BB59096FBC98713"
+  }
+]

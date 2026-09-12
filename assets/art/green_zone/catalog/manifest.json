@@ -1,0 +1,901 @@
+{
+  "pack": "Green Zone",
+  "scope": "96 terrain tiles, 78 static props, 5 animated props; backgrounds excluded",
+  "files": [
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_01.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_01.png",
+      "sha256": "61bd5eb1f251ca7416495754daf9a60806b13ba5df9ca57a2bf327006aa7fc20"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_02.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_02.png",
+      "sha256": "3172029beb462d1abcfa003c9c9f2f59942ff493513654db26e7e6fcaac3e293"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_03.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_03.png",
+      "sha256": "1a5b2799b0e367fe5469921024ad63fb73808067c4c293c8b210ceb6e3a11d9c"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_04.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_04.png",
+      "sha256": "1293b583e9c191bd5ed12f5527a25090f081b85800fc43b7614c7c10826e45fc"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_05.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_05.png",
+      "sha256": "ad4dc885e6e42b2a2e2eb76236bf2128218e6e81ae5a81faa583e9f908b53d9d"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_06.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_06.png",
+      "sha256": "b109d95d94f7490f09f6f5e04feee6f589135b61f32b1c8e0d7e4fd6e485f45b"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_07.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_07.png",
+      "sha256": "4591087caf0f14a918f68e7d06b475dcccf6115811acb14a2714b3792c670370"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_08.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_08.png",
+      "sha256": "10ebc4dc1f5a470cc381f145a26501b3e8080e5e670154c9ee16306a3ae349ed"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_09.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_09.png",
+      "sha256": "9a6bb7297a742456cf1dbfbb4ba7f0386a6f97583e432edc20065e6a38bcdf57"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_10.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_10.png",
+      "sha256": "d625a2c032730fb50581abb312c00305ae91d19e7c3ed9d46d65c9747f27d40d"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_11.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_11.png",
+      "sha256": "7380d9e83d5c9e47cdd0e7b05b067ebb2235a7034201abdf8c280a171075ad67"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_12.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_12.png",
+      "sha256": "e6be23c454fc72154d6cf46efa9032c7a60bb8b5d43ff680a21172335962c1fe"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_13.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_13.png",
+      "sha256": "308060dbbc0da97ce994cfc38deb1d93d1e506db2343410078a4ada5499cead6"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_14.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_14.png",
+      "sha256": "d841ceb7f8cfb3c072e3835e1577b794a17487af69b2c32c17ddc606b4ffe4e0"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_15.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_15.png",
+      "sha256": "91dde23fb77327a48c82aa3c93587c8a7eb474c1a38e2874edde7e9ae9e2c9cb"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_16.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_16.png",
+      "sha256": "76695950594b0474c08d911c642fbe963627b35b832224515db0a6e1c20eeeb9"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_17.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_17.png",
+      "sha256": "d65ca015fb5ff1a8c2ead175203104dd1adb54706cabff8f576c723d0dadd0db"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_18.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_18.png",
+      "sha256": "5ce85738740243e5fb5d7487e45ca0ba607a18d0d0e0260611c8b871ee9d53ca"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_19.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_19.png",
+      "sha256": "38df8fd4f5449d10a6a5cd21c4c9337dede93a53ee19b36f11cd08127639fec0"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_20.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_20.png",
+      "sha256": "803becd055fc61130821ffc20227afb53f2d4c510a2797bd2db1d60d6d518027"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_21.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_21.png",
+      "sha256": "dc70e904ba655f1d39dde5fb0b1719273f5dc29c09c8dab14b21b0437cecde96"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_22.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_22.png",
+      "sha256": "4adce8589de3169f4ba71e20251a5cd0123bd02a0d6718920186920b86cda0b4"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_23.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_23.png",
+      "sha256": "b475025cdc69b273c206a802c7d901fe046c286f50f92920ccacdd81daff3443"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_24.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_24.png",
+      "sha256": "25811efe68f48b2a6420e6bf35f608df975727c5abee4d3f3d07834d4feafcf7"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_25.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_25.png",
+      "sha256": "33fd8efb108b57e8708bfa874f236a775a53d0353c57d0c59f1f0573c36d40ee"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_26.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_26.png",
+      "sha256": "cf4ddc751bbc1066af251cf89e196c53463fd5ae97f9d30db8ae52100658b5d1"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_27.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_27.png",
+      "sha256": "f71dcf9fae88a6e08d0d3e65621edff6f61ad4f43518e69da4a0e7f1a2b74d06"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_28.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_28.png",
+      "sha256": "990d3d96bb5f4d3babca92c238bb47ed644033473b69ed2ed5dea8d89cdf9033"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_29.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_29.png",
+      "sha256": "cc1a153d123f5d65eba7064ba57ece07ee42707e77e689393e42dd816417de2e"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_30.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_30.png",
+      "sha256": "82ec003d2f5f44d4fd23090cc6c9c24a8395659368830cbcd094dc70d5523b32"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_31.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_31.png",
+      "sha256": "fd899717891a21dc02aca0c6a130737f7ef5dc97e487bab8ccfb4f8206edc898"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_32.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_32.png",
+      "sha256": "e98433d8c9f2b82edce230d2e94428edbb2ee7410e45d77555048ce6f8c26fb3"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_33.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_33.png",
+      "sha256": "4c66f8638aec8ebd22c76ddc07d755de2f09358209b08c7f5029e93637687065"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_34.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_34.png",
+      "sha256": "9e43671aa7821a05a047f27291262139f82d7e8f95be32466d5ad8e241862476"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_35.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_35.png",
+      "sha256": "e6e0feaa36cdaaeea6a12651b30e9638349ecca09e12c5cca993fa8f05ea9097"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_36.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_36.png",
+      "sha256": "94b2b02f400fd6734006252a8e7a02c62b92b48c8d56d07cec8d69360e70f9ae"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_37.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_37.png",
+      "sha256": "736e35c13972c089abb565387cff01f2ea06866785d8e72f72894a0573f6d4cd"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_38.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_38.png",
+      "sha256": "a94c97908019ccc1586f76f73b64cdfdb018758458049b176474d5c8fbeff7c8"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_39.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_39.png",
+      "sha256": "8cae9efae22d983bed0f7d02aaa7c1db25685ab7be40930f3a488a3f98155977"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_40.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_40.png",
+      "sha256": "8bb649ae41fa8966e0e8063e7ebf311982ca0fa8d3de9b69a26dbab85b30b579"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_41.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_41.png",
+      "sha256": "e9b56c9c1eac3b20bf87b3a4904a206f1de5c5ea1ac3f24fb4d443440812f0b0"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_42.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_42.png",
+      "sha256": "a063c0bbc1b1e51783a63b050e2f8fd1eb7e57001f6a18ee740e223173be47e6"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_43.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_43.png",
+      "sha256": "a6c04dd7043eace2589074d09af07bb5a4a4d5198891adc969f3704a81d17418"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_44.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_44.png",
+      "sha256": "0a9e4000bf6d24fd8aef4e1952f5da0ddf7318345b0f9c5596f4a26b5e00ee53"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_45.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_45.png",
+      "sha256": "2ee5e56492846e0ff14ee2d5744ec2e2f33134f475a4dc5e69d8bd9ec2f5cf96"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_46.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_46.png",
+      "sha256": "2d4e54af87b0ec90ad8d0d09e430baf40ddd32ec2b26f360877ab78af196174f"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_47.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_47.png",
+      "sha256": "ecb8e83231b9fc6d6f3a476ff95df6ab581f1a1e916b3c370080a4f53919131f"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_48.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_48.png",
+      "sha256": "b826f51f13b671fd3a57b31f0dd0304cc59cfcc65aec2d7491d95a86bcf3a033"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_49.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_49.png",
+      "sha256": "010682056b8d380320c154a80eb16ea0cb4a9ebc367d4b5a547426e20f00e849"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_50.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_50.png",
+      "sha256": "46950392120abe83932f67fe36a833962eebcb78b3be856f48b4a9fb3f81904e"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_51.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_51.png",
+      "sha256": "94896092387399d0e49204ee4ff7b38c58ad9754c456d34f8abe5c965f9e1b5c"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_52.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_52.png",
+      "sha256": "68cf83c5829078c9c24714eb90286be653c9c364a848fe94a6493258ebb25de5"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_53.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_53.png",
+      "sha256": "0a74c130a8238cae6e63e112cff19dc5f5e48e9c64e86e180a94c632f3fe9b22"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_54.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_54.png",
+      "sha256": "662559c7b9d55bf237413ce917017f70c6fe84cff88d62a8c4c5925d843f291a"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_55.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_55.png",
+      "sha256": "9537063b138cebde32bd4ee43155fcbd5e8c2844d142bfa02b21f96ce06eb7ff"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_56.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_56.png",
+      "sha256": "9b27d993add4b3d988593f5c7bbb2860a06377fc075f14cdebece24ad6aea12f"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_57.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_57.png",
+      "sha256": "6359ffbbdfec86c1bc8b9204aa5022563a3087513b8499af150b329edbc4970e"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_58.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_58.png",
+      "sha256": "8c20ca4f9bf9de3f5fb634863f60fc4910b9dc7e8d940b941e1fd6a8bb18f0b8"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_59.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_59.png",
+      "sha256": "c0fb9de1e16d742cc8c850cb630b5f81f00d6df82018ce4f714e2d1730c88eda"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_60.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_60.png",
+      "sha256": "371432019d9b1c298af3f121200914aacc38f64042d36cac5623d076cec74737"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_61.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_61.png",
+      "sha256": "61558f2870b043aa4754890e25de2fdc9d0294a911fec180d8debbdf2532f771"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_62.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_62.png",
+      "sha256": "e16572e3231b4575b691a06a2ac07e08488810596016abc2bb5553027f5113e1"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_63.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_63.png",
+      "sha256": "26a1445c1011ecc2e377cfa71651c06695f06e8b0fde6165cc6160f47c7ee48f"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_64.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_64.png",
+      "sha256": "452501cafbad619afb96673b64c2ed80e854e23f430cf52a94f0e69318f8ea49"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_65.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_65.png",
+      "sha256": "28439e324d2a542a7882b90dee4d67de79a32fb5b5786c27e0fa4371dd0faa6b"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_66.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_66.png",
+      "sha256": "6550eb9472dc7cef0af37f7e4fd4e7fa1467b16f757c69266c0e6e140eea33f8"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_67.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_67.png",
+      "sha256": "79006899e39c98a5551b201354d73c735b70ae4569d4bffe545b9df2a539c2df"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_68.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_68.png",
+      "sha256": "fff8ccaeb346efc2b220ce4f4defb50b2103935b9e5bf5f652c5eb592bd7b1bf"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_69.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_69.png",
+      "sha256": "8a50b65adeb7f17879733e91360044ccc506f7e96764cab9aef6c94d556c7f05"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_70.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_70.png",
+      "sha256": "70058a336a08e14d25000e72ddb4228f5ab1f7ca942fe2feb5496f8d0f0cc544"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_71.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_71.png",
+      "sha256": "506771e885ab0e098044000c69631ba6eb109bf217c7115c6cb36ca286fee01c"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_72.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_72.png",
+      "sha256": "e6fa7819c196880ea9b30b300d980a856f8ed37cd90e4b5464b96154e490353a"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_73.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_73.png",
+      "sha256": "592c1cf55b52512c92e87267908eb20141923333c9c3e5514367009ed47e0aca"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_74.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_74.png",
+      "sha256": "58e3817de69e9e4b7b15b491de252d38229a81e513c9ccea281374ec84fac268"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_75.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_75.png",
+      "sha256": "41a122baef8d894378709b5b1d96961bb94fdf45785b02ad1bde592fab258326"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_76.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_76.png",
+      "sha256": "32787b1c51acffbb802ed67c6faa548f123d46ef01be896bc5351ecc65b2cac4"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_77.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_77.png",
+      "sha256": "900e0ad15437a31dd6cd54e4fa14e0e30a9e2670e9c5cdc6dfdba401cbdaf77e"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_78.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_78.png",
+      "sha256": "4aa4aed8f8a5b1c1ad329f379bda0b6f4d914ee03fbc38a3b5bc529fb023952b"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_79.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_79.png",
+      "sha256": "11a7d2214e9fa88586cab9838c89fec0e611e6cb07b31788bc0aa689e63187aa"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_80.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_80.png",
+      "sha256": "436f7e1158266a1fc6dae5282574db2de445b57d1e5d1c5aba0520d8ea7547d6"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_81.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_81.png",
+      "sha256": "a64f043700f85d304b9d193baf787a36de279f95b2bf20e4fba1eb39053d611c"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_82.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_82.png",
+      "sha256": "97b373ba56e5ddddc6adcac39dbfd2ffd43d23cc2990d656a482c35180361627"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_83.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_83.png",
+      "sha256": "355a442806afe1b466178f919ec1e6a0cff6df4e5c40170078844c0c88d07b7d"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_84.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_84.png",
+      "sha256": "c619cf36291b3e3f843d66cafde0aa818c62478f156c395d5150b3300ed4b38e"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_85.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_85.png",
+      "sha256": "aea8ed487bb27759bb0303e052dab05cb36e88979f97931d9040143c943c5514"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_86.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_86.png",
+      "sha256": "c2300e4989aae5bf4e031e4cc34e65ad60f569d378c07b0fe3437469338ed708"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_87.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_87.png",
+      "sha256": "9132821858dadae8649e3d3714a2e461e012d9e9d659dc0cf306422e36b240ef"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_88.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_88.png",
+      "sha256": "25ed08f5416f11578e800080b9b6caca457de72313d4fac156b1ede0f417b9e1"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_89.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_89.png",
+      "sha256": "fa42ec8a614542819cd28338e9b7d73a5d9d01d895518e175b67519a9cc3d0f8"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_90.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_90.png",
+      "sha256": "bc3f12925318f48940996641dea005a475bda231b0be2834fc86600ceae28cc9"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_91.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_91.png",
+      "sha256": "b4d8b09661451c1e07445105aae039f25d876fa3e0bbc40673f32b402c6e1ce0"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_92.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_92.png",
+      "sha256": "af00f9d400b8deeaf2c1712e4dc4e43ab1645c5f089463f385b21ea3403de189"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_93.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_93.png",
+      "sha256": "178de6bb1d3fe72841db0d19b421a57a4a3d28bf56e1e8fc99cd7df9245cb064"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_94.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_94.png",
+      "sha256": "841f6504d084a5190f777947455263d17722177d55dc103d69dcd62255c1e5d5"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_95.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_95.png",
+      "sha256": "a11fb9bab960a109d587bc492f4dbcfe7412d685225b2b6bd3bc0e5a29282f67"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/1 Tiles/Tile_96.png",
+      "output": "assets/art/green_zone/catalog/tiles/tile_96.png",
+      "sha256": "ccd703dbd7167235e874f2729f809ba388ea4c7a6112c4d516f2498fc1cfa8ce"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Benches/1.png",
+      "output": "assets/art/green_zone/catalog/props/benches/1.png",
+      "sha256": "3667b400d0ceb39e31cfc5a65d23710bcbf01054dd6b13ea8886641a4cf4ce5a"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Benches/2.png",
+      "output": "assets/art/green_zone/catalog/props/benches/2.png",
+      "sha256": "53afcf793ccc9fbdd27b29713dc534f5f6212b78efacf8d5d5028d9a768da60e"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Benches/3.png",
+      "output": "assets/art/green_zone/catalog/props/benches/3.png",
+      "sha256": "893c9ab2ffe60d5ad82009e03a21f3acb41b10176199c481307f427c0069d780"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Benches/4.png",
+      "output": "assets/art/green_zone/catalog/props/benches/4.png",
+      "sha256": "62f3281f3841423d7baa97da9b04d7bab769aba75c1c50e961556780eff87712"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Bushes/1.png",
+      "output": "assets/art/green_zone/catalog/props/bushes/1.png",
+      "sha256": "9b9afd884a2754eecff07ccd832441fb2db7ddc8b49e0da1e981291f8934d84d"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Bushes/10.png",
+      "output": "assets/art/green_zone/catalog/props/bushes/10.png",
+      "sha256": "28674fd47adb5f3d11a9fe95c438e9a6f544270db5adf8e358d8c995dfa3bdea"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Bushes/11.png",
+      "output": "assets/art/green_zone/catalog/props/bushes/11.png",
+      "sha256": "154350503924c917638f619fca675df2c2313d8ec6b1afe8c6e563626dac9ff4"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Bushes/12.png",
+      "output": "assets/art/green_zone/catalog/props/bushes/12.png",
+      "sha256": "f040c7f4d71206df8df326d8b2050623e197f9b31eb0bcb26fc39d5ca826abe4"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Bushes/13.png",
+      "output": "assets/art/green_zone/catalog/props/bushes/13.png",
+      "sha256": "b219de8a0c1c92e3f7295b7c7f53029c426da545f480c6649be0ded63fb4e9cf"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Bushes/14.png",
+      "output": "assets/art/green_zone/catalog/props/bushes/14.png",
+      "sha256": "10c4348ce669695374eff1366f342062cd8aebfab12db67b0f329b217af41a69"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Bushes/15.png",
+      "output": "assets/art/green_zone/catalog/props/bushes/15.png",
+      "sha256": "de91c2d05298060d6d9447a03c6c4300cd079bdd182f9a6f0a5ff83ff29d64c7"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Bushes/16.png",
+      "output": "assets/art/green_zone/catalog/props/bushes/16.png",
+      "sha256": "2fa9323569da74e59191bab4f626a73ca5ec3c3f33da65463bc790a217b7ee3a"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Bushes/17.png",
+      "output": "assets/art/green_zone/catalog/props/bushes/17.png",
+      "sha256": "014d04606380e16d740cc876db279a617f9cdb1cff9dc20aec08edaf61f27fde"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Bushes/18.png",
+      "output": "assets/art/green_zone/catalog/props/bushes/18.png",
+      "sha256": "f40d3b5cee1d342b0a48a60f579a30ab179bb4e3bd313986037d5e27e6ceac5c"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Bushes/19.png",
+      "output": "assets/art/green_zone/catalog/props/bushes/19.png",
+      "sha256": "6c426f62d27d51bc604d28fc83d9645b92a48e6538f43c722ddac64dc6e3ead9"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Bushes/2.png",
+      "output": "assets/art/green_zone/catalog/props/bushes/2.png",
+      "sha256": "4705f8174ad767505883604f95ea6b39e2200f7c89047bb9e1f1d8f72a893899"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Bushes/20.png",
+      "output": "assets/art/green_zone/catalog/props/bushes/20.png",
+      "sha256": "40ada78c1d01fa20dcdb3255f6a9b5974583cbdf7069c371bc1b25b388371c01"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Bushes/3.png",
+      "output": "assets/art/green_zone/catalog/props/bushes/3.png",
+      "sha256": "8646f725b158386a9f989bd67858dbe3474a3325b2c4070621a0b0db9b54cb69"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Bushes/4.png",
+      "output": "assets/art/green_zone/catalog/props/bushes/4.png",
+      "sha256": "8069dde5d1ba99167473113682ec9f18ba0c6081d538de72e382e441f23a8bc7"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Bushes/5.png",
+      "output": "assets/art/green_zone/catalog/props/bushes/5.png",
+      "sha256": "3f5834a8b0ed88125667ab599ee57f56eb55f0aa94a31739d4dbd00e275fe6c9"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Bushes/6.png",
+      "output": "assets/art/green_zone/catalog/props/bushes/6.png",
+      "sha256": "78e6726d8321370248a03499154b5fa2646fdcc49dd44f52997cd4c0e3406386"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Bushes/7.png",
+      "output": "assets/art/green_zone/catalog/props/bushes/7.png",
+      "sha256": "c15469dcf6b905796970a04c359592e7ed5de93ea9be5b67bdc7af038d9a0526"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Bushes/8.png",
+      "output": "assets/art/green_zone/catalog/props/bushes/8.png",
+      "sha256": "ced3924e10283d0a45c02d8b4036395d15b8761dec730f36863545df1172680c"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Bushes/9.png",
+      "output": "assets/art/green_zone/catalog/props/bushes/9.png",
+      "sha256": "7cf965400daa695d0e4d1999867a5ef210149f577dfab154f43ab91f01da056e"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Fence/1.png",
+      "output": "assets/art/green_zone/catalog/props/fence/1.png",
+      "sha256": "ae99b295606d10ea13425a3e46b4528908cc7ce9e6a0bbd77fe293e28bd81c50"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Fence/2.png",
+      "output": "assets/art/green_zone/catalog/props/fence/2.png",
+      "sha256": "52d87a772a28de12a81f0a0530def0144629c503ad931f546df17403476dc3bc"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Fence/2_1.png",
+      "output": "assets/art/green_zone/catalog/props/fence/2_1.png",
+      "sha256": "8a59ed477c0cb61bf0aebbcb6131abab578d00c96cd3c1c98b817425801845b8"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Fence/3.png",
+      "output": "assets/art/green_zone/catalog/props/fence/3.png",
+      "sha256": "28e2f2df106c3bc7073bb3ba502172d8adac2baa787e9925b76cb52238a451a2"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Fence/4.png",
+      "output": "assets/art/green_zone/catalog/props/fence/4.png",
+      "sha256": "838d2a5ad2a4d302174bb32c7674126cdab992e223445dfa558329e2c05c3ebf"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Fence/4_1.png",
+      "output": "assets/art/green_zone/catalog/props/fence/4_1.png",
+      "sha256": "9ef5481206f9e46271f2d6500444634d345a22e16d393b4c9bbe959c63c84730"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Fence/5.png",
+      "output": "assets/art/green_zone/catalog/props/fence/5.png",
+      "sha256": "539f9a6d7bb4bf7332d9bb8d9547d9aae113c84535be06707ddc0620e10c8ade"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Fence/6.png",
+      "output": "assets/art/green_zone/catalog/props/fence/6.png",
+      "sha256": "a0b5e88fe555d074d9fc646016adca0f6c0307c6acda60a5b7fb82601ae44e46"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Fence/7.png",
+      "output": "assets/art/green_zone/catalog/props/fence/7.png",
+      "sha256": "d0fabaab4b8d5b8c93afeae87f2c7c77331d437d4f9f81d34cfbfe2543a67da5"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Fountain/1.png",
+      "output": "assets/art/green_zone/catalog/props/fountain/1.png",
+      "sha256": "b2d0e321fe9f2bf62d17e0a06103a76adb75a676a920c2d68c23ce50accdd2cf"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Fountain/2.png",
+      "output": "assets/art/green_zone/catalog/props/fountain/2.png",
+      "sha256": "d79317f4565e9b02182d0617153ecfc14ceb01092a9f581302538815d2fdf9d5"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Grass/1.png",
+      "output": "assets/art/green_zone/catalog/props/grass/1.png",
+      "sha256": "6797ebe7e61f12bb7975a38a6343e637088bb0609b3c5d4e8bc38195cf3b988c"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Grass/10.png",
+      "output": "assets/art/green_zone/catalog/props/grass/10.png",
+      "sha256": "732e0f3c20d0c718a23baef1f0ea42bf818f3989ee999312afcea854e48a1fbe"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Grass/11.png",
+      "output": "assets/art/green_zone/catalog/props/grass/11.png",
+      "sha256": "ee40bd922afca1610efddac7f204a821d0524fe3003ea5473b69d02c2c96b33d"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Grass/12.png",
+      "output": "assets/art/green_zone/catalog/props/grass/12.png",
+      "sha256": "12e5a0855ac4f3ce2efe975d8b39aa98cfc62190e3ea7ac07db9b7db5679440d"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Grass/13.png",
+      "output": "assets/art/green_zone/catalog/props/grass/13.png",
+      "sha256": "a96815d9fd9b6c9edb3bfc0dc38e14e2edf7ba46a4bd9ab7ee1319c57c8d8992"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Grass/14.png",
+      "output": "assets/art/green_zone/catalog/props/grass/14.png",
+      "sha256": "17eb24ade3923b4b183613af8ed1e0926cc64ca6ea9ad1df8d0aa5c9816ca16f"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Grass/15.png",
+      "output": "assets/art/green_zone/catalog/props/grass/15.png",
+      "sha256": "73e3f77ca88a380e0e8d377546945fdbb36868b719e77c790048939066172c69"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Grass/2.png",
+      "output": "assets/art/green_zone/catalog/props/grass/2.png",
+      "sha256": "43f40de70e6a7a41d1f26e11b54298636175d2fc7d27132964e4cd8743f1b51a"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Grass/3.png",
+      "output": "assets/art/green_zone/catalog/props/grass/3.png",
+      "sha256": "2fad11c001c8ef530419547fe4d5a7e8f1043d48ea462a29e3b214b20dbfb70d"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Grass/4.png",
+      "output": "assets/art/green_zone/catalog/props/grass/4.png",
+      "sha256": "766fd5af60d7165363ba007bc6cb2e1a30b52ae1c029aeaed0d7b182538e5530"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Grass/5.png",
+      "output": "assets/art/green_zone/catalog/props/grass/5.png",
+      "sha256": "5b7036f9de1b173213e6cfaf6f67e152163d073ce4540b7047c40d4457496983"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Grass/6.png",
+      "output": "assets/art/green_zone/catalog/props/grass/6.png",
+      "sha256": "c15850a644b6feca6aea74f227ada08068c1a4f008518b7871bbadd81cd88955"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Grass/7.png",
+      "output": "assets/art/green_zone/catalog/props/grass/7.png",
+      "sha256": "fb1efe6014d2503cbeab2f47657a762b3b027bd5144c2155731e60426107542f"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Grass/8.png",
+      "output": "assets/art/green_zone/catalog/props/grass/8.png",
+      "sha256": "f49ea571d645138bd704f69ec876de8229fc7dcacefcc7734b442363866db386"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Grass/9.png",
+      "output": "assets/art/green_zone/catalog/props/grass/9.png",
+      "sha256": "5a47b0afb3ec31e1fa4c13334b266287d807470d8274302b1eb2498c59871514"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Leaf/1.png",
+      "output": "assets/art/green_zone/catalog/props/leaf/1.png",
+      "sha256": "a0a43b4f63f18a2f723fd8e16785f0d2cc99045c031e6d918dc95780c64362c9"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Leaf/2.png",
+      "output": "assets/art/green_zone/catalog/props/leaf/2.png",
+      "sha256": "166119b8d4b1438f80fbc5c16b686d7e7c04e71a8ebfad3d1c371de9c1e6f709"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Leaf/3.png",
+      "output": "assets/art/green_zone/catalog/props/leaf/3.png",
+      "sha256": "9cd31dca18dd4caf4726a43c7a4891a5076e54b81e481cee43daa2b06864d47b"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Leaf/4.png",
+      "output": "assets/art/green_zone/catalog/props/leaf/4.png",
+      "sha256": "f70a74e7945054460abcc5e397a7962529b8ecb87f3a7c8c9cfed6aa853803d4"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Leaf/5.png",
+      "output": "assets/art/green_zone/catalog/props/leaf/5.png",
+      "sha256": "40d67dd108c8a9e0a94e2c5b0f8c942c48322a5913cd37c598fd5ef89369a6d0"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Leaf/6.png",
+      "output": "assets/art/green_zone/catalog/props/leaf/6.png",
+      "sha256": "40f1021500e1eab6dc89214afb0653846a4e14df1eedff05abb60d022db991fc"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Other/Box.png",
+      "output": "assets/art/green_zone/catalog/props/other/Box.png",
+      "sha256": "e9803a0427c2d681206c0d4000678363de83a7248b30af75a3cd13236e39fa27"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Other/Garbage_Can1.png",
+      "output": "assets/art/green_zone/catalog/props/other/Garbage_Can1.png",
+      "sha256": "079a868da63243855ad28fac84ab67f29a79c376dd067800fca2bb245e88b2b7"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Other/Garbage_Can2.png",
+      "output": "assets/art/green_zone/catalog/props/other/Garbage_Can2.png",
+      "sha256": "b4092b86174dc4523d91a5fb9e62fb24906195da76be0d1193ed93a89cd2d14d"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Other/Ladder1.png",
+      "output": "assets/art/green_zone/catalog/props/other/Ladder1.png",
+      "sha256": "98a78ad6ceac5e98760ed07309d9d01c6c1d7fbeb833180515d75603948d9582"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Other/Ladder2.png",
+      "output": "assets/art/green_zone/catalog/props/other/Ladder2.png",
+      "sha256": "3a37a77bd70ff0c3c0550352a907e98cc1ad2615e4caa31b67bdaba2be14e851"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Other/Ramp1.png",
+      "output": "assets/art/green_zone/catalog/props/other/Ramp1.png",
+      "sha256": "fee17fc735d20c0e2963f8c0ffb8926bf713826f4f8a6e395da5416dc3a77f88"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Other/Ramp2.png",
+      "output": "assets/art/green_zone/catalog/props/other/Ramp2.png",
+      "sha256": "109cc0f6f7eb07fc98e6a25c1337bee9bba072e3cc8db1de61ba51d22c76b4da"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Other/Rapm3.png",
+      "output": "assets/art/green_zone/catalog/props/other/Rapm3.png",
+      "sha256": "d817a8cfb8aec592578b91f8f5c0c547a61198e6d235e26687d353656397570f"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Other/Skateboard1.png",
+      "output": "assets/art/green_zone/catalog/props/other/Skateboard1.png",
+      "sha256": "9bb797273e92267d7437e1a83d302816475692268813d81b6bd0a6d79599f829"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Other/Skateboard2.png",
+      "output": "assets/art/green_zone/catalog/props/other/Skateboard2.png",
+      "sha256": "5c1d6118277f7700c17c94c582dff446af1f938057f9648842f951106cf4006a"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Other/Skateboard3.png",
+      "output": "assets/art/green_zone/catalog/props/other/Skateboard3.png",
+      "sha256": "be5bf3b9e41ad670039e5bbf94008bd56415e48782eb8aa53ad6c8835e6480ee"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Other/Skateboard4.png",
+      "output": "assets/art/green_zone/catalog/props/other/Skateboard4.png",
+      "sha256": "60da9b836e60ceaa33347ebc816750f1915728afafd8c15c95206fd00e09244c"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Other/Tree1.png",
+      "output": "assets/art/green_zone/catalog/props/other/Tree1.png",
+      "sha256": "1cd7df5860c34b0b8e8c55ededc09df9fa02ddb7485c5b3415b55f4b682deaee"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Other/Tree2.png",
+      "output": "assets/art/green_zone/catalog/props/other/Tree2.png",
+      "sha256": "c1fbbaeb1a857bad10b7b7a8b20b4a660d970215c10c249278dd5a0cc29ff22d"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Other/Tree3.png",
+      "output": "assets/art/green_zone/catalog/props/other/Tree3.png",
+      "sha256": "65e8cc8abaf6da4bd4736632f9bf54a959102d7c7bfc9c0a744582b0276c5091"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Other/Tree4.png",
+      "output": "assets/art/green_zone/catalog/props/other/Tree4.png",
+      "sha256": "4683f5948e139e4cdb7f48b1790e2c6c04a4c14f3789d9e80a47129adb025c82"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Stones/1.png",
+      "output": "assets/art/green_zone/catalog/props/stones/1.png",
+      "sha256": "53cad88a1a3ebe7732d5559c30e1f13d5e9b7608b054a62a48882a87de19b5fd"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Stones/2.png",
+      "output": "assets/art/green_zone/catalog/props/stones/2.png",
+      "sha256": "9b3edf79e1fcb7c76029b28592cf788b22ee3295ec17da023a451937119e70d2"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Stones/3.png",
+      "output": "assets/art/green_zone/catalog/props/stones/3.png",
+      "sha256": "8e4cb0faf0d07d976513b8e05df8bdfb11f4e64b0fd7783fbaad3161e65bd840"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Stones/4.png",
+      "output": "assets/art/green_zone/catalog/props/stones/4.png",
+      "sha256": "996247eb4da17dee1e71c76ae3c361db7f1e3a40f90dec97223a414d18c1b8f6"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Stones/5.png",
+      "output": "assets/art/green_zone/catalog/props/stones/5.png",
+      "sha256": "e3614e6347c9010904ab4bc344d6de07cbeffb698dd62ec66d687cf13884e901"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/3 Objects/Stones/6.png",
+      "output": "assets/art/green_zone/catalog/props/stones/6.png",
+      "sha256": "959fc01f747f893c790f52b8b7e607c0ee4fbd628cd4de9ffdb35ab188fe7f6a"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/4 Animated objects/Card.png",
+      "output": "assets/art/green_zone/catalog/animated/Card.png",
+      "sha256": "72339bfcaae88a500b2fa346efa758f5fd8bde1cb05a63cca84d819fc79d6bfc"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/4 Animated objects/Money.png",
+      "output": "assets/art/green_zone/catalog/animated/Money.png",
+      "sha256": "cd295133222d4d0cb6f1cbd400274072d9295fa0b445729e98737ed11c33101f"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/4 Animated objects/Skateboard.png",
+      "output": "assets/art/green_zone/catalog/animated/Skateboard.png",
+      "sha256": "8696a85243b392840bc364b23a7815fc60d57a0c34216ac82fa0b5c2cb951cc0"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/4 Animated objects/Fountain.png",
+      "output": "assets/art/green_zone/catalog/animated/Fountain.png",
+      "sha256": "cf7a794eb5c910b9a5ed6fb1ce546a20ea97ae803fab8ff1e4d1be60a9b5cad1"
+    },
+    {
+      "source": "assets/library/tilesets/green_zone/4 Animated objects/Chest_open.png",
+      "output": "assets/art/green_zone/catalog/animated/Chest_open.png",
+      "sha256": "8d1834aa41d70e29805b1d3f5a4d1b9f24721b650e2e0239b46010bbe73531e6"
+    }
+  ]
+}

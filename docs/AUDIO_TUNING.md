@@ -1,10 +1,15 @@
 # Audio tuning
 
-Run a level from Godot, press **F1**, then click **Audio tuning…**.
+Run the main project in a separate Godot game window, press **F1**, then click
+**Audio tuning…**. Use the separate window because the embedded game view
+previously offset cursor targeting during user testing.
 The panel pauses the game. **Try in game**, **F1**, or **Esc** closes it and
 resumes play with the selected mix. Changes survive deaths and level changes.
+Opening the Level designer closes this panel while retaining its unsaved mix;
+designer previews are silent and Test uses the selected settings. The designer
+and friendly-fire checkpoint did not change `movement_mix.tres`.
 
-## Gunfire and bullet impacts: first listening pass (2026-09-12)
+## Gunfire and bullet impacts (2026-09-12)
 
 The user subsequently saved a new mix: player **Shot_2 at -12 dB**, enemy
 **Shot_2 at -15 dB**, scenery **Hammer_1 at -24 dB with pitch 1.65**, and
@@ -43,7 +48,9 @@ Each simultaneous enemy two-gun beat plays one balanced sound cue; the six
 projectiles in a three-beat volley therefore make three firing cues. Each real
 collision has its own impact cue. Character hits include the player's body and
 enemy projectile hurtboxes; other collisions use the scenery bank. Flying
-bullets, expiry, and misses do not create impact sounds.
+bullets, expiry, and misses do not create impact sounds. A gunner holding fire
+for a teammate plays no shot cue. Enemy-on-enemy hits use the character bank;
+bullets that survive shooter defeat can still produce their eventual impact cue.
 
 `combat_audio_3d.gd` owns a bounded pool of 24 spatial voices per level. Camera
 staging depth does not attenuate the mix; left/right placement still follows
@@ -276,6 +283,12 @@ playback, selected-asset persistence, intentional empty slots, and room exit.
 Tests save only to `build/audio_environment_test` and hash production defaults.
 
 ## Implementation and validation
+
+Accepted checkpoint, 2026-09-12: 46/47 suite checks passed in 293.2 s, including
+all audio checks and friendly-fire cue checks. The sole failure is the existing
+Level 2 stage-10 traversal death near (64.54,29.02). Older dated validation
+results below describe earlier milestones, not the current suite status.
+
 
 - `scripts/developer/audio_tuning_panel.gd`: developer UI and independent
   preview voices; restores the prior pause state on close or level exit.

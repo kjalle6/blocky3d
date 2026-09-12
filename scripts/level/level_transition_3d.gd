@@ -33,6 +33,7 @@ enum SourceExitMode {
 
 
 func _ready() -> void:
+	if preload("res://scripts/developer/level_layout_preview.gd").is_preview(self): return
 	add_to_group("level_transition")
 	body_entered.connect(_on_body_entered)
 

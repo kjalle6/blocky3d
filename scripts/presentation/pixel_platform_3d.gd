@@ -18,9 +18,20 @@ const DEFAULT_STYLE: PixelPlatformStyle = preload(
 @export var cap_left_edge := true
 @export var cap_right_edge := true
 @export var cap_bottom_edge := true
+var _generated_children: Array[Node] = []
 
 
 func _ready() -> void:
+	rebuild_geometry()
+
+
+func rebuild_geometry() -> void:
+	# Only replace our generated art/collision; authored children belong to the scene.
+	for child in _generated_children:
+		if is_instance_valid(child):
+			remove_child(child)
+			child.free()
+	_generated_children.clear()
 	assert(
 		absf(size.x / TILE_WORLD_SIZE - roundf(size.x / TILE_WORLD_SIZE)) < 0.001
 		and absf(size.y / TILE_WORLD_SIZE - roundf(size.y / TILE_WORLD_SIZE)) < 0.001,
@@ -44,6 +55,7 @@ func _build_collision() -> void:
 	shape.size = size
 	collision.shape = shape
 	add_child(collision)
+	_generated_children.append(collision)
 
 
 func _build_face() -> void:
@@ -70,6 +82,7 @@ func _build_face() -> void:
 				face_depth
 			)
 			add_child(sprite)
+			_generated_children.append(sprite)
 
 
 func _cropped_top(texture: Texture2D) -> Texture2D:

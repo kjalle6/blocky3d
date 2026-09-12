@@ -37,6 +37,7 @@ size = Vector3(1.2, 0.55, 1.2)
 size = Vector3(2.56, 3.2, 1.2)
 
 [node name="GreenZoneFinaleShooterAreaWip" instance=ExtResource("1_base")]
+metadata/layout_section = "green_zone_shooter_area"
 
 [node name="WorldEnvironment" parent="." index="1"]
 environment = SubResource("Environment_night")

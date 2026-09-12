@@ -21,6 +21,7 @@ const CHECKED_DEVELOPER_LEVELS: Array[StringName] = [
 	&"dev_level_design_lab",
 	&"dev_animation_lab",
 	&"dev_green_zone_finale_wip",
+	&"dev_level_designer_sandbox",
 ]
 const LEVEL_2_INTERIOR_SCENE_PATH := (
 	"res://scenes/levels/overgrown_coastal_ascent_interior.tscn"
@@ -30,6 +31,7 @@ const LEVEL_3_SHOOTER_AREA_SCENE_PATH := (
 	"res://scenes/dev/green_zone_finale_shooter_area_wip.tscn"
 )
 const LEVEL_3_SHOOTER_AREA := preload("res://tools/level_3_shooter_area_fixture.gd")
+const DESIGNER_FIXTURE_SCENE_PATH := "res://scenes/dev/level_designer_fixture.tscn"
 ## Props that merely share an edge are not overlapping.
 const EDGE_TOLERANCE := 0.01
 const ACTOR_GROUPS: PackedStringArray = [
@@ -71,6 +73,12 @@ func _run() -> void:
 	var level_3_shooter_area := LEVEL_3_SHOOTER_AREA.load_into(game_root)
 	await process_frame
 	_audit(level_3_shooter_area, &"dev_green_zone_finale_shooter_area_wip")
+	var fixture_definition := LevelDefinition.new()
+	fixture_definition.level_id = &"dev_designer_fixture"
+	fixture_definition.scene = load(DESIGNER_FIXTURE_SCENE_PATH)
+	assert(game_root._start_session(fixture_definition, null))
+	await process_frame
+	_audit(game_root.current_level as LevelSession3D, fixture_definition.level_id)
 
 	assert(_scenery_seen > 0, "No authored scenery was reached at all; the walk is broken.")
 	if not _failures.is_empty():
@@ -80,7 +88,7 @@ func _run() -> void:
 		return
 	print("Pixel-art invariants passed: %d authored sprites across %d levels." % [
 		_scenery_seen,
-		CHECKED_LEVELS.size() + CHECKED_DEVELOPER_LEVELS.size() + 2,
+		CHECKED_LEVELS.size() + CHECKED_DEVELOPER_LEVELS.size() + 3,
 	])
 	quit(0)
 
@@ -94,6 +102,7 @@ func _assert_every_scene_is_accounted_for(game_root: Node) -> void:
 			covered.append(definition.scene.resource_path)
 	covered.append(LEVEL_2_INTERIOR_SCENE_PATH)
 	covered.append(LEVEL_3_SHOOTER_AREA_SCENE_PATH)
+	covered.append(DESIGNER_FIXTURE_SCENE_PATH)
 	for directory in ["res://scenes/levels", "res://scenes/dev"]:
 		for file_name in DirAccess.get_files_at(directory):
 			if not file_name.ends_with(".tscn"):

@@ -102,6 +102,7 @@ func _physics_process(delta: float) -> void:
 	_update_diagnostics()
 
 func _on_footstep_contact(contact: Dictionary) -> void:
+	if preload("res://scripts/developer/level_layout_preview.gd").is_preview(self): return
 	contact_count += 1
 	if int(contact.id) <= _last_contact_id:
 		_reject(contact, "duplicate")

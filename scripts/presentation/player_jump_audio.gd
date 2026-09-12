@@ -55,6 +55,7 @@ func _physics_process(delta: float) -> void:
 		_air_time += delta
 
 func _can_play() -> bool:
+	if preload("res://scripts/developer/level_layout_preview.gd").is_preview(self): return false
 	return not player.is_dead() and not player.is_developer_inspection_enabled() and not player.is_transition_running()
 
 func _on_ground_jump_started() -> void:

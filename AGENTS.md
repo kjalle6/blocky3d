@@ -77,8 +77,10 @@ powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -EditorImpor
 ## Running the validators
 
 Use `tools/run_validation_suite.ps1` rather than looping over `validate_*.gd`
-by hand. It runs every validator - about 150s headless - and reports a single
-pass or fail rather than a wall of output.
+by hand. It runs every validator and reports a single pass or fail rather than a wall
+of output. The accepted 2026-09-12 checkpoint has 47 validators and took about
+293 seconds headless; 46 passed, with only the known Level 2 stage-10 traversal
+failure remaining. Timing and test count are checkpoint observations, not limits.
 
 It still takes a `-Scope` switch even though only `All` exists today. The six
 prototype levels used to be a separate scope worth skipping, at roughly 60% of
@@ -97,3 +99,17 @@ camera, and ceiling motion; run it with `-Visual`, never headless.
 Run the suite when a change could plausibly reach what it covers, not as
 reassurance. Two full passes in a row, the second confirming what the first
 already proved, is wasted time whether or not it opens windows.
+
+## Layout export checks
+
+The runner also owns `-ExportPack` (with `-ExportPreset LayoutSmoke`) and
+`-MainPack` probes. Keep both on the same supervised standard engine and
+exclusive lock. Pack paths stay inside `build`; MainPack probes use a separate
+working directory so missing resources cannot fall back to the source checkout.
+`LayoutSmoke` is a validation preset, not a release configuration. Commands and
+fixture cleanup rules are in `docs/LEVEL_DESIGNER.md`.
+
+Before changing registered scene sections or structural layout dependencies,
+run `tools/inspect_level_layout.gd` through the runner and read the resolved
+layout report. Preserve project layout JSON and local recovery drafts. Do not
+rewrite fingerprints or discard user overrides merely to make validation pass.

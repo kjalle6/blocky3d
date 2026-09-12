@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://scripts/app/game_root.gd" id="1_app"]
 [ext_resource type="Resource" path="res://resources/campaign/main_campaign.tres" id="2_campaign"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/campaign/level_definition.gd" id="5_level_definition"]
 [ext_resource type="Resource" path="res://resources/dev/green_zone_finale_wip.tres" id="6_green_zone_finale_wip"]
 [ext_resource type="PackedScene" path="res://scenes/ui/weapon_status_hud.tscn" id="7_weapon_status_hud"]
+[ext_resource type="Resource" path="res://resources/dev/level_designer_sandbox.tres" id="8_designer_sandbox"]
 
 [sub_resource type="StyleBoxFlat" id="Style_panel"]
 bg_color = Color(0.03, 0.045, 0.075, 0.9)
@@ -38,7 +39,7 @@ corner_radius_bottom_left = 6
 script = ExtResource("1_app")
 campaign = ExtResource("2_campaign")
 developer_room_definition = ExtResource("3_animation_lab")
-developer_level_definitions = Array[ExtResource("5_level_definition")]([ExtResource("3_animation_lab"), ExtResource("4_level_design_lab"), ExtResource("6_green_zone_finale_wip")])
+developer_level_definitions = Array[ExtResource("5_level_definition")]([ExtResource("3_animation_lab"), ExtResource("4_level_design_lab"), ExtResource("6_green_zone_finale_wip"), ExtResource("8_designer_sandbox")])
 level_button_style = SubResource("Style_button")
 developer_fresh_level_runs = true
 developer_tools_enabled = true

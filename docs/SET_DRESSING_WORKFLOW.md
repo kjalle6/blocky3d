@@ -9,6 +9,21 @@ props, debris, or other dressing below floating terrain. The terrain silhouette
 is the underside language; decoration belongs on a readable support surface or
 in a deliberately authored background layer.
 
+## In-game authoring update (2026-09-12)
+
+The accepted [Level designer](LEVEL_DESIGNER.md) adds manual picture-card
+placement across all registered sections. The Green Zone catalog exposes its
+full terrain/prop collection, organized by zone. Existing curated dressing
+definitions and automatic preview/bake tools below retain their original role;
+manual designer additions save as layout JSON instead of being baked to scenes.
+Inspect the resolved layout before further scene work.
+
+New scenery remains non-colliding: decorative rocks do not stop bullets, and
+ladder/ramp artwork does not introduce climbing or skating. Use supported solid
+terrain or an authored collision object for cover. The full catalog broadens
+the user's choices without authorizing automated clutter or route redesign.
+Readability, clean undersides, and intentional support remain the visual rules.
+
 ## Evidence from the current Arrival route
 
 The real-input traversal writes `build/diagnostics/arrival_route_trace.json`.

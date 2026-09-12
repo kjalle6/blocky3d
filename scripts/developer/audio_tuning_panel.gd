@@ -62,6 +62,8 @@ func _ready() -> void:
 func open_panel() -> void:
 	if is_open:
 		return
+	if get_parent().has_method("claim_developer_tool") and not get_parent().claim_developer_tool("audio"):
+		return
 	is_open = true
 	_was_paused = get_tree().paused
 	get_tree().paused = true
@@ -81,6 +83,7 @@ func close_panel() -> void:
 	_ambience_file_dialog.hide()
 	_overlay.hide()
 	is_open = false
+	if get_parent().has_method("release_developer_tool"): get_parent().release_developer_tool("audio")
 	MIX.restore_gameplay_reverb(_gameplay_bus_mutes)
 	get_tree().paused = _was_paused
 	closed.emit()

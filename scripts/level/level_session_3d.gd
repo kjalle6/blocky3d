@@ -49,6 +49,17 @@ var _developer_measurement_grid: DeveloperMeasurementGrid3D
 var _developer_collision_overlay: DeveloperCollisionOverlay3D
 
 
+func _enter_tree() -> void:
+	# Parent entry precedes child ready, including direct scene/test launches.
+	if has_meta("layout_section") and not get_meta("layout_applied", false):
+		var error := preload("res://scripts/developer/level_layout_resolver.gd").apply_saved(self)
+		if not error.is_empty():
+			set_meta("layout_error", error)
+			process_mode = Node.PROCESS_MODE_DISABLED
+			visible = false
+			push_error("Level layout could not load: " + error)
+
+
 func configure(
 	definition: LevelDefinition,
 	progression_store: ProgressionStore = null,
@@ -73,6 +84,13 @@ func configure(
 
 
 func _ready() -> void:
+	if has_meta("layout_error"):
+		return
+	if get_meta("layout_preview", false):
+		camera.target = player
+		if background != null:
+			background.bind_camera(camera)
+		return
 	_initial_spawn_transform = spawn_point.global_transform
 	_active_respawn_transform = _initial_spawn_transform
 	_apply_ability_policy()
@@ -210,6 +228,12 @@ func _on_transition_entered(transition: LevelTransition3D) -> void:
 
 
 func _on_checkpoint_activated(checkpoint: LevelCheckpoint3D) -> void:
+	# Added checkpoints are extra respawn spots, not numbered campaign gates.
+	# They must never prevent a later authored checkpoint from being earned.
+	if checkpoint.get_meta("layout_added_checkpoint", false):
+		_active_respawn_transform = checkpoint.respawn_transform()
+		checkpoint_changed.emit(_active_checkpoint_index)
+		return
 	if checkpoint.route_index <= _active_checkpoint_index:
 		return
 	_active_checkpoint_index = checkpoint.route_index

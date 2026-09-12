@@ -48,7 +48,9 @@ remain read-only design references.
   three-beat shooter encounter. Killing that enemy with the existing knife now
   produces one deterministic physical gun drop. Collecting it gives the player
   a session-local two-slot knife/handgun loadout, auto-equips the pack-1 pistol,
-  and enables mouse aiming within a 180-degree forward arc (accepted handgun milestone). Keyboard/gamepad retain
+  and enables mouse aiming that turns with the cursor and reaches straight up
+  and down. Shooting continues during double jumps; grounded retreat uses a
+  slower upright backpedal. Keyboard/gamepad retain
   horizontal/upward-diagonal fire. Select weapons with `1`, `2`, the
   mouse wheel, or gamepad RB for switching. Ammo, the safe firing lesson, boss,
   ending, and production promotion remain deliberately open
@@ -61,8 +63,9 @@ remain read-only design references.
 - The World 1 production selector exposes Arrival / Shoreline and Overgrown
   Coastal Ascent. Its cave interior is a same-level Level 2 section, and focused
   tools load that section under the production Level 2 identity. Development
-  entries retain Animation Lab, the reusable Level Design Lab, and Level 3 WIP;
-  the lab keeps the current cave-terrain and lift proofs as starting fixtures
+  entries include Firearm Review Lab (the former Animation Lab), the reusable
+  Level Design Lab, Level 3 WIP, its Gun encounter shortcut, and Level Designer
+  Sandbox. The older design lab retains cave-terrain and lift fixtures
 - A reusable profile-driven pixel-background rig provides native-scale,
   seam-safe horizontal coverage, authored coastal-to-green transitions, and
   stable framing during vertical camera travel. Level 2 actively uses authored
@@ -79,8 +82,17 @@ remain read-only design references.
   a later campaign fit
 - Typed world catalog and world-grouped mouse or `W`/`S` + `Enter` level
   selector
-- Development-only Animation Lab with a full-speed runway, test geometry,
-  immediate ability toggles, and no campaign/save effects
+- Development-only Firearm Review Lab with a full-speed runway, ability
+  toggles, shooter/cover tests, and no campaign/save effects
+- Accepted in-game level designer: F1 opens the tool; menu 7 opens its empty
+  sandbox. Build block by block, browse assets by zone, place enemies/props,
+  adjust patrols, and use Test/Undo/Save. Green Zone terrain and props plus six
+  Beach sand pieces are available across every registered section. Scripted
+  sequences and camera wiring remain with Codex
+- Enemy friendly fire: gunners wait when a teammate blocks either barrel, while
+  released bullets can damage enemies and remain live after the shooter dies
+- F1 audio tuning persists recording choices, movement/room mixes, and combat
+  audio directly to the project; saved settings remain authoritative
 - Development mode starts every level from its fresh level-defined entry state,
   then retains session abilities through death and `R`
 - Development review tools expose independent F7 collision/hitbox overlays, an
@@ -101,9 +113,14 @@ remain read-only design references.
 
 The living design and authoring documents are:
 
+- [`NEW_CHAT_README.md`](NEW_CHAT_README.md) — current accepted checkpoint,
+  preservation rules, validation result, and continuation pointers
+- [`docs/LEVEL_DESIGNER.md`](docs/LEVEL_DESIGNER.md) — building, object browsers,
+  patrol controls, testing, saving, and adding new asset zones
 - [`docs/DEVELOPER_LEVEL_EDITOR_PLAN.md`](docs/DEVELOPER_LEVEL_EDITOR_PLAN.md)
-  — the next milestone: in-game layout editing, patrol controls, platform
-  building, and permanent saves; scripted sequences remain with Codex
+  — the implemented scope, original build contract, and deferred features
+- [`docs/AUDIO_TUNING.md`](docs/AUDIO_TUNING.md) and
+  [`docs/FOOTSTEP_AUDIO.md`](docs/FOOTSTEP_AUDIO.md) — audio controls and contact events
 - [`docs/ideas/README.md`](docs/ideas/README.md) — future gameplay ideas to
   revisit later, separate from planned work
 - [`docs/GAME_DIRECTION.md`](docs/GAME_DIRECTION.md) — what the game is
@@ -122,8 +139,13 @@ The living design and authoring documents are:
 - Jump: `Space`, `W`, up arrow, gamepad south button
 - Dash: `Shift`, gamepad east button
 - Attack: left mouse, `J`, gamepad west button
+- Aim handgun: mouse; keyboard/gamepad also support upward-diagonal fire
+- Select knife/gun: `1` / `2`, mouse wheel, gamepad RB
+- Developer tools: `F1` for Audio tuning and Level designer; `F7` hitboxes,
+  `F10` grid, `F11` free-flight inspection
 - Restart current run: `R`
-- Return to level selector: `Escape`
+- Return to level selector: `Escape` during ordinary play; while testing a
+  designer draft, `Escape` returns to editing
 - Menu: click, `W` / `S` + `Enter`, or number shortcut
 
 ## Legacy references
@@ -155,17 +177,23 @@ powershell -ExecutionPolicy Bypass -File .\tools\prepare_green_zone_assets.ps1
 
 Use the guarded runner rather than launching Godot directly. It preserves the
 running editor/game by default and uses the standard non-.NET Godot 4.6.3 build
-with the normal Compatibility renderer. Do not use `--headless`. Pass
+with the Compatibility renderer. Use the runner's optional `-Headless` switch
+for contract checks; use `-Visual` for rendered captures. Never pass raw
+`--headless` or bypass the runner. Pass
 `-CloseRunningGodot` only when a particular automation run genuinely requires
 exclusive access.
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Script res://tools/validate_project.gd
-powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Script res://tools/validate_arrival_shoreline_slice.gd
-powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Script res://tools/validate_arrival_shoreline_slice_playthrough.gd
+powershell -ExecutionPolicy Bypass -File .\tools\run_validation_suite.ps1 -Scope All -Headless
+powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Headless -Script res://tools/validate_enemy_friendly_fire.gd
 ```
 
-Pass any other `res://tools/validate_*.gd` script through the same runner.
+Use the suite for broad integration changes and the runner for a focused
+contract. The accepted 2026-09-12 checkpoint passed **46/47** checks in 293.2 s.
+The only failure is the existing Level 2 stage-10 traversal death near
+(64.54,29.02); the suite is not fully green. Designer and friendly-fire checks
+passed, and the user accepted their gameplay. Do not rerun the suite solely
+for documentation changes.
 
 The runner's `-EditorImport` mode uses Godot's dedicated `--import` command and
 waits on the real editor executable, not only its console launcher. Every mode
@@ -180,7 +208,7 @@ automation crash.
 Generate graphical review captures with:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Visual -Script res://tools/capture_level1.gd
+powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Visual -Script res://tools/capture_enemy_friendly_fire.gd
 powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Visual -Script res://tools/capture_animation_lab.gd
 powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Visual -Script res://tools/capture_arrival_shoreline_slice.gd
 ```

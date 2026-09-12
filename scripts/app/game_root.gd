@@ -24,6 +24,9 @@ var _developer_collision_overlay_enabled := false
 var audio_tuning_panel: CanvasLayer
 var cave_ambience: AudioStreamPlayer
 var _audio_tools_button: Button
+var _designer_tools_button: Button
+var level_designer: CanvasLayer
+var _developer_tool_owner := ""
 
 @onready var world: Node3D = %World
 @onready var instructions: PanelContainer = %Instructions
@@ -52,6 +55,8 @@ const INTERSTITIAL_EXIT_FADE_DURATION := 0.22
 
 
 func _ready() -> void:
+	if not preload("res://scripts/developer/level_layout_registry.gd").can_author():
+		developer_tools_enabled = false
 	assert(campaign != null, "GameRoot requires a CampaignCatalog.")
 	var catalog_errors := campaign.validation_errors()
 	assert(
@@ -62,6 +67,16 @@ func _ready() -> void:
 	developer_mode_label.visible = developer_fresh_level_runs
 	_build_world_list()
 	_build_audio_tools()
+	level_designer = preload("res://scripts/developer/level_designer.gd").new()
+	level_designer.name = "LevelDesigner"
+	add_child(level_designer)
+	_designer_tools_button = Button.new()
+	_designer_tools_button.text = "Level designer…"
+	_designer_tools_button.position = Vector2(20, 246)
+	_designer_tools_button.custom_minimum_size = Vector2(200, 44)
+	_designer_tools_button.add_theme_font_size_override("font_size", 20)
+	get_node("Interface").add_child(_designer_tools_button)
+	_designer_tools_button.pressed.connect(level_designer.open_panel)
 	cave_ambience = preload("res://scripts/audio/cave_ambience_player.gd").new()
 	cave_ambience.name = "CaveAmbience"
 	add_child(cave_ambience)
@@ -82,6 +97,7 @@ func _build_audio_tools() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if level_designer != null and level_designer.is_editing(): return
 	if not event is InputEventKey or not event.pressed or event.echo:
 		return
 	if (
@@ -200,12 +216,25 @@ func _start_session(
 	definition: LevelDefinition,
 	world_definition: WorldDefinition,
 	initial_session_abilities: Array[StringName] = [],
-	scene_override: PackedScene = null
-) -> void:
+	scene_override: PackedScene = null,
+	layout_override: Variant = null,
+	preview_mode := false,
+	preview_fingerprint := ""
+) -> bool:
+	var session_scene := scene_override if scene_override != null else definition.scene
+	var candidate := session_scene.instantiate() as LevelSession3D
+	if candidate == null:
+		show_developer_message("Could not load the level", "The scene is not a level session.")
+		return false
+	var resolver := preload("res://scripts/developer/level_layout_resolver.gd")
+	var layout_error: String = resolver.apply_saved(candidate) if layout_override == null else resolver.apply_layout(candidate, layout_override, preview_fingerprint if preview_mode else "")
+	if not layout_error.is_empty():
+		candidate.free()
+		show_developer_message("Could not load the level layout", layout_error)
+		return false
 	_free_current_level()
 	_free_active_interstitial()
-	var session_scene := scene_override if scene_override != null else definition.scene
-	current_level = session_scene.instantiate() as LevelSession3D
+	current_level = candidate
 	assert(
 		current_level != null,
 		"%s must instantiate a LevelSession3D." % session_scene.resource_path
@@ -224,12 +253,17 @@ func _start_session(
 		)
 	var session_store := _progression_store() if world_definition != null else null
 	current_level.configure(definition, session_store, initial_session_abilities)
+	if preview_mode:
+		preload("res://scripts/developer/level_layout_preview.gd").prepare(current_level)
 	world.add_child(current_level)
-	current_level.run_completed.connect(_on_run_completed)
-	current_level.transition_requested.connect(_on_transition_requested)
-	current_level.run_reset.connect(_on_run_reset)
-	current_level.ability_unlocked.connect(_on_ability_unlocked)
-	weapon_status_hud.bind_session(current_level)
+	if preview_mode:
+		preload("res://scripts/developer/level_layout_preview.gd").finish(current_level)
+	else:
+		current_level.run_completed.connect(_on_run_completed)
+		current_level.transition_requested.connect(_on_transition_requested)
+		current_level.run_reset.connect(_on_run_reset)
+		current_level.ability_unlocked.connect(_on_ability_unlocked)
+		weapon_status_hud.bind_session(current_level)
 	var session_heading := definition.heading()
 	if world_definition == null:
 		session_heading = "DEVELOPER TOOLS / %s" % definition.title.to_upper()
@@ -251,9 +285,13 @@ func _start_session(
 	_set_developer_inspection_enabled(false)
 	_set_developer_measurement_grid_enabled(false)
 	_set_developer_collision_overlay_enabled(false)
+	return true
 
 
 func show_level_select() -> void:
+	if level_designer != null and level_designer.is_active():
+		level_designer.request_close(true)
+		return
 	_transition_serial += 1
 	_free_current_level()
 	_free_active_interstitial()
@@ -274,6 +312,8 @@ func show_level_select() -> void:
 	developer_collision_legend.visible = false
 	_hide_ability_tutorial()
 	_configure_developer_ability_panel(false)
+	if _audio_tools_button != null: _audio_tools_button.visible = developer_tools_enabled
+	if _designer_tools_button != null: _designer_tools_button.visible = false
 	if not _level_buttons.is_empty():
 		_level_buttons.front().grab_focus()
 
@@ -424,6 +464,8 @@ func _apply_gameplay_tools_visibility() -> void:
 	instructions.visible = _gameplay_tools_visible
 	if _audio_tools_button != null:
 		_audio_tools_button.visible = _gameplay_tools_visible and developer_tools_enabled
+	if _designer_tools_button != null:
+		_designer_tools_button.visible = _gameplay_tools_visible and developer_tools_enabled and preload("res://scripts/developer/level_layout_registry.gd").can_author()
 	developer_ability_panel.visible = (
 		_gameplay_tools_visible
 		and _developer_ability_panel_available
@@ -572,6 +614,7 @@ func _on_developer_ability_toggled(enabled: bool, ability_id: StringName) -> voi
 
 
 func _progression_store() -> ProgressionStore:
+	if level_designer != null and level_designer.is_active(): return null
 	if developer_fresh_level_runs or not persist_progression:
 		return null
 	return get_node_or_null("/root/GameProgression") as ProgressionStore
@@ -796,3 +839,25 @@ func _on_ability_unlocked(ability_id: StringName) -> void:
 func _hide_ability_tutorial() -> void:
 	ability_tutorial_timer.stop()
 	ability_tutorial.visible = false
+
+
+func claim_developer_tool(owner: String) -> bool:
+	if owner == "designer" and audio_tuning_panel != null: audio_tuning_panel.close_panel()
+	if not _developer_tool_owner.is_empty() and _developer_tool_owner != owner: return false
+	_developer_tool_owner = owner
+	return true
+
+
+func release_developer_tool(owner: String) -> void:
+	if _developer_tool_owner == owner: _developer_tool_owner = ""
+
+
+func show_developer_message(title: String, message: String) -> void:
+	var dialog := AcceptDialog.new()
+	dialog.process_mode = Node.PROCESS_MODE_ALWAYS
+	dialog.title = title
+	dialog.dialog_text = message
+	add_child(dialog)
+	dialog.confirmed.connect(dialog.queue_free)
+	dialog.canceled.connect(dialog.queue_free)
+	dialog.popup_centered(Vector2i(600, 180))

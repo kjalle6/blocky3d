@@ -60,6 +60,7 @@ func _ready() -> void:
 	add_to_group("run_resettable")
 	_rest_x = position.x
 	_rest_y = position.y
+	if preload("res://scripts/developer/level_layout_preview.gd").is_preview(self): return
 	_apply(0.0)
 
 

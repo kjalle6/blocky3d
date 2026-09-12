@@ -5,7 +5,7 @@
 [ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="2_platform"]
 [ext_resource type="Script" path="res://scripts/level/level_transition_3d.gd" id="3_transition"]
 [ext_resource type="PackedScene" path="res://scenes/levels/overgrown_coastal_ascent_interior.tscn" id="4_interior"]
-[ext_resource type="Texture2D" path="res://assets/library/environment/structures/cave_entrances/cave_entrance_green_zone_native.png" id="5_cave"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/cave_entrance_green_zone_native.png" id="5_cave"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/stone_small.png" id="6_stone_small"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/stone_medium.png" id="7_stone_medium"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/stone_flat.png" id="8_stone_flat"]
@@ -35,6 +35,7 @@ size = Vector3(1.28, 2.56, 2)
 size = Vector3(1.28, 14.08, 2)
 
 [node name="OvergrownCoastalAscent" instance=ExtResource("1_base")]
+metadata/layout_section = "overgrown_coastal_ascent"
 
 [node name="Background" parent="." index="3"]
 profile = ExtResource("10_dusk")

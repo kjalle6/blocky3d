@@ -15,6 +15,19 @@ identity. Focused validators, captures, and probes load the interior scene
 directly under `resources/campaign/level_02.tres`, preserving that production
 Level 2 identity without a separate developer selector entry.
 
+## Designer and validation checkpoint (2026-09-12)
+
+Both Level 2 sections now support prepared additions through the in-game
+designer. Their original connected terrain, camera regions, and scripted
+sequence assemblies remain protected; this does not reopen the accepted route
+or add cave-painting tools. Inspect resolved layout data before further scene
+work. The cave entrance texture was promoted unchanged from the source catalog
+to production art for isolated export loading.
+
+The latest full suite passed 46/47. The existing stage-10 traversal harness
+death near (64.54,29.02) remains the sole failure. It does not authorize changing
+the authored route; human playtesting still owns any design decision.
+
 ## Approved route
 
 Read this as a side view, from left to right:

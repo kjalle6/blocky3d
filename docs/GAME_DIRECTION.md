@@ -140,8 +140,18 @@ gun rotate together around the shoulder, with nearest texture filtering.
 Keyboard/gamepad retain horizontal fire and the upward-diagonal aim input.
 Enemy ranged targeting is a separate language: production shooters may aim
 directly toward the player through the full 360 degrees of the flat X/Y gameplay
-plane while keeping depth fixed. That does not expand the player's deliberately
-limited firearm controls.
+plane while keeping depth fixed. Their visible guns use the appropriate
+forward/up/down pose. The player can shoot throughout the double-jump flip;
+retreating on the ground uses a slower upright backpedal. These are accepted
+movement/shooting combinations, while bullet time and renewable jump chains
+remain ideas for later.
+
+Enemy friendly fire is accepted: bullets can damage other enemies, while a
+gunner waits if a teammate already blocks either gun. Once released, a bullet
+remains dangerous even if its shooter dies. This lets movement and positioning
+create accidental crossfire without deliberately shooting through a waiting
+teammate. Reset clears the projectiles; melee and indestructible hazards keep
+their existing rules.
 
 The introduction uses one solid natural object as honest projectile cover,
 without adding a crouch or snap-to-cover mechanic. The defeated shooter visibly
@@ -252,6 +262,15 @@ economy, and filler are not mandates.
 Permanent ability ownership and versioned save data already exist. Collectible
 economies, weapon construction, skill trees, records, and broader upgrades
 require explicit designs before implementation.
+
+## Collaborative level authoring
+
+The accepted in-game level designer supports block-by-block terrain building,
+prepared enemies/props/hazards, patrol tuning, and permanent per-section saves.
+Assets are organized by zone, starting with Green Zone and Beach. Codex and
+the user still plan the level and camera together; scripted sequences remain
+with Codex. Tool availability does not make every asset appropriate to every
+encounter. See [LEVEL_DESIGNER.md](LEVEL_DESIGNER.md) for the current controls.
 
 ## Settled decisions
 

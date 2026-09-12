@@ -14,6 +14,7 @@ var _height_source: Node3D
 
 
 func _ready() -> void:
+	if preload("res://scripts/developer/level_layout_preview.gd").is_preview(self): return
 	body_entered.connect(_on_body_entered)
 	area_entered.connect(_on_area_entered)
 	_height_source = get_node_or_null(height_source_path) as Node3D

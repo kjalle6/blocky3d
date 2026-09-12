@@ -12,9 +12,10 @@ the current sound banks.
 
 The user accepted NOX Walk Mono 07/06/04 for both grass running and walking
 on 2026-09-06 after in-game listening. Keep the current randomized mix,
-original pitch, -10 dB volume, and each gait's animation-driven timing.
+original pitch, and each gait's animation-driven timing. Later saved tuning
+sets grass running to -16 dB and walking to -17 dB (2026-09-12 snapshot).
 This supersedes the earlier grass candidates. Sand uses the accepted NOX
-Footsteps_Sand_Walk_01/02 for both gaits, at original pitch and currently -13 dB. Both
+Footsteps_Sand_Walk_01/02 for both gaits, at original pitch and a saved -19 dB. Both
 recordings are copied unchanged. Sand's `foot_indices` binds 01 to the left
 animation foot and 02 to the right. A fresh stride starts with left/01, then
 right/02; pauses and gait changes preserve the foot-to-recording association.
@@ -23,11 +24,21 @@ comparison bank and are excluded from the paired playback.
 The user accepted this fixed left/right pairing after in-game listening on
 2026-09-06, for both running and walking on sand.
 
-Sand loudness (2026-09-06): the user accepted running at -13 dB, 3 dB below
-the original level. Footsteps and their F6 comparisons keep that gain.
-Takeoff and landing were still too loud at -13 dB; their current trial is
--16 dB, another 3 dB quieter. These adjustments change volume only; pitch,
-timing, recordings, and filtering are unchanged. Grass remains at -10 dB.
+Current saved volume snapshot (2026-09-12):
+
+| Surface | Running | Walking | Takeoff | Landing |
+| --- | --- | --- | --- | --- |
+| Grass | -16 dB | -17 dB | -18 dB | -24 dB |
+| Sand | -19 dB | -19 dB | -22 dB | -26 dB |
+
+These saved values supersede the earlier -10/-13/-16 dB listening trials.
+The resource remains authoritative if the user tunes it again. No mix change
+was made for the designer/friendly-fire checkpoint.
+
+Designer-added solid blocks expose their supporting surface in Settings;
+Beach blocks default to sand and Green Zone terrain to grass. The same
+contact-event and surface-detection path plays their footsteps and jumps during
+Test/normal play. Frozen placement/edit previews suppress movement audio.
 
 ## Choosing footsteps for future surfaces
 

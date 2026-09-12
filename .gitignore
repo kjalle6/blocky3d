@@ -16,6 +16,7 @@ incoming/
 *.blend2
 *.tmp
 *.bak
+resources/level_layouts/*.lock/
 
 # OS/editor noise
 .DS_Store

@@ -45,6 +45,7 @@ size = Vector3(79.36, 1, 8)
 size = Vector3(2.56, 3.2, 1.2)
 
 [node name="GreenZoneFinaleWip" instance=ExtResource("1_base")]
+metadata/layout_section = "green_zone_finale_outdoors"
 
 [node name="WorldEnvironment" parent="." index="1"]
 environment = SubResource("Environment_night")
@@ -57,6 +58,7 @@ route_end_x = 171.52
 profile = ExtResource("4_background")
 
 [node name="LiftShelf" type="StaticBody3D" parent="Platforms" index="0"]
+metadata/layout_locked = "Lift landing support — adjust with the lift sequence."
 position = Vector3(10.88, -3.2, 0)
 script = ExtResource("2_platform")
 size = Vector3(11.52, 6.4, 2)
@@ -70,6 +72,8 @@ position = Vector3(2.56, 6.4, 0)
 shape = SubResource("Shape_left_boundary")
 
 [node name="DoubleJumpIsland" type="StaticBody3D" parent="Platforms" index="2"]
+metadata/layout_id = "outdoors_double_jump_island"
+metadata/layout_kind = "platform"
 position = Vector3(29.44, -3.2, 0)
 script = ExtResource("2_platform")
 size = Vector3(7.68, 6.4, 2)
@@ -77,6 +81,8 @@ style = ExtResource("3_green_style")
 cap_bottom_edge = false
 
 [node name="DashIsland01" type="StaticBody3D" parent="Platforms" index="3"]
+metadata/layout_id = "outdoors_dash_island"
+metadata/layout_kind = "platform"
 position = Vector3(50.56, -3.2, 0)
 script = ExtResource("2_platform")
 size = Vector3(6.4, 6.4, 2)
@@ -140,6 +146,7 @@ right_face_overrides = PackedVector2Array(36, 5, 36, 6, 36, 7, 36, 8, 36, 9, 36,
 top_face_overrides = PackedVector2Array(41, 20)
 
 [node name="LevelStartLift" parent="Props" index="0" instance=ExtResource("5_lift")]
+metadata/layout_locked = "Scripted lift assembly — work with Codex."
 position = Vector3(4, -12.8, 0)
 starts_at_top = true
 trigger_on_boarding = false
@@ -166,6 +173,8 @@ flip_h = true
 shaded = false
 
 [node name="FinalLandingSpikes" parent="Hazards" index="0" instance=ExtResource("10_spikes")]
+metadata/layout_id = "outdoors_landing_spikes"
+metadata/layout_kind = "spikes"
 position = Vector3(75.68, 0, 0)
 row_width = 7.36
 
@@ -174,6 +183,8 @@ position = Vector3(145.92, -25.6, 0)
 row_width = 5.12
 
 [node name="OpeningCheckpoint" parent="Checkpoints" index="0" instance=ExtResource("11_checkpoint")]
+metadata/layout_id = "outdoors_opening_checkpoint"
+metadata/layout_kind = "checkpoint"
 position = Vector3(84.48, 0, 0)
 route_index = 1
 
@@ -204,6 +215,8 @@ position = Vector3(85.76, -32, 0)
 shape = SubResource("Shape_kill_plane")
 
 [node name="OpeningPatrol" parent="." index="12" instance=ExtResource("8_enemy")]
+metadata/layout_id = "outdoors_opening_patrol"
+metadata/layout_kind = "enemy"
 position = Vector3(11.52, 0.42, 0)
 patrol_speed = 2.0
 patrol_left_distance = 3.84
@@ -225,6 +238,8 @@ spark_period = 2.4
 spark_active = 0.6
 
 [node name="DashLandingPatrol" parent="." index="15" instance=ExtResource("8_enemy")]
+metadata/layout_id = "outdoors_dash_patrol"
+metadata/layout_kind = "enemy"
 position = Vector3(50.56, 0.42, 0)
 patrol_speed = 2.0
 patrol_left_distance = 1.92
@@ -290,6 +305,8 @@ script = ExtResource("17_hazard")
 shape = SubResource("Shape_opening_kill_plane")
 
 [node name="RunupPatrol" parent="." index="23" instance=ExtResource("8_enemy")]
+metadata/layout_id = "outdoors_runup_patrol"
+metadata/layout_kind = "enemy"
 position = Vector3(91.52, 0.42, 0)
 patrol_speed = 2.0
 patrol_left_distance = 11.44

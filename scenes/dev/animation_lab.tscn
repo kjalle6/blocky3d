@@ -10,6 +10,7 @@
 size = Vector3(36, 1, 8)
 
 [node name="AnimationLab" instance=ExtResource("1_base")]
+metadata/layout_section = "animation_lab"
 
 [node name="RouteExtent" parent="." index="2"]
 route_start_x = 0
