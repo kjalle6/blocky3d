@@ -101,6 +101,11 @@ remain read-only design references.
 
 The living design and authoring documents are:
 
+- [`docs/DEVELOPER_LEVEL_EDITOR_PLAN.md`](docs/DEVELOPER_LEVEL_EDITOR_PLAN.md)
+  — the next milestone: in-game layout editing, patrol controls, platform
+  building, and permanent saves; scripted sequences remain with Codex
+- [`docs/ideas/README.md`](docs/ideas/README.md) — future gameplay ideas to
+  revisit later, separate from planned work
 - [`docs/GAME_DIRECTION.md`](docs/GAME_DIRECTION.md) — what the game is
 - [`docs/LEVEL_ROADMAP.md`](docs/LEVEL_ROADMAP.md) — the eleven legacy ideas,
   revised campaign spine, and next level

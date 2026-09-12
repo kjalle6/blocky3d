@@ -100,11 +100,103 @@ func _run() -> void:
 		await physics_frame
 	assert(player.is_on_floor())
 	assert(player.aerial_jumps_remaining() == 1, "Landing should refresh Double Jump.")
+	await _validate_double_jump_fire(level)
 
 	game_root.free()
 	_finished = true
-	print("Double Jump movement contract validation passed.")
+	print("Double Jump movement and firearm pose/aim/timing contracts passed.")
 	quit(0)
+
+
+func _validate_double_jump_fire(level: LevelSession3D) -> void:
+	var player := level.player
+	var visual := player.pixel_visual
+	(level.get_node("HandgunEnemy") as HandgunEnemy3D).set_engagement_enabled(false)
+	assert(level.acquire_weapon(PlayerWeapon.HANDGUN))
+	var shots: Array[Dictionary] = []
+	player.projectile_fired.connect(func(round: HandgunProjectile3D) -> void:
+		assert(visual.current_state() == "double_jump")
+		assert(visual.gun.visible and visual.gun_grip.visible)
+		assert(round.global_position.is_equal_approx(visual.handgun_muzzle_world()))
+		assert(player.aerial_jumps_remaining() == 0)
+		if player.player_handgun.mouse_aim_active:
+			assert(round.travel_direction().is_equal_approx(player.player_handgun.aim_direction))
+			assert(round.travel_direction().is_equal_approx(
+				(player.player_handgun.crosshair_world - round.global_position).normalized()
+			))
+		shots.append({"frame": visual.body.frame, "direction": round.travel_direction()})
+	)
+	# A real input shot on every flip frame, including jump + fire together.
+	# Reset between trials isolates pose coverage from the normal gun cooldown.
+	for requested_frame in 6:
+		player.reset_at(Transform3D(Basis.IDENTITY, Vector3(5.0, 10.0, 0.0)))
+		player.player_handgun.reset_run()
+		player.player_handgun._mouse_requested = true
+		for tick in 10:
+			await physics_frame
+		assert(player._coyote_remaining <= 0.0)
+		Input.action_press("jump")
+		if requested_frame == 0:
+			Input.action_press("attack")
+		await physics_frame
+		await physics_frame
+		assert(visual.current_state() == "double_jump")
+		assert(player.player_handgun.mouse_aim_active, "Mouse aiming must stay active through the flip.")
+		if requested_frame > 0:
+			while visual.body.frame < requested_frame:
+				await physics_frame
+			Input.action_press("attack")
+			await physics_frame
+			await physics_frame
+		Input.action_release("attack")
+		Input.action_release("jump")
+		assert(shots.size() == requested_frame + 1)
+		assert(shots.back().frame == requested_frame, "Shooting must use the current flip pose without restarting it.")
+		assert(visual.body.texture.resource_path.ends_with("player_handgun_double_jump.png"))
+		assert(player.aerial_jumps_remaining() == 0, "Shooting must not grant another jump.")
+		while player._double_jump_visual_remaining > 0.0:
+			await physics_frame
+		await physics_frame
+		assert(visual.current_state() == "jump")
+		assert(visual.gun.visible and player.player_handgun.mouse_aim_active)
+
+	# Keyboard/gamepad fallback can shoot upward during the same flip too.
+	player.reset_at(Transform3D(Basis.IDENTITY, Vector3(5.0, 10.0, 0.0)))
+	player.player_handgun.reset_run()
+	player.player_handgun._mouse_requested = false
+	for tick in 3:
+		await physics_frame
+	Input.action_press("aim_up")
+	Input.action_press("jump")
+	Input.action_press("attack")
+	await physics_frame
+	await physics_frame
+	Input.action_release("attack")
+	Input.action_release("jump")
+	Input.action_release("aim_up")
+	assert(shots.size() == 7)
+	assert(shots.back().direction.y > 0.6)
+	assert(visual.gun.flip_v)
+
+	# Exercise every shoulder registration and cursor side/height without
+	# depending on a physical cursor in headless automation.
+	player.set_physics_process(false)
+	for facing in [-1.0, 1.0]:
+		for frame in 6:
+			visual.set_mouse_aim(false, 0.0)
+			visual.set_state("double_jump", true)
+			visual.tick_authored_state((frame + 0.1) / 14.0, "double_jump", facing > 0.0)
+			for height in [-20.0, 0.0, 20.0]:
+				var target := player.global_position + Vector3(facing * 8.0, height, 0.0)
+				player.player_handgun.update_mouse_aim(facing, target)
+				assert(player.player_handgun.mouse_aim_active)
+				assert(visual.body.frame == frame)
+				assert(visual.gun.visible and visual.gun_grip.visible)
+				var muzzle := visual.handgun_muzzle_world()
+				assert(player.player_handgun.aim_direction.is_equal_approx(
+					(target - muzzle).normalized()
+				))
+				assert(visual.body.flip_h == (facing < 0.0))
 
 
 func _on_watchdog_timeout() -> void:

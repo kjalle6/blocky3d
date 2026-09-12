@@ -103,14 +103,15 @@ func _physics_process(delta: float) -> void:
 		_refresh_dash()
 	if Input.is_action_just_pressed("dash"):
 		_try_start_dash(input_axis)
-	_update_weapon_selection_input()
-	_update_attack(delta)
 	if (
 		not is_dashing()
 		and _wall_jump_control_lock_remaining <= 0.0
 		and not is_zero_approx(input_axis)
 	):
 		_facing_sign = signf(input_axis)
+	_update_weapon_selection_input()
+	var shot_blocked_by_dash := is_dashing()
+	_update_attack(delta)
 	if grounded:
 		_refresh_aerial_jumps()
 		_wall_coyote_remaining = 0.0
@@ -190,6 +191,8 @@ func _physics_process(delta: float) -> void:
 	if global_position.y < fall_limit_y:
 		kill()
 	_update_pixel_visual(delta)
+	if not shot_blocked_by_dash:
+		_fire_handgun_from_input()
 
 
 func _update_jump_timers(delta: float) -> void:
@@ -364,7 +367,10 @@ func feet_world_y() -> float:
 
 
 func is_attacking() -> bool:
-	return _attack_remaining > 0.0
+	return _attack_remaining > 0.0 or (
+		_active_attack_weapon_id == PlayerWeapon.HANDGUN
+		and not player_handgun.can_fire()
+	)
 
 
 func is_melee_attacking() -> bool:
@@ -560,14 +566,20 @@ func _update_attack(delta: float) -> void:
 	if is_dashing():
 		_cancel_active_attack(true)
 		return
-	if Input.is_action_just_pressed("attack") and _attack_remaining <= 0.0:
+	# Gun recovery follows the weapon's cooldown. Knife contact and swing
+	# duration must neither delay a shot nor impose a second firing gate.
+	if _active_attack_weapon_id == PlayerWeapon.HANDGUN:
+		if not player_handgun.can_fire():
+			return
+		_finish_active_attack()
+	if (
+		Input.is_action_just_pressed("attack") and _attack_remaining <= 0.0
+		and _equipped_weapon_id == PlayerWeapon.KNIFE
+	):
+		_active_attack_weapon_id = PlayerWeapon.KNIFE
+		_active_attack_aim_up = false
 		_attack_remaining = attack_duration
 		_attack_hit_applied = false
-		_active_attack_weapon_id = _equipped_weapon_id
-		_active_attack_aim_up = (
-			_active_attack_weapon_id == PlayerWeapon.HANDGUN
-			and Input.is_action_pressed("aim_up")
-		)
 	if _attack_remaining <= 0.0:
 		_apply_pending_weapon()
 		return
@@ -575,22 +587,27 @@ func _update_attack(delta: float) -> void:
 	var elapsed := attack_duration - _attack_remaining
 	if not _attack_hit_applied and elapsed >= attack_impact_time:
 		_attack_hit_applied = true
-		_perform_active_attack_impact()
+		_perform_melee_hit()
 	if _attack_remaining <= 0.0:
 		_finish_active_attack()
 
 
-func _perform_active_attack_impact() -> void:
-	if _active_attack_weapon_id == PlayerWeapon.HANDGUN:
-		var projectile := player_handgun.fire(
-			_facing_sign,
-			_active_attack_aim_up,
-			self
-		)
-		if projectile != null:
-			projectile_fired.emit(projectile)
+func _fire_handgun_from_input() -> void:
+	# Movement, animation frame, and mouse aim resolve first, within this same
+	# physics tick. Jump + fire therefore uses the new pose's real barrel.
+	if (
+		_dead or is_dashing() or is_attacking()
+		or _equipped_weapon_id != PlayerWeapon.HANDGUN
+		or not Input.is_action_just_pressed("attack") or not player_handgun.can_fire()
+	):
 		return
-	_perform_melee_hit()
+	_active_attack_weapon_id = PlayerWeapon.HANDGUN
+	_active_attack_aim_up = Input.is_action_pressed("aim_up")
+	var projectile := player_handgun.fire(_facing_sign, _active_attack_aim_up, self)
+	if projectile != null:
+		projectile_fired.emit(projectile)
+	else:
+		_finish_active_attack()
 
 
 func _finish_active_attack() -> void:
@@ -764,7 +781,7 @@ func _update_pixel_visual(delta: float) -> void:
 		is_on_floor(),
 		horizontal_speed,
 		velocity.y,
-		_attack_remaining > 0.0,
+		is_attacking(),
 		_dead,
 		_facing_sign > 0.0,
 		_double_jump_visual_remaining > 0.0,

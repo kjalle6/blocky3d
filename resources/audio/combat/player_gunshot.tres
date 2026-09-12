@@ -1,0 +1,15 @@
+[gd_resource type="Resource" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/audio/sound_event_bank.gd" id="1_bank"]
+[ext_resource type="AudioStream" path="res://assets/audio/combat/shot_1.wav" id="2_shot"]
+[ext_resource type="AudioStream" path="res://assets/audio/combat/shot_2.wav" id="3_alternate"]
+[ext_resource type="AudioStream" path="res://assets/audio/combat/blaster.wav" id="4_blaster"]
+
+[resource]
+script = ExtResource("1_bank")
+clips = Array[AudioStream]([ExtResource("2_shot"), ExtResource("3_alternate"), ExtResource("4_blaster")])
+labels = PackedStringArray("Shot_1 · starting pick", "Shot_2 · alternative", "Blaster · alternative")
+volume_db = -12.0
+selection_mode = 1
+fixed_index = 0
+repeat_interval = 0.28

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/audio/sound_event_bank.gd" id="1_bank"]
+[ext_resource type="AudioStream" path="res://assets/audio/combat/bump.wav" id="2_bump"]
+[ext_resource type="AudioStream" path="res://assets/audio/combat/hammer_1.wav" id="3_alternate"]
+
+[resource]
+script = ExtResource("1_bank")
+clips = Array[AudioStream]([ExtResource("2_bump"), ExtResource("3_alternate")])
+labels = PackedStringArray("Bump · starting pick", "Hammer_1 · mechanical alternative")
+volume_db = -12.0
+selection_mode = 1
+fixed_index = 0

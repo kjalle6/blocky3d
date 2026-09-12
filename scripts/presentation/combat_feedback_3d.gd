@@ -1,7 +1,7 @@
 class_name CombatFeedback3D
 extends Node
 ## Restrained, replaceable combat feedback. Timing and visual readability live
-## here; final audio can subscribe to the named cue signal later.
+## here; gunshot and bullet-impact audio follows the actual gameplay events.
 
 signal audio_cue_requested(cue_name: StringName, world_position: Vector3)
 signal projectile_impact_presented(world_position: Vector3, surface_normal: Vector3)
@@ -15,6 +15,13 @@ signal projectile_impact_presented(world_position: Vector3, surface_normal: Vect
 
 var _pause_serial := 0
 var _active_projectile_impacts: Array[PixelProjectileImpact3D] = []
+var combat_audio: Node3D
+
+
+func _ready() -> void:
+	combat_audio = preload("res://scripts/audio/combat_audio_3d.gd").new()
+	combat_audio.name = "CombatAudio"
+	add_child(combat_audio)
 
 
 func bind_player(player: PlayerCharacter) -> void:
@@ -36,11 +43,15 @@ func bind_handgun_enemy(enemy: HandgunEnemy3D) -> void:
 	var callback := _on_handgun_projectile_fired
 	if not enemy.shot_fired.is_connected(callback):
 		enemy.shot_fired.connect(callback)
+	if not enemy.dual_shot_fired.is_connected(_on_enemy_dual_shot):
+		enemy.dual_shot_fired.connect(_on_enemy_dual_shot)
 
 
 func reset_feedback() -> void:
 	_pause_serial += 1
 	Engine.time_scale = 1.0
+	if is_instance_valid(combat_audio):
+		combat_audio.reset_run()
 	while not _active_projectile_impacts.is_empty():
 		var impact: PixelProjectileImpact3D = _active_projectile_impacts.pop_back()
 		if is_instance_valid(impact):
@@ -75,12 +86,18 @@ func _on_handgun_projectile_fired(projectile: HandgunProjectile3D) -> void:
 	var callback := _on_handgun_projectile_impacted
 	if not projectile.impacted.is_connected(callback):
 		projectile.impacted.connect(callback)
+	if projectile.is_player_owned():
+		combat_audio.play_event("combat/player_gunshot", projectile.global_position)
+
+
+func _on_enemy_dual_shot(world_position: Vector3) -> void:
+	combat_audio.play_event("combat/enemy_gunshot", world_position)
 
 
 func _on_handgun_projectile_impacted(
 	world_position: Vector3,
 	surface_normal: Vector3,
-	_collider: Object
+	collider: Object
 ) -> void:
 	var impact := projectile_impact_scene.instantiate() as PixelProjectileImpact3D
 	assert(impact != null, "CombatFeedback3D requires a PixelProjectileImpact3D scene.")
@@ -90,6 +107,8 @@ func _on_handgun_projectile_impacted(
 	impact.play_impact(world_position, surface_normal)
 	projectile_impact_presented.emit(world_position, surface_normal)
 	audio_cue_requested.emit(&"projectile_impact", world_position)
+	var character_hit := collider is PlayerCharacter or (collider != null and collider.has_method("receive_projectile_hit"))
+	combat_audio.play_event("combat/bullet_character" if character_hit else "combat/bullet_scenery", world_position)
 
 
 func _on_projectile_impact_finished(impact: PixelProjectileImpact3D) -> void:

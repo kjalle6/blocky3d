@@ -32,6 +32,9 @@ func _validate() -> void:
 	var level_3_wip_button := world_list.get_node(
 		"GreenZoneFinaleWipButton"
 	) as Button
+	var gun_encounter_button := world_list.get_node(
+		"GreenZoneFinaleWipGunEncounterButton"
+	) as Button
 
 	assert(game_root.campaign is CampaignCatalog, "GameRoot requires typed campaign data.")
 	assert(game_root.campaign.validation_errors().is_empty(), "Campaign data must validate.")
@@ -57,6 +60,7 @@ func _validate() -> void:
 	assert(animation_lab_button.text == "FIREARM REVIEW LAB")
 	assert(level_design_lab_button.text == "LEVEL DESIGN LAB")
 	assert(level_3_wip_button.text == "LEVEL 3 WIP")
+	assert(gun_encounter_button.text == "LEVEL 3 - GUN ENCOUNTER")
 	assert(game_root.campaign.find_by_id(&"dev_green_zone_finale_wip") == null)
 	assert(world_list.get_node_or_null("World01Level03Button") == null)
 	assert(world_list.get_node_or_null("EnclosedTerrainLabButton") == null)
@@ -76,7 +80,7 @@ func _validate() -> void:
 	menu_up.pressed = true
 	game_root._unhandled_input(menu_up)
 	assert(
-		level_3_wip_button.has_focus(),
+		gun_encounter_button.has_focus(),
 		"W should wrap Level 1 to the final developer entry."
 	)
 	var menu_down := InputEventKey.new()
@@ -128,5 +132,53 @@ func _validate() -> void:
 	assert(game_root.current_level_definition.level_id == &"overgrown_coastal_ascent")
 	assert(game_root.current_level.name == "World01Level02")
 
+	# The shortcut is another entry into Level 3, preserving its identity and
+	# movement kit. Click, keyboard focus, and number keys share the same loader.
+	var level_3 := load("res://resources/dev/green_zone_finale_wip.tres") as LevelDefinition
+	assert(level_3.validation_errors().is_empty())
+	var gun_entry := level_3.find_developer_entry_point(&"gun_encounter")
+	assert(gun_entry != null)
+	game_root.show_level_select()
+	gun_encounter_button.pressed.emit()
+	await process_frame
+	_validate_gun_entry(game_root, level_3, gun_entry)
+	var gun_session := game_root.current_level as LevelSession3D
+	gun_session._reset_run()
+	await process_frame
+	assert(game_root.current_level == gun_session)
+	_validate_gun_entry(game_root, level_3, gun_entry)
+	game_root.show_level_select()
+	gun_encounter_button.grab_focus()
+	game_root._unhandled_input(menu_enter)
+	await process_frame
+	_validate_gun_entry(game_root, level_3, gun_entry)
+	game_root.show_level_select()
+	var menu_six := InputEventKey.new()
+	menu_six.physical_keycode = KEY_6
+	menu_six.pressed = true
+	game_root._unhandled_input(menu_six)
+	await process_frame
+	_validate_gun_entry(game_root, level_3, gun_entry)
+	game_root.show_level_select()
+	level_3_wip_button.pressed.emit()
+	await process_frame
+	assert(game_root.current_level.scene_file_path == level_3.scene.resource_path)
+	assert(game_root.current_level.get_node_or_null("ShooterAreaTransition") != null)
+
 	print("Project and production World 1 campaign validation passed.")
 	quit(0)
+
+
+func _validate_gun_entry(game_root: Node, definition: LevelDefinition, entry: LevelEntryPoint) -> void:
+	var level := game_root.current_level as LevelSession3D
+	assert(game_root.current_level_definition == definition)
+	assert(game_root.current_world_definition == null)
+	assert(level.scene_file_path == entry.scene.resource_path)
+	assert(level.route_extent.route_end_x == 40.96)
+	assert(is_equal_approx(level.player.global_position.x, level.spawn_point.global_position.x))
+	assert(level.active_checkpoint_index() == -1)
+	for ability_id in definition.assumed_owned_abilities:
+		assert(level.player.has_ability(ability_id))
+	var intro := level.get_node("ShooterEncounterStaging/ShooterIntro") as GreenZoneShooterIntro3D
+	assert(intro.trigger_is_armed())
+	assert(not level.get_node("ShooterEncounterStaging/ShooterEnemyAnchor/HandgunEnemy").engagement_enabled())

@@ -1,5 +1,5 @@
 extends SceneTree
-## Visual-review frames for the exact family-2 player firearm and contextual
+## Visual-review frames for the player firearm and contextual
 ## two-slot HUD. This is presentation evidence, not gameplay acceptance.
 
 const OUTPUT_SIZE := Vector2i(1920, 1080)
@@ -129,6 +129,7 @@ func _run() -> void:
 			await physics_frame
 
 	_release_input()
+	await _capture_shot_sequences(level, shooter)
 	quit(0)
 
 
@@ -146,3 +147,64 @@ func _capture(file_name: String) -> void:
 func _release_input() -> void:
 	for action in [&"move_left", &"move_right", &"jump", &"attack", &"aim_up"]:
 		Input.action_release(action)
+
+
+func _capture_shot_sequences(level: LevelSession3D, shooter: HandgunEnemy3D) -> void:
+	# Render real shot events at known simulation times. Pausing automatic
+	# processing prevents screenshot readback time from changing the animation.
+	var player := level.player
+	player.reset_at(Transform3D(Basis.IDENTITY, Vector3(20.48, 0.7, 0.0)))
+	player.player_handgun._mouse_requested = false
+	player.player_handgun.reset_run()
+	level.camera.snap_to_target()
+	for frame in 8:
+		await physics_frame
+	paused = true
+	player._facing_sign = 1.0
+	player.pixel_visual.set_state("idle", true)
+	player._update_pixel_visual(0.0)
+	var round := player.player_handgun.fire(1.0, false, player)
+	assert(round != null)
+	player.pixel_visual.tick_authored_state(0.0, "idle", true)
+	for step in 16:
+		await _capture_sequence_frame(level, "player_shot", step)
+		for tick in 2:
+			player.pixel_visual.tick_authored_state(1.0 / 60.0, "idle", true)
+			if is_instance_valid(round):
+				round._physics_process(1.0 / 60.0)
+	if is_instance_valid(round):
+		round.reset_run()
+	paused = false
+	shooter.reset_run()
+	# Reset restores collisions through deferred calls. Let those apply and
+	# the body settle normally before freezing the enemy's review sequence.
+	for frame in 8:
+		await physics_frame
+	paused = true
+	shooter.set_engagement_enabled(true)
+	# Keep the review target visible for the full volley without a respawn
+	# moving the camera midway through this paused, tool-only capture.
+	player.collision_layer = 0
+	shooter._begin_volley()
+	for step in 25:
+		await _capture_sequence_frame(level, "enemy_volley", step)
+		for tick in 2:
+			shooter._physics_process(1.0 / 60.0)
+			for projectile in shooter._active_projectiles.duplicate():
+				if is_instance_valid(projectile):
+					projectile._physics_process(1.0 / 60.0)
+	shooter.clear_active_projectiles()
+	paused = false
+
+
+func _capture_sequence_frame(level: LevelSession3D, prefix: String, step: int) -> void:
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var image := root.get_texture().get_image()
+	assert(image != null, "Shot sequences require a graphical renderer.")
+	var center: Vector2 = level.camera.unproject_position(level.player.global_position + Vector3(2.5, 0.5, 0.0))
+	var crop := Rect2i(Vector2i(center) - Vector2i(360, 160), Vector2i(720, 320))
+	var error := image.get_region(crop).save_png(
+		"%s/%s_%02d.png" % [OUTPUT_DIRECTORY, prefix, step]
+	)
+	assert(error == OK)

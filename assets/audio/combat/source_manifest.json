@@ -1,0 +1,56 @@
+{
+  "source_collection": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds",
+  "note": "Selected from the user-provided downloaded sound collection. Original pack attribution is not recorded in the flattened source folder. Files are copied unchanged.",
+  "files": [
+    {
+      "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Shot_1.wav",
+      "runtime": "assets/audio/combat/shot_1.wav",
+      "sha256": "09927c8f70d629b3a65b5a5f53b2323a7d0c4b8b59951b300f3dea5f2148f2a4"
+    },
+    {
+      "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Shot_2.wav",
+      "runtime": "assets/audio/combat/shot_2.wav",
+      "sha256": "67fc73042dff12398ec730a02c826cd7c6243b0501f9c46e2c95f58f8bf85810"
+    },
+    {
+      "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Shot_3.wav",
+      "runtime": "assets/audio/combat/shot_3.wav",
+      "sha256": "2dabca42c2f873deace6a91f91b6b88dbaa5303eb4a1878c24bc5f92753a9668"
+    },
+    {
+      "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Shot_4.wav",
+      "runtime": "assets/audio/combat/shot_4.wav",
+      "sha256": "5bbb8fe161da9d5be47882953abcd859c8c9eae3fafa99cf5168861915a17b9e"
+    },
+    {
+      "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Blaster.wav",
+      "runtime": "assets/audio/combat/blaster.wav",
+      "sha256": "4e673763c4974e19cdf224cc1faebb44734ee8012f149203545efa416fd63357"
+    },
+    {
+      "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Bump.wav",
+      "runtime": "assets/audio/combat/bump.wav",
+      "sha256": "fefbdc3361718991264367aebceebace0597926575d1f4e39119cbb7f805e72f"
+    },
+    {
+      "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Hammer_1.wav",
+      "runtime": "assets/audio/combat/hammer_1.wav",
+      "sha256": "2298389cb37c1d0c372d63dcdb86c235beee843ba2a5f6513bde3bdf8e9b6868"
+    },
+    {
+      "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Blood_1.wav",
+      "runtime": "assets/audio/combat/blood_1.wav",
+      "sha256": "cac3edb405a59254dca8aa8ac8627f0b3520a21526ba212843edf35622df3f11"
+    },
+    {
+      "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Blood_2.wav",
+      "runtime": "assets/audio/combat/blood_2.wav",
+      "sha256": "091be4df776328d497a585902b3061489a1448ca7438ecbf791f9659d0726666"
+    },
+    {
+      "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Blood_3.wav",
+      "runtime": "assets/audio/combat/blood_3.wav",
+      "sha256": "b3d50a456b9b0cf164c4471715453513f4669b9e4729050265f61af4c83b734e"
+    }
+  ]
+}

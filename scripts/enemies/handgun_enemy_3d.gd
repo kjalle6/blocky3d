@@ -5,10 +5,13 @@ extends CharacterBody3D
 
 signal defeated(impact_position: Vector3)
 signal shot_fired(projectile: HandgunProjectile3D)
+signal dual_shot_fired(world_position: Vector3)
 signal volley_completed(pattern: FirePattern, shot_count: int)
 
 enum FirePattern { TWIN, TRIPLE }
 enum CombatState { IDLE, TELEGRAPH, FIRING, RECOVERY, DEFEATED }
+
+const RECOVERY_AIM_HOLD := 0.12
 
 @export var starts_enabled := true
 @export var starts_facing_right := false
@@ -19,18 +22,8 @@ enum CombatState { IDLE, TELEGRAPH, FIRING, RECOVERY, DEFEATED }
 @export_range(2.0, 30.0, 0.5) var detection_range := 18.0
 @export_range(0.5, 8.0, 0.1) var vertical_tolerance := 3.0
 @export_range(0.1, 1.5, 0.05) var telegraph_duration := 0.55
-@export_range(1.0, 30.0, 0.5) var attack_frame_rate := 14.0
-@export_range(1, 30, 1) var attack_frame_count := 9
-## Zero-based frames in the selected nine-frame attack strip. Frames 1 and 7
-## begin the two outward muzzle flashes; the downward flash on frame 4 is
-## intentionally omitted from gameplay.
-@export var forward_fire_frames := PackedInt32Array([1, 7])
-@export_range(0.0, 0.5, 0.01) var projectile_lane_spacing := 0.18
 @export_range(0.1, 1.0, 0.01) var twin_shot_interval := 0.55
 @export_range(0.05, 0.6, 0.01) var triple_shot_interval := 0.18
-## Starting at attack frame 1, this duration ends on frame 3 before the
-## downward muzzle-flash frame 4 can appear.
-@export_range(0.05, 0.5, 0.01) var forward_visual_duration := 0.18
 @export_range(0.1, 3.0, 0.05) var recovery_duration := 0.85
 @export_range(1.0, 30.0, 0.1) var projectile_speed := 8.5
 @export_range(1.0, 50.0, 0.5) var projectile_distance := 22.0
@@ -44,7 +37,7 @@ var _state := CombatState.IDLE
 var _phase_remaining := 0.0
 var _sequence_shots_remaining := 0
 var _sequence_shot_timer := 0.0
-var _forward_visual_remaining := 0.0
+var _shot_direction := Vector3.LEFT
 var _current_volley_shots := 0
 var _shots_fired_total := 0
 var _completed_volleys_total := 0
@@ -58,7 +51,6 @@ var _active_projectiles: Array[HandgunProjectile3D] = []
 @onready var body_collision: CollisionShape3D = %BodyCollision
 @onready var contact_area: Area3D = %ContactArea
 @onready var contact_collision: CollisionShape3D = %ContactCollision
-@onready var muzzle: Marker3D = %Muzzle
 @onready var pixel_visual: PixelHandgunEnemyVisual3D = %PixelVisual
 
 
@@ -69,6 +61,7 @@ func _ready() -> void:
 	add_to_group("run_resettable")
 	add_to_group("melee_target")
 	contact_area.body_entered.connect(_on_body_entered)
+	pixel_visual.shot_frame_reached.connect(_on_shot_frame_reached)
 
 
 func _physics_process(delta: float) -> void:
@@ -105,10 +98,11 @@ func _physics_process(delta: float) -> void:
 			if _phase_remaining <= 0.0:
 				_begin_volley()
 		CombatState.FIRING:
-			_tick_forward_shot_visual(delta)
+			_tick_shot_visual(delta)
 			_tick_dual_shot_sequence(delta)
 		CombatState.RECOVERY:
-			pixel_visual.tick(delta, &"idle", _facing_sign > 0.0)
+			var holding_aim := recovery_duration - _phase_remaining < RECOVERY_AIM_HOLD
+			pixel_visual.tick(delta, &"telegraph" if holding_aim else &"idle", _facing_sign > 0.0)
 			_phase_remaining = maxf(0.0, _phase_remaining - delta)
 			if _phase_remaining <= 0.0:
 				_return_to_idle()
@@ -147,6 +141,7 @@ func begin_encounter(initial_telegraph_duration := -1.0) -> void:
 			else telegraph_duration
 		)
 		pixel_visual.set_state(&"telegraph", true)
+		pixel_visual.set_aim_direction(_resolve_shot_direction(), _facing_sign > 0.0)
 
 
 func notice_player() -> void:
@@ -200,7 +195,7 @@ func projectiles_per_fire_beat() -> int:
 
 
 func fire_beat_count() -> int:
-	return forward_fire_frames.size() if fire_pattern == FirePattern.TWIN else 3
+	return 2 if fire_pattern == FirePattern.TWIN else 3
 
 
 func active_shot_interval() -> float:
@@ -256,7 +251,6 @@ func reset_combat_cycle(clear_projectiles := true) -> void:
 	_phase_remaining = 0.0
 	_sequence_shots_remaining = 0
 	_sequence_shot_timer = 0.0
-	_forward_visual_remaining = 0.0
 	_current_volley_shots = 0
 	_shots_fired_total = 0
 	_completed_volleys_total = 0
@@ -313,6 +307,7 @@ func _can_engage(player: PlayerCharacter) -> bool:
 
 func _face_player(player: PlayerCharacter) -> void:
 	_facing_sign = 1.0 if player.global_position.x >= global_position.x else -1.0
+	pixel_visual.set_aim_direction(player.global_position - global_position, _facing_sign > 0.0)
 
 
 func _return_to_idle() -> void:
@@ -320,7 +315,6 @@ func _return_to_idle() -> void:
 	_phase_remaining = 0.0
 	_sequence_shots_remaining = 0
 	_sequence_shot_timer = 0.0
-	_forward_visual_remaining = 0.0
 	_current_volley_shots = 0
 	pixel_visual.set_state(&"idle", true)
 
@@ -330,18 +324,17 @@ func _begin_volley() -> void:
 	_current_volley_shots = 0
 	_sequence_shots_remaining = fire_beat_count()
 	_sequence_shot_timer = 0.0
-	_forward_visual_remaining = 0.0
 	_fire_next_dual_shot()
 
 
-func _tick_forward_shot_visual(delta: float) -> void:
-	if _forward_visual_remaining <= 0.0:
-		pixel_visual.tick(delta, &"idle", _facing_sign > 0.0)
-		return
-	pixel_visual.tick(delta, &"attack", _facing_sign > 0.0)
-	_forward_visual_remaining = maxf(0.0, _forward_visual_remaining - delta)
-	if _forward_visual_remaining <= 0.0:
-		pixel_visual.set_state(&"idle", true)
+func _tick_shot_visual(delta: float) -> void:
+	if not pixel_visual.is_shot_playing():
+		pixel_visual.set_aim_direction(_resolve_shot_direction(), _facing_sign > 0.0)
+	pixel_visual.tick(
+		delta,
+		&"attack" if pixel_visual.is_shot_playing() else &"telegraph",
+		_facing_sign > 0.0
+	)
 
 
 func _tick_dual_shot_sequence(delta: float) -> void:
@@ -350,21 +343,20 @@ func _tick_dual_shot_sequence(delta: float) -> void:
 		if _sequence_shot_timer <= 0.0:
 			_fire_next_dual_shot()
 		return
-	if _forward_visual_remaining <= 0.0:
+	if not pixel_visual.is_shot_playing():
 		_enter_recovery()
 
 
 func _fire_next_dual_shot() -> void:
 	if _sequence_shots_remaining <= 0:
 		return
-	pixel_visual.begin_forward_shot()
-	_fire_forward_beat()
-	_forward_visual_remaining = forward_visual_duration
+	_shot_direction = _resolve_shot_direction()
+	pixel_visual.begin_shot(_shot_direction, _facing_sign > 0.0)
 	_sequence_shots_remaining -= 1
 	_sequence_shot_timer = active_shot_interval()
 
 
-func _fire_forward_beat() -> void:
+func _resolve_shot_direction() -> Vector3:
 	var player := get_tree().get_first_node_in_group("player_character") as PlayerCharacter
 	var shot_direction := Vector3(_facing_sign, 0.0, 0.0)
 	if player != null and not player.is_dead():
@@ -374,25 +366,27 @@ func _fire_forward_beat() -> void:
 			shot_direction = player_offset.normalized()
 			if not is_zero_approx(shot_direction.x):
 				_facing_sign = 1.0 if shot_direction.x > 0.0 else -1.0
-	var lane_axis := Vector3(-shot_direction.y, shot_direction.x, 0.0)
-	var projectile_count := projectiles_per_fire_beat()
-	for index in projectile_count:
-		var centered_index := float(index) - float(projectile_count - 1) * 0.5
-		_spawn_projectile(
-			shot_direction,
-			lane_axis * centered_index * projectile_lane_spacing
-		)
+	return shot_direction
 
 
-func _spawn_projectile(shot_direction: Vector3, lane_offset: Vector3) -> void:
+func _on_shot_frame_reached() -> void:
+	if _state != CombatState.FIRING or _defeated or not _engagement_enabled:
+		return
+	for gun_index in projectiles_per_fire_beat():
+		_spawn_projectile(_shot_direction, gun_index)
+	# One sound event represents both simultaneous guns. Per-projectile events
+	# remain separate for impacts, so a pair does not double the shot volume.
+	dual_shot_fired.emit(global_position)
+
+
+func _spawn_projectile(shot_direction: Vector3, gun_index: int) -> void:
 	var projectile := projectile_scene.instantiate() as HandgunProjectile3D
 	assert(projectile != null, "HandgunEnemy3D requires a HandgunProjectile3D scene.")
 	get_parent().add_child(projectile)
-	projectile.global_position = global_position + Vector3(
-		absf(muzzle.position.x) * _facing_sign,
-		muzzle.position.y,
-		0.0
-	) + lane_offset
+	# Project each real barrel from the sprite's depth onto the gameplay plane.
+	var barrel := pixel_visual.muzzle_world_position(gun_index)
+	barrel.z = global_position.z
+	projectile.global_position = barrel
 	projectile.speed = projectile_speed
 	projectile.maximum_distance = projectile_distance
 	projectile.launch(shot_direction, self)
@@ -409,7 +403,7 @@ func _enter_recovery() -> void:
 	_completed_volleys_total += 1
 	volley_completed.emit(fire_pattern, _current_volley_shots)
 	_phase_remaining = recovery_duration
-	pixel_visual.set_state(&"idle", true)
+	pixel_visual.set_state(&"telegraph", true)
 
 
 func _on_projectile_expired(projectile: HandgunProjectile3D) -> void:

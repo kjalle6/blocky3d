@@ -23,6 +23,14 @@
                                               "source":  "characters/1 Biker/Biker_doublejump.png",
                                               "sha256":  "3a127a9a4c1aba5a0f0fb5a03592d083b38adaee1e5e2f549d0fe33daf8dd654"
                                           },
+    "characters/player_handgun_double_jump.png": {
+        "sources": [
+            "characters/1 Biker/Biker_doublejump.png",
+            "weapons/guns_pack_1/1 Characters/1 Biker/Jump1.png"
+        ],
+        "transform": "Removed the tucked firing-arm silhouette in flip frames 0-3; reused one-arm Jump1 frames 2/3 for recovery frames 4/5. See tools/prepare_player_handgun_double_jump.ps1.",
+        "sha256": "eb3c1989dd0caf2eb667732c5fb4a28c56acbeb65b7e214da5dc259175707830"
+    },
     "characters/player_dash.png":  {
                                        "source":  "characters/animations/1/Dash.png",
                                        "sha256":  "db04422f1fbdcfe49bfbe9d7b4a8e506ccaf325a29a6086965181be983d8c87f"
@@ -136,16 +144,16 @@
                                                 "sha256":  "540304bd06016f495ce3d79ca8df7e43ebe91456e1db7f4083e2897a9032d6e5"
                                             },
     "effects/player_handgun_shot_horizontal.png":  {
-                                                       "source":  "weapons/guns_pack_1/4 Shoot_effects/2_1.png",
-                                                       "sha256":  "de854dec3f1375535bc7a7fab830eddc23a3ab04902871cd5923621f44ac0f1f"
+                                                       "source":  "weapons/guns_pack_2/4 Shoot_effects/6_1.png",
+                                                       "sha256":  "8deaea1345a17ecec86cf08e6c5adc3a75c144ac3cf7a26afc9fc562eeba5ff1"
                                                    },
     "effects/player_handgun_shot_diagonal.png":  {
                                                      "source":  "weapons/guns_pack_1/4 Shoot_effects/2_2.png",
                                                      "sha256":  "09b73f99fa7d099843f3e95c3418c0ed9f9361832e75829a12676b2dd8ae57e2"
                                                  },
     "projectiles/player_handgun_bullet_horizontal.png":  {
-                                                             "source":  "weapons/guns_pack_1/5 Bullets/2.png",
-                                                             "sha256":  "44c45aa91d58e48e60c932b27bf1ceced377655e0b4e25fe2623ebfff6fe946d"
+                                                             "source":  "weapons/guns_pack_2/5 Bullets/2.png",
+                                                             "sha256":  "7c55984ce8f3752c17a45240982dc18cff59d2d01c25efe72960e47a8929c73f"
                                                          },
     "projectiles/player_handgun_bullet_diagonal.png":  {
                                                            "source":  "weapons/guns_pack_1/5 Bullets/2_2.png",

@@ -44,13 +44,36 @@ func _run() -> void:
 	assert(shooter != null)
 	assert(shooter.current_fire_pattern() == HandgunEnemy3D.FirePattern.TRIPLE)
 	assert(is_equal_approx(shooter.projectile_speed, 8.5))
-	assert(shooter.forward_fire_frames == PackedInt32Array([1, 7]))
 	assert(is_equal_approx(shooter.active_shot_interval(), 0.18))
 	assert(is_equal_approx(shooter.triple_shot_interval, 0.18))
-	assert(is_equal_approx(shooter.forward_visual_duration, 0.18))
+	_validate_shot_markers(shooter)
 	assert(shooter.projectiles_per_fire_beat() == 2)
 	assert(shooter.fire_beat_count() == 3)
 	assert(shooter.expected_projectiles_per_attack() == 6)
+	shooter.shot_fired.connect(func(projectile: HandgunProjectile3D) -> void:
+		var direction := projectile.travel_direction()
+		var elevation := atan2(direction.y, absf(direction.x))
+		var flash_frame := 1
+		var gun_index := (shooter.shots_fired_total() - 1) % 2
+		var barrel_pixel: Vector2 = [Vector2(30.0, 26.0), Vector2(18.0, 25.0)][gun_index]
+		if elevation > deg_to_rad(22.5):
+			flash_frame = 7
+			barrel_pixel = [Vector2(26.0, 14.0), Vector2(17.0, 14.0)][gun_index]
+		elif elevation < deg_to_rad(-22.5):
+			flash_frame = 4
+			barrel_pixel = [Vector2(28.0, 36.0), Vector2(19.0, 35.0)][gun_index]
+		assert(shooter.pixel_visual.frame == flash_frame, "Each bullet must launch on its directional flash frame.")
+		assert(shooter.pixel_visual.flip_h == (shooter.facing_direction() < 0.0))
+		assert(projectile.visual.basis.x.normalized().is_equal_approx(projectile.travel_direction()))
+		# Check source-art registrations independently of the visual's helper.
+		var barrel := shooter.pixel_visual.global_position + Vector3(
+			(barrel_pixel.x - 24.0) * shooter.facing_direction(), 24.0 - barrel_pixel.y, 0.0
+		) * shooter.pixel_visual.pixel_size
+		barrel.z = 0.0
+		assert(projectile.global_position.is_equal_approx(barrel), "Each round must leave its own gun, not a shared origin.")
+	)
+	_validate_directional_aim(shooter, room.player)
+	_validate_volley_pose_hold(shooter)
 	shooter.pixel_visual.set_state(&"telegraph", true)
 	shooter.pixel_visual.tick(0.1, &"telegraph", false)
 	assert(
@@ -194,6 +217,105 @@ func _run() -> void:
 	_finished = true
 	print("Firearm Review Lab cadence, impact, cover, and damage validation passed.")
 	quit(0)
+
+
+func _validate_shot_markers(shooter: HandgunEnemy3D) -> void:
+	var visual := shooter.pixel_visual
+	var markers := [0]
+	var record_marker := func() -> void: markers[0] += 1
+	visual.shot_frame_reached.connect(record_marker)
+	for facing in [-1.0, 1.0]:
+		for vertical in [-1.0, 0.0, 1.0]:
+			var direction := Vector3(facing, vertical, 0.0).normalized()
+			var aim_frame := 3 if vertical < 0.0 else (6 if vertical > 0.0 else 0)
+			visual.set_state(&"telegraph", true)
+			visual.set_aim_direction(direction, facing > 0.0)
+			visual.tick(0.1, &"telegraph", facing > 0.0)
+			assert(visual.frame == aim_frame)
+			var before: int = markers[0]
+			visual.begin_shot(direction, facing > 0.0)
+			assert(markers[0] == before + 1 and visual.frame == aim_frame + 1)
+			visual.set_aim_direction(-direction, facing < 0.0)
+			assert(visual.frame == aim_frame + 1 and visual.flip_h == (facing < 0.0))
+			visual.tick(0.03, &"attack", facing < 0.0)
+			assert(visual.frame == aim_frame + 1)
+			visual.tick(0.05, &"attack", facing < 0.0)
+			assert(markers[0] == before + 1 and visual.frame == aim_frame + 2)
+			assert(visual.flip_h == (facing < 0.0), "A shot also retains its facing through recoil.")
+			visual.tick(0.09, &"attack", facing > 0.0)
+			assert(visual.is_shot_playing() and visual.frame == aim_frame, "Recoil settles back into aim before the next beat.")
+			visual.tick(0.02, &"attack", facing > 0.0)
+			assert(not visual.is_shot_playing(), "Every direction retains the 0.18s shot beat.")
+			assert(visual.current_state() == &"telegraph" and visual.frame == aim_frame)
+			visual.begin_shot(direction, facing > 0.0)
+			visual.tick(0.5, &"attack", facing > 0.0)
+			assert(markers[0] == before + 2, "A long update must not duplicate the firing marker.")
+			assert(not visual.is_shot_playing())
+		# Directly vertical targets retain the selected horizontal facing.
+		for vertical in [-1.0, 1.0]:
+			visual.set_state(&"telegraph", true)
+			visual.set_aim_direction(Vector3(0.0, vertical, 0.0), facing > 0.0)
+			assert(visual.frame == (3 if vertical < 0.0 else 6))
+			assert(visual.flip_h == (facing < 0.0))
+	assert(shooter.shots_fired_total() == 0, "Previewing a pose outside combat must not fire.")
+	visual.shot_frame_reached.disconnect(record_marker)
+	visual.set_state(&"idle", true)
+	visual.set_state(&"telegraph", true)
+	assert(visual.frame == 0, "Resetting the visual must clear its previous directional pose.")
+
+
+func _validate_directional_aim(shooter: HandgunEnemy3D, player: PlayerCharacter) -> void:
+	var player_transform := player.global_transform
+	var shooter_transform := shooter.global_transform
+	# Exercise actual telegraph -> fire transitions with targets on both sides
+	# and at shallow/diagonal/steep heights, without advancing the player.
+	for facing in [-1.0, 1.0]:
+		for degrees in [-70.0, -35.0, -10.0, 0.0, 10.0, 35.0, 70.0]:
+			shooter.reset_combat_cycle(true)
+			shooter.global_position = shooter_transform.origin + Vector3.UP * 4.0
+			shooter.velocity = Vector3.ZERO
+			var angle := deg_to_rad(degrees)
+			var direction := Vector3(cos(angle) * facing, sin(angle), 0.0)
+			player.global_position = shooter.global_position + direction * 2.0
+			shooter._physics_process(0.0)
+			assert(shooter.pixel_visual.current_state() == &"telegraph")
+			assert(shooter.pixel_visual.frame == (3 if degrees < -22.5 else (6 if degrees > 22.5 else 0)))
+			assert(shooter.pixel_visual.flip_h == (facing < 0.0))
+			shooter._phase_remaining = 0.0
+			shooter._physics_process(0.0)
+			assert(shooter.shots_fired_total() == 2)
+			for projectile in shooter._active_projectiles:
+				assert(projectile.travel_direction().is_equal_approx(direction), "Sprite selection must not snap the projectile angle.")
+			# Next beat can track a moving player without changing this beat's recoil.
+			player.global_position = shooter.global_position + Vector3(facing, -direction.y, 0.0)
+			shooter._tick_shot_visual(0.08)
+			assert(shooter.pixel_visual.frame == (5 if degrees < -22.5 else (8 if degrees > 22.5 else 2)))
+			shooter._fire_next_dual_shot()
+			assert(shooter.shots_fired_total() == 4)
+	shooter.reset_combat_cycle(true)
+	shooter.global_transform = shooter_transform
+	shooter.velocity = Vector3.ZERO
+	player.global_transform = player_transform
+
+
+func _validate_volley_pose_hold(shooter: HandgunEnemy3D) -> void:
+	shooter.set_fire_pattern(HandgunEnemy3D.FirePattern.TWIN)
+	shooter._begin_volley()
+	shooter._tick_shot_visual(0.2)
+	shooter._tick_dual_shot_sequence(0.2)
+	assert(shooter.shots_fired_total() == 2)
+	assert(not shooter.pixel_visual.is_shot_playing())
+	assert(shooter.pixel_visual.current_state() == &"telegraph", "Guns stay raised between the slower twin beats.")
+	shooter._tick_shot_visual(0.2)
+	shooter._tick_dual_shot_sequence(0.2)
+	assert(shooter.shots_fired_total() == 2 and shooter.pixel_visual.current_state() == &"telegraph")
+	shooter._tick_dual_shot_sequence(0.16)
+	assert(shooter.shots_fired_total() == 4)
+	shooter._tick_shot_visual(0.19)
+	shooter._tick_dual_shot_sequence(0.19)
+	assert(shooter.completed_volleys_total() == 1)
+	assert(shooter.pixel_visual.current_state() == &"telegraph", "The final shot settles before the enemy relaxes.")
+	shooter.set_fire_pattern(HandgunEnemy3D.FirePattern.TRIPLE)
 
 
 func _toggle_gameplay_tools(game_root: Node) -> void:

@@ -31,6 +31,7 @@ const WEAPON_TEXTURES := {
 	"run_attack": preload("res://assets/art/green_zone/characters/weapon_run_attack.png"),
 }
 const HANDGUN_BODY_TEXTURES := {
+	"double_jump": preload("res://assets/art/green_zone/characters/player_handgun_double_jump.png"),
 	"backpedal": preload("res://assets/art/green_zone/characters/player_handgun_walk_one_hand.png"),
 	"idle": preload(
 		"res://assets/art/green_zone/characters/player_handgun_idle_one_hand.png"
@@ -58,9 +59,6 @@ const HANDGUN_DIAGONAL_TEXTURE := preload(
 )
 const HANDGUN_HORIZONTAL_SHOT_TEXTURE := preload(
 	"res://assets/art/green_zone/effects/player_handgun_shot_horizontal.png"
-)
-const HANDGUN_DIAGONAL_SHOT_TEXTURE := preload(
-	"res://assets/art/green_zone/effects/player_handgun_shot_diagonal.png"
 )
 const FRAME_COUNTS := {
 	"backpedal": 6,
@@ -98,10 +96,12 @@ const AIR_DASH_FRAMES := [1, 2, 3, 2, 3, 4]
 const NOTICE_FRAMES := [0, 1, 0, 5]
 const KNIFE_WEAPON_ID: StringName = &"knife"
 const HANDGUN_WEAPON_ID: StringName = &"handgun"
-const HANDGUN_SHOT_FRAME_COUNT := 3
-## Show only the first four pixels of each source muzzle-streak frame.
-## Keep native pixel scale and leave the travelling bullet visually separate.
-const HANDGUN_SHOT_FRAME_RATE := 40.0
+## Pack 2 effect 6: all six native 48px frames, anchored at source (0, 24).
+## Tint its white pixels to the same warm yellow as both projectile sprites.
+const HANDGUN_SHOT_FRAME_COUNT := 6
+const HANDGUN_SHOT_FRAME_RATE := 60.0
+const HANDGUN_SHOT_COLOR := Color("ffda45")
+const HANDGUN_SHOT_ANCHOR_OFFSET := 24.0
 ## Gun images are tightly cropped, unlike the centred body and 32-pixel grip
 ## canvases. These offsets place the grip and support hand on the weapon
 ## instead of centring the gun through the character's chest.
@@ -111,6 +111,9 @@ const HANDGUN_UP_GUN_OFFSET := Vector2(10.0, 10.0)
 ## Sprite offsets use Y-up; the source sheet uses Y-down. Move the gun and
 ## flash with the grip so their existing hand/muzzle registration is retained.
 const HANDGUN_GRIP_OFFSETS := {
+	# Shoulder registration follows each authored flip pose; aim stays in
+	# world space, independently of the body's somersault.
+	"double_jump": [Vector2(-1, -4), Vector2(-3, -4), Vector2(0, -2), Vector2(-4, 1), Vector2(-3, -1), Vector2(-3, -3)],
 	"backpedal": [Vector2(-5, -2), Vector2(-5, -1), Vector2(-5, -1), Vector2(-5, -2), Vector2(-5, -1), Vector2(-5, -1)],
 	"idle": [Vector2(-5, -2), Vector2(-6, -2), Vector2(-6, -2), Vector2(-5, -2)],
 	"run": [Vector2(1, -3), Vector2(2, -3), Vector2(2, -3), Vector2(2, -2), Vector2(2, -3), Vector2(1, -3)],
@@ -160,9 +163,9 @@ func _ready() -> void:
 		sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 		sprite.shaded = false
 		sprite.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	shot_effect.hframes = 1
-	shot_effect.region_enabled = true
-	shot_effect.region_rect = Rect2(0, 20, 4, 8)
+	shot_effect.hframes = HANDGUN_SHOT_FRAME_COUNT
+	shot_effect.region_enabled = false
+	shot_effect.modulate = HANDGUN_SHOT_COLOR
 	set_state("idle", true)
 
 
@@ -260,19 +263,21 @@ func set_weapon_presentation(
 	_apply_facing(_facing_right)
 
 
-## Connected directly to PlayerHandgun3D so the authored streak begins on the
-## frame a projectile actually launches, not at the earlier input wind-up.
+## The flash begins on the same event as the projectile launch.
 func _on_player_handgun_shot_fired(_projectile: HandgunProjectile3D) -> void:
 	_handgun_shot_active = true
 	_handgun_shot_elapsed = 0.0
 	shot_effect.frame = 0
-	shot_effect.region_rect = Rect2(0, 20, 4, 8)
 	_refresh_weapon_layers(body.frame)
 	_apply_facing(_facing_right)
 
 
 func current_state() -> String:
 	return _state
+
+
+func supports_handgun_aim() -> bool:
+	return HANDGUN_BODY_TEXTURES.has(_state)
 
 
 ## Advances one explicitly authored presentation state without asking gameplay
@@ -383,7 +388,7 @@ func _refresh_weapon_layers(preserved_frame: int) -> void:
 			else HANDGUN_HORIZONTAL_TEXTURE
 		)
 		# The grip folder already provides a distinct upward pose. Only the
-		# diagonal gun/effect sources point downward and need a vertical flip.
+		# diagonal gun source points downward and needs a vertical flip.
 		gun_grip.flip_v = false
 		gun.flip_v = _handgun_aim_up
 		shot_effect.texture = HANDGUN_HORIZONTAL_SHOT_TEXTURE
@@ -451,11 +456,13 @@ func _apply_facing(facing_right: bool) -> void:
 	var flash_angle := angle
 	if not _mouse_aim_active and _handgun_aim_up:
 		flash_angle = PI / 4.0 if facing_right else -PI / 4.0
-	var flash_direction := Vector2(1 if facing_right else -1, 0).rotated(flash_angle)
-	shot_effect.offset = Vector2.ZERO
+	shot_effect.offset = Vector2(
+		HANDGUN_SHOT_ANCHOR_OFFSET if facing_right else -HANDGUN_SHOT_ANCHOR_OFFSET,
+		0.0
+	)
 	shot_effect.rotation.z = flash_angle
-	shot_effect.position.x = muzzle.x + flash_direction.x * 2.0 * gun.pixel_size
-	shot_effect.position.y = muzzle.y + flash_direction.y * 2.0 * gun.pixel_size
+	shot_effect.position.x = muzzle.x
+	shot_effect.position.y = muzzle.y
 
 
 func set_mouse_aim(active: bool, angle: float) -> void:
@@ -509,5 +516,5 @@ func _advance_handgun_shot(delta: float) -> void:
 		_handgun_shot_active = false
 		shot_effect.visible = false
 		return
-	shot_effect.region_rect = Rect2(frame * 96, 20, 4, 8)
+	shot_effect.frame = frame
 	shot_effect.visible = gun.visible

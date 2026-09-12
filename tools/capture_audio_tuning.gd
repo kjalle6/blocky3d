@@ -24,6 +24,12 @@ func _run() -> void:
 			await process_frame
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png("res://build/previews/audio_tuning/%s.png" % surface)
+	for event_id in ["abilities/double_jump", "combat/player_gunshot", "world/lift_motor", "ambience/cave", "music/menu"]:
+		game.audio_tuning_panel.select_event(event_id)
+		for frame in 3:
+			await process_frame
+		await RenderingServer.frame_post_draw
+		root.get_texture().get_image().save_png("res://build/previews/audio_tuning/%s.png" % event_id.replace("/", "_"))
 	game.audio_tuning_panel.close_panel()
 	game.free()
 	quit()

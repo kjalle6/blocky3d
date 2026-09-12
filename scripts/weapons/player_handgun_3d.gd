@@ -36,7 +36,7 @@ func update_mouse_aim(facing_sign: float, target_override: Variant = null) -> vo
 	mouse_aim_active = (
 		(_mouse_requested or target_override != null) and player.equipped_weapon_id() == PlayerWeapon.HANDGUN
 		and not player.is_dead() and not player.is_transition_running()
-		and visual.current_state() in ["idle", "run", "backpedal", "jump"]
+		and visual.supports_handgun_aim()
 		and not Input.is_action_pressed("aim_up")
 	)
 	var camera := get_viewport().get_camera_3d()
@@ -142,11 +142,6 @@ func fire(
 	projectile.speed = definition.projectile_speed
 	projectile.maximum_distance = definition.projectile_distance
 	projectile.launch(aim_direction if mouse_aim_active else definition.shot_direction(facing_sign, aim_up), source)
-	if mouse_aim_active:
-		projectile.visual.texture = projectile.horizontal_texture
-		projectile.visual.flip_h = false
-		projectile.visual.flip_v = false
-		projectile.visual.rotation.z = atan2(aim_direction.y, aim_direction.x)
 	_cooldown_remaining = definition.fire_interval
 	shot_fired.emit(projectile)
 	return projectile

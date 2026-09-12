@@ -5,6 +5,7 @@
 
 [node name="HandgunProjectile" type="Node3D"]
 script = ExtResource("1_projectile")
+horizontal_texture = ExtResource("2_bullet")
 
 [node name="Visual" type="Sprite3D" parent="."]
 unique_name_in_owner = true

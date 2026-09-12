@@ -1,3 +1,154 @@
+> Current checkpoint (2026-09-12): the user requested committing the current
+> firearm visuals, double-jump shooting, Level 3 menu shortcut, expanded audio
+> tool, gunfire/impact audio, and saved tuning. The NEXT task is the in-game
+> level editor in docs/DEVELOPER_LEVEL_EDITOR_PLAN.md, linked from the roadmap.
+> It is planned only. Prove move/test/save/reload for a platform, walking enemy,
+> and ordinary trigger first, then expand patrol controls and platform building.
+> The user and Codex design levels together; Codex builds camera/level wiring,
+> the user fine-tunes visually, and ALL scripted sequences stay with Codex.
+> Latest saved audio overrides supersede the initial picks below: player Shot_2
+> at -12 dB; enemy Shot_2 at -15 dB; scenery Hammer_1 at -24 dB and pitch 1.65;
+> character Blood_1/2/3 random at -17 dB. The promoted Hammer recording and all
+> current movement/ambience settings in movement_mix.tres belong in this checkpoint.
+> The full suite passed 41/42 before these final user audio tweaks; its only
+> failure is the existing Level 2 stage-10 traversal death at (64.54,29.02).
+> A fresh validate_sound_event_tuning.gd pass checks loading/persistence after
+> the user's saved tweaks, without modifying the saved mix.
+>
+> First gun-audio listening pass (2026-09-12): four Combat banks are connected.
+> Player: Shot_1 at -12 dB, with Shot_2/Blaster alternatives. Enemy paired beat:
+> Shot_2 at -15 dB, with Shot_3/4 alternatives. Scenery impact: Bump at -12 dB,
+> with Hammer_1 alternative. Character impacts: Blood_1/2/3 random at -17 dB.
+> Gun/scenery banks start fixed; all choices are available under F1 -> Audio
+> tuning -> Combat. The user explicitly asked for initial picks they can tune.
+> The session could inspect audio timing/waveforms but could not hear playback;
+> these are trial selections, not an accepted final mix. Source WAVs are copied
+> unchanged into assets/audio/combat with source paths/hashes in its manifest.
+> Gunshot cues follow real releases, including double jumps; each simultaneous
+> enemy two-gun beat emits one cue. Projectile collisions select character or
+> scenery impacts. Misses/expiry are silent. Twenty-four pooled spatial voices
+> let tails overlap; live events cannot loop. Reset/exit clears voices and tails.
+> Initial defaults are resources/audio/combat/*.tres, merged before explicit
+> saved event overrides; resources/audio/movement_mix.tres is byte-for-byte
+> unchanged. All earlier movement/ambience choices and dirty work are preserved.
+> validate_combat_audio.gd passes. capture_combat_audio.gd captures four tuning
+> pages and actual mixer output; player/enemy sample peaks are -14.1/-17.7 dB.
+> See docs/AUDIO_TUNING.md. Full headless suite: 41/42 passed in 235.7s;
+> only the existing Level 2 stage-10 traversal death at (64.54,29.02) remains.
+>
+> Future idea archive: docs/ideas/README.md. The first note records the user's
+> parkour + shooting + cover concept, including double-jump firing angles and
+> wall-jump routes up behind enemies. A possible fit is tall vertical levels
+> with a choice of approach, not every shootout. Saved for much later.
+>
+> Level 3 shortcut and two-gun firing refinement (2026-09-12): the menu now has
+> LEVEL 3 - GUN ENCOUNTER directly below LEVEL 3 WIP, also reachable with key 6.
+> It starts the shooter-area scene at its normal entrance, just before the
+> introduction. The same Level 3 identity and assumed movement abilities are
+> retained; the intro, enemy, checkpoint, and gun pickup run normally. R restarts
+> this section. The original Level 3 button still starts the traversal section.
+> LevelDefinition.developer_entry_points stores typed LevelEntryPoint resources;
+> GameRoot's existing developer loader accepts an optional entry_id. The tool
+> fixture uses that same loader. No extra campaign level or duplicate scene.
+> The enemy now releases one round from each gun's source-art flash root:
+> forward front/rear (30,26)/(18,25), down (28,36)/(19,35), up (26,14)/(17,14).
+> The old artificial pair spacing around a shared barrel is removed. Both guns
+> still fire simultaneously, with the same continuous direction, speed, damage,
+> beat count, and intervals. Projectile size was not changed in this pass.
+> Each 0.18s beat is flash 0-.04s, recoil .04-.11s, then return to aim. Guns stay
+> raised between beats; the final beat holds aim for .12s into the existing
+> recovery period before relaxing. No additional delay or firing audio.
+> Focused project/menu and firing checks pass. Full headless suite: 40/41 passed
+> in 231.6s; only the existing Level 2 stage-10 traversal death at (64.54,29.02)
+> remains. Graphical review: build/previews/enemy_handgun_aim contains the
+> menu, all directional poses, and full twin/triple firing sequences.
+> The user accepted this firing refinement, the preceding directional aiming,
+> and double-jump shooting. Nothing has been committed.
+>
+> Enemy directional aiming (2026-09-12): target height now selects the source
+> sheet's forward 0/1/2, downward 3/4/5, or upward 6/7/8 aim/flash/recoil group,
+> mirrored for either facing. The threshold is 22.5 degrees from horizontal.
+> Telegraphs track the target; each released shot holds its pose through recoil
+> and the next shot can select a new angle. Actual projectile aim remains exact.
+> The visual owns per-pose barrel registration: source forward (30, 26), down
+> (28, 36), up (26, 14); the obsolete fixed Muzzle marker is removed. Paired
+> lanes retain 0.18 spacing, and firing counts/cadence/speed/damage are unchanged.
+> Focused lab checks cover both facings, shallow/steep targets, all pose markers,
+> barrel origins, continuous trajectories, recoil stability, and cover/damage.
+> Level 3 shooter-intro and handgun-drop checks pass. The capture tool
+> tools/capture_enemy_handgun_aim.gd produces
+> real-renderer directional pose/shot captures under build/previews/enemy_handgun_aim.
+> Rendered poses were reviewed; final in-game feel remains with the user.
+>
+> Double-jump handgun accepted (2026-09-12): mouse aiming and the gun remain active
+> throughout the six-frame somersault. Per-frame shoulder registration follows
+> the original flip while the firing arm aims independently in world space.
+> player_handgun_double_jump.png is a deterministic derivative: the tucked
+> firing-arm silhouette is removed from source frames 0-3; matching one-arm
+> Jump1 recovery frames supply 4/5. Original knife art is retained. The recipe
+> is tools/prepare_player_handgun_double_jump.ps1, also called by the main art
+> preparation tool; both sources and the transform are in asset_manifest.json.
+> Handgun input now releases after movement, pose, and aim resolve in the SAME
+> physics tick, so jump + fire uses the current barrel instead of the preceding
+> frame's shoulder. Knife contact timing and dash cancellation are preserved.
+> The 0.28s cooldown, aerial jump limit, movement speed, and normal time scale
+> remain as before. Bullet time / jump chains are future ideas, not implemented.
+> Focused checks cover firing on all six frames, simultaneous jump/fire,
+> keyboard up-aim, both cursor sides/heights, and return to the normal jump pose.
+> tools/capture_double_jump_handgun.gd records real jump input, then fixed-step
+> shots on flip frames 0/4, from both sides. The user says double-jump shooting
+> feels good; the remaining issue they reported was enemy directional aiming.
+> Full headless suite after this change: 40/41 passed in 232.6s; only the known
+> Level 2 stage-10 traversal failure remains. The art recipe reproduces the
+> production texture byte-for-byte; the user's saved audio mix is unchanged.
+> The user liked the preceding firing pass; enemy projectiles may be a little
+> large, but that adjustment was deferred while adding double-jump shooting.
+>
+> Firearm presentation trial (2026-09-12): the player handgun now fires on the
+> accepted input tick, independently of the knife's 0.13s contact delay / 0.34s
+> swing. Its own 0.28s cooldown also governs deferred switching; early clicks
+> are not queued, holding fire stays semi-automatic, and dash still cancels.
+> Player bullet speed is 28 (was 13), using pack-2 Bullets/2.png: a slim yellow
+> streak. Both projectile owners rotate their source sprite to actual travel;
+> the gun component no longer overrides the projectile sprite after launch.
+> Player flash is pack-2 Shoot_effects/6_1.png, six complete native frames over
+> 0.10s, tinted to the bullets' yellow and anchored at the barrel in all poses.
+> Pistol 4_1/4_2, the accepted arm rig, mouse facing, and backpedal are retained.
+> The enemy uses only the forward flash/recoil frames 1/2 after telegraph 0;
+> a frame marker releases both projectiles. It no longer drifts into the
+> separate down/up source poses. The clip owns its 0.18s completion; obsolete
+> inspector timing/frame exports are removed. Enemy speed, targeting, dual-shot
+> counts, intervals, and recovery tuning remain as before. No shooting audio
+> was added. The saved movement audio mix and the earlier tool work are intact.
+> The enemy muzzle marker is registered to forward flash source (30, 26):
+> local (0.24, 0.33), replacing (0.72, 0.42), which spawned rounds ahead of the
+> barrel. Its two projectile lanes retain their existing 0.18 spacing.
+> Visual acceptance remains with the user; these changes are not committed.
+> tools/capture_player_handgun_review.gd now also captures fixed-time shot and
+> volley sequences, in addition to the live input / aiming / retreat review.
+> Validation: full headless suite 40/41, with only the same Level 2 stage-10
+> traversal death at (64.54, 29.02). After the final muzzle registration change,
+> validate_animation_lab.gd and validate_green_zone_shooter_intro.gd both passed.
+> The lab covers shot markers, volley counts, cover/damage, and muzzle origin;
+> validate_player_handgun.gd covers immediate/repeated input, cooldown, deferred
+> switching, dash cancellation, fast thin-cover collision, and both owners'
+> directional sprites. Graphical captures were reviewed with the real renderer.
+>
+> Audio tool expansion (2026-09-12): F1 -> Audio tuning now has categories for
+> Footsteps & jumps, Abilities, Combat, Pickups & progress, World objects,
+> Ambience, Interface, and Music. Fifty new event banks start empty; fixed/random
+> selection, one-shot/loop previews, pitch/variation, volume, reverb routing,
+> A/B/Revert/Save are available. New slots are explicitly PREVIEW ONLY until
+> gameplay owners are connected. The user requested the tool without adding
+> production audio because gun firing/projectile visuals still need work.
+> No gameplay audio hooks or gun/projectile visuals were changed. Existing Cave
+> and Underground ambience also have direct entries in the Ambience category.
+> resources/audio/movement_mix.tres remains authoritative, including the user's
+> newer grass tweaks. It was not rewritten by this tool expansion.
+> Full suite: 40/41 passed; only the same Level 2 stage-10 traversal failure.
+> Focused event-tool checks passed, and the panel's graphical captures were reviewed.
+> See docs/AUDIO_TUNING.md and tools/validate_sound_event_tuning.gd.
+>
 > Audio milestone accepted (2026-09-06): the user is happy with the saved
 > footsteps, ground takeoff/landing, room ambience/reverb, and slower run cadence.
 > resources/audio/movement_mix.tres is authoritative; all four surfaces now

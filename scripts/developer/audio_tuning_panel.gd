@@ -2,6 +2,8 @@ extends CanvasLayer
 ## Developer-only listening UI. The world pauses; these preview voices do not.
 signal closed
 const MIX := preload("res://scripts/audio/movement_audio_mix.gd")
+const EVENTS := preload("res://scripts/audio/sound_event_catalog.gd")
+const EVENT_VOICE := preload("res://scripts/audio/sound_event_voice.gd")
 const STEPS := preload("res://scripts/presentation/player_footsteps.gd")
 const SOURCE_DIRECTORY := "D:/GodotProjects/blocky3dassets/audio/Sounds/Footsteps_Essentials_NOX_SOUND"
 const SURFACES := ["grass", "sand", "cave", "underground"]
@@ -9,6 +11,8 @@ const SPACES := [&"outdoors", &"cave", &"underground"]
 const RUN_STEP_INTERVAL: float = 3.0 / PixelPlayerVisual3D.FRAME_RATES["run"]
 var surface := "grass"
 var kind := "run"
+var category := "movement"
+var event_id := ""
 var is_open := false
 var _was_paused := false
 var _gameplay_bus_mutes: Dictionary = {}
@@ -19,9 +23,11 @@ var _next_left := true
 var _repeat := false
 var _countdown := 0.0
 var _voices: Array[AudioStreamPlayer] = []
+var _event_voice: AudioStreamPlayer
 var _overlay: Control
 var _body: VBoxContainer
 var _surface_picker: OptionButton
+var _category_picker: OptionButton
 var _kind_picker: OptionButton
 var _status: Label
 var _now_playing: Label
@@ -33,6 +39,9 @@ var _ambience_picker_environment: StringName = &"cave"
 var _pace: OptionButton
 var _space: OptionButton
 var _repeat_button: Button
+var _play_button: Button
+var _stop_button: Button
+var _scroll: ScrollContainer
 var _rebuilding := false
 
 func _ready() -> void:
@@ -45,6 +54,8 @@ func _ready() -> void:
 		var voice := AudioStreamPlayer.new()
 		add_child(voice)
 		_voices.append(voice)
+	_event_voice = EVENT_VOICE.new()
+	add_child(_event_voice)
 	_build()
 	_overlay.hide()
 
@@ -89,10 +100,21 @@ func _input(event: InputEvent) -> void:
 			close_panel()
 
 func _process(delta: float) -> void:
+	if is_open and category != "movement" and not _is_room_ambience() and _event_voice.playing:
+		var bank := _bank()
+		_event_voice.volume_db = bank.volume_db
+		_event_voice.bus = MIX.preview_bus(_preview_environment) if bank.use_room_reverb else &"Master"
 	if not is_open or not _repeat:
 		return
 	_countdown -= delta
 	if _countdown <= 0.0:
+		if category != "movement":
+			# Repetition never layers a recording over its own tail; loops run in
+			# the mixer and are not restarted at each preview interval.
+			if not _event_voice.playing:
+				_preview_contact()
+			_countdown = maxf(0.1, _bank().repeat_interval)
+			return
 		_preview_contact()
 		# Keep the preview tied to the running animation's contact interval.
 		_countdown = (RUN_STEP_INTERVAL if _pace.selected == 0 else 3.0 / 7.8) if kind in ["run", "walk", "step"] else 1.0
@@ -107,8 +129,8 @@ func _build() -> void:
 	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var panel := PanelContainer.new()
 	_overlay.add_child(panel)
-	panel.anchor_left = 0.14
-	panel.anchor_right = 0.86
+	panel.anchor_left = 0.08
+	panel.anchor_right = 0.92
 	panel.anchor_top = 0.09
 	panel.anchor_bottom = 0.91
 	var style := StyleBoxFlat.new()
@@ -133,7 +155,20 @@ func _build() -> void:
 	title.add_theme_color_override("font_color", Color("6fffc1"))
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_button(header, "Try in game  ·  F1 / Esc", close_panel)
-	_label(layout, "Gameplay paused • Listen here, then try your settings in the level. Save when you're happy.", 16)
+	_label(layout, "Gameplay paused • Preview and compare recordings. Save your choices for future launches.", 16)
+	var category_row := HBoxContainer.new()
+	category_row.add_theme_constant_override("separation", 14)
+	layout.add_child(category_row)
+	_label(category_row, "Category", 16)
+	_category_picker = OptionButton.new()
+	_category_picker.name = "AudioCategory"
+	_category_picker.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	for entry in EVENTS.CATEGORIES:
+		_category_picker.add_item(EVENTS.CATEGORIES[entry])
+		_category_picker.set_item_metadata(_category_picker.item_count - 1, entry)
+	category_row.add_child(_category_picker)
+	_category_picker.item_selected.connect(func(index: int) -> void:
+		_select_category(str(_category_picker.get_item_metadata(index))))
 	var selectors := HBoxContainer.new()
 	selectors.add_theme_constant_override("separation", 14)
 	layout.add_child(selectors)
@@ -148,13 +183,20 @@ func _build() -> void:
 		_preview_environment = StringName(surface) if StringName(surface) in MIX.ENVIRONMENTS else &"outdoors"
 		_select_bank())
 	_kind_picker = OptionButton.new()
+	_kind_picker.fit_to_longest_item = false
 	_kind_picker.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	selectors.add_child(_kind_picker)
 	_kind_picker.item_selected.connect(func(index: int) -> void:
-		kind = str(_kind_picker.get_item_metadata(index))
+		if category == "movement":
+			kind = str(_kind_picker.get_item_metadata(index))
+		else:
+			event_id = str(_kind_picker.get_item_metadata(index))
+			if _is_room_ambience():
+				_preview_environment = StringName(EVENTS.definition(event_id).room)
 		_select_bank())
 	_comparison = _button(selectors, "B · Current experiment", _toggle_comparison)
 	var scroll := ScrollContainer.new()
+	_scroll = scroll
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	layout.add_child(scroll)
@@ -162,16 +204,17 @@ func _build() -> void:
 	_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_body.add_theme_constant_override("separation", 12)
 	scroll.add_child(_body)
-	var listening := HBoxContainer.new()
+	var listening := HFlowContainer.new()
 	listening.add_theme_constant_override("separation", 12)
 	layout.add_child(listening)
-	_button(listening, "Play contact", _preview_contact)
+	_play_button = _button(listening, "Play contact", _preview_contact)
 	_repeat_button = _button(listening, "Repeat", func() -> void:
 		_repeat = not _repeat
 		_countdown = 0.0
 		_repeat_button.text = "Stop repeat" if _repeat else "Repeat"
 		if not _repeat:
 			_stop_preview())
+	_stop_button = _button(listening, "Stop", _stop_preview)
 	_pace = OptionButton.new()
 	_pace.add_item("Running · %.1f steps/sec" % (1.0 / RUN_STEP_INTERVAL))
 	_pace.add_item("Backwards walking · 2.6 steps/sec")
@@ -184,6 +227,8 @@ func _build() -> void:
 	_space.item_selected.connect(func(index: int) -> void:
 		_stop_preview()
 		_preview_environment = SPACES[index]
+		if _is_room_ambience():
+			_preview_environment = StringName(EVENTS.definition(event_id).room)
 		_refresh())
 	_now_playing = _label(layout, "Choose a recording's Play button, or repeat the current mix.", 16)
 	_now_playing.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
@@ -240,16 +285,39 @@ func _button(parent: Node, text: String, action: Callable) -> Button:
 	return button
 
 func _key() -> String:
-	return surface + "/" + kind
+	return surface + "/" + kind if category == "movement" else event_id
+
+func _bank() -> Resource:
+	return MIX.bank_for(_key()) if category == "movement" else MIX.event_bank_for(event_id)
+
+func _is_room_ambience() -> bool:
+	return category == "ambience" and EVENTS.definition(event_id).has("room")
+
+func _select_category(next_category: String) -> void:
+	category = next_category
+	if category != "movement":
+		event_id = EVENTS.entries_for(category)[0].id
+		_preview_environment = StringName(EVENTS.definition(event_id).get("room", "outdoors"))
+	_select_bank()
+
+func select_event(next_event_id: String) -> void:
+	if EVENTS.definition(next_event_id).is_empty():
+		return
+	category = next_event_id.get_slice("/", 0)
+	event_id = next_event_id
+	_preview_environment = StringName(EVENTS.definition(event_id).get("room", "outdoors"))
+	_select_bank()
 
 func listening_environment() -> StringName:
 	return _preview_environment
 
 func _select_bank() -> void:
 	_stop_preview()
+	_now_playing.text = "Choose a recording's Play button, or preview the selected mix."
 	_pace.select(1 if kind == "walk" else 0)
 	_previous = -1
 	_next_left = true
+	_scroll.scroll_vertical = 0
 	_refresh()
 
 func _refresh() -> void:
@@ -257,16 +325,50 @@ func _refresh() -> void:
 	for child in _body.get_children():
 		_body.remove_child(child)
 		child.queue_free()
+	_category_picker.select(EVENTS.CATEGORIES.keys().find(category))
+	_surface_picker.visible = category == "movement"
 	_surface_picker.select(SURFACES.find(surface))
 	_kind_picker.clear()
 	var kinds := ["run", "walk", "jump_start", "jump_land"] if surface == "grass" else ["step", "jump_start", "jump_land"]
 	var titles := {"run": "Footsteps · running", "walk": "Footsteps · backwards walking", "step": "Footsteps · running & walking", "jump_start": "Jump · takeoff", "jump_land": "Jump · landing"}
-	for entry in kinds:
-		_kind_picker.add_item(titles[entry])
-		_kind_picker.set_item_metadata(_kind_picker.item_count - 1, entry)
-	_kind_picker.select(kinds.find(kind))
-	var bank := MIX.bank_for(_key())
+	if category == "movement":
+		for entry in kinds:
+			_kind_picker.add_item(titles[entry])
+			_kind_picker.set_item_metadata(_kind_picker.item_count - 1, entry)
+		_kind_picker.select(kinds.find(kind))
+	else:
+		for entry in EVENTS.entries_for(category):
+			_kind_picker.add_item(entry.title)
+			_kind_picker.set_item_metadata(_kind_picker.item_count - 1, entry.id)
+			if entry.id == event_id:
+				_kind_picker.select(_kind_picker.item_count - 1)
 	var read_only := MIX.listening_to_saved
+	_space.select(SPACES.find(_preview_environment))
+	_space.disabled = _is_room_ambience()
+	_play_button.visible = not _is_room_ambience()
+	_repeat_button.visible = not _is_room_ambience()
+	_stop_button.visible = not _is_room_ambience()
+	_pace.visible = category == "movement" and kind in ["step", "run", "walk"]
+	_play_button.text = "Play contact" if category == "movement" else "Play event"
+	_comparison.text = "A · Saved defaults" if read_only else "B · Current experiment"
+	if _is_room_ambience():
+		_label(_body, "Connected · shared with this room's existing gameplay ambience.", 16)
+		_build_ambience_controls(read_only)
+		_build_reverb_controls(read_only)
+		_now_playing.text = "The selected room ambience plays continuously while enabled."
+		_rebuilding = false
+		_update_status()
+		return
+	var bank := _bank()
+	if category != "movement":
+		var connection := str(EVENTS.definition(event_id).get("gameplay", "Preview only · gameplay connection pending. Saved choices will be ready when this event is connected."))
+		if EVENTS.definition(event_id).has("gameplay"):
+			connection += " Live sounds play once; Loop and Repeat are preview controls."
+		var hint := _label(_body, connection, 16)
+		hint.name = "EventConnectionStatus"
+		hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		hint.add_theme_color_override("font_color", Color("f5cd7c"))
+		_build_event_controls(bank, read_only)
 	var volume_row := HBoxContainer.new()
 	volume_row.add_theme_constant_override("separation", 16)
 	_body.add_child(volume_row)
@@ -302,7 +404,7 @@ func _refresh() -> void:
 	if _preview_environment in MIX.ENVIRONMENTS:
 		_build_reverb_controls(read_only)
 		_build_ambience_controls(read_only)
-	if kind in ["step", "run", "walk"]:
+	if category == "movement" and kind in ["step", "run", "walk"]:
 		var mode_row := HBoxContainer.new()
 		mode_row.add_theme_constant_override("separation", 12)
 		_body.add_child(mode_row)
@@ -348,7 +450,7 @@ func _refresh() -> void:
 	var add := _button(list_header, "Add recordings…", func() -> void: _file_dialog.popup_centered_ratio(0.7))
 	add.disabled = read_only
 	if bank.clips.is_empty():
-		_label(_body, "No recordings yet. Add sounds, then choose a left and right foot or a jump mix.", 16)
+		_label(_body, "No recordings yet. This slot is silent until you add and select sounds." if category != "movement" else "No recordings yet. Add sounds, then choose a left and right foot or a jump mix.", 16)
 	for index in bank.clips.size():
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 12)
@@ -358,6 +460,8 @@ func _refresh() -> void:
 		enabled.disabled = read_only or not bank.foot_indices.is_empty()
 		row.add_child(enabled)
 		enabled.toggled.connect(func(value: bool) -> void:
+			if category != "movement":
+				_stop_preview()
 			var disabled: Array = Array(bank.disabled_indices)
 			disabled.erase(index)
 			if not value:
@@ -373,10 +477,96 @@ func _refresh() -> void:
 			_play(bank, index))
 		var remove := _button(row, "Remove", _remove_clip.bind(index))
 		remove.disabled = read_only
-	_pace.visible = kind in ["step", "run", "walk"]
-	_comparison.text = "A · Saved defaults" if read_only else "B · Current experiment"
 	_rebuilding = false
 	_update_status()
+
+func _build_event_controls(bank: Resource, read_only: bool) -> void:
+	var row := HFlowContainer.new()
+	row.add_theme_constant_override("h_separation", 16)
+	_body.add_child(row)
+	var enabled := CheckBox.new()
+	enabled.name = "EventEnabled"
+	enabled.text = "Enabled in mix"
+	enabled.button_pressed = bank.enabled
+	enabled.disabled = read_only
+	row.add_child(enabled)
+	enabled.toggled.connect(func(value: bool) -> void:
+		bank.enabled = value
+		_stop_preview()
+		_update_status())
+	var mode := OptionButton.new()
+	mode.name = "EventSelection"
+	mode.add_item("Random pool · avoid repeats")
+	mode.add_item("Fixed recording")
+	mode.select(bank.selection_mode)
+	mode.disabled = read_only
+	row.add_child(mode)
+	mode.item_selected.connect(func(index: int) -> void:
+		_stop_preview()
+		bank.selection_mode = index
+		_refresh())
+	var playback := OptionButton.new()
+	playback.name = "EventPlayback"
+	playback.add_item("Play once")
+	playback.add_item("Loop until stopped")
+	playback.select(1 if bank.looping else 0)
+	playback.disabled = read_only
+	row.add_child(playback)
+	playback.item_selected.connect(func(index: int) -> void:
+		_stop_preview()
+		bank.looping = index == 1
+		_refresh())
+	if bank.selection_mode == 1:
+		var fixed := OptionButton.new()
+		fixed.name = "EventFixedRecording"
+		fixed.fit_to_longest_item = false
+		fixed.add_item("No recording · silent")
+		for clip: AudioStream in bank.clips:
+			fixed.add_item(MIX.clip_name(clip))
+		fixed.select(clampi(bank.fixed_index + 1, 0, bank.clips.size()))
+		fixed.disabled = read_only
+		_body.add_child(fixed)
+		fixed.item_selected.connect(func(index: int) -> void:
+			_stop_preview()
+			bank.fixed_index = index - 1
+			_update_status())
+	var tuning := HFlowContainer.new()
+	tuning.add_theme_constant_override("h_separation", 20)
+	_body.add_child(tuning)
+	_event_number(tuning, bank, "pitch_scale", "Pitch", 0.5, 2.0, 0.01, read_only)
+	_event_number(tuning, bank, "pitch_variation", "Pitch variation ±", 0.0, 0.2, 0.01, read_only)
+	if not bank.looping:
+		_event_number(tuning, bank, "repeat_interval", "Preview interval · seconds", 0.1, 10.0, 0.1, read_only)
+	var reverb := CheckBox.new()
+	reverb.name = "EventRoomReverb"
+	reverb.text = "Use listening room's reverb"
+	reverb.button_pressed = bank.use_room_reverb
+	reverb.disabled = read_only
+	_body.add_child(reverb)
+	reverb.toggled.connect(func(value: bool) -> void:
+		_stop_preview()
+		bank.use_room_reverb = value
+		_update_status())
+	_label(_body, "Loops keep one recording playing until Stop. A new play chooses another from the pool." if bank.looping else "Repeat waits for each recording to finish if it is longer than the interval.", 15)
+
+func _event_number(parent: Node, bank: Resource, property: String, title: String, minimum: float, maximum: float, increment: float, read_only: bool) -> void:
+	var column := VBoxContainer.new()
+	parent.add_child(column)
+	_label(column, title, 16)
+	var number := SpinBox.new()
+	number.name = "Event" + property.to_pascal_case()
+	number.custom_minimum_size.x = 150
+	number.min_value = minimum
+	number.max_value = maximum
+	number.step = increment
+	number.value = bank.get(property)
+	number.editable = not read_only
+	column.add_child(number)
+	number.value_changed.connect(func(value: float) -> void:
+		bank.set(property, value)
+		if property.begins_with("pitch"):
+			_stop_preview()
+		_update_status())
 
 func _build_reverb_controls(read_only: bool) -> void:
 	var settings := MIX.reverb_settings(_preview_environment)
@@ -395,7 +585,7 @@ func _build_reverb_controls(read_only: bool) -> void:
 	card.add_child(layout)
 	var enabled := CheckBox.new()
 	enabled.name = str(_preview_environment).capitalize() + "ReverbEnabled"
-	enabled.text = "%s REVERB · shared by footsteps and jumps" % str(_preview_environment).to_upper()
+	enabled.text = "%s REVERB · shared room settings" % str(_preview_environment).to_upper()
 	enabled.button_pressed = settings.enabled
 	enabled.disabled = read_only
 	layout.add_child(enabled)
@@ -509,8 +699,10 @@ func _set_ambience_recording(path: String, environment: StringName) -> void:
 	_refresh()
 
 func _remove_clip(index: int) -> void:
+	if MIX.listening_to_saved:
+		return
 	_stop_preview()
-	var bank := MIX.bank_for(_key())
+	var bank := _bank()
 	bank.clips.remove_at(index)
 	if index < bank.labels.size():
 		bank.labels.remove_at(index)
@@ -519,6 +711,8 @@ func _remove_clip(index: int) -> void:
 		if entry != index:
 			disabled.append(entry - 1 if entry > index else entry)
 	bank.disabled_indices = disabled
+	if category != "movement":
+		bank.fixed_index = -1 if bank.fixed_index == index else bank.fixed_index - 1 if bank.fixed_index > index else bank.fixed_index
 	for foot in bank.foot_indices:
 		var mapped: int = bank.foot_indices[foot]
 		bank.foot_indices[foot] = -1 if mapped == index else mapped - 1 if mapped > index else mapped
@@ -526,11 +720,14 @@ func _remove_clip(index: int) -> void:
 	_refresh()
 
 func _add_files(paths: PackedStringArray) -> void:
-	var bank: Resource = MIX.working[_key()]
+	if MIX.listening_to_saved or _is_room_ambience():
+		return
+	_stop_preview()
+	var bank := _bank()
 	var failures := PackedStringArray()
 	for path in paths:
 		var clip := MIX.load_recording(path)
-		if clip == null:
+		if clip == null or clip.get_length() <= 0.0:
 			failures.append(path.get_file())
 			continue
 		bank.clips.append(clip)
@@ -540,17 +737,24 @@ func _add_files(paths: PackedStringArray) -> void:
 		_status.text = "Could not read: " + ", ".join(failures)
 
 func _preview_contact() -> void:
-	var bank := MIX.bank_for(_key())
+	if _is_room_ambience():
+		return
+	var bank := _bank()
 	var foot := "left" if _next_left else "right"
 	var index: int = bank.choose_clip(_random, _previous, foot)
 	_next_left = not _next_left
 	if index < 0:
-		_now_playing.text = "No enabled recording for this contact."
+		_now_playing.text = "No enabled recording for this contact." if category == "movement" else "This event is silent · enable it and select a recording."
 		return
 	_previous = index
-	_play(bank, index, foot if kind in ["run", "walk", "step"] else "")
+	_play(bank, index, foot if category == "movement" and kind in ["run", "walk", "step"] else "")
 
 func _play(bank: Resource, index: int, foot := "") -> void:
+	if category != "movement":
+		var output_bus: StringName = MIX.preview_bus(_preview_environment) if bank.use_room_reverb else &"Master"
+		_event_voice.play_recording(bank, index, _random, output_bus)
+		_now_playing.text = "%s   ·   %.1f dB   ·   pitch %.2f%s" % [MIX.clip_name(bank.clips[index]), bank.volume_db, _event_voice.pitch_scale, "   ·   looping until Stop" if bank.looping else ""]
+		return
 	for voice in _voices:
 		if not voice.playing:
 			voice.stream = bank.clips[index]
@@ -567,11 +771,14 @@ func _stop_preview() -> void:
 		_repeat_button.text = "Repeat"
 	for voice in _voices:
 		voice.stop()
+	if _event_voice != null:
+		_event_voice.stop()
 	MIX.clear_preview_tails()
 
 func _toggle_comparison() -> void:
 	for voice in _voices:
 		voice.stop()
+	_event_voice.stop()
 	MIX.clear_preview_tails()
 	MIX.listening_to_saved = not MIX.listening_to_saved
 	_previous = -1
@@ -583,7 +790,7 @@ func _update_status() -> void:
 	if _rebuilding:
 		return
 	var changed := MIX.has_changes()
-	_status.text = "Unsaved changes · active in gameplay until you quit." if changed else "Using saved project defaults."
+	_status.text = "Unsaved changes · Save defaults to keep your choices." if changed else "Using saved project defaults."
 	if MIX.listening_to_saved:
 		_status.text = "Listening to A · saved defaults. Switch to B to edit; your experiment is retained."
 	_save.disabled = MIX.listening_to_saved or not changed or not OS.has_feature("editor")

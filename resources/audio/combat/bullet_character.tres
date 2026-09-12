@@ -1,0 +1,12 @@
+[gd_resource type="Resource" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/audio/sound_event_bank.gd" id="1_bank"]
+[ext_resource type="AudioStream" path="res://assets/audio/combat/blood_1.wav" id="2_hit"]
+[ext_resource type="AudioStream" path="res://assets/audio/combat/blood_2.wav" id="3_hit"]
+[ext_resource type="AudioStream" path="res://assets/audio/combat/blood_3.wav" id="4_hit"]
+
+[resource]
+script = ExtResource("1_bank")
+clips = Array[AudioStream]([ExtResource("2_hit"), ExtResource("3_hit"), ExtResource("4_hit")])
+labels = PackedStringArray("Blood_1", "Blood_2", "Blood_3")
+volume_db = -17.0

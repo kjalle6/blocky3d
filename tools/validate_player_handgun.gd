@@ -103,7 +103,10 @@ func _run() -> void:
 	assert(not player.is_attacking())
 	assert(player.equipped_weapon_id() == PlayerWeapon.HANDGUN)
 
-	# A real family-2 round must hit the enemy's visible projectile surface at
+	await _validate_firing_timing(level)
+	await _validate_fast_projectile_cover(level)
+
+	# A real round must hit the enemy's visible projectile surface at
 	# the same height as the visible gun, without enlarging its movement body.
 	var target := PATROL_ENEMY.instantiate() as StompableEnemy3D
 	target.name = "PlayerHandgunTarget"
@@ -126,11 +129,7 @@ func _run() -> void:
 	Input.action_release("attack")
 	assert(player.active_attack_weapon_id() == PlayerWeapon.HANDGUN)
 	assert(not player.is_melee_attacking())
-	for frame in 30:
-		await physics_frame
-		if not fired.is_empty():
-			break
-	assert(fired.size() == 1)
+	assert(fired.size() == 1, "An accepted gun click must fire on its first physics update.")
 	var horizontal_round := fired[0]
 	assert(horizontal_round.is_player_owned())
 	assert(horizontal_round.is_in_group("player_projectile"))
@@ -148,8 +147,8 @@ func _run() -> void:
 	assert(impact_count[0] == 1)
 	assert(not player.is_dead())
 
-	# The second authored source pose is vertically pixel-flipped for up-diagonal
-	# fire. The body stays upright and the projectile really travels upward.
+	# The gun uses its authored upward pose, while the same projectile sprite
+	# rotates to the real trajectory for keyboard, gamepad, and mouse aiming.
 	player.call(&"_finish_active_attack")
 	for frame in 20:
 		await physics_frame
@@ -172,9 +171,10 @@ func _run() -> void:
 		diagonal_round.travel_direction().y
 	))
 	assert(diagonal_round.visual.texture.resource_path.ends_with(
-		"/player_handgun_bullet_diagonal.png"
+		"/player_handgun_bullet_horizontal.png"
 	))
-	assert(diagonal_round.visual.flip_v)
+	assert(diagonal_round.visual.basis.x.is_equal_approx(diagonal_round.travel_direction()))
+	assert(not diagonal_round.visual.flip_v)
 	assert(player.pixel_visual.gun.flip_v)
 	assert(not player.pixel_visual.gun_grip.flip_v)
 	assert(player.pixel_visual.gun_grip.texture.resource_path.ends_with(
@@ -221,8 +221,8 @@ func _run() -> void:
 		assert(player.player_handgun._mouse_facing_sign == -previous)
 	assert(player._facing_sign == movement_facing)
 	assert(player._dash_direction == dash_direction)
-	assert(player.pixel_visual.shot_effect.region_enabled)
-	assert(player.pixel_visual.shot_effect.region_rect.size == Vector2(4, 8))
+	assert(not player.pixel_visual.shot_effect.region_enabled)
+	assert(player.pixel_visual.shot_effect.hframes == 6)
 	player.player_handgun.update_mouse_aim(1.0)
 
 	# Checkpoint/death-style reset retains the run reward and selection. Manual R
@@ -247,6 +247,104 @@ func _run() -> void:
 	)
 	_completed = true
 	quit(0)
+
+
+func _validate_firing_timing(level: LevelSession3D) -> void:
+	var player := level.player
+	var shot_frames: Array[int] = []
+	var record_shot := func(_projectile: HandgunProjectile3D) -> void:
+		shot_frames.append(Engine.get_physics_frames())
+	player.projectile_fired.connect(record_shot)
+	player.player_handgun.reset_run()
+	var input_frame := Engine.get_physics_frames()
+	Input.action_press("attack")
+	await physics_frame
+	await physics_frame
+	Input.action_release("attack")
+	assert(shot_frames.size() == 1)
+	assert(shot_frames[0] - input_frame <= 1, "The gun must not inherit the knife wind-up.")
+	await physics_frame
+	Input.action_press("attack")
+	await physics_frame
+	await physics_frame
+	Input.action_release("attack")
+	assert(shot_frames.size() == 1, "Clicking during recovery must not bypass the gun cooldown.")
+	while not player.player_handgun.can_fire():
+		await physics_frame
+	assert(shot_frames.size() == 1, "An early click must not queue an unexpected later shot.")
+	Input.action_press("attack")
+	await physics_frame
+	await physics_frame
+	assert(shot_frames.size() == 2, "The next shot must be available at the gun's own interval.")
+	var shot_spacing := float(shot_frames[1] - shot_frames[0]) / Engine.physics_ticks_per_second
+	assert(shot_spacing >= player.player_handgun.definition.fire_interval)
+	assert(shot_spacing < player.attack_duration, "The old knife duration must not gate gun cadence.")
+	assert(player.request_weapon(PlayerWeapon.KNIFE))
+	assert(player.equipped_weapon_id() == PlayerWeapon.HANDGUN)
+	for frame in 24:
+		await physics_frame
+	assert(shot_frames.size() == 2, "Holding attack must not turn the handgun into automatic fire.")
+	assert(player.equipped_weapon_id() == PlayerWeapon.KNIFE)
+	Input.action_release("attack")
+	await physics_frame
+	assert(player.request_weapon(PlayerWeapon.HANDGUN))
+	Input.action_press("dash")
+	Input.action_press("attack")
+	await physics_frame
+	await physics_frame
+	Input.action_release("dash")
+	Input.action_release("attack")
+	assert(player.is_dashing())
+	assert(shot_frames.size() == 2, "A simultaneous dash must still cancel firing.")
+	player.projectile_fired.disconnect(record_shot)
+	level.call(&"_reset_world")
+	for frame in 8:
+		await physics_frame
+
+
+func _validate_fast_projectile_cover(level: LevelSession3D) -> void:
+	var cover := StaticBody3D.new()
+	var collision := CollisionShape3D.new()
+	var shape := BoxShape3D.new()
+	shape.size = Vector3(0.025, 2.0, 1.0)
+	collision.shape = shape
+	cover.add_child(collision)
+	cover.position = Vector3(2.0, 100.0, 0.0)
+	level.add_child(cover)
+	await physics_frame
+	await physics_frame
+	var definition := level.player.player_handgun.definition
+	var round := definition.projectile_scene.instantiate() as HandgunProjectile3D
+	level.add_child(round)
+	round.set_physics_process(false)
+	round.global_position = Vector3(0.0, 100.0, 0.0)
+	round.speed = definition.projectile_speed
+	round.launch(Vector3.RIGHT, level.player)
+	var hits: Array[Object] = []
+	round.impacted.connect(func(_point: Vector3, _normal: Vector3, collider: Object) -> void:
+		hits.append(collider)
+	)
+	# One long update crosses the entire thin collider. A point/overlap check
+	# would miss it; the swept ray must stop the faster bullet exactly once.
+	round._physics_process(0.15)
+	round._physics_process(0.15)
+	assert(hits.size() == 1 and hits[0] == cover)
+	assert(round.global_position.x < cover.global_position.x)
+	cover.queue_free()
+	for scene_path in [
+		"res://scenes/projectiles/player_handgun_projectile.tscn",
+		"res://scenes/projectiles/handgun_projectile.tscn",
+	]:
+		var projectile_scene := load(scene_path) as PackedScene
+		var directional_round := projectile_scene.instantiate() as HandgunProjectile3D
+		level.add_child(directional_round)
+		directional_round.set_physics_process(false)
+		for direction in [Vector3.RIGHT, Vector3.LEFT, Vector3.UP, Vector3.DOWN, Vector3(-3, 2, 0).normalized()]:
+			directional_round.launch(direction)
+			assert(directional_round.visual.basis.x.normalized().is_equal_approx(direction))
+			assert(not directional_round.visual.flip_h and not directional_round.visual.flip_v)
+		directional_round.queue_free()
+	await physics_frame
 
 
 func _press_selection(action: StringName) -> void:
@@ -314,6 +412,7 @@ func _assert_no_ammo_contract(
 func _release_test_input() -> void:
 	for action in [
 		&"attack",
+		&"dash",
 		&"aim_up",
 		&"weapon_slot_1",
 		&"weapon_slot_2",

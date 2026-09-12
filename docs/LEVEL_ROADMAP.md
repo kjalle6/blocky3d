@@ -10,6 +10,20 @@ bank for routes, hazards, power-up placement, and experiments. The Unreal
 prototype at `D:\UnrealProjects\Blocky3D` is a secondary visual and layout
 reference. Godot is canonical.
 
+## Next development milestone: in-game level editor
+
+The agreed next task is a developer mode for moving and resizing supported
+platforms, enemies, hazards, and ordinary triggers while testing the game,
+with undo/revert and permanent saving. It will also expose walking-enemy patrol
+limits and grow into a terrain palette for building platforms.
+
+The user and Codex design levels together; Codex builds the initial layout,
+camera setup, and connections, then the user fine-tunes through play. All
+scripted sequences remain with Codex for now. Begin with one proven
+edit/test/save/reload cycle before extending support across the levels.
+See [the agreed scope and acceptance gate](DEVELOPER_LEVEL_EDITOR_PLAN.md).
+This is planned work; no level editor has been implemented yet.
+
 ## Current implementation
 
 Arrival / Shoreline and Overgrown Coastal Ascent are the first two production

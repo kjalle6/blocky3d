@@ -4,6 +4,138 @@ Run a level from Godot, press **F1**, then click **Audio tuning…**.
 The panel pauses the game. **Try in game**, **F1**, or **Esc** closes it and
 resumes play with the selected mix. Changes survive deaths and level changes.
 
+## Gunfire and bullet impacts: first listening pass (2026-09-12)
+
+The user subsequently saved a new mix: player **Shot_2 at -12 dB**, enemy
+**Shot_2 at -15 dB**, scenery **Hammer_1 at -24 dB with pitch 1.65**, and
+the **Blood_1/2/3 character mix at -17 dB**. These choices are stored in
+`resources/audio/movement_mix.tres` and override the original starting banks.
+The Hammer recording was promoted into `assets/audio/tuned` by the tool.
+Preserve these saved choices; the table below records the original candidates.
+
+The four Combat entries below now play in-game. Start **Level 3 - Gun encounter**
+from the menu (key **6**), then use **F1 -> Audio tuning -> Combat** to compare
+the choices. Player shots also work throughout double jumps.
+
+| Event | Starting selection | Alternatives in the tool | Volume |
+| --- | --- | --- | --- |
+| Player handgun · shot | Shot_1, fixed | Shot_2, Blaster | -12 dB |
+| Enemy handguns · paired shot | Shot_2, fixed | Shot_3, Shot_4 | -15 dB |
+| Bullet · scenery impact | Bump, fixed | Hammer_1 | -12 dB |
+| Bullet · character impact | Blood_1 / Blood_2 / Blood_3, random without immediate repeats | Any member can be selected alone | -17 dB |
+
+These are initial candidates for the user to hear and tune. Selection was
+based on source names and measured onset/tail characteristics; this session
+could not audition playback. Shot_1 and Shot_2 have immediate onsets and shorter
+active tails than Shot_3/4. Ten source recordings were copied unchanged from
+`D:/GodotProjects/blocky3dassets/audio/Sounds` into `assets/audio/combat`.
+`source_manifest.json` there records paths and hashes. The flattened source
+folder does not identify the exact original pack for each recording.
+
+For the fixed banks, change the **Fixed recording** dropdown to compare
+alternatives. **Random pool** varies enabled recordings. Volume, pitch, pitch
+variation, enable/mute, A/B, reverb, Revert, and Save work in-game. Preview
+**Loop** and **Repeat** remain audition controls; live shots and impacts always
+play once. Preview Repeat waits for a recording to finish; actual rapid shots
+overlap using separate voices, preserving their tails.
+
+Each simultaneous enemy two-gun beat plays one balanced sound cue; the six
+projectiles in a three-beat volley therefore make three firing cues. Each real
+collision has its own impact cue. Character hits include the player's body and
+enemy projectile hurtboxes; other collisions use the scenery bank. Flying
+bullets, expiry, and misses do not create impact sounds.
+
+`combat_audio_3d.gd` owns a bounded pool of 24 spatial voices per level. Camera
+staging depth does not attenuate the mix; left/right placement still follows
+the sound position. Room reverb uses the actual source/impact position. Reset
+stops combat voices and clears gameplay reverb tails; level exit frees them.
+The enemy's `dual_shot_fired` signal and `CombatFeedback3D` connect the events.
+
+The initial banks live in `resources/audio/combat`, merged as fallback defaults
+by `movement_audio_mix.gd`. Explicit settings in `movement_mix.tres`, including
+empty banks, take precedence. The user's existing saved movement and room mix
+was not rewritten. Save from the panel persists later choices as usual.
+
+`tools/validate_combat_audio.gd` checks real shot/impact events, double-jump
+shots, paired beats, overlapping tails, live controls, routing, and cleanup.
+`tools/capture_combat_audio.gd` records the real output mixer and captures the
+four tuning pages under `build/previews/combat_audio`. Initial captured peaks
+were approximately -14.1 dB for player shots/cover and -17.7 dB for the enemy
+volley/cover, leaving headroom. These checks do not establish listening approval.
+
+## Sound-event tool expansion (2026-09-12)
+
+Choose a **Category**, then a surface/action or named sound event. Categories
+are Footsteps & jumps, Abilities, Combat, Pickups & progress, World objects,
+Ambience, Interface, and Music. The existing surface controls still work as
+before. Ambience also gives direct access to the existing Cave and Underground
+recording/reverb controls; these edit the same settings shown alongside footsteps.
+
+The expansion introduced 50 empty event banks, including dash, wall movement,
+combat, pickups, lift/skater/flyer sounds, outdoor ambience, menu sounds, and
+music. Four gunfire/impact entries are now connected as described above; the
+other new events remain **preview-only**. Their pages identify whether they
+are connected. Adding and saving a recording to an unconnected entry prepares
+it for later integration. Existing Cave/Underground ambience stays connected.
+
+For a new event:
+
+1. **Add recordings…** accepts multiple WAV, OGG, or MP3 files.
+2. Choose a **Random pool** (no immediate repeat with multiple enabled clips)
+   or **Fixed recording**. An empty pool, no fixed selection, or disabling
+   **Enabled in mix** makes the event silent. A row's **Play** button can still
+   audition a recording separately from its inclusion in the mix.
+3. Set **Volume**, **Pitch**, and optional **Pitch variation ±**. Pitch 1.0 and
+   variation 0.0 retain normal playback. Variation is an additive range around
+   the chosen pitch, sampled once per play; a loop keeps that pitch until stopped.
+4. Choose **Play once** or **Loop until stopped**. **Play event** follows the
+   current selection rules. A loop repeats the same recording in the audio mixer;
+   pressing Play event again picks a new recording according to the pool.
+5. **Repeat** previews one-shots at the selected interval, waiting if a recording
+   is still playing. It never layers the same event over its own tail. **Stop**
+   ends the preview immediately. Loops continue until stopped, without timer
+   restarts. Changing category/event, playback mode, A/B, or closing the panel
+   also stops the previous event voice.
+6. **Use listening room's reverb** routes the event through the selected Cave
+   or Underground preview space. Untick it for dry playback. Ambience, Interface,
+   and Music slots start dry. The room's existing ambience can play underneath
+   previews, and its shared controls remain available.
+7. **A/B**, **Revert all changes**, and **Save defaults** include these event
+   settings together with the existing movement and room settings. Save promotes
+   imported recordings into the project and persists the choices for later runs.
+
+Implementation: `scripts/audio/sound_event_catalog.gd` is the central event
+registry. Each unique `category/event` entry supplies its title and initial loop
+mode; new entries automatically appear in the panel and receive an empty bank.
+A `gameplay` description identifies a connected event in the panel.
+`sound_event_bank.gd` extends the existing recording bank with event selection,
+pitch, repeat, enable, loop, and reverb settings. The mix resource stores them in
+`event_banks`, separate from the established surface banks. Older saved mixes
+load the current fallback defaults for new events and retain all existing choices.
+
+`sound_event_voice.gd` provides explicit play/stop playback for previews and
+future gameplay owners. It duplicates stream settings before enabling/disabling
+WAV/OGG/MP3 looping, preserving the original asset. It does not subscribe to any
+gameplay signals. Future integration must deliberately connect a gameplay owner
+and decide event lifetime, positional playback, and voice limits as appropriate.
+
+`tools/validate_sound_event_tuning.gd` checks empty defaults, legacy mix loading,
+selection, pitch limits, isolated A/B, file replacement and failure handling,
+asset promotion, actual panel controls, paused looping and one-shot playback,
+room routing, cleanup, and absence of ability-audio subscriptions. Generated
+test tones and saved test mixes stay under `build/sound_event_tuning_test`.
+The validator hashes the production mix before/after. Extended graphical
+captures are under `build/previews/audio_tuning`.
+
+Validation on 2026-09-12: the full suite passed 40/41 checks in about 230 seconds.
+The only failure was the previously known Level 2 traversal stage 10 at
+(64.54, 29.02). The new event validator also passed additional Repeat/Stop and
+pause-ownership checks. Grass, empty event, loop, and room-ambience layouts were
+captured at 1920x1080; the grass, combat, and room-ambience captures were visually
+reviewed. This is tool validation, not approval of any new audio selections.
+
+The surface-specific instructions and earlier validation history follow.
+
 The user accepted the saved movement and environment mix on 2026-09-06.
 All Grass, Sand, Cave, and Underground footstep/takeoff/landing banks are now
 populated. `movement_mix.tres` contains the chosen recordings and final levels;

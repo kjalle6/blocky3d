@@ -10,12 +10,11 @@ signal impacted(world_position: Vector3, surface_normal: Vector3, collider: Obje
 
 enum Allegiance { ENEMY, PLAYER }
 
-@export_range(1.0, 30.0, 0.1) var speed := 8.5
+@export_range(1.0, 40.0, 0.1) var speed := 8.5
 @export_range(1.0, 50.0, 0.5) var maximum_distance := 22.0
 @export_flags_3d_physics var collision_mask := 1
 @export var allegiance := Allegiance.ENEMY
 @export var horizontal_texture: Texture2D
-@export var diagonal_texture: Texture2D
 
 var _direction := Vector3.LEFT
 var _remaining_distance := 0.0
@@ -96,15 +95,13 @@ func travel_direction() -> Vector3:
 func _apply_directional_visual() -> void:
 	if visual == null:
 		return
-	var uses_diagonal := not is_zero_approx(_direction.y)
-	if uses_diagonal and diagonal_texture != null:
-		visual.texture = diagonal_texture
-	elif horizontal_texture != null:
+	if horizontal_texture != null:
 		visual.texture = horizontal_texture
-	visual.flip_h = _direction.x < 0.0
-	# The authored family-2 diagonal points down-right. A vertical pixel flip is
-	# the exact source-compatible up-diagonal pose; never smooth-rotate it.
-	visual.flip_v = uses_diagonal and _direction.y > 0.0
+	# The same slim round follows its actual trajectory for both owners and
+	# every input method. Keep nearest filtering for the rotated pixel art.
+	visual.flip_h = false
+	visual.flip_v = false
+	visual.rotation.z = atan2(_direction.y, _direction.x)
 
 
 func _expire() -> void:

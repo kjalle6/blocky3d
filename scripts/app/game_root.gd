@@ -171,7 +171,7 @@ func load_developer_room() -> void:
 	load_developer_level(developer_room_definition)
 
 
-func load_developer_level(definition: LevelDefinition) -> void:
+func load_developer_level(definition: LevelDefinition, entry_id: StringName = &"") -> void:
 	assert(developer_tools_enabled, "Developer tools are disabled.")
 	assert(definition != null, "A developer level definition is required.")
 	assert(
@@ -186,10 +186,13 @@ func load_developer_level(definition: LevelDefinition) -> void:
 	var initial_abilities := definition.assumed_owned_abilities.duplicate()
 	if definition == developer_room_definition:
 		initial_abilities = definition.available_abilities.duplicate()
+	var entry := definition.find_developer_entry_point(entry_id)
+	assert(entry_id.is_empty() or entry != null, "Unknown level entry point: %s" % entry_id)
 	_start_session(
 		definition,
 		null,
-		initial_abilities
+		initial_abilities,
+		entry.scene if entry != null else null
 	)
 
 
@@ -315,22 +318,29 @@ func _build_world_list() -> void:
 		world_list.add_child(heading)
 
 		for definition in developer_definitions:
-			var button := Button.new()
-			button.name = (
-				"%sButton"
-				% String(definition.level_id).trim_prefix("dev_").to_pascal_case()
-			)
-			button.custom_minimum_size = Vector2(0.0, 58.0)
-			button.add_theme_font_size_override("font_size", 20)
-			if level_button_style != null:
-				button.add_theme_stylebox_override("normal", level_button_style)
-			button.text = definition.title.to_upper()
-			button.set_meta(&"developer_level_definition", definition)
-			if definition == developer_room_definition:
-				button.set_meta(&"developer_room", true)
-			button.pressed.connect(_load_button_level.bind(button))
-			world_list.add_child(button)
-			_level_buttons.append(button)
+			_add_developer_level_button(definition)
+			for entry in definition.developer_entry_points:
+				_add_developer_level_button(definition, entry)
+
+
+func _add_developer_level_button(definition: LevelDefinition, entry: LevelEntryPoint = null) -> void:
+	var button := Button.new()
+	var level_name := String(definition.level_id).trim_prefix("dev_").to_pascal_case()
+	var entry_name := String(entry.entry_id).to_pascal_case() if entry != null else ""
+	button.name = level_name + entry_name + "Button"
+	button.custom_minimum_size = Vector2(0.0, 58.0)
+	button.add_theme_font_size_override("font_size", 20)
+	if level_button_style != null:
+		button.add_theme_stylebox_override("normal", level_button_style)
+	button.text = (entry.title if entry != null else definition.title).to_upper()
+	button.set_meta(&"developer_level_definition", definition)
+	if entry != null:
+		button.set_meta(&"developer_entry_id", entry.entry_id)
+	if definition == developer_room_definition:
+		button.set_meta(&"developer_room", true)
+	button.pressed.connect(_load_button_level.bind(button))
+	world_list.add_child(button)
+	_level_buttons.append(button)
 
 
 func _ordered_developer_definitions() -> Array[LevelDefinition]:
@@ -372,7 +382,7 @@ func _load_button_level(button: Button) -> void:
 			&"developer_level_definition"
 		) as LevelDefinition
 	if developer_definition != null:
-		load_developer_level(developer_definition)
+		load_developer_level(developer_definition, button.get_meta(&"developer_entry_id", &""))
 	else:
 		load_level(button.get_meta(&"level_id") as StringName)
 

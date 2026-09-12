@@ -85,11 +85,11 @@ $assets = [ordered]@{
     "weapons/player_handgun_diagonal.png" =
         "weapons\guns_pack_1\2 Guns\4_2.png"
     "effects/player_handgun_shot_horizontal.png" =
-        "weapons\guns_pack_1\4 Shoot_effects\2_1.png"
+        "weapons\guns_pack_2\4 Shoot_effects\6_1.png"
     "effects/player_handgun_shot_diagonal.png" =
         "weapons\guns_pack_1\4 Shoot_effects\2_2.png"
     "projectiles/player_handgun_bullet_horizontal.png" =
-        "weapons\guns_pack_1\5 Bullets\2.png"
+        "weapons\guns_pack_2\5 Bullets\2.png"
     "projectiles/player_handgun_bullet_diagonal.png" =
         "weapons\guns_pack_1\5 Bullets\2_2.png"
     "projectiles/handgun_bullet.png" =
@@ -319,6 +319,17 @@ foreach ($entry in $assets.GetEnumerator()) {
 }
 
 Add-Type -AssemblyName System.Drawing
+
+& (Join-Path $PSScriptRoot 'prepare_player_handgun_double_jump.ps1') `
+    -AssetRoot $AssetRoot -OutputRoot $OutputRoot
+$manifest['characters/player_handgun_double_jump.png'] = [ordered]@{
+    sources = @(
+        'characters/1 Biker/Biker_doublejump.png',
+        'weapons/guns_pack_1/1 Characters/1 Biker/Jump1.png'
+    )
+    transform = 'Removed the tucked firing-arm silhouette in flip frames 0-3; reused one-arm Jump1 frames 2/3 for recovery frames 4/5. See tools/prepare_player_handgun_double_jump.ps1.'
+    sha256 = (Get-FileHash -LiteralPath (Join-Path $OutputRoot 'characters/player_handgun_double_jump.png') -Algorithm SHA256).Hash.ToLowerInvariant()
+}
 
 function New-SolidPixelSilhouette {
     param(
