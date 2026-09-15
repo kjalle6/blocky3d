@@ -499,6 +499,13 @@ with the existing movement and melee kit.
   scenery hits to separate live banks, including enemy-on-enemy impacts. One
   gunshot cue plays per simultaneous enemy pair; held beats create no cue.
   Finer material-specific impact routing remains deferred.
+- Knife and stomp audio use the same level-owned voice pool. `PlayerCharacter`
+  emits `melee_swung` on an accepted knife attack and `stomp_bounced` on the
+  bounce requested by a confirmed enemy stomp. `CombatFeedback3D` also listens
+  to `attack_connected`, presenting one knife hit sound per swing even when
+  multiple targets take damage. Defeated melee targets are skipped before
+  damage/contact reporting. These hooks preserve the existing animation and
+  damage timing; ordinary jumps/landings retain their movement-audio hooks.
 - Ammo appearance, ownership scope, capacity, depletion, pickup, drop, and reset
   behavior remain an explicit design discussion after the no-ammo gun controls
   are accepted. None is implied by the current firearm resource or HUD.
@@ -748,10 +755,24 @@ selector entry or campaign identity.
 
 ## Validation and visual review
 
-Every lasting system receives focused validation. The accepted 2026-09-12
-checkpoint passed **46/47** checks in 293.2 s. Only the known Level 2 stage-10
-traversal death near (64.54,29.02) remains; do not report the suite as fully green.
+Every lasting system receives focused validation. On 2026-09-15 the user
+retired the scripted Level 2 full-route playthrough. Maintain focused movement,
+ability, level-structure, and transition checks; full-route timing belongs to
+hands-on review. The old stage-10 bot death is no longer an outstanding issue.
+The remaining 47 validators all passed in the preceding 48-test windowed run;
+the removed bot was its sole failure. This deletion did not require a full rerun.
 The user accepted designer and friendly-fire gameplay after rendered review.
+
+Historical evidence for checkpoint `e620abb` (46/47 at that time): the suite summary is
+`build/friendly_fire_validation_suite.txt`; the Level 2 failure log is
+`build/godot_tool_logs/script_headless_20260912_212240_5168.log`.
+No native fault occurred. Designer/layout/browser/catalog contracts,
+fresh-process reload, and isolated LayoutSmoke pack loading passed; browser,
+palette, context-menu, and block-building captures were reviewed at 720p/1080p.
+`tools/capture_enemy_friendly_fire.gd` produced the reviewed
+`build/previews/enemy_holding_fire.png` and `enemy_friendly_fire_hit.png`.
+These ignored local artifacts are reproducible through the guarded runner;
+their availability is not a runtime dependency.
 
 The current suite covers:
 
@@ -808,8 +829,7 @@ The current suite covers:
   shaft, Dash crossings, hovering hazards, checkpoints, waterline death and
   splash presentation, zoned cave background, regional grade, shared ceiling,
   independent vertical and horizontal camera regions, exit gauntlet, fixed lift
-  framing, stillness-gated departure, completion fade, containment, and
-  real-input traversal;
+  framing, stillness-gated departure, completion fade, and containment;
 - production Arrival / Shoreline's catalog identity, typed sand style,
   synchronized animated water, collision-free travelling shore wave, grounded
   scenery, session-local Double Jump pickup, checkpoint/reset policy, Green
@@ -834,8 +854,9 @@ The current suite covers:
   checkpoint policy, hazard dimensions, camera region, a validated 13.28 m
   17-spike Dash crossing beyond Double Jump reach, a 14.08 m
   single- and dual-machine gaps, the final Dash-required spike strip, enemy
-  placement, lift boarding/ascent/completion timing, and a real-input traversal
-  through Double Jump, repeated Wall Jumps, and Dashes.
+  placement, and lift boarding/ascent/completion timing. Double Jump, repeated
+  Wall Jumps, and Dashes retain their focused runtime checks; hands-on testing
+  covers the complete Level 2 route.
 
 Graphical capture scripts render deterministic 1920x1080 review positions for
 all current levels. Visual changes are inspected in the running game;

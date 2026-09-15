@@ -1,0 +1,14 @@
+[gd_resource type="Resource" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/audio/sound_event_bank.gd" id="1_bank"]
+[ext_resource type="AudioStream" path="res://assets/audio/combat/throw.wav" id="2_sound"]
+[ext_resource type="AudioStream" path="res://assets/audio/combat/knife_throwing.wav" id="3_sound"]
+[ext_resource type="AudioStream" path="res://assets/audio/combat/slicing_through_flesh_neospica.mp3" id="4_sound"]
+
+[resource]
+script = ExtResource("1_bank")
+clips = Array[AudioStream]([ExtResource("2_sound"), ExtResource("3_sound"), ExtResource("4_sound")])
+labels = PackedStringArray("Throw", "Knife_throwing", "Slicing through flesh - NeoSpica")
+volume_db = -23.0
+selection_mode = 1
+fixed_index = 0

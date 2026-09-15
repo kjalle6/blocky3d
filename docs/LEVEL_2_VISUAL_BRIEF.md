@@ -24,9 +24,11 @@ or add cave-painting tools. Inspect resolved layout data before further scene
 work. The cave entrance texture was promoted unchanged from the source catalog
 to production art for isolated export loading.
 
-The latest full suite passed 46/47. The existing stage-10 traversal harness
-death near (64.54,29.02) remains the sole failure. It does not authorize changing
-the authored route; human playtesting still owns any design decision.
+On 2026-09-15 the user retired the scripted full-route Level 2 playthrough.
+Its fragile automated inputs were not worth maintaining. Focused structure,
+movement, ability, and transition validators remain; human playtesting owns
+the full route and its timing. The old stage-10 bot death is no longer an open
+issue and does not authorize changing the accepted geometry or restoring the bot.
 
 ## Approved route
 

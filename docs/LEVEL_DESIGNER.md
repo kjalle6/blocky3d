@@ -6,6 +6,8 @@ Scripted sequences, camera editing, and background selection remain deferred.
 Open **Level Designer Sandbox** from level select (shortcut **7**), then press
 **F1** and choose **Level designer…**. The sandbox starts empty apart from its
 protected grass foundation. Run the main project in a separate game window.
+The embedded game view previously offset cursor targeting; the separate window
+aligned correctly during user testing.
 
 ## First experiment
 
@@ -267,8 +269,9 @@ Use `capture_level_designer.gd` with `-Visual` for the real interface at 1080p
 and 720p. `capture_green_zone_catalog.gd` captures the zone browsers and a
 temporary tile-building example, leaving the sandbox empty. The regular
 validation suite includes all four contracts. The accepted checkpoint passed
-46/47 checks in 293.2 s; only the existing Level 2 stage-10 traversal death
-near (64.54,29.02) failed. `validate_enemy_friendly_fire.gd` separately covers
+46/47 checks in 293.2 s; the sole failure was the Level 2 route bot, retired
+at the user's request on 2026-09-15. See README for current validation status.
+`validate_enemy_friendly_fire.gd` separately covers
 placed-enemy firing discipline, damage, live bullets after defeat, and reset.
 The user accepted both the designer and friendly-fire gameplay.
 

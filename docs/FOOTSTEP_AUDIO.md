@@ -141,6 +141,8 @@ jump validator passed. The full headless suite passed 37/38 in 209.2s, including
 footsteps, jump audio, movement, air abilities, and player handgun checks. The
 only failure repeated the existing Level 2 traversal stage-10 death near
 (64.54, 29.02); log `build/godot_tool_logs/script_headless_20260906_052156_15916.log`.
+That full-route Level 2 bot was retired at the user's request on 2026-09-15;
+this historical failure is no longer an outstanding test issue.
 
 ## Audition and diagnosis
 
@@ -193,4 +195,6 @@ The user chose them in the tuning panel and confirmed completion by listening.
 Cave's DirtyGround Jump Land 03 in takeoff and Jump Start 03 in landing are
 intentional corrections for swapped source names. Do not normalize those
 assignments from their filenames. Keep the user-saved levels in movement_mix.tres.
-Next work is audio for dash, double jump, and wall jump, before combat sounds.
+Dash, double-jump, and wall-jump audio remain unwired; combat audio is now live.
+See [AUDIO_TUNING.md](AUDIO_TUNING.md) for current event support. No further
+audio implementation order is fixed by this earlier listening milestone.

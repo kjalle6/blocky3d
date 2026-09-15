@@ -28,6 +28,9 @@ const SOURCE_EVENT_BANKS := {
 	"combat/enemy_gunshot": preload("res://resources/audio/combat/enemy_gunshot.tres"),
 	"combat/bullet_scenery": preload("res://resources/audio/combat/bullet_scenery.tres"),
 	"combat/bullet_character": preload("res://resources/audio/combat/bullet_character.tres"),
+	"combat/knife_swing": preload("res://resources/audio/combat/knife_swing.tres"),
+	"combat/knife_hit": preload("res://resources/audio/combat/knife_hit.tres"),
+	"combat/stomp": preload("res://resources/audio/combat/stomp.tres"),
 }
 static var working: Dictionary = {}
 static var saved: Dictionary = {}

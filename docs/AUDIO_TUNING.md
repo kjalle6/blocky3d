@@ -9,6 +9,93 @@ Opening the Level designer closes this panel while retaining its unsaved mix;
 designer previews are silent and Test uses the selected settings. The designer
 and friendly-fire checkpoint did not change `movement_mix.tres`.
 
+## Knife and stomp audio (accepted 2026-09-15)
+
+Validation scope update: the user subsequently retired the scripted Level 2
+full-route bot on 2026-09-15. All 47 retained validators passed in the 48-test
+run recorded below. Dated stage-10 failures in this guide belong to that retired
+test, not an outstanding issue; the reduced suite was not rerun for its deletion.
+
+Three more Combat entries now play in-game. Use **F1 -> Audio tuning -> Combat**,
+choose the event, and change **Fixed recording** to compare its candidates.
+The user accepted and saved the following mix after in-game listening.
+`movement_mix.tres` is authoritative, including the disabled swing alternative.
+
+| Event | Saved selection | Alternatives in the tool | Volume |
+| --- | --- | --- | --- |
+| Knife · swing | Throw / Knife_throwing, random without immediate repeats | Slicing through flesh - NeoSpica, disabled | -23 dB |
+| Knife · hit | Knife Stab - Mixedupmoviestuff, fixed | One recording | -10 dB |
+| Enemy stomp | Punch_2, fixed | Kick, Bump | -18 dB |
+
+Pitch starts at 1.0 with no variation. The initial collection candidates were
+selected using source names and measured onset/tail characteristics; automation
+verified mixer output but could not listen to the recordings. The user rejected
+both Blood and the subsequent Punch/Kick alternatives for knife impacts while
+retaining the Blood mix for bullet impacts.
+
+The user then downloaded two chosen Freesound originals into the source Sounds
+folder. Both are copied unchanged into `assets/audio/combat`:
+
+- [Knife Stab.wav by Mixedupmoviestuff](https://freesound.org/people/Mixedupmoviestuff/sounds/179222/)
+  replaces the rejected knife-hit choices and is selected by default.
+- [Slicing through flesh by NeoSpica](https://freesound.org/people/NeoSpica/sounds/504615/)
+  is an additional **swing** choice, as requested despite the source name.
+  It is retained in the tool but disabled in the accepted mix. Re-enable it
+  before including it in playback.
+
+Both sources are CC0 1.0. `assets/audio/combat/source_manifest.json` records
+creators, source pages, licenses, original paths, and SHA-256 hashes. The WAV is
+about 1.72 seconds and the MP3 about 0.89 seconds. No trimming, fades, pitch,
+or contact-timing changes were applied. Knife hit was initially -19 dB before
+the user's -10 dB adjustment above. Stomp, bullet impacts, movement, and room
+settings retain their saved values.
+
+After adding the Freesound originals, guarded editor import and the focused
+`validate_melee_audio.gd` check passed, including live selection of the MP3
+swing alternative. Comparing the saved mix before/after confirmed that only
+the knife swing and hit resources changed.
+
+The three previously empty saved entries were populated in `movement_mix.tres`.
+Their initial fallback banks remain in `resources/audio/combat`; saved choices
+take precedence over those starting settings. Fixed selection gives a consistent
+comparison; **Random pool** is the user's chosen mode for knife swings.
+
+Knife swing audio follows an accepted attack, including misses. Hit audio follows
+confirmed damage at the existing knife impact timing (0.13 seconds).
+Already-defeated enemies do not report new contacts. A swing that catches
+several enemies damages them all but
+plays only one hit cue. Cancelling an attack before contact produces no hit cue.
+The swing's natural audio tail can finish; it is not restarted by rejected input.
+
+Stomp audio follows a confirmed enemy stomp and the player's bounce, for both
+patrol/skater enemies and gunners. Ordinary jumps and landings keep their
+surface-specific sounds. Enemy defeat does not add another cue on top. These
+events reuse the level's bounded combat voice pool, positional room routing,
+mix controls, and reset/level-exit cleanup. Designer previews remain silent.
+
+`tools/validate_melee_audio.gd` checks actual knife input, contact timing,
+multi-target hits, defeated targets, interrupted attacks, real falling stomps
+on both enemy types, normal jumps/landings, gun isolation, selection/mute/A-B,
+cleanup, connected tuning pages, and silent previews. It never saves the mix.
+`tools/capture_melee_audio.gd`, run with **-Visual**, captures the real game
+mixer and the three tuning pages under `build/previews/melee_audio`.
+
+Validation on 2026-09-15: the full windowed suite passed **47/48** checks in
+339.7 seconds. The sole failure was the existing Level 2 stage-10 traversal
+death at (64.54, 29.02), logged in
+`build/godot_tool_logs/script_20260915_060153_22096.log`. All three tuning pages
+were visually reviewed. Before the knife hit candidate replacement, captured
+peaks were approximately -26.2 dB for the knife miss/hit samples and -25.8 dB
+for stomp, with no clipping. Those captures contain the original Blood_1 hit.
+The user subsequently accepted the saved mix listed above; these older captures
+do not represent that final recording selection or balance.
+
+The initial editor import reported the previously documented native access
+violation after generating the five new WAV imports
+(`build/godot_tool_logs/editor_import_20260915_054544_19596.log`). Subsequent
+windowed validation and capture completed without another native fault; this
+does not establish a fix or root cause for the engine issue.
+
 ## Gunfire and bullet impacts (2026-09-12)
 
 The user subsequently saved a new mix: player **Shot_2 at -12 dB**, enemy
@@ -80,7 +167,7 @@ recording/reverb controls; these edit the same settings shown alongside footstep
 
 The expansion introduced 50 empty event banks, including dash, wall movement,
 combat, pickups, lift/skater/flyer sounds, outdoor ambience, menu sounds, and
-music. Four gunfire/impact entries are now connected as described above; the
+music. Seven combat entries are now connected as described above; the
 other new events remain **preview-only**. Their pages identify whether they
 are connected. Adding and saving a recording to an unconnected entry prepares
 it for later integration. Existing Cave/Underground ambience stays connected.
@@ -285,8 +372,8 @@ Tests save only to `build/audio_environment_test` and hash production defaults.
 ## Implementation and validation
 
 Accepted checkpoint, 2026-09-12: 46/47 suite checks passed in 293.2 s, including
-all audio checks and friendly-fire cue checks. The sole failure is the existing
-Level 2 stage-10 traversal death near (64.54,29.02). Older dated validation
+all audio checks and friendly-fire cue checks. The sole failure was the Level 2
+route bot, retired at the user's request on 2026-09-15. Older dated validation
 results below describe earlier milestones, not the current suite status.
 
 

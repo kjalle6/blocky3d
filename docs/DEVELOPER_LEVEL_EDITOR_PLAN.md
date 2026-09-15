@@ -1,8 +1,8 @@
 # In-game level designer: implemented scope and build plan
 
-Updated 2026-09-12. The user accepted the designer, its block-building/browser
-follow-ups, and enemy friendly fire, then requested this checkpoint be committed.
-The previous checkpoint is `9d8df81`; use Git for the exact current revision.
+Accepted checkpoint: `e620abb` (2026-09-12), including the designer, its
+block-building/browser follow-ups, and enemy friendly fire. Use Git for any
+newer changes.
 The first version is complete. The stages below record its original build and
 acceptance contract, with the approved expansions here taking precedence.
 
@@ -28,10 +28,11 @@ user-authored, and no automated fixture was left in the sandbox.
 All four designer/layout/browser/catalog validators, fresh-process reload, and
 isolated exported-pack loading pass. UI/placement captures were reviewed at
 720p/1080p. The final suite, including friendly fire, passed **46/47** in
-293.2 s; only the existing Level 2 stage-10 traversal death near (64.54,29.02)
-failed. No native fault occurred. Saved audio is unchanged. See
-[the current user guide](LEVEL_DESIGNER.md) and
-[the current handoff](../NEW_CHAT_README.md) for controls and preservation details.
+293.2 s; the sole failure was the Level 2 route bot, subsequently retired at
+the user's request on 2026-09-15. No native fault occurred. Saved audio was
+unchanged at that checkpoint. See
+[the current user guide](LEVEL_DESIGNER.md) for controls and
+[the saved-layout notes](../resources/level_layouts/README.md) for preservation.
 
 Further features are optional future work, not hidden completion requirements.
 Enemy friendly fire is a shared combat rule used by placed enemies, not a new
@@ -487,9 +488,10 @@ or approve the user's route design.
 
 Run scoped tests when their contracts change. Shared loader/session/geometry
 changes justify a full validation sweep at integration milestones, not after
-every small UI adjustment. The accepted checkpoint baseline is 46/47, with
-the existing Level 2 stage-10 traversal failure near (64.54,29.02). Route-specific
-tests may need deliberate revision after a user-approved geometry change;
+every small UI adjustment. See README for current validation status. The user
+retired the scripted Level 2 full-route bot on 2026-09-15; retain focused checks
+and hands-on route review. Other route-specific tests may need deliberate
+revision after a user-approved geometry change;
 never alter them automatically merely to make a new layout pass.
 
 All Godot launches use tools/run_godot_tool.ps1. Use -Visual for captures and

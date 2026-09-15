@@ -1,6 +1,6 @@
 {
   "source_collection": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds",
-  "note": "Selected from the user-provided downloaded sound collection. Original pack attribution is not recorded in the flattened source folder. Files are copied unchanged.",
+  "note": "Selected from the user-provided downloaded sound collection. Files are copied unchanged. Freesound entries record their creators, pages and licenses; original pack attribution for older flattened collection entries is unknown.",
   "files": [
     {
       "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Shot_1.wav",
@@ -51,6 +51,53 @@
       "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Blood_3.wav",
       "runtime": "assets/audio/combat/blood_3.wav",
       "sha256": "b3d50a456b9b0cf164c4471715453513f4669b9e4729050265f61af4c83b734e"
+    },
+    {
+      "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Throw.wav",
+      "runtime": "assets/audio/combat/throw.wav",
+      "sha256": "eeb1aea749c448f04419aec40dc80f5d564baf82df368c488f6f1ad69cbc9c7d"
+    },
+    {
+      "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Knife_throwing.wav",
+      "runtime": "assets/audio/combat/knife_throwing.wav",
+      "sha256": "3232ef81be172927bbb48f7a76006f9524eaa7fb49b77fbbfd1ffecbf35bd879"
+    },
+    {
+      "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Punch_1.wav",
+      "runtime": "assets/audio/combat/punch_1.wav",
+      "sha256": "8922b768b5ee4545c90523ff717baa1b1b2bbe4530b5acbab38a69189a4b5de6"
+    },
+    {
+      "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Punch_2.wav",
+      "runtime": "assets/audio/combat/punch_2.wav",
+      "sha256": "3931ce59611e8414cff8946a82afead963bad7df6ee1186a1251b2fe68118d08"
+    },
+    {
+      "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Kick.wav",
+      "runtime": "assets/audio/combat/kick.wav",
+      "sha256": "137b77841269c6dfe6033a2648428e150f0d788ee4510c53b0eca4274b7970e2"
+    },
+    {
+      "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\179222__mixedupmoviestuff__knife-stab.wav",
+      "runtime": "assets/audio/combat/knife_stab_mixedupmoviestuff.wav",
+      "sha256": "dd13f2c024028f2841bd50cd368f62d8948e02a2ff33c691641a561360472461",
+      "title": "Knife Stab.wav",
+      "creator": "Mixedupmoviestuff",
+      "source_page": "https://freesound.org/people/Mixedupmoviestuff/sounds/179222/",
+      "license": "CC0 1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "modifications": "None; original download copied unchanged."
+    },
+    {
+      "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\504615__neospica__slicing-through-flesh.mp3",
+      "runtime": "assets/audio/combat/slicing_through_flesh_neospica.mp3",
+      "sha256": "226cdcd59791dc45bef235d4e2ff964934136a3914e47e9ccb8f58303daa6ae3",
+      "title": "Slicing through flesh",
+      "creator": "NeoSpica",
+      "source_page": "https://freesound.org/people/NeoSpica/sounds/504615/",
+      "license": "CC0 1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "modifications": "None; original download copied unchanged."
     }
   ]
 }

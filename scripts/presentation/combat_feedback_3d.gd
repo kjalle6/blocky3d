@@ -1,7 +1,7 @@
 class_name CombatFeedback3D
 extends Node
 ## Restrained, replaceable combat feedback. Timing and visual readability live
-## here; gunshot and bullet-impact audio follows the actual gameplay events.
+## here; combat audio follows accepted actions and confirmed gameplay contacts.
 
 signal audio_cue_requested(cue_name: StringName, world_position: Vector3)
 signal projectile_impact_presented(world_position: Vector3, surface_normal: Vector3)
@@ -16,6 +16,7 @@ signal projectile_impact_presented(world_position: Vector3, surface_normal: Vect
 var _pause_serial := 0
 var _active_projectile_impacts: Array[PixelProjectileImpact3D] = []
 var combat_audio: Node3D
+var _knife_hit_sound_played := false
 
 
 func _ready() -> void:
@@ -31,6 +32,12 @@ func bind_player(player: PlayerCharacter) -> void:
 	var projectile_callback := _on_handgun_projectile_fired
 	if not player.projectile_fired.is_connected(projectile_callback):
 		player.projectile_fired.connect(projectile_callback)
+	if not player.melee_swung.is_connected(_on_melee_swung):
+		player.melee_swung.connect(_on_melee_swung)
+	if not player.attack_connected.is_connected(_on_melee_connected):
+		player.attack_connected.connect(_on_melee_connected)
+	if not player.stomp_bounced.is_connected(_on_stomp_bounced):
+		player.stomp_bounced.connect(_on_stomp_bounced)
 
 
 func bind_enemy(enemy: StompableEnemy3D) -> void:
@@ -50,6 +57,7 @@ func bind_handgun_enemy(enemy: HandgunEnemy3D) -> void:
 func reset_feedback() -> void:
 	_pause_serial += 1
 	Engine.time_scale = 1.0
+	_knife_hit_sound_played = false
 	if is_instance_valid(combat_audio):
 		combat_audio.reset_run()
 	while not _active_projectile_impacts.is_empty():
@@ -80,6 +88,23 @@ func _on_enemy_defeated(impact_position: Vector3, enemy: StompableEnemy3D) -> vo
 	enemy.play_impact_flash()
 	audio_cue_requested.emit(&"enemy_defeat", impact_position)
 	_begin_impact_pause(enemy_defeat_pause)
+
+
+func _on_melee_swung(world_position: Vector3) -> void:
+	_knife_hit_sound_played = false
+	combat_audio.play_event("combat/knife_swing", world_position)
+
+
+func _on_melee_connected(target: Node3D) -> void:
+	# One swing may defeat several enemies. Keep all damage, but one contact cue.
+	if _knife_hit_sound_played:
+		return
+	_knife_hit_sound_played = true
+	combat_audio.play_event("combat/knife_hit", target.global_position)
+
+
+func _on_stomp_bounced(world_position: Vector3) -> void:
+	combat_audio.play_event("combat/stomp", world_position)
 
 
 func _on_handgun_projectile_fired(projectile: HandgunProjectile3D) -> void:

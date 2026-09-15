@@ -93,6 +93,9 @@ remain read-only design references.
   released bullets can damage enemies and remain live after the shooter dies
 - F1 audio tuning persists recording choices, movement/room mixes, and combat
   audio directly to the project; saved settings remain authoritative
+- Gunfire, bullet impacts, knife swings/hits, and enemy stomps have live audio
+  entries. The user accepted and saved the knife/stomp mix in the Combat
+  category; [audio tuning](docs/AUDIO_TUNING.md) lists the choices
 - Development mode starts every level from its fresh level-defined entry state,
   then retains session abilities through death and `R`
 - Development review tools expose independent F7 collision/hitbox overlays, an
@@ -113,8 +116,7 @@ remain read-only design references.
 
 The living design and authoring documents are:
 
-- [`NEW_CHAT_README.md`](NEW_CHAT_README.md) — current accepted checkpoint,
-  preservation rules, validation result, and continuation pointers
+- [`AGENTS.md`](AGENTS.md) — automation, validation, and preservation rules
 - [`docs/LEVEL_DESIGNER.md`](docs/LEVEL_DESIGNER.md) — building, object browsers,
   patrol controls, testing, saving, and adding new asset zones
 - [`docs/DEVELOPER_LEVEL_EDITOR_PLAN.md`](docs/DEVELOPER_LEVEL_EDITOR_PLAN.md)
@@ -132,6 +134,25 @@ The living design and authoring documents are:
   gameplay contracts, asset pipeline, and validation
 - [`docs/SET_DRESSING_WORKFLOW.md`](docs/SET_DRESSING_WORKFLOW.md) — curated
   scenery, gameplay exclusions, visual review, and accepted-placement rules
+
+## Continuing work and handoffs
+
+Start here and in `AGENTS.md`, then read the guide relevant to the task.
+The canonical checkout is `D:\GodotProjects\blocky3d`. Check `git status --short`
+and `git log -3 --oneline` before editing: newer user changes take precedence
+over a dated checkpoint description. Preserve saved layouts and the user's
+`resources/audio/movement_mix.tres`; commit only when requested.
+
+Keep lasting decisions in the relevant guide and outstanding campaign work in
+`docs/LEVEL_ROADMAP.md`. Implementation plans record scope and completion; they
+should not become running conversation logs.
+
+Create a handoff only when requested for an actual chat transition. Write it
+fresh from the current files: the active task, accepted decisions, exact Git
+state, unfinished work or blockers, and the next useful action. Link to the
+regular docs for background. Record relevant test results and evidence, and
+distinguish technical validation from user approval. Do not maintain a standing
+handoff or append unrelated milestones to an old one.
 
 ## Controls
 
@@ -189,11 +210,14 @@ powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Headless -S
 ```
 
 Use the suite for broad integration changes and the runner for a focused
-contract. The accepted 2026-09-12 checkpoint passed **46/47** checks in 293.2 s.
-The only failure is the existing Level 2 stage-10 traversal death near
-(64.54,29.02); the suite is not fully green. Designer and friendly-fire checks
-passed, and the user accepted their gameplay. Do not rerun the suite solely
-for documentation changes.
+contract. On 2026-09-15 the user retired the scripted Level 2 full-route
+playthrough. Its old stage-10 bot death is no longer an outstanding test failure;
+Level 2 keeps focused structure, movement, ability, and transition checks, with
+hands-on review of the full route. The suite now has **47 validators**, all of
+which passed in the immediately preceding 48-test run. The removed bot was that
+run's sole failure; the reduced suite was not rerun just for this deletion.
+Designer and friendly-fire gameplay have user acceptance. Do not rerun the
+suite solely for documentation changes.
 
 The runner's `-EditorImport` mode uses Godot's dedicated `--import` command and
 waits on the real editor executable, not only its console launcher. Every mode

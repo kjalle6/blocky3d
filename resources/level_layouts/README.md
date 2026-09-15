@@ -33,5 +33,22 @@ resolved project layouts and current local recovery before such changes. Keep
 the original file, establish why the base changed, and validate unchanged
 records before any specific recovery; never blanket-update fingerprints.
 
-See [the designer guide](../../docs/LEVEL_DESIGNER.md) for edit/test/save behavior
-and [the current handoff](../../NEW_CHAT_README.md) for checkpoint evidence.
+See [the designer guide](../../docs/LEVEL_DESIGNER.md) for edit/test/save behavior.
+
+## Local recovery reference
+
+The interactive Windows profile keeps drafts at
+`%APPDATA%\Godot\app_userdata\Blocky 3D\level_designer`; automation has its own
+profile under ignored `build/godot_automation_profile`.
+
+On 2026-09-12 the friendly-fire change required a specific review of the user's
+two-gunner sandbox draft. Its old fingerprint was reproduced from the exact
+pre-change enemy source and other current dependencies. Only the recovery
+fingerprint changed; the two records stayed at x=8.32/21.119999, y=0.55,
+facing left. The original backup is beside `sandbox.recovery.json`, named
+`sandbox.before-friendly-fire.*.review.json`. Reviewed candidates and backups
+also remain under ignored `build/sandbox_recovery*`.
+
+These are local recovery artifacts, not project saves or a general migration.
+Inspect current draft/save contents before restoring anything: the user may
+have made newer edits since that review.

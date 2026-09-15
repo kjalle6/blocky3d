@@ -10,6 +10,8 @@ const DEATH_KIND_WATER: StringName = &"water"
 signal died
 signal death_started(kind: StringName, world_position: Vector3)
 signal attack_connected(target: Node3D)
+signal melee_swung(world_position: Vector3)
+signal stomp_bounced(world_position: Vector3)
 signal damage_received(source_position: Vector3)
 signal ability_performed(ability_id: StringName)
 signal weapon_equipped(weapon_id: StringName)
@@ -231,6 +233,8 @@ func bounce(vertical_speed: float) -> void:
 	velocity.y = vertical_speed
 	_descending_before_slide = false
 	floor_snap_length = 0.0
+	# This bounce is requested by confirmed enemy stomps, not ordinary landings.
+	stomp_bounced.emit(global_position)
 
 
 func was_descending_before_slide() -> bool:
@@ -580,6 +584,7 @@ func _update_attack(delta: float) -> void:
 		_active_attack_aim_up = false
 		_attack_remaining = attack_duration
 		_attack_hit_applied = false
+		melee_swung.emit(global_position)
 	if _attack_remaining <= 0.0:
 		_apply_pending_weapon()
 		return
@@ -630,6 +635,10 @@ func _cancel_active_attack(apply_pending: bool) -> void:
 func _perform_melee_hit() -> void:
 	for candidate in get_tree().get_nodes_in_group("melee_target"):
 		if not candidate is Node3D or not candidate.has_method("receive_melee_hit"):
+			continue
+		# Defeated actors remain in the group during their death presentation.
+		# They reject damage, so they must not report another successful hit.
+		if candidate.has_method("is_defeated") and candidate.call("is_defeated"):
 			continue
 		var target := candidate as Node3D
 		var offset := target.global_position - global_position

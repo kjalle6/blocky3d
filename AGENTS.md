@@ -78,9 +78,16 @@ powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -EditorImpor
 
 Use `tools/run_validation_suite.ps1` rather than looping over `validate_*.gd`
 by hand. It runs every validator and reports a single pass or fail rather than a wall
-of output. The accepted 2026-09-12 checkpoint has 47 validators and took about
-293 seconds headless; 46 passed, with only the known Level 2 stage-10 traversal
-failure remaining. Timing and test count are checkpoint observations, not limits.
+of output. On 2026-09-15 the user requested removal of the scripted Level 2
+full-route playthrough: maintaining its automated input sequence was not useful.
+Do not restore that bot or carry its old stage-10 death as an outstanding bug.
+Keep focused movement, ability, Level 2 structure, and transition checks;
+hands-on playtesting owns the complete Level 2 route.
+
+The suite now contains 47 validators. All 47 passed in the immediately preceding
+48-validator windowed run (339.7 seconds); the removed playthrough was its sole
+failure. No full rerun was needed for deleting that independent test and updating
+documentation. Timing and test count are checkpoint observations, not limits.
 
 It still takes a `-Scope` switch even though only `All` exists today. The six
 prototype levels used to be a separate scope worth skipping, at roughly 60% of
@@ -113,3 +120,13 @@ Before changing registered scene sections or structural layout dependencies,
 run `tools/inspect_level_layout.gd` through the runner and read the resolved
 layout report. Preserve project layout JSON and local recovery drafts. Do not
 rewrite fingerprints or discard user overrides merely to make validation pass.
+
+## Project documentation and handoffs
+
+Start with `README.md` and the relevant task guide. Keep durable project
+decisions in those documents and planned campaign work in `docs/LEVEL_ROADMAP.md`.
+There is no standing handoff file. Only create a handoff when the user requests
+one for a chat transition; write a fresh, task-specific snapshot of current
+Git state, remaining work, constraints, validation, and next actions. Link to
+existing docs instead of copying their history. Do not accumulate a new
+permanent conversation log under the name of a handoff.

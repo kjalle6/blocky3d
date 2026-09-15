@@ -655,9 +655,13 @@ level. It must also:
 
 ## Current milestone
 
-The level designer and friendly-fire checkpoint is accepted. Full validation
-passed 46/47; only the known Level 2 stage-10 traversal failure remains. The
-next implementation is for the user to choose. The remaining Level 3 campaign
+The level designer and friendly-fire checkpoint is accepted. The user retired
+the scripted Level 2 full-route test on 2026-09-15; its old bot death is no
+longer an open issue. Focused checks remain and full-route testing is hands-on.
+See README for current validation status. The next implementation is for the
+user to choose. Knife swing, knife impact, and enemy-stomp audio are now
+connected, and their saved mix was accepted on 2026-09-15; see
+[AUDIO_TUNING.md](AUDIO_TUNING.md). The remaining Level 3 campaign
 work includes the safe firing lesson, ammo policy, later practice, and boss.
 
 Arrival / Shoreline is now the production campaign's Level 1. The shoreline,
