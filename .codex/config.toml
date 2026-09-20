@@ -1,0 +1,10 @@
+[mcp_servers.godot]
+command = 'C:\Users\kappe\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe'
+args = ['D:\GodotTools\godot-mcp-toolkit\server-1.0.1\node_modules\@npgamedev\godot-mcp-server\dist\index.js']
+cwd = 'D:\GodotProjects\blocky3d'
+startup_timeout_sec = 30
+tool_timeout_sec = 60
+
+[mcp_servers.godot.env]
+GODOT_MCP_CONFIG_VERSION = '1'
+GODOT_MCP_PROJECT_PATH = 'D:\GodotProjects\blocky3d'

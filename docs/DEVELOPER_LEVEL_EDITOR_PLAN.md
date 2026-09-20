@@ -494,7 +494,8 @@ and hands-on route review. Other route-specific tests may need deliberate
 revision after a user-approved geometry change;
 never alter them automatically merely to make a new layout pass.
 
-All Godot launches use tools/run_godot_tool.ps1. Use -Visual for captures and
+Use Godot MCP for ordinary editor work and playtest start/stop. Standalone
+checks use tools/run_godot_tool.ps1, with -Visual for capture scripts and
 tools/run_validation_suite.ps1 for a full sweep. Refresh the generated class
 registry through -EditorImport when required. Preserve the user's Godot processes
 unless exclusive access is necessary. Check the then-current worktree and saved

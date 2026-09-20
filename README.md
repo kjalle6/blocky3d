@@ -117,6 +117,7 @@ remain read-only design references.
 The living design and authoring documents are:
 
 - [`AGENTS.md`](AGENTS.md) — automation, validation, and preservation rules
+- [`docs/GODOT_MCP.md`](docs/GODOT_MCP.md) — editor bridge installation and connection
 - [`docs/LEVEL_DESIGNER.md`](docs/LEVEL_DESIGNER.md) — building, object browsers,
   patrol controls, testing, saving, and adding new asset zones
 - [`docs/DEVELOPER_LEVEL_EDITOR_PLAN.md`](docs/DEVELOPER_LEVEL_EDITOR_PLAN.md)
@@ -196,11 +197,18 @@ powershell -ExecutionPolicy Bypass -File .\tools\prepare_green_zone_assets.ps1
 
 ## Validate
 
-Use the guarded runner rather than launching Godot directly. It preserves the
-running editor/game by default and uses the standard non-.NET Godot 4.6.3 build
+Use Godot MCP for ordinary editor work, live screenshots, and starting/stopping
+playtests (`game_start` with `scene_path: "main"`). Reuse the open editor, or
+open it through `tools/run_godot_tool.ps1 -Editor`. The editor stays available
+while standalone checks run; it no longer holds their automation lock. See
+[`docs/GODOT_MCP.md`](docs/GODOT_MCP.md) for setup and workflow.
+
+Use the guarded runner for standalone checks rather than launching Godot
+directly. It preserves the running editor/game by default and uses the standard
+non-.NET Godot 4.6.3 build
 with the Compatibility renderer. Use the runner's optional `-Headless` switch
 for contract checks; use `-Visual` for rendered captures. Never pass raw
-`--headless` or bypass the runner. Pass
+`--headless` to these jobs or bypass the runner. Pass
 `-CloseRunningGodot` only when a particular automation run genuinely requires
 exclusive access.
 
@@ -221,9 +229,11 @@ suite solely for documentation changes.
 
 The runner's `-EditorImport` mode uses Godot's dedicated `--import` command and
 waits on the real editor executable, not only its console launcher. Every mode
-uses the real process exit code, a per-run log, and an exclusive automation
-lock. Do not substitute `--editor --quit`; it can exit while import workers are
-still active. The complete source-art catalog under `assets/library` is
+uses the real process exit code and a per-run log. Standalone modes also hold
+an exclusive automation lock; interactive `-Editor` does not. Avoid editor
+mutations/imports during standalone checks. Do not substitute `--editor --quit`;
+it can exit while import workers are still active. The complete source-art
+catalog under `assets/library` is
 available in Godot for searching and auditioning; only selected production
 files are referenced from scenes and promoted into `assets/art`. Bulk asset
 activity is not treated as the proven cause or cure for the outstanding native
@@ -237,11 +247,12 @@ powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Visual -Scr
 powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Visual -Script res://tools/capture_arrival_shoreline_slice.gd
 ```
 
-The runner gives automation its own writable Windows profile at
+The runner gives standalone automation its own writable Windows profile at
 `build/godot_automation_profile`. Godot's editor cache and `user://` therefore
 stay inside the ignored build directory during validators and captures instead
 of touching the interactive editor profile or the player's campaign save. The
-runner checks both its Roaming and Local profile roots before every launch. It
+runner checks both its Roaming and Local profile roots before standalone launches.
+Interactive `-Editor` uses the normal profile and skips these probes. The runner
 uses the standard build because this project contains no C# and the Mono build
 repeatedly crashed inside CoreCLR. Use
 `res://tools/validate_automation_environment.gd` to verify the isolated profile

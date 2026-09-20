@@ -9,6 +9,8 @@ param(
 
     [switch]$EditorImport,
 
+    [switch]$Editor,
+
     [switch]$Game,
 
     # Pack-only smoke exports use the same supervised standard engine.
@@ -38,8 +40,12 @@ param(
 $ErrorActionPreference = 'Stop'
 
 if ($ExportPack) {
-    if ($EditorImport -or $Game -or $Visual -or $Script -or $MainPack) {
+    if ($EditorImport -or $Editor -or $Game -or $Visual -or $Script -or $MainPack) {
         throw '-ExportPack is a separate mode; it cannot be combined with other launch modes.'
+    }
+} elseif ($Editor) {
+    if ($EditorImport -or $Game -or $Visual -or $Script -or $MainPack -or $Headless) {
+        throw '-Editor is an interactive editor mode; it cannot be combined with other launch modes.'
     }
 } elseif ($EditorImport) {
     if (-not [string]::IsNullOrWhiteSpace($Script)) {
@@ -56,7 +62,7 @@ if ($ExportPack) {
         throw '-Game cannot be combined with -Script.'
     }
 } elseif ([string]::IsNullOrWhiteSpace($Script)) {
-    throw '-Script is required unless -EditorImport or -Game is used.'
+    throw '-Script is required unless -Editor, -EditorImport or -Game is used.'
 }
 
 if ($Headless) {
@@ -95,75 +101,73 @@ if ($ExportPack -or $MainPack) {
         New-Item -ItemType Directory -Path ([System.IO.Path]::GetDirectoryName($resolvedPackPath)) -Force | Out-Null
     }
 }
-$automationProfileRoot = Join-Path $projectRoot 'build\godot_automation_profile'
-$automationRoamingRoot = Join-Path $automationProfileRoot 'Roaming'
-$automationLocalRoot = Join-Path $automationProfileRoot 'Local'
-$pathSeparators = [char[]]@(
-    [System.IO.Path]::DirectorySeparatorChar,
-    [System.IO.Path]::AltDirectorySeparatorChar
-)
-$projectPrefix = $projectRoot.TrimEnd($pathSeparators) + `
-    [System.IO.Path]::DirectorySeparatorChar
-$resolvedAutomationProfile = [System.IO.Path]::GetFullPath(
-    $automationProfileRoot
-)
-if (-not $resolvedAutomationProfile.StartsWith(
-        $projectPrefix,
-        [System.StringComparison]::OrdinalIgnoreCase
-)) {
-    throw "Refusing to place the Godot automation profile outside the project: $resolvedAutomationProfile"
-}
-
-# Codex automation runs in a restricted process that cannot write to the
-# interactive Windows profile. Godot normally places editor caches and
-# `user://` below APPDATA/LOCALAPPDATA; denied writes there have produced both
-# clear editor errors and keep automation away from the interactive profile.
-# Give only the wrapper process a project-local, gitignored profile instead.
-# The normal editor is unaffected, and validators cannot touch the player's
-# real campaign save.
-foreach ($directory in @($automationRoamingRoot, $automationLocalRoot)) {
-    New-Item -ItemType Directory -Path $directory -Force | Out-Null
-}
-
-# Prevent two Codex/tool launches from writing the same project cache and
-# automation profile concurrently. This does not close or alter the user's
-# interactive editor; -CloseRunningGodot remains the explicit exclusive mode.
-$automationLockPath = Join-Path $projectRoot 'build\godot_tool.lock'
 $automationLock = $null
-try {
-    $automationLock = [System.IO.File]::Open(
-        $automationLockPath,
-        [System.IO.FileMode]::OpenOrCreate,
-        [System.IO.FileAccess]::ReadWrite,
-        [System.IO.FileShare]::None
+# The interactive editor uses the normal profile and stays open for MCP. It
+# does not own the standalone automation lock or need automation write probes.
+if (-not $Editor) {
+    $automationProfileRoot = Join-Path $projectRoot 'build\godot_automation_profile'
+    $automationRoamingRoot = Join-Path $automationProfileRoot 'Roaming'
+    $automationLocalRoot = Join-Path $automationProfileRoot 'Local'
+    $pathSeparators = [char[]]@(
+        [System.IO.Path]::DirectorySeparatorChar,
+        [System.IO.Path]::AltDirectorySeparatorChar
     )
-} catch {
-    throw (
-        'Another Godot automation run already owns {0}. Wait for it to finish before launching another.' -f `
-            $automationLockPath
+    $projectPrefix = $projectRoot.TrimEnd($pathSeparators) + `
+        [System.IO.Path]::DirectorySeparatorChar
+    $resolvedAutomationProfile = [System.IO.Path]::GetFullPath(
+        $automationProfileRoot
     )
-}
+    if (-not $resolvedAutomationProfile.StartsWith(
+            $projectPrefix,
+            [System.StringComparison]::OrdinalIgnoreCase
+    )) {
+        throw "Refusing to place the Godot automation profile outside the project: $resolvedAutomationProfile"
+    }
 
-$writeProbePaths = @(
-    (Join-Path $automationRoamingRoot ".write_probe_$PID"),
-    (Join-Path $automationLocalRoot ".write_probe_$PID")
-)
-foreach ($writeProbePath in $writeProbePaths) {
+    # Standalone checks get writable, gitignored caches and saves. They cannot
+    # overwrite the user's campaign progress or the editor's MCP registry.
+    foreach ($directory in @($automationRoamingRoot, $automationLocalRoot)) {
+        New-Item -ItemType Directory -Path $directory -Force | Out-Null
+    }
+
+    # Serialize standalone runs that share automation caches and saves. The editor
+    # and its MCP playtest use the normal profile and do not participate in this lock.
+    $automationLockPath = Join-Path $projectRoot 'build\godot_tool.lock'
     try {
-        [System.IO.File]::WriteAllText(
-            $writeProbePath,
-            'godot-automation-profile'
+        $automationLock = [System.IO.File]::Open(
+            $automationLockPath,
+            [System.IO.FileMode]::OpenOrCreate,
+            [System.IO.FileAccess]::ReadWrite,
+            [System.IO.FileShare]::None
         )
     } catch {
         throw (
-            'Godot automation profile is not writable: {0}{1}{2}' -f `
-                (Split-Path -Parent $writeProbePath),
-                [Environment]::NewLine,
-                $_.Exception.Message
+            'Another standalone Godot run already owns {0}. Wait for it to finish before launching another.' -f `
+                $automationLockPath
         )
-    } finally {
-        if (Test-Path -LiteralPath $writeProbePath -PathType Leaf) {
-            Remove-Item -LiteralPath $writeProbePath -Force
+    }
+
+    $writeProbePaths = @(
+        (Join-Path $automationRoamingRoot ".write_probe_$PID"),
+        (Join-Path $automationLocalRoot ".write_probe_$PID")
+    )
+    foreach ($writeProbePath in $writeProbePaths) {
+        try {
+            [System.IO.File]::WriteAllText(
+                $writeProbePath,
+                'godot-automation-profile'
+            )
+        } catch {
+            throw (
+                'Godot automation profile is not writable: {0}{1}{2}' -f `
+                    (Split-Path -Parent $writeProbePath),
+                    [Environment]::NewLine,
+                    $_.Exception.Message
+            )
+        } finally {
+            if (Test-Path -LiteralPath $writeProbePath -PathType Leaf) {
+                Remove-Item -LiteralPath $writeProbePath -Force
+            }
         }
     }
 }
@@ -254,6 +258,8 @@ if ($Headless) {
 if ($ExportPack) {
     # --export-pack implies the dedicated import workflow and exits on completion.
     $arguments += @('--export-pack', $ExportPreset, ('"{0}"' -f $resolvedPackPath))
+} elseif ($Editor) {
+    $arguments += '--editor'
 } elseif ($EditorImport) {
     # `--import` is Godot's dedicated editor import mode: it waits for pending
     # resources to finish before quitting. Do not replace it with
@@ -275,6 +281,8 @@ $logDirectory = Join-Path $projectRoot 'build\godot_tool_logs'
 New-Item -ItemType Directory -Path $logDirectory -Force | Out-Null
 $modeLabel = if ($ExportPack) {
     if ($Headless) { 'export_pack_headless' } else { 'export_pack' }
+} elseif ($Editor) {
+    'editor'
 } elseif ($EditorImport) {
     'editor_import'
 } elseif ($Game) {
@@ -295,8 +303,12 @@ $previousAppData = $env:APPDATA
 $previousLocalAppData = $env:LOCALAPPDATA
 $exitCode = 1
 try {
-    $env:APPDATA = $automationRoamingRoot
-    $env:LOCALAPPDATA = $automationLocalRoot
+    # An interactive editor shares the user's normal settings and MCP registry.
+    # Automated imports, validators and game probes retain isolated saves/caches.
+    if (-not $Editor) {
+        $env:APPDATA = $automationRoamingRoot
+        $env:LOCALAPPDATA = $automationLocalRoot
+    }
     # The Windows *_console.exe is a small launcher for the real executable.
     # Invoke the real process directly and wait for it so a delayed native
     # failure cannot be hidden behind a successful launcher exit code.
