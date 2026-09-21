@@ -3,6 +3,8 @@ extends Node3D
 ## Runtime wiring shared by authored levels and disposable test courses. The
 ## session owns run reset/completion, while gameplay behavior stays on entities.
 
+signal death_menu_requested
+signal retry_requested
 signal run_completed
 signal transition_requested(
 	target_level: LevelDefinition,
@@ -14,6 +16,7 @@ signal transition_requested(
 	completes_source_level: bool,
 	session_abilities: Array[StringName]
 )
+signal item_received(item_id: StringName, amount: int)
 signal run_reset
 signal checkpoint_changed(route_index: int)
 signal ability_unlocked(ability_id: StringName)
@@ -34,6 +37,7 @@ signal weapon_ownership_changed(owned_weapon_ids: Array[StringName])
 @onready var spawn_point: Marker3D = %SpawnPoint
 @onready var combat_feedback := get_node_or_null("%CombatFeedback")
 
+var save_state: SessionSaveState
 var _resetting := false
 var _completed := false
 var _initial_spawn_transform := Transform3D.IDENTITY
@@ -91,6 +95,8 @@ func _ready() -> void:
 		if background != null:
 			background.bind_camera(camera)
 		return
+	save_state = SessionSaveState.new(self)
+	player.damage_received.connect(save_state.note_combat)
 	_initial_spawn_transform = spawn_point.global_transform
 	_active_respawn_transform = _initial_spawn_transform
 	_apply_ability_policy()
@@ -134,8 +140,18 @@ func _ready() -> void:
 		background.snap_to_camera(true)
 
 
+func _physics_process(delta: float) -> void:
+	if save_state != null:
+		save_state.tick(delta)
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("restart"):
+		if _progression_store != null:
+			if not _completed and not player.is_transition_running():
+				retry_requested.emit()
+			get_viewport().set_input_as_handled()
+			return
 		if _completed or player.is_transition_running():
 			get_viewport().set_input_as_handled()
 			return
@@ -165,6 +181,9 @@ func _on_player_died() -> void:
 			return
 		await get_tree().process_frame
 	if request_serial != _reset_request_serial:
+		return
+	if _progression_store != null:
+		death_menu_requested.emit()
 		return
 	_reset_world()
 	camera.snap_to_target()
@@ -228,6 +247,8 @@ func _on_transition_entered(transition: LevelTransition3D) -> void:
 
 
 func _on_checkpoint_activated(checkpoint: LevelCheckpoint3D) -> void:
+	if save_state != null:
+		save_state.queue_point(checkpoint)
 	# Added checkpoints are extra respawn spots, not numbered campaign gates.
 	# They must never prevent a later authored checkpoint from being earned.
 	if checkpoint.get_meta("layout_added_checkpoint", false):
@@ -245,6 +266,10 @@ func _reset_run(clear_checkpoint := true) -> void:
 	_reset_request_serial += 1
 	_resetting = false
 	if clear_checkpoint:
+		if save_state != null and _progression_store == null:
+			save_state.rewards.clear()
+			save_state.world_flags.clear()
+			player.inventory.reset()
 		_clear_session_weapons_for_restart()
 		_active_checkpoint_index = -1
 		_active_respawn_transform = _initial_spawn_transform
@@ -396,14 +421,18 @@ func is_session_ability_enabled(ability_id: StringName) -> bool:
 	return ability_id in _session_unlocked_abilities
 
 
-func acquire_weapon(weapon_id: StringName) -> bool:
+func acquire_weapon(weapon_id: StringName, initial_rounds := 30) -> bool:
 	if not PlayerWeapon.is_known(weapon_id):
 		push_error("Level requested unknown weapon '%s'." % weapon_id)
 		return false
 	if weapon_id in _session_owned_weapon_ids:
 		return false
 	_session_owned_weapon_ids.append(weapon_id)
+	if _progression_store != null:
+		_progression_store.unlock_weapon(weapon_id)
 	player.configure_weapon_ownership(_session_owned_weapon_ids, weapon_id)
+	if weapon_id == PlayerWeapon.HANDGUN:
+		player.player_handgun.grant_initial_ammo(initial_rounds)
 	weapon_ownership_changed.emit(owned_weapon_ids())
 	weapon_acquired.emit(weapon_id)
 	return true
@@ -418,6 +447,7 @@ func owned_weapon_ids() -> Array[StringName]:
 
 
 func _clear_session_weapons_for_restart() -> void:
+	player.player_handgun.set_loaded_rounds(0)
 	if _session_owned_weapon_ids == [PlayerWeapon.KNIFE]:
 		return
 	_session_owned_weapon_ids.assign([PlayerWeapon.KNIFE])

@@ -1,6 +1,6 @@
 extends SceneTree
-## Focused contract for the first player firearm before an ammunition economy
-## exists: session ownership, two-slot input, presentation, projectile
+## Focused contract for the first player firearm: session ownership,
+## two-slot input, presentation, projectile
 ## allegiance, explicit enemy hurt surfaces, feedback, and reset policy.
 
 const SHOOTER_AREA := preload("res://tools/level_3_shooter_area_fixture.gd")
@@ -43,7 +43,8 @@ func _run() -> void:
 	assert(player.player_handgun != null)
 	assert(player.player_handgun.definition.weapon_id == PlayerWeapon.HANDGUN)
 	assert(player.player_handgun.definition.validation_errors().is_empty())
-	_assert_no_ammo_contract(player.player_handgun.definition, hud)
+	assert(player.player_handgun.definition.magazine_capacity == 12)
+	assert(_action_has_key(&"reload", KEY_R))
 
 	assert(level.owned_weapon_ids() == [PlayerWeapon.KNIFE])
 	assert(player.owned_weapon_ids() == [PlayerWeapon.KNIFE])
@@ -80,6 +81,7 @@ func _run() -> void:
 	# state. With two items, either wheel direction toggles predictably.
 	await _press_selection("weapon_slot_1")
 	assert(player.equipped_weapon_id() == PlayerWeapon.KNIFE)
+	assert(not hud.status_is_visible())
 	assert(hud.highlighted_weapon_id() == PlayerWeapon.KNIFE)
 	await _press_selection("weapon_cycle_previous")
 	assert(player.equipped_weapon_id() == PlayerWeapon.HANDGUN)
@@ -113,6 +115,7 @@ func _run() -> void:
 	target.position = Vector3(4.0, 0.42, 0.0)
 	level.add_child(target)
 	target.set_physics_process(false)
+	target.health.reset(player.player_handgun.definition.damage)
 	var fired: Array[HandgunProjectile3D] = []
 	var impact_count := [0]
 	player.projectile_fired.connect(
@@ -241,7 +244,7 @@ func _run() -> void:
 
 	_release_test_input()
 	print(
-		"Player handgun passed: no-ammo pickup ownership, two-slot input, "
+		"Player handgun passed: pickup ownership, two-slot input, "
 		+ "deferred switching, layered pose wiring, player allegiance, enemy "
 		+ "hurt surfaces, impact feedback, and deterministic reset policy."
 	)
@@ -397,16 +400,6 @@ func _action_has_joy_button(action: StringName, button: JoyButton) -> bool:
 		):
 			return true
 	return false
-
-
-func _assert_no_ammo_contract(
-	definition: FirearmDefinition,
-	hud: WeaponStatusHUD
-) -> void:
-	for property in definition.get_property_list():
-		assert("ammo" not in String(property.name).to_lower())
-	for node in hud.find_children("*", "Label", true, false):
-		assert("AMMO" not in (node as Label).text.to_upper())
 
 
 func _release_test_input() -> void:

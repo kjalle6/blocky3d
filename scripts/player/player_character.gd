@@ -6,6 +6,7 @@ extends CharacterBody3D
 const DOUBLE_JUMP_VISUAL_DURATION := 0.43
 const DEATH_KIND_GENERIC: StringName = &"generic"
 const DEATH_KIND_WATER: StringName = &"water"
+const ENEMY_CONTACT := preload("res://scripts/combat/enemy_combat_contact.gd")
 
 signal died
 signal death_started(kind: StringName, world_position: Vector3)
@@ -13,6 +14,8 @@ signal attack_connected(target: Node3D)
 signal melee_swung(world_position: Vector3)
 signal stomp_bounced(world_position: Vector3)
 signal damage_received(source_position: Vector3)
+signal health_changed(current: int, maximum: int)
+signal healing_used(item_id: StringName, amount: int)
 signal ability_performed(ability_id: StringName)
 signal weapon_equipped(weapon_id: StringName)
 signal projectile_fired(projectile: HandgunProjectile3D)
@@ -20,17 +23,28 @@ signal ground_jump_started
 signal landed(impact_speed: float)
 signal movement_reset
 
+@export var combat: CombatProfile = preload("res://resources/combat/player.tres")
+@export var knife_attack: AttackDefinition = preload("res://resources/combat/knife.tres")
+@export var stomp_attack: AttackDefinition = preload("res://resources/combat/stomp.tres")
 @export var movement: PlayerMovementConfig
 @export_range(0.2, 1.0, 0.05) var handgun_backpedal_speed_ratio := 0.65
 @export var fall_limit_y := -8.0
 @export_range(0.05, 1.0, 0.01) var attack_duration := 0.34
 @export_range(0.0, 1.0, 0.01) var attack_impact_time := 0.13
+## Keep contact through the fully extended source poses, before frame 5 retracts.
+@export_range(0.01, 0.3, 0.01) var attack_active_duration := 0.14
 @export_range(0.1, 3.0, 0.05) var attack_reach := 1.25
 @export_range(0.1, 2.0, 0.05) var attack_vertical_tolerance := 0.9
 @export_category("Developer inspection")
 @export_range(1.0, 40.0, 0.5) var inspection_flight_speed := 14.0
 @export_range(1.0, 4.0, 0.25) var inspection_fast_multiplier := 2.0
 
+var health := HealthState.new()
+var inventory := PlayerInventory.new()
+var healing_remaining := 0.0
+var last_healing_amount := 0
+var _attack_lock_remaining := 0.0
+var _melee_hit: CombatHit
 var horizontal_speed := 0.0
 var _coyote_remaining := 0.0
 var _jump_buffer_remaining := 0.0
@@ -39,7 +53,7 @@ var _death_kind := DEATH_KIND_GENERIC
 var _descending_before_slide := false
 var _facing_sign := 1.0
 var _attack_remaining := 0.0
-var _attack_hit_applied := false
+var _melee_hit_targets: Array[int] = []
 var _active_attack_weapon_id: StringName = &""
 var _active_attack_aim_up := false
 var _owned_weapon_ids: Array[StringName] = [PlayerWeapon.KNIFE]
@@ -72,6 +86,8 @@ var _normal_hazard_contact_layer := 0
 
 
 func _ready() -> void:
+	health.changed.connect(func(current: int, maximum: int) -> void: health_changed.emit(current, maximum))
+	health.reset(combat.maximum_hp)
 	assert(movement != null, "PlayerCharacter requires a PlayerMovementConfig.")
 	add_to_group("player_character")
 	floor_snap_length = movement.floor_snap_length
@@ -92,6 +108,12 @@ func _physics_process(delta: float) -> void:
 		_update_transition_run(delta)
 		return
 
+	healing_remaining = maxf(0.0, healing_remaining - delta)
+	_attack_lock_remaining = maxf(0.0, _attack_lock_remaining - delta)
+	if Input.is_action_just_pressed("quick_item_1"):
+		use_quick_item(0)
+	if Input.is_action_just_pressed("quick_item_2"):
+		use_quick_item(1)
 	_update_jump_timers(delta)
 	_double_jump_visual_remaining = maxf(0.0, _double_jump_visual_remaining - delta)
 	_wall_jump_control_lock_remaining = maxf(
@@ -174,7 +196,12 @@ func _physics_process(delta: float) -> void:
 	velocity.z = 0.0
 	_descending_before_slide = velocity.y < -0.5
 	var vertical_speed_before_slide := velocity.y
+	var position_before_slide := global_position
 	move_and_slide()
+	# Resolve player damage before enemy attacks, using this tick's movement.
+	if is_melee_contact_active():
+		_perform_melee_hit()
+	_resolve_stomp(position_before_slide)
 	if not grounded and is_on_floor():
 		landed.emit(maxf(0.0, -vertical_speed_before_slide))
 	_update_wall_contact()
@@ -212,6 +239,8 @@ func kill(kind: StringName = DEATH_KIND_GENERIC) -> void:
 	if _dead or _developer_inspection_enabled or is_transition_running():
 		return
 	_dead = true
+	if health.current > 0:
+		health.reset(health.maximum, 0)
 	_death_kind = kind
 	_dash_remaining = 0.0
 	_dash_available = false
@@ -261,13 +290,17 @@ func disappear_for_transition() -> void:
 
 
 func reset_at(spawn_transform: Transform3D) -> void:
+	health.reset(combat.maximum_hp)
+	_attack_lock_remaining = 0.0
+	healing_remaining = 0.0
+	_melee_hit = null
 	global_transform = spawn_transform
 	velocity = Vector3.ZERO
 	horizontal_speed = 0.0
 	_coyote_remaining = 0.0
 	_jump_buffer_remaining = 0.0
 	_attack_remaining = 0.0
-	_attack_hit_applied = false
+	_melee_hit_targets.clear()
 	_active_attack_weapon_id = &""
 	_active_attack_aim_up = false
 	_pending_weapon_id = &""
@@ -295,6 +328,10 @@ func reset_at(spawn_transform: Transform3D) -> void:
 		pixel_visual.set_state("idle", true)
 	_apply_developer_inspection_collision()
 	movement_reset.emit()
+
+
+func can_save_state(stationary := true) -> bool:
+	return not _dead and not is_transition_running() and not _developer_inspection_enabled and not is_attacking() and not player_handgun.is_reloading() and healing_remaining <= 0.0 and _attack_lock_remaining <= 0.0 and (not stationary or absf(velocity.x) < 0.1) and absf(velocity.y) < 0.1
 
 
 func is_dead() -> bool:
@@ -373,12 +410,21 @@ func feet_world_y() -> float:
 func is_attacking() -> bool:
 	return _attack_remaining > 0.0 or (
 		_active_attack_weapon_id == PlayerWeapon.HANDGUN
-		and not player_handgun.can_fire()
+		and player_handgun.is_recovering()
 	)
 
 
 func is_melee_attacking() -> bool:
 	return is_attacking() and _active_attack_weapon_id == PlayerWeapon.KNIFE
+
+
+func is_melee_contact_active() -> bool:
+	var elapsed := attack_duration - _attack_remaining
+	return (
+		is_melee_attacking() and not _dead
+		and elapsed >= attack_impact_time
+		and elapsed <= attack_impact_time + attack_active_duration
+	)
 
 
 func active_attack_weapon_id() -> StringName:
@@ -444,11 +490,71 @@ func developer_melee_bounds() -> Rect2:
 	)
 
 
-func receive_enemy_hit(source_position: Vector3) -> void:
+func receive_enemy_hit(source_position: Vector3, hit: CombatHit = null) -> bool:
 	if _dead or _developer_inspection_enabled or is_transition_running():
-		return
+		return false
+	if hit == null:
+		hit = CombatHit.new(25, &"enemy", source_position)
+	if not health.damage(hit):
+		return false
+	_cancel_active_attack(true)
+	_attack_lock_remaining = maxf(_attack_lock_remaining, combat.hurt_duration)
 	damage_received.emit(source_position)
-	kill()
+	if health.current == 0:
+		kill()
+	return true
+
+
+func use_quick_item(slot: int) -> bool:
+	if _dead or is_transition_running() or _developer_inspection_enabled or healing_remaining > 0.0:
+		return false
+	if slot < 0 or slot >= inventory.quick_slots.size():
+		return false
+	var item_id := inventory.quick_slots[slot]
+	var item := ItemCatalog.definition(item_id)
+	if item == null or inventory.count(item_id) <= 0 or health.current >= health.maximum:
+		return false
+	var before := health.current
+	if not health.heal(item.healing):
+		return false
+	inventory.consume(item_id)
+	_cancel_active_attack(true)
+	healing_remaining = item.use_duration
+	_attack_lock_remaining = maxf(_attack_lock_remaining, item.use_duration)
+	last_healing_amount = health.current - before
+	healing_used.emit(item_id, last_healing_amount)
+	return true
+
+
+func capture_state() -> Dictionary:
+	return {
+		"health": health.to_dictionary(),
+		"inventory": inventory.to_dictionary(),
+		"handgun_ammo": {"loaded": player_handgun.loaded_rounds},
+		"weapons": Array(_owned_weapon_ids),
+		"equipped_weapon": String(_equipped_weapon_id),
+		"abilities": Array(_active_abilities),
+		"facing": _facing_sign,
+	}
+
+
+func restore_state(data: Dictionary) -> void:
+	health.reset(int(data.health.maximum), int(data.health.current))
+	inventory.restore(data.inventory)
+	var weapons: Array[StringName] = []
+	weapons.assign(data.weapons)
+	configure_weapon_ownership(weapons, StringName(data.equipped_weapon))
+	if data.has("handgun_ammo"):
+		player_handgun.set_loaded_rounds(int(data.handgun_ammo.loaded))
+	elif owns_weapon(PlayerWeapon.HANDGUN):
+		# Pre-ammo saves owned an unlimited gun. Give one initial 30-round supply;
+		# every new snapshot records the exact remaining rounds thereafter.
+		player_handgun.grant_initial_ammo(30)
+	else:
+		player_handgun.set_loaded_rounds(0)
+	_facing_sign = float(data.get("facing", 1.0))
+	_attack_lock_remaining = 0.0
+	healing_remaining = 0.0
 
 
 func set_developer_inspection_enabled(enabled: bool) -> void:
@@ -461,7 +567,7 @@ func set_developer_inspection_enabled(enabled: bool) -> void:
 	_transition_run_remaining = 0.0
 	_transition_run_speed = 0.0
 	_attack_remaining = 0.0
-	_attack_hit_applied = false
+	_melee_hit_targets.clear()
 	_active_attack_weapon_id = &""
 	_active_attack_aim_up = false
 	_pending_weapon_id = &""
@@ -491,7 +597,7 @@ func begin_transition_run(direction: float, speed: float, duration: float) -> vo
 	_facing_sign = _transition_run_direction
 	_dash_remaining = 0.0
 	_attack_remaining = 0.0
-	_attack_hit_applied = false
+	_melee_hit_targets.clear()
 	_active_attack_weapon_id = &""
 	_active_attack_aim_up = false
 	_pending_weapon_id = &""
@@ -567,13 +673,13 @@ func play_damage_flash() -> void:
 
 
 func _update_attack(delta: float) -> void:
-	if is_dashing():
+	if is_dashing() or _attack_lock_remaining > 0.0:
 		_cancel_active_attack(true)
 		return
 	# Gun recovery follows the weapon's cooldown. Knife contact and swing
 	# duration must neither delay a shot nor impose a second firing gate.
 	if _active_attack_weapon_id == PlayerWeapon.HANDGUN:
-		if not player_handgun.can_fire():
+		if player_handgun.is_recovering():
 			return
 		_finish_active_attack()
 	if (
@@ -583,15 +689,14 @@ func _update_attack(delta: float) -> void:
 		_active_attack_weapon_id = PlayerWeapon.KNIFE
 		_active_attack_aim_up = false
 		_attack_remaining = attack_duration
-		_attack_hit_applied = false
+		_melee_hit_targets.clear()
+		_melee_hit = CombatHit.new(knife_attack.damage, &"knife", global_position)
 		melee_swung.emit(global_position)
 	if _attack_remaining <= 0.0:
 		_apply_pending_weapon()
 		return
 	_attack_remaining = maxf(0.0, _attack_remaining - delta)
-	var elapsed := attack_duration - _attack_remaining
-	if not _attack_hit_applied and elapsed >= attack_impact_time:
-		_attack_hit_applied = true
+	if is_melee_contact_active():
 		_perform_melee_hit()
 	if _attack_remaining <= 0.0:
 		_finish_active_attack()
@@ -601,7 +706,7 @@ func _fire_handgun_from_input() -> void:
 	# Movement, animation frame, and mouse aim resolve first, within this same
 	# physics tick. Jump + fire therefore uses the new pose's real barrel.
 	if (
-		_dead or is_dashing() or is_attacking()
+		_dead or is_dashing() or is_attacking() or _attack_lock_remaining > 0.0
 		or _equipped_weapon_id != PlayerWeapon.HANDGUN
 		or not Input.is_action_just_pressed("attack") or not player_handgun.can_fire()
 	):
@@ -617,7 +722,7 @@ func _fire_handgun_from_input() -> void:
 
 func _finish_active_attack() -> void:
 	_attack_remaining = 0.0
-	_attack_hit_applied = false
+	_melee_hit_targets.clear()
 	_active_attack_weapon_id = &""
 	_active_attack_aim_up = false
 	_apply_pending_weapon()
@@ -625,7 +730,7 @@ func _finish_active_attack() -> void:
 
 func _cancel_active_attack(apply_pending: bool) -> void:
 	_attack_remaining = 0.0
-	_attack_hit_applied = false
+	_melee_hit_targets.clear()
 	_active_attack_weapon_id = &""
 	_active_attack_aim_up = false
 	if apply_pending:
@@ -641,15 +746,53 @@ func _perform_melee_hit() -> void:
 		if candidate.has_method("is_defeated") and candidate.call("is_defeated"):
 			continue
 		var target := candidate as Node3D
-		var offset := target.global_position - global_position
-		var forward_distance := offset.x * _facing_sign
+		if target.get_instance_id() in _melee_hit_targets:
+			continue
+		var bounds := ENEMY_CONTACT.hurt_bounds(target)
+		var forward_distance := (bounds.get_center().x - global_position.x) * _facing_sign
 		if (
 			forward_distance >= 0.0
-			and forward_distance <= attack_reach
-			and absf(offset.y) <= attack_vertical_tolerance
+			and developer_melee_bounds().intersects(bounds)
 		):
-			candidate.call("receive_melee_hit", global_position)
-			attack_connected.emit(target)
+			_melee_hit_targets.append(target.get_instance_id())
+			if _melee_hit == null:
+				_melee_hit = CombatHit.new(knife_attack.damage, &"knife", global_position)
+			if candidate.call("receive_melee_hit", global_position, _melee_hit):
+				attack_connected.emit(target)
+
+
+func _resolve_stomp(previous_position: Vector3) -> void:
+	if not _descending_before_slide or _dead:
+		return
+	var start := Vector2(previous_position.x, previous_position.y - 0.55)
+	var end := Vector2(global_position.x, feet_world_y())
+	var target: Node3D
+	var first_contact := 2.0
+	var head_y := 0.0
+	for candidate in get_tree().get_nodes_in_group("melee_target"):
+		if not candidate.has_method("receive_stomp") or candidate.is_defeated():
+			continue
+		var bounds := ENEMY_CONTACT.stomp_bounds(candidate)
+		var contact := ENEMY_CONTACT.stomp_crossing(start, end, bounds, 0.36)
+		if contact >= 0.0 and contact < first_contact:
+			target = candidate
+			first_contact = contact
+			head_y = bounds.end.y
+	if target != null:
+		global_position.y = head_y + 0.55
+		target.receive_stomp(self)
+		return
+	# The solid body is lower than the drawn head and has a different centre.
+	# An edge landing or short hop can miss the head plane but still land on
+	# that body. Resolve the actual top contact instead of riding the enemy.
+	for index in get_slide_collision_count():
+		var collision := get_slide_collision(index)
+		if collision.get_normal().y <= 0.7:
+			continue
+		var body := collision.get_collider() as Node3D
+		if body != null and body.has_method("receive_stomp") and not body.is_defeated():
+			body.receive_stomp(self)
+			return
 
 
 func _perform_ground_jump() -> void:

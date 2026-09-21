@@ -57,26 +57,44 @@ func _run() -> void:
 	await process_frame
 	var finale_session := game_root.current_level as LevelSession3D
 	_assert_complete_kit(finale_session, "Firearm Review Lab entry")
+	_assert_firearm_loadout(finale_session)
+	assert(finale_session.player.request_weapon(PlayerWeapon.KNIFE))
 
 	finale_session._reset_run()
 	await physics_frame
 	_assert_complete_kit(finale_session, "Firearm Review Lab manual restart")
+	_assert_firearm_loadout(finale_session)
 
 	finale_session.player.kill()
 	for frame in 40:
 		await physics_frame
 	assert(not finale_session.player.is_dead())
 	_assert_complete_kit(finale_session, "Firearm Review Lab death reset")
+	_assert_firearm_loadout(finale_session)
 
 	game_root.show_level_select()
 	game_root.load_developer_room()
 	await process_frame
 	var fresh_finale_session := game_root.current_level as LevelSession3D
 	_assert_complete_kit(fresh_finale_session, "fresh Firearm Review Lab reload")
+	_assert_firearm_loadout(fresh_finale_session)
+
+	game_root.load_level(&"arrival_shoreline")
+	await process_frame
+	assert(game_root.current_level.owned_weapon_ids() == [PlayerWeapon.KNIFE])
+	assert(game_root.current_level.player.equipped_weapon_id() == PlayerWeapon.KNIFE,
+		"The lab handgun must not carry into campaign levels.")
 
 	game_root.free()
 	print("Fresh-per-level developer progression validation passed.")
 	quit(0)
+
+
+func _assert_firearm_loadout(level: LevelSession3D) -> void:
+	assert(level.owned_weapon_ids() == [PlayerWeapon.KNIFE, PlayerWeapon.HANDGUN])
+	assert(level.player.owns_weapon(PlayerWeapon.HANDGUN))
+	assert(level.player.equipped_weapon_id() == PlayerWeapon.HANDGUN,
+		"Firearm Review Lab must start with the handgun equipped.")
 
 
 func _assert_complete_kit(level: LevelSession3D, context: String) -> void:

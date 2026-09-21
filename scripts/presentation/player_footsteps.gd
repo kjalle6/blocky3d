@@ -4,15 +4,8 @@ signal step_played(surface: String)
 signal footfall_played(event: Dictionary)
 const MIX := preload("res://scripts/audio/movement_audio_mix.gd")
 const SURFACES := preload("res://scripts/audio/footstep_surface_resolver.gd")
-const RUN_BANK := preload("res://resources/audio/grass_run.tres")
-const WALK_BANK := preload("res://resources/audio/grass_walk.tres")
-const SAND_BANK := preload("res://resources/audio/sand.tres")
-const SAND_COMPARISONS := preload("res://resources/audio/sand_comparisons.tres")
 const VOICE_COUNT := 4
 const MAX_EVENT_AGE := 0.10
-static var grass_run_index := -1
-static var grass_walk_index := -1
-static var sand_index := -1
 static var diagnostics_enabled := false
 
 var _voices: Array[AudioStreamPlayer] = []
@@ -22,9 +15,7 @@ var _last_position := Vector3.ZERO
 var _last_contact_id := -1
 var _last_play_time := -1.0
 var _clock := 0.0
-var _label: Label
 var _debug_label: Label
-var _label_time := 0.0
 var contact_count := 0
 var played_count := 0
 var rejected_count := 0
@@ -46,16 +37,17 @@ func _ready() -> void:
 		_voices.append(voice)
 	var canvas := CanvasLayer.new()
 	add_child(canvas)
-	_label = _make_label(canvas, Vector2(20, 64))
-	_debug_label = _make_label(canvas, Vector2(20, 118))
+	_debug_label = _make_label(canvas, Vector2(-920, 530))
 	_debug_label.add_theme_font_size_override("font_size", 16)
-	_show_choice()
-	_label_time = 7.0
 	_update_diagnostics()
 
 func _make_label(canvas: CanvasLayer, at: Vector2) -> Label:
 	var label := Label.new()
+	label.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 	label.position = at
+	label.size.x = 900
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	label.add_theme_color_override("font_shadow_color", Color.BLACK)
 	label.add_theme_constant_override("shadow_offset_x", 2)
 	label.add_theme_constant_override("shadow_offset_y", 2)
@@ -65,37 +57,14 @@ func _make_label(canvas: CanvasLayer, at: Vector2) -> Label:
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo:
 		return
-	match event.physical_keycode:
-		KEY_F5: grass_run_index = (grass_run_index + 2) % (MIX.bank_for("grass/run").clips.size() + 1) - 1
-		KEY_F4: grass_walk_index = (grass_walk_index + 2) % (MIX.bank_for("grass/walk").clips.size() + 1) - 1
-		KEY_F6: sand_index = (sand_index + 2) % (MIX.bank_for("sand/step").clips.size() + SAND_COMPARISONS.clips.size() + 1) - 1
-		KEY_F9: diagnostics_enabled = not diagnostics_enabled
-		_: return
-	# Audition switches affect the next footfall; existing tails keep playing.
-	_show_choice()
+	if event.physical_keycode != KEY_F9:
+		return
+	diagnostics_enabled = not diagnostics_enabled
 	_update_diagnostics()
 	get_viewport().set_input_as_handled()
 
-func _show_choice() -> void:
-	var sand: Resource = MIX.bank_for("sand/step")
-	var sand_choice := _audition_name(sand, sand_index)
-	if sand_index >= sand.clips.size():
-		sand_choice = _audition_name(SAND_COMPARISONS, sand_index - sand.clips.size())
-	_label.text = "F5 RUN: %s    F4 WALK: %s\nF6 SAND: %s    F1: AUDIO TOOLS    F9: DIAGNOSTICS" % [
-		_audition_name(MIX.bank_for("grass/run"), grass_run_index),
-		_audition_name(MIX.bank_for("grass/walk"), grass_walk_index), sand_choice]
-	_label_time = 5.0
-	_label.visible = true
-
-func _audition_name(bank: Resource, selected: int) -> String:
-	if selected >= 0 and selected < bank.clips.size():
-		return MIX.clip_name(bank.clips[selected])
-	return "PAIR" if not bank.foot_indices.is_empty() else "MIX"
-
 func _physics_process(delta: float) -> void:
 	_clock += delta
-	_label_time = maxf(0.0, _label_time - delta)
-	_label.visible = _label_time > 0.0
 	if player.is_developer_inspection_enabled():
 		_stop_voices()
 	_last_position = player.global_position
@@ -129,21 +98,10 @@ func surface_at(collider: Object, world_position: Vector3) -> String:
 func play_step(surface: String, gait := "run", event: Dictionary = {}) -> void:
 	var key := MIX.step_key(surface, gait)
 	var bank := MIX.bank_for(key)
-	var selected := -1
-	if not MIX.listening_to_saved:
-		if surface == "grass":
-			selected = grass_walk_index if gait == "walk" else grass_run_index
-		elif surface == "sand":
-			selected = sand_index
-			if selected >= bank.clips.size():
-				selected -= bank.clips.size()
-				bank = SAND_COMPARISONS
-				key = "sand/comparisons"
 	if bank == null:
 		_reject(event, "no bank: " + surface)
 		return
-	if selected < 0 or selected >= bank.clips.size():
-		selected = bank.choose_clip(_random, int(_previous_choices.get(key, -1)), str(event.get("foot", "left")))
+	var selected: int = bank.choose_clip(_random, int(_previous_choices.get(key, -1)), str(event.get("foot", "left")))
 	if selected < 0:
 		_reject(event, "no enabled recording")
 		return

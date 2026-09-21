@@ -4,7 +4,6 @@ signal closed
 const MIX := preload("res://scripts/audio/movement_audio_mix.gd")
 const EVENTS := preload("res://scripts/audio/sound_event_catalog.gd")
 const EVENT_VOICE := preload("res://scripts/audio/sound_event_voice.gd")
-const STEPS := preload("res://scripts/presentation/player_footsteps.gd")
 const SOURCE_DIRECTORY := "D:/GodotProjects/blocky3dassets/audio/Sounds/Footsteps_Essentials_NOX_SOUND"
 const SURFACES := ["grass", "sand", "cave", "underground"]
 const SPACES := [&"outdoors", &"cave", &"underground"]
@@ -68,10 +67,6 @@ func open_panel() -> void:
 	_was_paused = get_tree().paused
 	get_tree().paused = true
 	_gameplay_bus_mutes = MIX.mute_gameplay_reverb()
-	# Legacy single-clip shortcuts must not mask the mix being tuned.
-	STEPS.grass_run_index = -1
-	STEPS.grass_walk_index = -1
-	STEPS.sand_index = -1
 	_overlay.show()
 	_refresh()
 

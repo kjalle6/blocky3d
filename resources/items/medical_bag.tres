@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ItemDefinition" load_steps=3 format=3]
+[ext_resource type="Script" path="res://scripts/inventory/item_definition.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/health/medical_bag.png" id="2"]
+[resource]
+script = ExtResource("1")
+item_id = &"medical_bag"
+display_name = "Medical bag"
+icon = ExtResource("2")
+healing = 75
+use_duration = 0.25
+development_only = true

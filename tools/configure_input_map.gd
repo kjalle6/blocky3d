@@ -19,7 +19,8 @@ func _init() -> void:
 	_configure_action("dash", 0.2, [
 		_key(KEY_SHIFT), _joy_button(JOY_BUTTON_B),
 	])
-	_configure_action("restart", 0.2, [
+	_configure_action("restart", 0.2, [])
+	_configure_action("reload", 0.2, [
 		_key(KEY_R), _joy_button(JOY_BUTTON_Y),
 	])
 	_configure_action("weapon_slot_1", 0.2, [

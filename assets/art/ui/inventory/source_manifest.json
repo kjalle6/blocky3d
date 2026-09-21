@@ -1,0 +1,110 @@
+{
+  "note": "Unchanged Cyberpunk GUI pieces, following the compact single-grid reference with Close/Sort and one working scrolling control. Details appear on hover; Q/E assignments are available by keyboard and context menu.",
+  "files": [
+    {
+      "runtime": "assets/art/ui/inventory/window.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_80.png",
+      "sha256": "a92559107bccbb12b8c0678341c8a89790998333907adfb38cae8b28394c7305"
+    },
+    {
+      "runtime": "assets/art/ui/inventory/slot.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_07.png",
+      "sha256": "754afdf3bd1212f54840dc5623aec08fb40612b9bc7f5742014a315f06c7e166"
+    },
+    {
+      "runtime": "assets/art/ui/inventory/button.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_37.png",
+      "sha256": "30b24c4a6ecdfe9995ef11525f08f034024427a13285c7df15488b6de0d69bf3"
+    },
+    {
+      "runtime": "assets/art/ui/inventory/frame_01.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_01.png",
+      "sha256": "90f9cccca13e27c7d39d46d351cf19c3478f18693199469474d983ce9a5741d7"
+    },
+    {
+      "runtime": "assets/art/ui/inventory/frame_02.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_02.png",
+      "sha256": "7973e1b87ea92d9eff3fa52e1c41d9eb77445520f6e967df398689da3bd50949"
+    },
+    {
+      "runtime": "assets/art/ui/inventory/frame_03.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_03.png",
+      "sha256": "5bce309a168ca3ff0b274180691beb27ab62fb2d464fc0249ca118fafdd11424"
+    },
+    {
+      "runtime": "assets/art/ui/inventory/frame_13.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_13.png",
+      "sha256": "f0a7c4085b1ff23b3f04fa09474fcc0c9ad3b02ed066c47059c821fc2ccc80ec"
+    },
+    {
+      "runtime": "assets/art/ui/inventory/frame_19.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_19.png",
+      "sha256": "fa06dcc49253b59d0195465cdc0b64553bbece617fd9177884164736b19f9f7f"
+    },
+    {
+      "runtime": "assets/art/ui/inventory/frame_20.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_20.png",
+      "sha256": "1a13eed2ebf30c0e9340a24db8700ebd3d22e84e96567680aba4eb6797134160"
+    },
+    {
+      "runtime": "assets/art/ui/inventory/frame_21.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_21.png",
+      "sha256": "519fa1d372ab5148fc643177436f6bd001beac5bd8c35f810cdf3466e4519b63"
+    },
+    {
+      "runtime": "assets/art/ui/inventory/frame_22.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_22.png",
+      "sha256": "4e5a04d0102851223aace0986ee2c6761d4c117a26849f027851eb12ee2ffdaa"
+    },
+    {
+      "runtime": "assets/art/ui/inventory/frame_25.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_25.png",
+      "sha256": "b7c7641fe2a7ea051732e6c1b0005458dddcbd5160acb6a552b665dbb7983b43"
+    },
+    {
+      "runtime": "assets/art/ui/inventory/frame_45.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_45.png",
+      "sha256": "6784cb91a573279b09e1caa00df1b44cf22e5f6d6f0fd8a41d22d7fa5e4a96d0"
+    },
+    {
+      "runtime": "assets/art/ui/inventory/close_icon.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/3 Icons/Icons/Icon_02.png",
+      "sha256": "eaaef8abeb443f1ff19a8499c8a4aba844423c774bb95725c809c225c5b7fa70"
+    },
+    {
+      "runtime": "assets/art/ui/inventory/red_button.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/6 Buttons/1/1_04.png",
+      "sha256": "00e0bcb2358f4536dca2cb675758967a5e63eb830d907e4d437b3d42334eed13"
+    },
+    {
+      "runtime": "assets/art/ui/inventory/gold_button.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/6 Buttons/5/5_04.png",
+      "sha256": "ca32a6b9962cf18c9a62c0e6d21c951cf6b3e46e1f97633728948001834acbb1"
+    },
+    {
+      "runtime": "assets/art/ui/inventory/green_button.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/6 Buttons/7/7_04.png",
+      "sha256": "b1ac4601b54531ddc6086a72aed5d7f267bad70a4fbc0a7729cc166afd281fb3"
+    },
+    {
+      "runtime": "assets/art/ui/inventory/pressed_button.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/6 Buttons/1/1_08.png",
+      "sha256": "0a92d19e403550b7510bcacb0d904f744a74a415d5ddc103812f15c4fb02abea"
+    },
+    {
+      "runtime": "assets/art/ui/inventory/frame_11.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_11.png",
+      "sha256": "af730e0568c1606d1cfaa517a2cdb8e678a8973d877968ccfaebd4669d1e6c87"
+    },
+    {
+      "runtime": "assets/art/ui/inventory/frame_56.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_56.png",
+      "sha256": "3d7b640b53b6d1031bdf7a11c11b41abfce44f49e0ce1aac1af97333ede1d869"
+    },
+    {
+      "runtime": "assets/art/ui/inventory/scroll_handle.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_12.png",
+      "sha256": "122f1f9c0c03c085560e7635ed67dfec08f97d5068a86530726dd084cd981c09"
+    }
+  ]
+}

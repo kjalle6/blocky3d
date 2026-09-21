@@ -16,6 +16,8 @@ const ENEMY_HURTBOX_LAYER := 4
 @export var allegiance := Allegiance.ENEMY
 @export var horizontal_texture: Texture2D
 
+@export_range(1, 1000, 1) var damage := 25
+var damage_hit: CombatHit
 var _direction := Vector3.LEFT
 var _remaining_distance := 0.0
 var _excluded: Array[RID] = []
@@ -36,7 +38,8 @@ func _ready() -> void:
 	_apply_directional_visual()
 
 
-func launch(direction: Vector3, source: CollisionObject3D = null) -> void:
+func launch(direction: Vector3, source: CollisionObject3D = null, attack: CombatHit = null) -> void:
+	damage_hit = attack if attack != null else CombatHit.new(damage, &"bullet", global_position)
 	_direction = direction.normalized()
 	_excluded = source_exclusions(source)
 	_remaining_distance = maximum_distance
@@ -57,12 +60,12 @@ func _physics_process(delta: float) -> void:
 		var surface_normal: Vector3 = hit.get("normal", -_direction)
 		impacted.emit(global_position, surface_normal, collider)
 		if allegiance == Allegiance.ENEMY and collider is PlayerCharacter:
-			(collider as PlayerCharacter).receive_enemy_hit(global_position)
+			(collider as PlayerCharacter).receive_enemy_hit(global_position, damage_hit)
 		elif (
 			collider != null
 			and collider.has_method("receive_projectile_hit")
 		):
-			collider.call("receive_projectile_hit", global_position)
+			collider.call("receive_projectile_hit", global_position, damage_hit)
 		_expire()
 		return
 	global_position = destination

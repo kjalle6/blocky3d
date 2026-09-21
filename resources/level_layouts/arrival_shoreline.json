@@ -1,0 +1,26 @@
+{
+	"catalog": {
+		"skater_enemy": "2ad7f1789cf5e8f85b1581ccb4e616efedd24a6f3144562dc482e31853c63b73"
+	},
+	"created": {
+		"object_3565f9a39bbee8b13e89594c": {
+			"template": "skater_enemy",
+			"values": {
+				"facing_right": false,
+				"left": 14.72,
+				"right": 0.64,
+				"speed": 2.0,
+				"x": 126.079994,
+				"y": 1.02
+			}
+		}
+	},
+	"fingerprint": "f6c7234f3ca64ae1d2086a71f23645c05a0ee1b5b1ba6bef9fee5f06c1c2f205",
+	"overrides": {
+
+	},
+	"removed": [],
+	"revision": 1.0,
+	"schema": 3.0,
+	"section": "arrival_shoreline"
+}

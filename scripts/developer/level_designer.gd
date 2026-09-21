@@ -177,7 +177,7 @@ func test_layout() -> void:
 	nodes.clear()
 	camera = null
 	panel.refresh()
-	set_status("Testing your draft · Esc returns to editing · R restarts the attempt")
+	set_status("Testing your draft · Esc returns to editing · R reloads · F1 opens tools")
 
 func return_to_editing() -> void:
 	if mode != Mode.TESTING: return

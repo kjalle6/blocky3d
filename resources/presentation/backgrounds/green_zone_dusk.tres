@@ -1,21 +1,18 @@
-[gd_resource type="Resource" script_class="PixelBackgroundProfile" load_steps=5 format=3]
+[gd_resource type="Resource" script_class="PixelBackgroundProfile" format=3 uid="uid://cw5ncpli3e7na"]
 
-[ext_resource type="Script" path="res://scripts/presentation/pixel_background_profile.gd" id="1_profile"]
-[ext_resource type="Script" path="res://scripts/presentation/pixel_background_layer_profile.gd" id="2_layer"]
-[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/dusk/layer_1.png" id="3_sky"]
-[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/dusk/layer_2.png" id="4_conifers"]
+[ext_resource type="Script" uid="uid://qdw3psmc2geu" path="res://scripts/presentation/pixel_background_profile.gd" id="1_profile"]
+[ext_resource type="Script" uid="uid://sl0ut8fqectp" path="res://scripts/presentation/pixel_background_layer_profile.gd" id="2_layer"]
+[ext_resource type="Texture2D" uid="uid://lniwrvniw8uu" path="res://assets/art/green_zone/background/dusk/layer_1.png" id="3_sky"]
+[ext_resource type="Texture2D" uid="uid://c8n0xpib3pneo" path="res://assets/art/green_zone/background/dusk/layer_2.png" id="4_conifers"]
 
 [sub_resource type="Resource" id="Layer_sky"]
 script = ExtResource("2_layer")
 texture = ExtResource("3_sky")
 horizontal_parallax = 0.05
-depth = -5.0
-tint = Color(1, 1, 1, 1)
 
 [sub_resource type="Resource" id="Layer_conifers"]
 script = ExtResource("2_layer")
 texture = ExtResource("4_conifers")
-horizontal_parallax = 0.2
 depth = -4.4
 tint = Color(1, 1, 1, 0.95)
 

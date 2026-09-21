@@ -1,0 +1,24 @@
+{
+	"catalog": {
+		"checkpoint": "b018d9addd4200cb7a14ffdf691da39015c951d80cc6fad15bc8bb5f2c575290"
+	},
+	"created": {
+		"object_05818c6832e4a4d653f06274": {
+			"template": "checkpoint",
+			"values": {
+				"height": 2.2,
+				"width": 2.56,
+				"x": 69.199998,
+				"y": 0.0
+			}
+		}
+	},
+	"fingerprint": "9c26b962ceee6ea1ecdf8b70952301bb91ce75dce82a2ba499f92d7807d434af",
+	"overrides": {
+
+	},
+	"removed": [],
+	"revision": 1.0,
+	"schema": 3.0,
+	"section": "green_zone_finale_outdoors"
+}

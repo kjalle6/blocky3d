@@ -1,14 +1,24 @@
 class_name FirearmDefinition
 extends Resource
-## Immutable authored tuning for one player firearm. Ammunition deliberately
-## lives outside this resource until its pickup/drop economy is designed.
+## Immutable authored tuning. Loaded rounds and reserve are per-player state.
 
 @export var weapon_id: StringName = &"handgun"
 @export var display_name := "HANDGUN"
 @export var projectile_scene: PackedScene
+## Provisional until the hands-on damage comparison.
+@export_range(1, 1000, 1) var damage := 25
+@export var damage_provisional := true
 
 @export_category("Cadence")
 @export_range(0.05, 2.0, 0.01) var fire_interval := 0.28
+
+@export_category("Ammunition")
+@export_range(1, 999, 1) var magazine_capacity := 12
+@export_range(0.1, 5.0, 0.05) var reload_duration := 1.5
+## Pick a start time once per reload; the success window keeps a fixed width.
+@export_range(0.0, 5.0, 0.01) var active_reload_earliest := 0.4
+@export_range(0.0, 5.0, 0.01) var active_reload_latest := 1.0
+@export_range(0.01, 1.0, 0.01) var active_reload_window := 0.2
 
 @export_category("Projectile")
 @export_range(1.0, 40.0, 0.1) var projectile_speed := 13.0
@@ -50,6 +60,11 @@ func validation_errors() -> PackedStringArray:
 		errors.append("%s requires a display name." % weapon_id)
 	if projectile_scene == null:
 		errors.append("%s requires a projectile scene." % weapon_id)
+	if magazine_capacity <= 0 or reload_duration <= 0.0:
+		errors.append("%s requires positive magazine capacity and reload duration." % weapon_id)
+	if (active_reload_earliest < 0.0 or active_reload_latest < active_reload_earliest
+		or active_reload_window <= 0.0 or active_reload_latest + active_reload_window >= reload_duration):
+		errors.append("%s requires its entire randomized active-reload window inside its reload duration." % weapon_id)
 	if fire_interval <= 0.0:
 		errors.append("%s requires a positive fire interval." % weapon_id)
 	if projectile_speed <= 0.0 or projectile_distance <= 0.0:

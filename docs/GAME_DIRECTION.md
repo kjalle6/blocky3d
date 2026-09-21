@@ -49,6 +49,10 @@ deterministic, learnable, and enjoyable on a retry. The shaking block that
 produces a spike where the player touched it is the model for this kind of
 borrowed idea, not permission for arbitrary traps.
 
+The intended difficulty is hard without tedious retries or a Soulslike recovery
+loop. Health and healing should support that goal; failure should not turn into
+repetitive resource farming before the next meaningful attempt.
+
 ## Presentation
 
 The current pixel-art style is the game direction, not a temporary skin waiting
@@ -104,7 +108,7 @@ airborne loops.
 Combat is a supporting platforming language, not the main genre. It should
 create route decisions, preserve momentum, and remain readable at running speed.
 
-The first patrol establishes the default enemy contract:
+The currently implemented first patrol establishes the default enemy contract:
 
 - passive body contact is solid and nonlethal;
 - the enemy turns at walls and ledges;
@@ -114,6 +118,16 @@ The first patrol establishes the default enemy contract:
 - dying and defeated enemies are harmless;
 - presentation, body collision, stomp detection, attack range, and hurt range
   remain separate contracts.
+
+The planned health-and-damage pass changes bat patrols and skaters to two knife
+hits, starting with one stomp for the first balance test. Flyers remain
+indestructible and instantly lethal: they are platforming hazards. Start testing
+ordinary combat without general invulnerability after damage, using readable
+enemy attacks and recovery periods. Hits interrupt attacks on both sides and
+need clear visual/audio impact feedback even when the target survives. Review
+overlapping attacks and repeated interruptions in play.
+[Combat balance](COMBAT_BALANCE.md) records the accepted targets and separates
+them from current one-hit behavior.
 
 Future enemies may chase, charge, fly, shoot, resist stomps, or be lethal on
 touch, but those differences must be communicated visually rather than hidden
@@ -174,6 +188,22 @@ assets are future options only. They are not approved gameplay systems. If a
 weapon bench is eventually justified, parts should create clear behavioral
 changes rather than a fog of minor percentage statistics.
 
+### Inventory and consumables
+
+The planned player inventory holds carried consumables, with better healing
+items introduced through progression. Start with no supplies and no healing-item
+carry cap. The basic healing item restores 25 HP instantly, with a brief player
+indicator and sound; movement remains available, while attacks are briefly
+locked for that feedback duration.
+
+Use an always-visible quick-use bar for more than one item type, without opening
+a selection menu. Extending weapon number keys or using up to four slots with
+keys such as R/T/F/G are alternatives for review, not final controls. Enemy
+healing/ammo drops and chest rewards are possible supply sources that reduce
+loose pickup clutter; their quantities and chances are undecided. Status-effect
+items and crafting from bought ingredients remain possible later additions.
+Details are recorded in [Combat balance](COMBAT_BALANCE.md).
+
 ## Hazards and checkpoints
 
 Player, enemy, weapon, and hazard hitboxes are tuned for enjoyable contact
@@ -190,6 +220,21 @@ A checkpoint is earned only after stable grounded contact on its authored
 surface. Falling or jumping through a nearby trigger never advances progress.
 Respawns must be supported, clear of edges and hazards, and outside immediate
 enemy attack range.
+
+The planned health pass turns the existing placeable checkpoints into autosave
+points in both presentation and persistent saving. Their grounded trigger areas
+remain editable in the level designer. Activation saves without healing. Separate
+manual save slots preserve player-chosen backups and cannot be overwritten by
+autosaves. Manual saving is available from the pause menu while safely grounded
+and out of combat, capturing the current safe position and state.
+Death presents Continue from last save, Load Save, and Quit. Continue
+loads the most recent manual or automatic save; Load Save lets the player choose
+an earlier backup. Loading restores that save's exact HP and consumable
+quantities, with no separate health refill. Healing pickups are a separate
+mechanic; permanent upgrades and completed bosses persist through ordinary
+retries. Whether loading an older manual save rolls back later permanent
+progress remains to be decided.
+[Combat balance](COMBAT_BALANCE.md) owns the detailed recovery and save rules.
 
 ## Campaign and progression
 

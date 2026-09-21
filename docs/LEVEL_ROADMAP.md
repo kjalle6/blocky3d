@@ -278,6 +278,12 @@ beyond the 11.79 m Double Jump envelope but comfortably inside the Double Jump
 plus Dash envelope, so the newly collected ability is required. Its following
 checkpoint is shifted clear of the widened hazard.
 
+Retain the Wall Jump shaft's upper spike pair at its current placement for now.
+It gives slow wall sliding a teaching purpose: the player can wait and slide
+down a wall before kicking off to adjust the next crossing's height. When the
+text tutorials are added, explain this control as part of the Wall Jump lesson
+before the upper pair, so the player knows that an immediate kick is optional.
+
 The machine shaft is now built at the end of that route. The corridor breaks for
 14.08 m, open floor to sky, with one hovering machine bobbing slowly in the gap;
 falling in is a long drop past the kill plane. The machine is indestructible and
@@ -473,6 +479,8 @@ before the firearm exists and intentionally contains no ammunition display until
 ammo appearance and drop behavior are designed. The reusable component can later
 move into the proper character HUD rather than becoming throwaway prototype UI.
 Full inventory, crafting, and weapon-menu work remain outside this milestone.
+The later health pass adds the separately planned consumable inventory and
+quick access described in [Combat balance](COMBAT_BALANCE.md).
 
 The boss remains unbuilt and is a later build decision after the current pickup,
 weapon switching, minimal no-ammo HUD, and safe firing lesson are accepted in
@@ -561,6 +569,49 @@ Deterministic captures, focused automation, and hands-on traversal accept this
 composition and the finished route. Production paths and campaign flow preserve
 the accepted level without redesigning it.
 
+### Next: health and damage
+
+The first health/inventory/save implementation is in place, ready for balancing
+before more gun enemies or the boss. [Combat balance](COMBAT_BALANCE.md) owns the accepted targets,
+display rules, proposed test values, and remaining decisions. Follow the phased
+[implementation plan](HEALTH_INVENTORY_SAVE_PLAN.md) for combat, inventory,
+healing, persistent saves, and recovery menus. The player starts
+with 100 maximum HP and a compact HUD that supports future capacity growth.
+Ordinary enemy attacks start at 25 damage: three hits survived, the fourth lethal
+without healing.
+Bat patrols and skaters start at 50 HP, with 25 knife damage and 50 stomp damage
+as the accepted first-test baseline. Flyers remain indestructible and instantly
+lethal; all traversal hazards retain instant death. Test ordinary combat without
+general damage invulnerability, with readable attack recovery, interruptions on
+both sides, and clear feedback when an enemy survives a hit. Review overlapping
+attacks and repeated interruptions before judging fairness.
+Replace the checkpoint presentation with real autosave points while retaining
+the existing placement workflow and saved
+layouts. Autosaves do not heal. Add separate manual save slots that autosaving
+cannot overwrite, so the player can preserve an earlier recovery point. Allow
+manual saving from the pause menu while safely grounded and out of combat.
+The death menu offers Continue from last save, Load Save, and Quit; Continue
+loads the most recent manual or automatic save, while Load Save permits selecting
+a backup.
+Loading restores the chosen save's exact HP and consumables. Older manual saves
+roll back all progression to that snapshot, retaining unlocks earned before it
+and removing those earned later. The prototype uses three protected manual slots
+and three rotating autosaves; [save-system guide](SAVE_SYSTEM.md) defines safety,
+migration, section restoration and developer isolation.
+Add carried healing with no starting supplies and no initial carry cap. The
+basic item restores 25 HP instantly with a short player indicator/sound and
+attack lockout while retaining all movement. Build always-visible quick-use
+slots for multiple healing types, with stronger healing through progression;
+the selected prototype uses two slots on Q/E. Explore healing/ammo drops and chest
+rewards to avoid loose pickup clutter, with reward quantities and persistence
+still to be designed. Status effects, ingredient purchases, and crafting remain
+possible later work.
+Feel out handgun damage in play and settle gunner values, hurt/feedback timing,
+and the remaining save/use rules. Shared resources now own implemented numbers.
+Review the first pass in the Firearm Lab and authored levels.
+The core loop is implemented. Healing chest/drop fixtures live in the Firearm Lab;
+production supplies, final presentation and gun/boss balancing still need review.
+
 ### Needed before the finale
 
 1. Promote the selected Green Zone enemy 2 animation set into `assets/art` and
@@ -589,9 +640,11 @@ screen, world/level selection, pause, options, accessibility, confirmations,
 contextual HUD, and development controls. Import a curated subset rather than
 the complete pack.
 
-Weapon construction, crafting, skill trees, large inventories, collectible
-economies, and advanced upgrades remain unapproved options. Their artwork may
-inform later prototypes but does not place them on the production schedule.
+A consumable inventory, quick access to multiple healing types, and stronger
+healing through progression are now planned with the health pass. Weapon
+construction, crafting, skill trees, broader inventory/economy systems, and
+advanced upgrades remain exploratory. Their artwork may inform later prototypes
+but does not place those extensions on the production schedule.
 
 ## Definition of done for a level
 

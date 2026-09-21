@@ -22,10 +22,15 @@ Files ending in `.bak` are local previous-save backups; `.tmp` and `.lock`
 directories are temporary save coordination. Compatible unsaved recovery drafts
 live under `user://level_designer`, separate from production layouts.
 
-At the accepted 2026-09-12 checkpoint this directory contains no production
-layout JSON. Temporary fixture saves used for validation were removed. Preserve
-any newer user-created section saves; they are authored content, not build
-artifacts. The user's local sandbox recovery remains separate from Git.
+Current section saves contain user-authored additions:
+
+- `arrival_shoreline.json`: an additional skater enemy in Level 1;
+- `overgrown_coastal_ascent_interior.json`: an additional spike row in Level 2;
+- `green_zone_finale_outdoors.json`: an additional checkpoint in Level 3 WIP.
+
+Preserve these saves as authored content, not build artifacts. Include them
+when committing or exporting the current levels. The user's local sandbox
+recovery remains separate from Git.
 
 The structural fingerprint includes supported enemy scripts, so even a shared
 combat change can require review of a draft or saved layout. Read both the
@@ -52,3 +57,10 @@ also remain under ignored `build/sandbox_recovery*`.
 These are local recovery artifacts, not project saves or a general migration.
 Inspect current draft/save contents before restoring anything: the user may
 have made newer edits since that review.
+
+The 2026-09-21 ground-combat change also reviewed the current sandbox recovery
+against the exact previous enemy-script bytes. Both gunner records, now at
+x=6.360001/19.159999 and y=0.55 facing left, validated unchanged against the new
+base. Only its fingerprint was updated. The original is preserved as
+`sandbox.before-ground-combat.20260921T001106945.review.json`; the review and
+original source snapshots are under ignored `build/ground_combat_review`.

@@ -2,10 +2,13 @@ class_name GameProgress
 extends RefCounted
 ## Versioned, engine-independent campaign progress payload.
 
-const SAVE_VERSION := 1
+const SAVE_VERSION := 2
 
 var completed_level_ids: Array[StringName] = []
 var unlocked_ability_ids: Array[StringName] = []
+var owned_weapon_ids: Array[StringName] = [PlayerWeapon.KNIFE]
+var completed_boss_ids: Array[StringName] = []
+var maximum_hp := 100
 
 
 func complete_level(level_id: StringName) -> bool:
@@ -42,12 +45,15 @@ func to_dictionary() -> Dictionary:
 		"version": SAVE_VERSION,
 		"completed_levels": completed,
 		"unlocked_abilities": abilities,
+		"owned_weapons": Array(owned_weapon_ids),
+		"completed_bosses": Array(completed_boss_ids),
+		"maximum_hp": maximum_hp,
 	}
 
 
 static func from_dictionary(data: Dictionary) -> GameProgress:
 	var loaded := GameProgress.new()
-	if int(data.get("version", -1)) != SAVE_VERSION:
+	if int(data.get("version", -1)) not in [1, SAVE_VERSION]:
 		return loaded
 	var completed_value: Variant = data.get("completed_levels", [])
 	if completed_value is Array:
@@ -64,4 +70,12 @@ static func from_dictionary(data: Dictionary) -> GameProgress:
 				and ability_id not in loaded.unlocked_ability_ids
 			):
 				loaded.unlocked_ability_ids.append(ability_id)
+	if int(data.get("version", -1)) == SAVE_VERSION:
+		loaded.maximum_hp = maxi(100, int(data.get("maximum_hp", 100)))
+		for id in data.get("owned_weapons", []):
+			if PlayerWeapon.is_known(StringName(id)) and StringName(id) not in loaded.owned_weapon_ids:
+				loaded.owned_weapon_ids.append(StringName(id))
+		for id in data.get("completed_bosses", []):
+			if id is String and not id.is_empty() and StringName(id) not in loaded.completed_boss_ids:
+				loaded.completed_boss_ids.append(StringName(id))
 	return loaded

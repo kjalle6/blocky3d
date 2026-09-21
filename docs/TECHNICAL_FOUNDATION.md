@@ -36,7 +36,7 @@ scene tree is three-dimensional.
 | Hazards | Reusable hazard areas; spike art and damage geometry remain independently authored |
 | Player combat | Focused melee and firearm owners that request movement-compatible actions without owning locomotion |
 | Projectiles | Reusable projectile contract with explicitly authored allegiance, collision, speed, damage, lifetime, and reset behavior |
-| Firearms and ammo | Typed firearm data plus session-local ownership and selection are implemented; ammunition is deliberately deferred until its appearance and drop policy are designed |
+| Firearms and ammo | Typed firearm tuning, ownership, loaded rounds, inventory reserve, reload and exact snapshot restoration; capacity and reload timing remain provisional |
 | Boss encounters | Boss-specific state machines using shared damage, projectile, feedback, and deterministic-reset contracts |
 | Feedback | `CombatFeedback3D` owns impact presentation and emits live character/scenery cues; `combat_audio_3d.gd` owns their bounded spatial voice pool |
 | Progression | `ProgressionStore` owns versioned `GameProgress` save data and permanent ability ownership |
@@ -67,8 +67,10 @@ without reading or modifying the campaign save. That state seeds the level's
 declared `assumed_owned_abilities`; it is not necessarily an empty progression
 view. Session abilities remain active through death and manual restart inside
 that loaded session, then reset when another level session is created.
-Disabling the mode restores the versioned persistent campaign behavior without
-changing level code.
+New campaign/Continue/Load now explicitly select persistent play while the
+development selector retains this fresh-run behavior. Campaign death uses the
+save recovery menu; developer death still resets quickly. See
+[SAVE_SYSTEM.md](SAVE_SYSTEM.md) for snapshot ownership and controls.
 
 `GameRoot.developer_tools_enabled` adds separate Firearm Review Lab and Level
 Design Lab entries to the selector. Both are development-only `LevelSession3D`
@@ -76,6 +78,9 @@ fixtures, not campaign worlds or levels. Firearm Review Lab is the repurposed
 Animation Lab and retains its session-local test abilities: they survive `R`,
 never enter the save payload, and never mark campaign completion. Its in-room
 panel still toggles each implemented ability immediately.
+The lab grants and equips the handgun on entry and manual restart, alongside
+the knife. Respawns retain ownership; leaving the lab does not grant a gun to
+campaign levels.
 
 The room retains clear surfaces for triggering and inspecting idle, run, jump,
 Double Jump, wall contact, attack, landing, and transition timing, and now adds
@@ -353,6 +358,25 @@ The established interaction priority is:
 Defeated enemies and dead players are ignored. New enemy families change
 declared behavior rather than introducing collision-order exceptions.
 
+Ground enemies use the authored damage box (`ProjectileHurtbox/Collision`)
+for knife overlap, recentered on the sprite's torso including its facing and
+the skater's registration offset. Stomps use that horizontal extent and a stable
+`stomp_head_height` aligned with the artwork, excluding the projectile box's
+transparent head padding. Their shorter movement bodies still handle navigation. A knife
+checks overlap throughout its 0.13–0.27 second thrust window, once per target
+per swing; windup and recovery do no damage. Starting or stopping movement
+preserves that thrust's animation clock. Stomps resolve from the descending
+feet crossing the head plane, with horizontal overlap measured at that
+crossing, before enemy attack processing. This avoids relying on a one-time
+area-entry signal or letting a fast fall sink through the visible head.
+If an edge landing or short hop misses that plane but lands on the enemy's
+solid body, the upward collision normal also confirms a stomp. Side and
+underside collisions do not count, and the bounce keeps its existing strength.
+`tools/validate_ground_combat_contacts.gd` covers these edge and timing cases,
+including solid-body landings, rising, passive side contact, and clear misses.
+Repeated hands-on testing accepted the solid-body landing fix, with no further
+instances of standing on an enemy instead of stomping it.
+
 Ordinary patrols still use wall and ledge sensing as their default movement
 contract. A scene may additionally author independent `patrol_left_distance`
 and `patrol_right_distance` values when a readable route must stop at a nearby
@@ -506,15 +530,19 @@ with the existing movement and melee kit.
   multiple targets take damage. Defeated melee targets are skipped before
   damage/contact reporting. These hooks preserve the existing animation and
   damage timing; ordinary jumps/landings retain their movement-audio hooks.
-- Ammo appearance, ownership scope, capacity, depletion, pickup, drop, and reset
-  behavior remain an explicit design discussion after the no-ammo gun controls
-  are accepted. None is implied by the current firearm resource or HUD.
+- PlayerHandgun3D owns loaded rounds and reload timing. PlayerInventory owns the
+  handgun_ammo reserve stack. FirearmDefinition supplies provisional magazine
+  capacity and reload duration. Player snapshots save both magazine and reserve;
+  pickup/chest claims prevent repeated grants. See COMBAT_BALANCE.md for tuning.
 - Zero ammo cannot make an encounter impossible. Required damage always has a
   melee route or a deterministic replenishment rule.
 - The firearm auto-equips on first pickup and briefly reveals the weapon-switch
-  controls. A contextual two-slot weapon display then highlights the equipped
-  knife or gun. It is absent before the player has a firearm, contains no ammo
-  fiction, and remains reusable inside the later character HUD.
+  controls. The compact bottom-left weapon HUD shows a gun icon, loaded/reserve
+  counts. A screen-sized bar above the player shows the moving reload marker and
+  a 0.2-second active window, randomly positioned once per reload with a start
+  between 0.4 and 1.0 seconds; one timed second press completes the reload.
+  A miss keeps the original duration. The knife has no weapon HUD. The separate aiming
+  reticle remains active for mouse aiming.
 
 Gun construction, crafting, inventories, skill trees, and permanent firearm
 progression are not current technical milestones. The asset library makes them
@@ -863,6 +891,9 @@ all current levels. Visual changes are inspected in the running game;
 screenshots do not replace hands-on movement and collision testing.
 The rendered Level 2 background-drift and wall-jump-camera probes deliberately
 remain outside the headless suite because they sample after `frame_post_draw`.
+The repeated jump/dash escape test, `tools/probe_shaft_containment.gd`, is also
+outside the routine suite. It is opt-in for changes to the machine shaft or
+movement rules that could permit climbing out, not an enemy-combat check.
 
 Automated playthroughs are technical legality checks, not difficulty judges.
 They may prove that collision, inputs, checkpoints, and completion work, but

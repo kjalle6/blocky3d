@@ -1,0 +1,23 @@
+{
+	"catalog": {
+		"spike_row": "fc2d44e78dd25cd1f229d114631d73c5cfe8f66adea0823d81fa482368f2efc8"
+	},
+	"created": {
+		"object_7bdf40e9d5e1e853f5c82928": {
+			"template": "spike_row",
+			"values": {
+				"width": 2.56,
+				"x": 15.36,
+				"y": 0.0
+			}
+		}
+	},
+	"fingerprint": "853627ecc9cf7cfc529701b47f5c76c53073f5571e12ed682bf37f720d9181ea",
+	"overrides": {
+
+	},
+	"removed": [],
+	"revision": 1.0,
+	"schema": 3.0,
+	"section": "overgrown_coastal_ascent_interior"
+}

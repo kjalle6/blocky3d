@@ -1,13 +1,20 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene format=3 uid="uid://851un60kf1i6"]
 
-[ext_resource type="Script" path="res://scripts/app/game_root.gd" id="1_app"]
+[ext_resource type="Script" uid="uid://herp5278m7nj" path="res://scripts/app/game_root.gd" id="1_app"]
 [ext_resource type="Resource" path="res://resources/campaign/main_campaign.tres" id="2_campaign"]
 [ext_resource type="Resource" path="res://resources/dev/animation_lab.tres" id="3_animation_lab"]
 [ext_resource type="Resource" path="res://resources/dev/level_design_lab.tres" id="4_level_design_lab"]
-[ext_resource type="Script" path="res://scripts/campaign/level_definition.gd" id="5_level_definition"]
-[ext_resource type="Resource" path="res://resources/dev/green_zone_finale_wip.tres" id="6_green_zone_finale_wip"]
+[ext_resource type="Script" uid="uid://cba0n2ff1glr" path="res://scripts/campaign/level_definition.gd" id="5_level_definition"]
+[ext_resource type="Resource" uid="uid://bej2xiyiu46ny" path="res://resources/dev/green_zone_finale_wip.tres" id="6_green_zone_finale_wip"]
 [ext_resource type="PackedScene" path="res://scenes/ui/weapon_status_hud.tscn" id="7_weapon_status_hud"]
 [ext_resource type="Resource" path="res://resources/dev/level_designer_sandbox.tres" id="8_designer_sandbox"]
+
+[sub_resource type="StyleBoxFlat" id="Style_button"]
+bg_color = Color(0.09, 0.2, 0.24, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [sub_resource type="StyleBoxFlat" id="Style_panel"]
 bg_color = Color(0.03, 0.045, 0.075, 0.9)
@@ -28,53 +35,52 @@ corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 
-[sub_resource type="StyleBoxFlat" id="Style_button"]
-bg_color = Color(0.09, 0.2, 0.24, 1)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
-
-[node name="GameRoot" type="Node"]
+[node name="GameRoot" type="Node" unique_id=316988863]
 script = ExtResource("1_app")
 campaign = ExtResource("2_campaign")
 developer_room_definition = ExtResource("3_animation_lab")
 developer_level_definitions = Array[ExtResource("5_level_definition")]([ExtResource("3_animation_lab"), ExtResource("4_level_design_lab"), ExtResource("6_green_zone_finale_wip"), ExtResource("8_designer_sandbox")])
 level_button_style = SubResource("Style_button")
-developer_fresh_level_runs = true
-developer_tools_enabled = true
 
-[node name="World" type="Node3D" parent="."]
+[node name="World" type="Node3D" parent="." unique_id=265900711]
 unique_name_in_owner = true
 
-[node name="AbilityTutorialTimer" type="Timer" parent="."]
+[node name="AbilityTutorialTimer" type="Timer" parent="." unique_id=2047684925]
 unique_name_in_owner = true
 wait_time = 3.8
 one_shot = true
 
-[node name="Interface" type="CanvasLayer" parent="."]
+[node name="Interface" type="CanvasLayer" parent="." unique_id=2050224974]
 
-[node name="Instructions" type="PanelContainer" parent="Interface"]
+[node name="Instructions" type="PanelContainer" parent="Interface" unique_id=384373316]
 unique_name_in_owner = true
 visible = false
-offset_left = 18.0
-offset_top = 18.0
-offset_right = 810.0
-offset_bottom = 102.0
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -680.0
+offset_top = 64.0
+offset_right = -20.0
+offset_bottom = 144.0
+grow_horizontal = 0
+mouse_filter = 2
 theme_override_styles/panel = SubResource("Style_panel")
 
-[node name="Margin" type="MarginContainer" parent="Interface/Instructions"]
+[node name="Margin" type="MarginContainer" parent="Interface/Instructions" unique_id=1091687421]
+layout_mode = 2
 theme_override_constants/margin_left = 14
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 14
 theme_override_constants/margin_bottom = 10
 
-[node name="LevelLabel" type="Label" parent="Interface/Instructions/Margin"]
+[node name="LevelLabel" type="Label" parent="Interface/Instructions/Margin" unique_id=911765486]
 unique_name_in_owner = true
+layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.97, 1, 1)
 theme_override_font_sizes/font_size = 18
+autowrap_mode = 3
 
-[node name="MenuHint" type="Label" parent="Interface"]
+[node name="MenuHint" type="Label" parent="Interface" unique_id=1370878134]
 unique_name_in_owner = true
 visible = false
 anchors_preset = 1
@@ -90,33 +96,38 @@ theme_override_font_sizes/font_size = 16
 text = "F1: TOOLS    F7: HITBOXES    F10: GRID    F11: INSPECT    ESC: SELECT"
 horizontal_alignment = 2
 
-[node name="DeveloperInspectionLabel" type="Label" parent="Interface"]
+[node name="DeveloperInspectionLabel" type="Label" parent="Interface" unique_id=1492286889]
 unique_name_in_owner = true
 visible = false
-anchors_preset = 10
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -390.0
-offset_top = 22.0
-offset_right = 390.0
-offset_bottom = 100.0
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -800.0
+offset_top = -236.0
+offset_right = -20.0
+offset_bottom = -152.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(1, 0.78, 0.32, 1)
 theme_override_colors/font_shadow_color = Color(0.02, 0.02, 0.03, 0.95)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 18
-text = "INSPECTION MODE — GOD / NOCLIP / FREE FLIGHT\nWASD or arrows: fly    SPACE: up    SHIFT: faster    F11: exit\nLEVEL ABILITIES STAY UNLOCKED UNTIL RELOAD"
-horizontal_alignment = 1
+text = "INSPECTION MODE — GOD / NOCLIP / FREE FLIGHT
+WASD or arrows: fly    SPACE: up    SHIFT: faster    F11: exit
+LEVEL ABILITIES STAY UNLOCKED UNTIL RELOAD"
+horizontal_alignment = 2
 
-[node name="DeveloperMeasurementLabel" type="Label" parent="Interface"]
+[node name="DeveloperMeasurementLabel" type="Label" parent="Interface" unique_id=1500976917]
 unique_name_in_owner = true
 visible = false
-anchors_preset = 12
-anchor_right = 1.0
+anchors_preset = 3
+anchor_left = 1.0
 anchor_top = 1.0
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 20.0
+offset_left = -650.0
 offset_top = -54.0
 offset_right = -20.0
 offset_bottom = -20.0
@@ -128,12 +139,11 @@ theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 17
 text = "GRID 1.28 m / 0.64 m    PLAYER FEET  X 0.00    Y 0.00"
-horizontal_alignment = 1
+horizontal_alignment = 2
 
-[node name="DeveloperCursorCoordinateLabel" type="Label" parent="Interface"]
+[node name="DeveloperCursorCoordinateLabel" type="Label" parent="Interface" unique_id=1874061915]
 unique_name_in_owner = true
 visible = false
-mouse_filter = 2
 z_index = 100
 theme_override_colors/font_color = Color(0.72, 0.94, 1, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.025, 0.04, 0.96)
@@ -141,35 +151,42 @@ theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 16
 text = "X 0.00    Y 0.00"
 
-[node name="DeveloperCollisionLegend" type="Label" parent="Interface"]
+[node name="DeveloperCollisionLegend" type="Label" parent="Interface" unique_id=1864004106]
 unique_name_in_owner = true
 visible = false
-offset_left = 20.0
-offset_top = 108.0
-offset_right = 550.0
-offset_bottom = 162.0
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -650.0
+offset_top = -120.0
+offset_right = -20.0
+offset_bottom = -66.0
 theme_override_colors/font_color = Color(0.94, 0.96, 1, 0.94)
 theme_override_colors/font_outline_color = Color(0.02, 0.025, 0.04, 0.96)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 15
-text = "HITBOXES  BLUE terrain  CYAN player  MAGENTA enemy  RED lethal\nORANGE contact/attacks  YELLOW checkpoints  PURPLE pickups  GREEN exits"
+text = "HITBOXES  BLUE terrain  CYAN player  MAGENTA enemy  RED lethal
+ORANGE contact/attacks  YELLOW checkpoints  PURPLE pickups  GREEN exits"
+horizontal_alignment = 2
 
-[node name="WeaponStatusHUD" parent="Interface" instance=ExtResource("7_weapon_status_hud")]
+[node name="WeaponStatusHUD" parent="Interface" unique_id=1700717709 instance=ExtResource("7_weapon_status_hud")]
 unique_name_in_owner = true
 
-[node name="CompletionFade" type="ColorRect" parent="Interface"]
+[node name="CompletionFade" type="ColorRect" parent="Interface" unique_id=2110204425]
 unique_name_in_owner = true
 visible = false
 modulate = Color(1, 1, 1, 0)
-mouse_filter = 2
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 color = Color(0.015, 0.02, 0.035, 1)
 
-[node name="CompletionLabel" type="Label" parent="Interface"]
+[node name="CompletionLabel" type="Label" parent="Interface" unique_id=2121325152]
 unique_name_in_owner = true
 visible = false
 anchors_preset = 15
@@ -182,14 +199,15 @@ theme_override_colors/font_shadow_color = Color(0.02, 0.02, 0.03, 0.9)
 theme_override_constants/shadow_offset_x = 3
 theme_override_constants/shadow_offset_y = 3
 theme_override_font_sizes/font_size = 42
-text = "LEVEL COMPLETE\nR: run again    ESC: level select"
+text = "LEVEL COMPLETE
+R: run again    ESC: level select"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="AbilityTutorial" type="PanelContainer" parent="Interface"]
+[node name="AbilityTutorial" type="PanelContainer" parent="Interface" unique_id=1135939263]
 unique_name_in_owner = true
 visible = false
-anchors_preset = 10
+anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -440.0
@@ -199,14 +217,14 @@ offset_bottom = 206.0
 grow_horizontal = 2
 theme_override_styles/panel = SubResource("Style_panel")
 
-[node name="Margin" type="MarginContainer" parent="Interface/AbilityTutorial"]
+[node name="Margin" type="MarginContainer" parent="Interface/AbilityTutorial" unique_id=484638431]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 10
 
-[node name="AbilityTutorialLabel" type="Label" parent="Interface/AbilityTutorial/Margin"]
+[node name="AbilityTutorialLabel" type="Label" parent="Interface/AbilityTutorial/Margin" unique_id=1142268969]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.43, 1, 0.72, 1)
@@ -216,7 +234,7 @@ theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 20
 horizontal_alignment = 1
 
-[node name="LevelSelect" type="Control" parent="Interface"]
+[node name="LevelSelect" type="Control" parent="Interface" unique_id=1537884258]
 unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
@@ -225,7 +243,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Backdrop" type="ColorRect" parent="Interface/LevelSelect"]
+[node name="Backdrop" type="ColorRect" parent="Interface/LevelSelect" unique_id=1643520823]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -234,7 +252,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.045, 0.075, 0.14, 1)
 
-[node name="Center" type="CenterContainer" parent="Interface/LevelSelect"]
+[node name="Center" type="CenterContainer" parent="Interface/LevelSelect" unique_id=1586856428]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -242,50 +260,50 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="Interface/LevelSelect/Center"]
+[node name="Panel" type="PanelContainer" parent="Interface/LevelSelect/Center" unique_id=763240130]
 custom_minimum_size = Vector2(540, 390)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Style_menu_panel")
 
-[node name="Margin" type="MarginContainer" parent="Interface/LevelSelect/Center/Panel"]
+[node name="Margin" type="MarginContainer" parent="Interface/LevelSelect/Center/Panel" unique_id=74284388]
 layout_mode = 2
 theme_override_constants/margin_left = 42
 theme_override_constants/margin_top = 38
 theme_override_constants/margin_right = 42
 theme_override_constants/margin_bottom = 38
 
-[node name="Options" type="VBoxContainer" parent="Interface/LevelSelect/Center/Panel/Margin"]
+[node name="Options" type="VBoxContainer" parent="Interface/LevelSelect/Center/Panel/Margin" unique_id=797570603]
 layout_mode = 2
 theme_override_constants/separation = 18
 alignment = 1
 
-[node name="Title" type="Label" parent="Interface/LevelSelect/Center/Panel/Margin/Options"]
+[node name="Title" type="Label" parent="Interface/LevelSelect/Center/Panel/Margin/Options" unique_id=956400484]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.43, 1, 0.72, 1)
 theme_override_font_sizes/font_size = 38
 text = "BLOCKY 3D"
 horizontal_alignment = 1
 
-[node name="Subtitle" type="Label" parent="Interface/LevelSelect/Center/Panel/Margin/Options"]
+[node name="Subtitle" type="Label" parent="Interface/LevelSelect/Center/Panel/Margin/Options" unique_id=1045091053]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.78, 0.84, 0.92, 1)
 theme_override_font_sizes/font_size = 18
 text = "SELECT LEVEL"
 horizontal_alignment = 1
 
-[node name="WorldList" type="VBoxContainer" parent="Interface/LevelSelect/Center/Panel/Margin/Options"]
+[node name="WorldList" type="VBoxContainer" parent="Interface/LevelSelect/Center/Panel/Margin/Options" unique_id=432335085]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Controls" type="Label" parent="Interface/LevelSelect/Center/Panel/Margin/Options"]
+[node name="Controls" type="Label" parent="Interface/LevelSelect/Center/Panel/Margin/Options" unique_id=1738858769]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.72, 0.82, 1)
 theme_override_font_sizes/font_size = 15
 text = "Click or use W / S + ENTER    •    1-9 shortcuts"
 horizontal_alignment = 1
 
-[node name="DeveloperModeLabel" type="Label" parent="Interface/LevelSelect/Center/Panel/Margin/Options"]
+[node name="DeveloperModeLabel" type="Label" parent="Interface/LevelSelect/Center/Panel/Margin/Options" unique_id=2138361515]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.78, 0.32, 1)
@@ -293,43 +311,43 @@ theme_override_font_sizes/font_size = 14
 text = "DEV MODE  •  LEVEL LOADS START FRESH"
 horizontal_alignment = 1
 
-[node name="DeveloperAbilityPanel" type="PanelContainer" parent="Interface"]
+[node name="DeveloperAbilityPanel" type="PanelContainer" parent="Interface" unique_id=1030637705]
 unique_name_in_owner = true
 visible = false
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -310.0
-offset_top = 78.0
+offset_top = 212.0
 offset_right = -20.0
-offset_bottom = 225.0
+offset_bottom = 400.0
 grow_horizontal = 0
 theme_override_styles/panel = SubResource("Style_panel")
 
-[node name="Margin" type="MarginContainer" parent="Interface/DeveloperAbilityPanel"]
+[node name="Margin" type="MarginContainer" parent="Interface/DeveloperAbilityPanel" unique_id=908858337]
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 12
 
-[node name="Options" type="VBoxContainer" parent="Interface/DeveloperAbilityPanel/Margin"]
+[node name="Options" type="VBoxContainer" parent="Interface/DeveloperAbilityPanel/Margin" unique_id=154347827]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Title" type="Label" parent="Interface/DeveloperAbilityPanel/Margin/Options"]
+[node name="Title" type="Label" parent="Interface/DeveloperAbilityPanel/Margin/Options" unique_id=2038651531]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.78, 0.32, 1)
 theme_override_font_sizes/font_size = 18
 text = "ABILITY TESTING"
 
-[node name="Hint" type="Label" parent="Interface/DeveloperAbilityPanel/Margin/Options"]
+[node name="Hint" type="Label" parent="Interface/DeveloperAbilityPanel/Margin/Options" unique_id=1731510654]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.78, 0.86, 1)
 theme_override_font_sizes/font_size = 13
 text = "Toggle abilities on or off instantly"
 
-[node name="DeveloperAbilityToggles" type="VBoxContainer" parent="Interface/DeveloperAbilityPanel/Margin/Options"]
+[node name="DeveloperAbilityToggles" type="VBoxContainer" parent="Interface/DeveloperAbilityPanel/Margin/Options" unique_id=990272491]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 4

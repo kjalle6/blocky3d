@@ -76,10 +76,21 @@ Do not restore that bot or carry its old stage-10 death as an outstanding bug.
 Keep focused movement, ability, Level 2 structure, and transition checks;
 hands-on playtesting owns the complete Level 2 route.
 
-The suite now contains 47 validators. All 47 passed in the immediately preceding
-48-validator windowed run (339.7 seconds); the removed playthrough was its sole
-failure. No full rerun was needed for deleting that independent test and updating
-documentation. Timing and test count are checkpoint observations, not limits.
+The suite contains 55 validators, including focused inventory UI and ammunition checks.
+All 54 then-existing validators passed in the 2026-09-21 windowed run
+(426.7 seconds), before moving the independent shaft-containment stress test
+out of the suite at the user's request. Its removal does not need another full
+run. The new inventory UI check and existing item reward check passed separately
+after the inventory presentation work. Timing and test count are checkpoint
+observations, not limits.
+
+`tools/probe_shaft_containment.gd` is opt-in only. It repeats four ten-second
+jump/dash attempts against the Level 2 machine shaft to check for an escape;
+it is not a cave playthrough. Run it only when changes to that shaft or movement
+rules could allow an escape. Do not include it in routine suites or combat work.
+For isolated enemy behavior changes, prefer the relevant focused combat checks
+and an MCP playtest; sharing an enemy script across levels is not by itself a
+reason to run unrelated cave, audio, background, and authoring checks.
 
 It still takes a `-Scope` switch even though only `All` exists today. The six
 prototype levels used to be a separate scope worth skipping, at roughly 60% of

@@ -1,0 +1,35 @@
+{
+  "note": "Selected unchanged files from the user-owned Cyberpunk GUI and Radioactive Icons collections. Healing icons approved: packet 25 HP, open kit 50 HP, medical bag 75 HP. Stronger tiers are lab fixtures until campaign placement.",
+  "files": [
+    {
+      "runtime": "assets/art/ui/health/player_full.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/2 Bars/HealthBar4.png",
+      "sha256": "af5376a0278f081f788c7fb19822e3456e4a535504b80d7b7a79b616b3446d0f"
+    },
+    {
+      "runtime": "assets/art/ui/health/player_empty.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/2 Bars/HealthBar8.png",
+      "sha256": "4d667d924a5472e77ac52ce5a485e118763e438bd4148e723725a5aae6080d11"
+    },
+    {
+      "runtime": "assets/art/ui/health/cyberpunk_pixel.otf",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/10 Font/CyberpunkCraftpixPixel.otf",
+      "sha256": "0795f960cee28562d2e8c638e84e179847993c59fbd1d3bfcdbfec061fed02d5"
+    },
+    {
+      "runtime": "assets/art/ui/health/basic_heal.png",
+      "source": "D:/GodotProjects/blocky3dassets/icons/radioactive_icons/1 Icons/Icon10_16.png",
+      "sha256": "c2aa7b7cacb9c7c3c23d9123b40e26d129534493e646133495d2cfc934784b1c"
+    },
+    {
+      "runtime": "assets/art/ui/health/large_heal.png",
+      "source": "D:/GodotProjects/blocky3dassets/icons/radioactive_icons/1 Icons/Icon10_19.png",
+      "sha256": "668cedb7d2748f195634b77ce26246f3ba6012dd8706142b299e8b70f8300e25"
+    },
+    {
+      "runtime": "assets/art/ui/health/medical_bag.png",
+      "source": "D:/GodotProjects/blocky3dassets/icons/radioactive_icons/1 Icons/Icon10_20.png",
+      "sha256": "23cb7cd86ebedd07e140c1f97b150c55076e953cdeaf426add5132760a1bbba3"
+    }
+  ]
+}

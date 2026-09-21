@@ -1,41 +1,41 @@
-[gd_resource type="Resource" format=3]
+[gd_resource type="Resource" format=3 uid="uid://bup1q8lk5cce1"]
 
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_walk_07.wav" id="1_sl60v"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_walk_06.wav" id="2_n6eqj"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_walk_04.wav" id="3_xipc6"]
-[ext_resource type="Script" path="res://scripts/audio/footstep_sound_bank.gd" id="4_37t10"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_walk_01.wav" id="5_22nab"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_walk_02.wav" id="6_32178"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_01.wav" id="7_4odbq"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_02.wav" id="8_f1uu0"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_03.wav" id="9_0wjvh"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_04.wav" id="10_rc2t5"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_05.wav" id="11_jfjs8"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_06.wav" id="12_4y82o"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_07.wav" id="13_swhmb"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_08.wav" id="14_wrk46"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_09.wav" id="15_hft4q"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_start_10.wav" id="16_rvbl7"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_land_01.wav" id="17_tt2gb"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_land_02.wav" id="18_kqdsv"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_land_03.wav" id="19_3kqwm"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_land_04.wav" id="20_l6eoa"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_land_05.wav" id="21_eo4if"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_land_06.wav" id="22_3is6m"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_land_07.wav" id="23_kxcfg"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_land_08.wav" id="24_beiln"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_land_09.wav" id="25_3d2fu"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_grass_jump_land_10.wav" id="26_63n0b"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_jump_start_01.wav" id="27_6s815"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_jump_start_02.wav" id="28_6p5m5"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_jump_start_03.wav" id="29_nsxpx"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_jump_start_04.wav" id="30_cqhql"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_jump_start_05.wav" id="31_so54k"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_jump_land_01.wav" id="32_i2q5j"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_jump_land_02.wav" id="33_6nnql"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_jump_land_03.wav" id="34_vsfuw"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_jump_land_04.wav" id="35_5icuc"]
-[ext_resource type="AudioStream" path="res://assets/audio/footsteps/nox_sand_jump_land_05.wav" id="36_pc4ng"]
+[ext_resource type="AudioStream" uid="uid://dfj4xxwjw4wqc" path="res://assets/audio/footsteps/nox_grass_walk_07.wav" id="1_sl60v"]
+[ext_resource type="AudioStream" uid="uid://s48e1g6eodx6" path="res://assets/audio/footsteps/nox_grass_walk_06.wav" id="2_n6eqj"]
+[ext_resource type="AudioStream" uid="uid://rh4vmq7s2baa" path="res://assets/audio/footsteps/nox_grass_walk_04.wav" id="3_xipc6"]
+[ext_resource type="Script" uid="uid://iruah1qqbgbq" path="res://scripts/audio/footstep_sound_bank.gd" id="4_37t10"]
+[ext_resource type="AudioStream" uid="uid://8e1xs7xva4uq" path="res://assets/audio/footsteps/nox_sand_walk_01.wav" id="5_22nab"]
+[ext_resource type="AudioStream" uid="uid://dskl127hr7t58" path="res://assets/audio/footsteps/nox_sand_walk_02.wav" id="6_32178"]
+[ext_resource type="AudioStream" uid="uid://d32kuvoh3u602" path="res://assets/audio/footsteps/nox_grass_jump_start_01.wav" id="7_4odbq"]
+[ext_resource type="AudioStream" uid="uid://clmpfiw5kim5m" path="res://assets/audio/footsteps/nox_grass_jump_start_02.wav" id="8_f1uu0"]
+[ext_resource type="AudioStream" uid="uid://c3tdlbtkc35ah" path="res://assets/audio/footsteps/nox_grass_jump_start_03.wav" id="9_0wjvh"]
+[ext_resource type="AudioStream" uid="uid://dxlbmi1hk2n1g" path="res://assets/audio/footsteps/nox_grass_jump_start_04.wav" id="10_rc2t5"]
+[ext_resource type="AudioStream" uid="uid://njoux58wv7ci" path="res://assets/audio/footsteps/nox_grass_jump_start_05.wav" id="11_jfjs8"]
+[ext_resource type="AudioStream" uid="uid://7yv6fvpgkxqe" path="res://assets/audio/footsteps/nox_grass_jump_start_06.wav" id="12_4y82o"]
+[ext_resource type="AudioStream" uid="uid://c68skud8ebe0f" path="res://assets/audio/footsteps/nox_grass_jump_start_07.wav" id="13_swhmb"]
+[ext_resource type="AudioStream" uid="uid://dr0b6rj6bwhlt" path="res://assets/audio/footsteps/nox_grass_jump_start_08.wav" id="14_wrk46"]
+[ext_resource type="AudioStream" uid="uid://7qixoqnf3y0k" path="res://assets/audio/footsteps/nox_grass_jump_start_09.wav" id="15_hft4q"]
+[ext_resource type="AudioStream" uid="uid://bc3adppcmkjy2" path="res://assets/audio/footsteps/nox_grass_jump_start_10.wav" id="16_rvbl7"]
+[ext_resource type="AudioStream" uid="uid://da7l4ibe8hiw8" path="res://assets/audio/footsteps/nox_grass_jump_land_01.wav" id="17_tt2gb"]
+[ext_resource type="AudioStream" uid="uid://828be6sspxkj" path="res://assets/audio/footsteps/nox_grass_jump_land_02.wav" id="18_kqdsv"]
+[ext_resource type="AudioStream" uid="uid://56od334yld0g" path="res://assets/audio/footsteps/nox_grass_jump_land_03.wav" id="19_3kqwm"]
+[ext_resource type="AudioStream" uid="uid://d3pw0sjxi8y0e" path="res://assets/audio/footsteps/nox_grass_jump_land_04.wav" id="20_l6eoa"]
+[ext_resource type="AudioStream" uid="uid://d0spr2nh7i2r2" path="res://assets/audio/footsteps/nox_grass_jump_land_05.wav" id="21_eo4if"]
+[ext_resource type="AudioStream" uid="uid://7idoqdhl3hx5" path="res://assets/audio/footsteps/nox_grass_jump_land_06.wav" id="22_3is6m"]
+[ext_resource type="AudioStream" uid="uid://cwvsbv1akh4qs" path="res://assets/audio/footsteps/nox_grass_jump_land_07.wav" id="23_kxcfg"]
+[ext_resource type="AudioStream" uid="uid://3d7isrysno6j" path="res://assets/audio/footsteps/nox_grass_jump_land_08.wav" id="24_beiln"]
+[ext_resource type="AudioStream" uid="uid://h23t6vr8j8u4" path="res://assets/audio/footsteps/nox_grass_jump_land_09.wav" id="25_3d2fu"]
+[ext_resource type="AudioStream" uid="uid://bhf8g0kfg01ss" path="res://assets/audio/footsteps/nox_grass_jump_land_10.wav" id="26_63n0b"]
+[ext_resource type="AudioStream" uid="uid://cgvrx0bakj8vq" path="res://assets/audio/footsteps/nox_sand_jump_start_01.wav" id="27_6s815"]
+[ext_resource type="AudioStream" uid="uid://cmbf60xpkxun" path="res://assets/audio/footsteps/nox_sand_jump_start_02.wav" id="28_6p5m5"]
+[ext_resource type="AudioStream" uid="uid://b1wq1hsfrhaip" path="res://assets/audio/footsteps/nox_sand_jump_start_03.wav" id="29_nsxpx"]
+[ext_resource type="AudioStream" uid="uid://b7l24vdi0b3yo" path="res://assets/audio/footsteps/nox_sand_jump_start_04.wav" id="30_cqhql"]
+[ext_resource type="AudioStream" uid="uid://dcavb3557phc" path="res://assets/audio/footsteps/nox_sand_jump_start_05.wav" id="31_so54k"]
+[ext_resource type="AudioStream" uid="uid://def1um1m822sw" path="res://assets/audio/footsteps/nox_sand_jump_land_01.wav" id="32_i2q5j"]
+[ext_resource type="AudioStream" uid="uid://l4wbq3gxno0j" path="res://assets/audio/footsteps/nox_sand_jump_land_02.wav" id="33_6nnql"]
+[ext_resource type="AudioStream" uid="uid://b6uqe3c7anwkr" path="res://assets/audio/footsteps/nox_sand_jump_land_03.wav" id="34_vsfuw"]
+[ext_resource type="AudioStream" uid="uid://bdtwi6tusyf5" path="res://assets/audio/footsteps/nox_sand_jump_land_04.wav" id="35_5icuc"]
+[ext_resource type="AudioStream" uid="uid://c6q2tvkhh1x5f" path="res://assets/audio/footsteps/nox_sand_jump_land_05.wav" id="36_pc4ng"]
 [ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_Mud_Walk_04_09291debf71c.res" id="37_jxivu"]
 [ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_Mud_Walk_05_a012fc7a07a5.res" id="38_4f054"]
 [ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_Mud_Walk_09_74ca31f68774.res" id="39_0egy3"]
@@ -51,28 +51,73 @@
 [ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_Mud_Jump_Land_03_14b697797cac.res" id="49_3h1yv"]
 [ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_Mud_Jump_Land_04_eab914eb4810.res" id="50_n4x4e"]
 [ext_resource type="AudioStream" path="res://assets/audio/tuned/Footsteps_Mud_Jump_Land_05_990019f6bda2.res" id="51_0rkxj"]
-[ext_resource type="AudioStream" path="res://assets/audio/ambience/nox_cave_drips_loop.wav" id="52_xohpe"]
-[ext_resource type="Script" path="res://scripts/audio/cave_ambience_settings.gd" id="53_cctxl"]
-[ext_resource type="Script" path="res://scripts/audio/cave_reverb_settings.gd" id="54_b3x62"]
-[ext_resource type="Script" path="res://scripts/audio/sound_event_bank.gd" id="55_5tvqq"]
-[ext_resource type="AudioStream" path="res://assets/audio/combat/shot_1.wav" id="56_756si"]
-[ext_resource type="AudioStream" path="res://assets/audio/combat/shot_2.wav" id="57_cf8vf"]
-[ext_resource type="AudioStream" path="res://assets/audio/combat/blaster.wav" id="58_i1s0x"]
-[ext_resource type="AudioStream" path="res://assets/audio/combat/shot_3.wav" id="59_t4kil"]
-[ext_resource type="AudioStream" path="res://assets/audio/combat/shot_4.wav" id="60_o4fn6"]
-[ext_resource type="AudioStream" path="res://assets/audio/combat/throw.wav" id="61_jcuks"]
-[ext_resource type="AudioStream" path="res://assets/audio/combat/knife_throwing.wav" id="62_nebq8"]
-[ext_resource type="AudioStream" path="res://assets/audio/combat/slicing_through_flesh_neospica.mp3" id="63_prcjf"]
-[ext_resource type="AudioStream" path="res://assets/audio/combat/knife_stab_mixedupmoviestuff.wav" id="64_3m618"]
+[ext_resource type="AudioStream" uid="uid://dr72ig4tf7iim" path="res://assets/audio/ambience/nox_cave_drips_loop.wav" id="52_xohpe"]
+[ext_resource type="Script" uid="uid://brbo6tqjo2st7" path="res://scripts/audio/cave_ambience_settings.gd" id="53_cctxl"]
+[ext_resource type="Script" uid="uid://cduw2ae3o2eqi" path="res://scripts/audio/cave_reverb_settings.gd" id="54_b3x62"]
+[ext_resource type="Script" uid="uid://cfkh5ondsfipc" path="res://scripts/audio/sound_event_bank.gd" id="55_5tvqq"]
+[ext_resource type="AudioStream" uid="uid://budrh0qhsf1ap" path="res://assets/audio/combat/shot_1.wav" id="56_756si"]
+[ext_resource type="AudioStream" uid="uid://dsqgtdr5m0yjv" path="res://assets/audio/combat/shot_2.wav" id="57_cf8vf"]
+[ext_resource type="AudioStream" uid="uid://dfkgb0ld0u5q2" path="res://assets/audio/combat/blaster.wav" id="58_i1s0x"]
+[ext_resource type="AudioStream" uid="uid://c1c0oc7j6nvrh" path="res://assets/audio/combat/shot_3.wav" id="59_t4kil"]
+[ext_resource type="AudioStream" uid="uid://bdbwvwe8i0mm1" path="res://assets/audio/combat/shot_4.wav" id="60_o4fn6"]
+[ext_resource type="AudioStream" uid="uid://cy02g82gh33qy" path="res://assets/audio/combat/throw.wav" id="61_jcuks"]
+[ext_resource type="AudioStream" uid="uid://bvvqr6mhikfvp" path="res://assets/audio/combat/knife_throwing.wav" id="62_nebq8"]
+[ext_resource type="AudioStream" uid="uid://xewxyy2k5a5v" path="res://assets/audio/combat/slicing_through_flesh_neospica.mp3" id="63_prcjf"]
+[ext_resource type="AudioStream" uid="uid://cbdedbh5xfiv1" path="res://assets/audio/combat/knife_stab_mixedupmoviestuff.wav" id="64_3m618"]
 [ext_resource type="AudioStream" path="res://assets/audio/tuned/Hammer_1_2298389cb37c.res" id="65_5o23j"]
-[ext_resource type="AudioStream" path="res://assets/audio/combat/blood_1.wav" id="66_yckqk"]
-[ext_resource type="AudioStream" path="res://assets/audio/combat/blood_2.wav" id="67_c315f"]
-[ext_resource type="AudioStream" path="res://assets/audio/combat/blood_3.wav" id="68_jeieu"]
-[ext_resource type="AudioStream" path="res://assets/audio/combat/punch_2.wav" id="69_4eide"]
-[ext_resource type="AudioStream" path="res://assets/audio/combat/kick.wav" id="70_i5875"]
-[ext_resource type="AudioStream" path="res://assets/audio/combat/bump.wav" id="71_lpbcc"]
-[ext_resource type="Script" path="res://scripts/audio/movement_audio_settings.gd" id="72_f5l1y"]
+[ext_resource type="AudioStream" uid="uid://cr7bfs7j6gidf" path="res://assets/audio/combat/blood_1.wav" id="66_yckqk"]
+[ext_resource type="AudioStream" uid="uid://dorfwpdt6hr5o" path="res://assets/audio/combat/blood_2.wav" id="67_c315f"]
+[ext_resource type="AudioStream" uid="uid://bas23canj7dx6" path="res://assets/audio/combat/blood_3.wav" id="68_jeieu"]
+[ext_resource type="AudioStream" uid="uid://umylvp6ylh6p" path="res://assets/audio/combat/punch_2.wav" id="69_4eide"]
+[ext_resource type="AudioStream" uid="uid://c5egugqd2yk2u" path="res://assets/audio/combat/kick.wav" id="70_i5875"]
+[ext_resource type="AudioStream" uid="uid://bj8kink4av0em" path="res://assets/audio/combat/bump.wav" id="71_lpbcc"]
+[ext_resource type="Script" uid="uid://c3a6uabilq3y2" path="res://scripts/audio/movement_audio_settings.gd" id="72_f5l1y"]
 [ext_resource type="AudioStream" path="res://assets/audio/tuned/Ambiance_Cave_Dark_Loop_Stereo_2db110a3db4b.res" id="73_hplgb"]
+
+[sub_resource type="Resource" id="Resource_rc2t5"]
+script = ExtResource("4_37t10")
+surface = &"cave"
+gait = &"jump_land"
+clips = Array[AudioStream]([ExtResource("44_0joh3"), ExtResource("45_42l0f"), ExtResource("46_2m0st"), ExtResource("47_wrqv7"), ExtResource("48_fecip"), ExtResource("49_3h1yv"), ExtResource("50_n4x4e"), ExtResource("51_0rkxj")])
+labels = PackedStringArray("Footsteps_DirtyGround_Jump_Land_01", "Footsteps_DirtyGround_Jump_Land_02", "Footsteps_DirtyGround_Jump_Start_03", "Footsteps_Mud_Jump_Land_01", "Footsteps_Mud_Jump_Land_02", "Footsteps_Mud_Jump_Land_03", "Footsteps_Mud_Jump_Land_04", "Footsteps_Mud_Jump_Land_05")
+volume_db = -20.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_0wjvh"]
+script = ExtResource("4_37t10")
+surface = &"cave"
+gait = &"jump_start"
+clips = Array[AudioStream]([ExtResource("41_xj7ac"), ExtResource("42_o4vq3"), ExtResource("43_xy82y")])
+labels = PackedStringArray("Footsteps_DirtyGround_Jump_Start_01", "Footsteps_DirtyGround_Jump_Start_02", "Footsteps_DirtyGround_Jump_Land_03")
+volume_db = -16.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_f1uu0"]
+script = ExtResource("4_37t10")
+surface = &"cave"
+gait = &"step"
+clips = Array[AudioStream]([ExtResource("37_jxivu"), ExtResource("38_4f054"), ExtResource("39_0egy3"), ExtResource("40_ysuwx")])
+labels = PackedStringArray("Footsteps_Mud_Walk_04", "Footsteps_Mud_Walk_05", "Footsteps_Mud_Walk_09", "Footsteps_Mud_Walk_10")
+volume_db = -15.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_22nab"]
+script = ExtResource("4_37t10")
+surface = &"grass"
+gait = &"jump_land"
+clips = Array[AudioStream]([ExtResource("17_tt2gb"), ExtResource("18_kqdsv"), ExtResource("19_3kqwm"), ExtResource("20_l6eoa"), ExtResource("21_eo4if"), ExtResource("22_3is6m"), ExtResource("23_kxcfg"), ExtResource("24_beiln"), ExtResource("25_3d2fu"), ExtResource("26_63n0b")])
+labels = PackedStringArray("01", "02", "03", "04", "05", "06", "07", "08", "09", "10")
+volume_db = -24.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_37t10"]
+script = ExtResource("4_37t10")
+surface = &"grass"
+gait = &"jump_start"
+clips = Array[AudioStream]([ExtResource("7_4odbq"), ExtResource("8_f1uu0"), ExtResource("9_0wjvh"), ExtResource("10_rc2t5"), ExtResource("11_jfjs8"), ExtResource("12_4y82o"), ExtResource("13_swhmb"), ExtResource("14_wrk46"), ExtResource("15_hft4q"), ExtResource("16_rvbl7")])
+labels = PackedStringArray("01", "02", "03", "04", "05", "06", "07", "08", "09", "10")
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
 
 [sub_resource type="Resource" id="Resource_sl60v"]
 script = ExtResource("4_37t10")
@@ -92,6 +137,24 @@ labels = PackedStringArray("07", "06", "04")
 volume_db = -17.0
 disabled_indices = PackedInt32Array()
 
+[sub_resource type="Resource" id="Resource_4odbq"]
+script = ExtResource("4_37t10")
+surface = &"sand"
+gait = &"jump_land"
+clips = Array[AudioStream]([ExtResource("32_i2q5j"), ExtResource("33_6nnql"), ExtResource("34_vsfuw"), ExtResource("35_5icuc"), ExtResource("36_pc4ng")])
+labels = PackedStringArray("01", "02", "03", "04", "05")
+volume_db = -26.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_32178"]
+script = ExtResource("4_37t10")
+surface = &"sand"
+gait = &"jump_start"
+clips = Array[AudioStream]([ExtResource("27_6s815"), ExtResource("28_6p5m5"), ExtResource("29_nsxpx"), ExtResource("30_cqhql"), ExtResource("31_so54k")])
+labels = PackedStringArray("01", "02", "03", "04", "05")
+volume_db = -22.0
+disabled_indices = PackedInt32Array()
+
 [sub_resource type="Resource" id="Resource_xipc6"]
 script = ExtResource("4_37t10")
 surface = &"sand"
@@ -105,76 +168,13 @@ foot_indices = {
 volume_db = -19.0
 disabled_indices = PackedInt32Array()
 
-[sub_resource type="Resource" id="Resource_37t10"]
-script = ExtResource("4_37t10")
-surface = &"grass"
-gait = &"jump_start"
-clips = Array[AudioStream]([ExtResource("7_4odbq"), ExtResource("8_f1uu0"), ExtResource("9_0wjvh"), ExtResource("10_rc2t5"), ExtResource("11_jfjs8"), ExtResource("12_4y82o"), ExtResource("13_swhmb"), ExtResource("14_wrk46"), ExtResource("15_hft4q"), ExtResource("16_rvbl7")])
-labels = PackedStringArray("01", "02", "03", "04", "05", "06", "07", "08", "09", "10")
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_22nab"]
-script = ExtResource("4_37t10")
-surface = &"grass"
-gait = &"jump_land"
-clips = Array[AudioStream]([ExtResource("17_tt2gb"), ExtResource("18_kqdsv"), ExtResource("19_3kqwm"), ExtResource("20_l6eoa"), ExtResource("21_eo4if"), ExtResource("22_3is6m"), ExtResource("23_kxcfg"), ExtResource("24_beiln"), ExtResource("25_3d2fu"), ExtResource("26_63n0b")])
-labels = PackedStringArray("01", "02", "03", "04", "05", "06", "07", "08", "09", "10")
-volume_db = -24.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_32178"]
-script = ExtResource("4_37t10")
-surface = &"sand"
-gait = &"jump_start"
-clips = Array[AudioStream]([ExtResource("27_6s815"), ExtResource("28_6p5m5"), ExtResource("29_nsxpx"), ExtResource("30_cqhql"), ExtResource("31_so54k")])
-labels = PackedStringArray("01", "02", "03", "04", "05")
-volume_db = -22.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_4odbq"]
-script = ExtResource("4_37t10")
-surface = &"sand"
-gait = &"jump_land"
-clips = Array[AudioStream]([ExtResource("32_i2q5j"), ExtResource("33_6nnql"), ExtResource("34_vsfuw"), ExtResource("35_5icuc"), ExtResource("36_pc4ng")])
-labels = PackedStringArray("01", "02", "03", "04", "05")
-volume_db = -26.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_f1uu0"]
-script = ExtResource("4_37t10")
-surface = &"cave"
-gait = &"step"
-clips = Array[AudioStream]([ExtResource("37_jxivu"), ExtResource("38_4f054"), ExtResource("39_0egy3"), ExtResource("40_ysuwx")])
-labels = PackedStringArray("Footsteps_Mud_Walk_04", "Footsteps_Mud_Walk_05", "Footsteps_Mud_Walk_09", "Footsteps_Mud_Walk_10")
-volume_db = -15.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_0wjvh"]
-script = ExtResource("4_37t10")
-surface = &"cave"
-gait = &"jump_start"
-clips = Array[AudioStream]([ExtResource("41_xj7ac"), ExtResource("42_o4vq3"), ExtResource("43_xy82y")])
-labels = PackedStringArray("Footsteps_DirtyGround_Jump_Start_01", "Footsteps_DirtyGround_Jump_Start_02", "Footsteps_DirtyGround_Jump_Land_03")
-volume_db = -16.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_rc2t5"]
-script = ExtResource("4_37t10")
-surface = &"cave"
-gait = &"jump_land"
-clips = Array[AudioStream]([ExtResource("44_0joh3"), ExtResource("45_42l0f"), ExtResource("46_2m0st"), ExtResource("47_wrqv7"), ExtResource("48_fecip"), ExtResource("49_3h1yv"), ExtResource("50_n4x4e"), ExtResource("51_0rkxj")])
-labels = PackedStringArray("Footsteps_DirtyGround_Jump_Land_01", "Footsteps_DirtyGround_Jump_Land_02", "Footsteps_DirtyGround_Jump_Start_03", "Footsteps_Mud_Jump_Land_01", "Footsteps_Mud_Jump_Land_02", "Footsteps_Mud_Jump_Land_03", "Footsteps_Mud_Jump_Land_04", "Footsteps_Mud_Jump_Land_05")
-volume_db = -20.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_jfjs8"]
+[sub_resource type="Resource" id="Resource_swhmb"]
 script = ExtResource("4_37t10")
 surface = &"underground"
-gait = &"step"
-clips = Array[AudioStream]([ExtResource("37_jxivu"), ExtResource("38_4f054"), ExtResource("39_0egy3"), ExtResource("40_ysuwx")])
-labels = PackedStringArray("Footsteps_Mud_Walk_04", "Footsteps_Mud_Walk_05", "Footsteps_Mud_Walk_09", "Footsteps_Mud_Walk_10")
-volume_db = -17.0
+gait = &"jump_land"
+clips = Array[AudioStream]([ExtResource("47_wrqv7"), ExtResource("48_fecip"), ExtResource("49_3h1yv"), ExtResource("50_n4x4e"), ExtResource("51_0rkxj")])
+labels = PackedStringArray("Footsteps_Mud_Jump_Land_01", "Footsteps_Mud_Jump_Land_02", "Footsteps_Mud_Jump_Land_03", "Footsteps_Mud_Jump_Land_04", "Footsteps_Mud_Jump_Land_05")
+volume_db = -24.0
 disabled_indices = PackedInt32Array()
 
 [sub_resource type="Resource" id="Resource_4y82o"]
@@ -186,13 +186,13 @@ labels = PackedStringArray("Footsteps_DirtyGround_Jump_Start_01", "Footsteps_Dir
 volume_db = -30.0
 disabled_indices = PackedInt32Array()
 
-[sub_resource type="Resource" id="Resource_swhmb"]
+[sub_resource type="Resource" id="Resource_jfjs8"]
 script = ExtResource("4_37t10")
 surface = &"underground"
-gait = &"jump_land"
-clips = Array[AudioStream]([ExtResource("47_wrqv7"), ExtResource("48_fecip"), ExtResource("49_3h1yv"), ExtResource("50_n4x4e"), ExtResource("51_0rkxj")])
-labels = PackedStringArray("Footsteps_Mud_Jump_Land_01", "Footsteps_Mud_Jump_Land_02", "Footsteps_Mud_Jump_Land_03", "Footsteps_Mud_Jump_Land_04", "Footsteps_Mud_Jump_Land_05")
-volume_db = -24.0
+gait = &"step"
+clips = Array[AudioStream]([ExtResource("37_jxivu"), ExtResource("38_4f054"), ExtResource("39_0egy3"), ExtResource("40_ysuwx")])
+labels = PackedStringArray("Footsteps_Mud_Walk_04", "Footsteps_Mud_Walk_05", "Footsteps_Mud_Walk_09", "Footsteps_Mud_Walk_10")
+volume_db = -17.0
 disabled_indices = PackedInt32Array()
 
 [sub_resource type="Resource" id="Resource_wrk46"]
@@ -206,7 +206,7 @@ amount = 0.35
 room_size = 0.85
 damping = 0.15
 
-[sub_resource type="Resource" id="Resource_rvbl7"]
+[sub_resource type="Resource" id="Resource_kqdsv"]
 script = ExtResource("55_5tvqq")
 labels = PackedStringArray()
 volume_db = -18.0
@@ -218,7 +218,13 @@ labels = PackedStringArray()
 volume_db = -18.0
 disabled_indices = PackedInt32Array()
 
-[sub_resource type="Resource" id="Resource_kqdsv"]
+[sub_resource type="Resource" id="Resource_eo4if"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_rvbl7"]
 script = ExtResource("55_5tvqq")
 labels = PackedStringArray()
 volume_db = -18.0
@@ -233,228 +239,6 @@ disabled_indices = PackedInt32Array()
 [sub_resource type="Resource" id="Resource_l6eoa"]
 script = ExtResource("55_5tvqq")
 looping = true
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_eo4if"]
-script = ExtResource("55_5tvqq")
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_3is6m"]
-script = ExtResource("55_5tvqq")
-selection_mode = 1
-fixed_index = 1
-repeat_interval = 0.28
-clips = Array[AudioStream]([ExtResource("56_756si"), ExtResource("57_cf8vf"), ExtResource("58_i1s0x")])
-labels = PackedStringArray("Shot_1 · starting pick", "Shot_2 · alternative", "Blaster · alternative")
-volume_db = -12.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_kxcfg"]
-script = ExtResource("55_5tvqq")
-selection_mode = 1
-fixed_index = 0
-repeat_interval = 0.18
-clips = Array[AudioStream]([ExtResource("57_cf8vf"), ExtResource("59_t4kil"), ExtResource("60_o4fn6")])
-labels = PackedStringArray("Shot_2 · starting pick", "Shot_3 · longer alternative", "Shot_4 · longest alternative")
-volume_db = -15.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_beiln"]
-script = ExtResource("55_5tvqq")
-fixed_index = 0
-clips = Array[AudioStream]([ExtResource("61_jcuks"), ExtResource("62_nebq8"), ExtResource("63_prcjf")])
-labels = PackedStringArray("Throw", "Knife_throwing", "Slicing through flesh - NeoSpica")
-volume_db = -23.0
-disabled_indices = PackedInt32Array(2)
-
-[sub_resource type="Resource" id="Resource_3d2fu"]
-script = ExtResource("55_5tvqq")
-selection_mode = 1
-fixed_index = 0
-clips = Array[AudioStream]([ExtResource("64_3m618")])
-labels = PackedStringArray("Knife Stab - Mixedupmoviestuff")
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_63n0b"]
-script = ExtResource("55_5tvqq")
-selection_mode = 1
-fixed_index = 0
-pitch_scale = 1.65
-clips = Array[AudioStream]([ExtResource("65_5o23j")])
-labels = PackedStringArray("Hammer_1")
-volume_db = -24.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_6s815"]
-script = ExtResource("55_5tvqq")
-clips = Array[AudioStream]([ExtResource("66_yckqk"), ExtResource("67_c315f"), ExtResource("68_jeieu")])
-labels = PackedStringArray("Blood_1", "Blood_2", "Blood_3")
-volume_db = -17.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_6p5m5"]
-script = ExtResource("55_5tvqq")
-selection_mode = 1
-fixed_index = 0
-clips = Array[AudioStream]([ExtResource("69_4eide"), ExtResource("70_i5875"), ExtResource("71_lpbcc")])
-labels = PackedStringArray("Punch_2", "Kick", "Bump")
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_nsxpx"]
-script = ExtResource("55_5tvqq")
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_cqhql"]
-script = ExtResource("55_5tvqq")
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_so54k"]
-script = ExtResource("55_5tvqq")
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_i2q5j"]
-script = ExtResource("55_5tvqq")
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_6nnql"]
-script = ExtResource("55_5tvqq")
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_vsfuw"]
-script = ExtResource("55_5tvqq")
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_5icuc"]
-script = ExtResource("55_5tvqq")
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_pc4ng"]
-script = ExtResource("55_5tvqq")
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_jxivu"]
-script = ExtResource("55_5tvqq")
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_4f054"]
-script = ExtResource("55_5tvqq")
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_0egy3"]
-script = ExtResource("55_5tvqq")
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_ysuwx"]
-script = ExtResource("55_5tvqq")
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_xj7ac"]
-script = ExtResource("55_5tvqq")
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_o4vq3"]
-script = ExtResource("55_5tvqq")
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_xy82y"]
-script = ExtResource("55_5tvqq")
-looping = true
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_0joh3"]
-script = ExtResource("55_5tvqq")
-looping = true
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_42l0f"]
-script = ExtResource("55_5tvqq")
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_2m0st"]
-script = ExtResource("55_5tvqq")
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_wrqv7"]
-script = ExtResource("55_5tvqq")
-looping = true
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_fecip"]
-script = ExtResource("55_5tvqq")
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_3h1yv"]
-script = ExtResource("55_5tvqq")
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_n4x4e"]
-script = ExtResource("55_5tvqq")
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_0rkxj"]
-script = ExtResource("55_5tvqq")
-looping = true
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_xohpe"]
-script = ExtResource("55_5tvqq")
-labels = PackedStringArray()
-volume_db = -18.0
-disabled_indices = PackedInt32Array()
-
-[sub_resource type="Resource" id="Resource_cctxl"]
-script = ExtResource("55_5tvqq")
 labels = PackedStringArray()
 volume_db = -18.0
 disabled_indices = PackedInt32Array()
@@ -483,7 +267,105 @@ labels = PackedStringArray()
 volume_db = -18.0
 disabled_indices = PackedInt32Array()
 
-[sub_resource type="Resource" id="Resource_cf8vf"]
+[sub_resource type="Resource" id="Resource_6s815"]
+script = ExtResource("55_5tvqq")
+clips = Array[AudioStream]([ExtResource("66_yckqk"), ExtResource("67_c315f"), ExtResource("68_jeieu")])
+labels = PackedStringArray("Blood_1", "Blood_2", "Blood_3")
+volume_db = -17.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_63n0b"]
+script = ExtResource("55_5tvqq")
+selection_mode = 1
+fixed_index = 0
+pitch_scale = 1.65
+clips = Array[AudioStream]([ExtResource("65_5o23j")])
+labels = PackedStringArray("Hammer_1")
+volume_db = -24.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_cqhql"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_nsxpx"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_kxcfg"]
+script = ExtResource("55_5tvqq")
+selection_mode = 1
+fixed_index = 0
+repeat_interval = 0.18
+clips = Array[AudioStream]([ExtResource("57_cf8vf"), ExtResource("59_t4kil"), ExtResource("60_o4fn6")])
+labels = PackedStringArray("Shot_2 · starting pick", "Shot_3 · longer alternative", "Shot_4 · longest alternative")
+volume_db = -15.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_so54k"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_3d2fu"]
+script = ExtResource("55_5tvqq")
+selection_mode = 1
+fixed_index = 0
+clips = Array[AudioStream]([ExtResource("64_3m618")])
+labels = PackedStringArray("Knife Stab - Mixedupmoviestuff")
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_beiln"]
+script = ExtResource("55_5tvqq")
+fixed_index = 0
+clips = Array[AudioStream]([ExtResource("61_jcuks"), ExtResource("62_nebq8"), ExtResource("63_prcjf")])
+labels = PackedStringArray("Throw", "Knife_throwing", "Slicing through flesh - NeoSpica")
+volume_db = -23.0
+disabled_indices = PackedInt32Array(2)
+
+[sub_resource type="Resource" id="Resource_i2q5j"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_3is6m"]
+script = ExtResource("55_5tvqq")
+selection_mode = 1
+fixed_index = 1
+repeat_interval = 0.28
+clips = Array[AudioStream]([ExtResource("56_756si"), ExtResource("57_cf8vf"), ExtResource("58_i1s0x")])
+labels = PackedStringArray("Shot_1 · starting pick", "Shot_2 · alternative", "Blaster · alternative")
+volume_db = -12.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_6nnql"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_6p5m5"]
+script = ExtResource("55_5tvqq")
+selection_mode = 1
+fixed_index = 0
+clips = Array[AudioStream]([ExtResource("69_4eide"), ExtResource("70_i5875"), ExtResource("71_lpbcc")])
+labels = PackedStringArray("Punch_2", "Kick", "Bump")
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_vsfuw"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_t4kil"]
 script = ExtResource("55_5tvqq")
 use_room_reverb = false
 labels = PackedStringArray()
@@ -497,7 +379,7 @@ labels = PackedStringArray()
 volume_db = -18.0
 disabled_indices = PackedInt32Array()
 
-[sub_resource type="Resource" id="Resource_t4kil"]
+[sub_resource type="Resource" id="Resource_cf8vf"]
 script = ExtResource("55_5tvqq")
 use_room_reverb = false
 labels = PackedStringArray()
@@ -511,9 +393,8 @@ labels = PackedStringArray()
 volume_db = -18.0
 disabled_indices = PackedInt32Array()
 
-[sub_resource type="Resource" id="Resource_jcuks"]
+[sub_resource type="Resource" id="Resource_5o23j"]
 script = ExtResource("55_5tvqq")
-looping = true
 use_room_reverb = false
 labels = PackedStringArray()
 volume_db = -18.0
@@ -543,9 +424,128 @@ labels = PackedStringArray()
 volume_db = -18.0
 disabled_indices = PackedInt32Array()
 
-[sub_resource type="Resource" id="Resource_5o23j"]
+[sub_resource type="Resource" id="Resource_jcuks"]
 script = ExtResource("55_5tvqq")
+looping = true
 use_room_reverb = false
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_0egy3"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_jxivu"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_5icuc"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_4f054"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_ysuwx"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_pc4ng"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_0rkxj"]
+script = ExtResource("55_5tvqq")
+looping = true
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_xohpe"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_cctxl"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_o4vq3"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_0joh3"]
+script = ExtResource("55_5tvqq")
+looping = true
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_42l0f"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_xj7ac"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_n4x4e"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_wrqv7"]
+script = ExtResource("55_5tvqq")
+looping = true
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_2m0st"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_3h1yv"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_fecip"]
+script = ExtResource("55_5tvqq")
+labels = PackedStringArray()
+volume_db = -18.0
+disabled_indices = PackedInt32Array()
+
+[sub_resource type="Resource" id="Resource_xy82y"]
+script = ExtResource("55_5tvqq")
+looping = true
 labels = PackedStringArray()
 volume_db = -18.0
 disabled_indices = PackedInt32Array()

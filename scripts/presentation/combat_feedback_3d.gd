@@ -26,6 +26,9 @@ func _ready() -> void:
 
 
 func bind_player(player: PlayerCharacter) -> void:
+	var heal_callback := _on_healing_used.bind(player)
+	if not player.healing_used.is_connected(heal_callback):
+		player.healing_used.connect(heal_callback)
 	var callback := _on_player_damage.bind(player)
 	if not player.damage_received.is_connected(callback):
 		player.damage_received.connect(callback)
@@ -88,6 +91,10 @@ func _on_enemy_defeated(impact_position: Vector3, enemy: StompableEnemy3D) -> vo
 	enemy.play_impact_flash()
 	audio_cue_requested.emit(&"enemy_defeat", impact_position)
 	_begin_impact_pause(enemy_defeat_pause)
+
+
+func _on_healing_used(_item_id: StringName, _amount: int, player: PlayerCharacter) -> void:
+	combat_audio.play_event("combat/heal", player.global_position)
 
 
 func _on_melee_swung(world_position: Vector3) -> void:

@@ -260,9 +260,9 @@ for landing: the user identified incorrect source filenames by listening.
    Saving is available in a project run from the Godot editor/executable;
    exported games allow temporary auditioning but cannot save project defaults.
 
-Opening the panel resets the old F5/F4/F6 single-recording auditions to their
-normal mix/pair mode, so those overrides cannot mask a panel change. Those
-shortcuts and F9 diagnostics remain available during gameplay.
+The audio tool owns all recording selection. The old F4/F5/F6 single-recording
+shortcuts and their popup are removed, so there are no separate audition
+overrides to mask the selected A/B mix. F9 footstep diagnostics remain available.
 
 ## Adding recordings
 

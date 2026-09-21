@@ -1,0 +1,100 @@
+{
+  "note": "Unchanged Cyberpunk GUI assets for the vertical Options layout; existing campaign actions are retained.",
+  "files": [
+    {
+      "runtime": "assets/art/ui/options/button.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/6 Buttons/10/10_04.png",
+      "sha256": "bc00601bd0a8c99c522df105922b4f42ced0493c8277a5f018cb1910df9ef9f0"
+    },
+    {
+      "runtime": "assets/art/ui/options/resume.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/3 Icons/Icons/Icon_34.png",
+      "sha256": "137e4680f549ae48b84777f201dfb8e3739c2d4400b0f047060db56a70c3eab8"
+    },
+    {
+      "runtime": "assets/art/ui/options/inventory.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/3 Icons/Icons/Icon_22.png",
+      "sha256": "992364341ca51b70776aba0337abc487efd37abb0338aa394dcece6b1ae0f0b0"
+    },
+    {
+      "runtime": "assets/art/ui/options/save.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/3 Icons/Icons/Icon_08.png",
+      "sha256": "d3810781534ce1d9f22da40d03fbbef722bd7c8f35cab528e034e6ec1b4a412e"
+    },
+    {
+      "runtime": "assets/art/ui/options/load.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/3 Icons/Icons/Icon_15.png",
+      "sha256": "9978dbe96687c9f3cd9dfa4308188a2f034b09d5f0726a9e8758bf05b46d8c66"
+    },
+    {
+      "runtime": "assets/art/ui/options/settings.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/3 Icons/Icons/Icon_07.png",
+      "sha256": "303bf9a93962aeb989965e3e9ab234380360e2f26eb969fb19adbda785ad5260"
+    },
+    {
+      "runtime": "assets/art/ui/options/main_menu.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/3 Icons/Icons/Icon_19.png",
+      "sha256": "c36c1e8f8c4fd744f99bb41d8d1ca97b4aeaa9faf12007fc9668615558ff0b42"
+    },
+    {
+      "runtime": "assets/art/ui/options/quit.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/3 Icons/Icons/Icon_35.png",
+      "sha256": "4b02f3f664f48b62d3695cb981b326b7251588ee60893dac4d7969ede5e923f6"
+    },
+    {
+      "runtime": "assets/art/ui/options/frame_46.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_46.png",
+      "sha256": "f671102c56d3e28f21ba865e6e9361a66d6464d5c71473891875d29b98da31de"
+    },
+    {
+      "runtime": "assets/art/ui/options/frame_47.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_47.png",
+      "sha256": "089cf88b3ba7b4eb54993826514588dfbcb48360f9c5121d97d828778d10ea67"
+    },
+    {
+      "runtime": "assets/art/ui/options/frame_48.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_48.png",
+      "sha256": "7348500116d3f79a388d9f22ba3b63ce06f002dda1580bbfa6656ee2daed6b5a"
+    },
+    {
+      "runtime": "assets/art/ui/options/frame_49.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_49.png",
+      "sha256": "06dcfdb00af129917bc9c00fe0364f0a73884a0fafcf7788262f26a40756fa45"
+    },
+    {
+      "runtime": "assets/art/ui/options/frame_50.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_50.png",
+      "sha256": "019165bcf5b386401821cbd22b3f162268180e158b4120960495e3558e7610e3"
+    },
+    {
+      "runtime": "assets/art/ui/options/frame_51.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_51.png",
+      "sha256": "0397a045f130277198040cd7ac89638b11fd78b846266f6caa52fc1056fb3106"
+    },
+    {
+      "runtime": "assets/art/ui/options/frame_55.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_55.png",
+      "sha256": "d27a6c5812a0d7f4a1992a4b7751570350cf52ead0a2918d88cfec0b0b639f5c"
+    },
+    {
+      "runtime": "assets/art/ui/options/frame_57.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_57.png",
+      "sha256": "c51361c0881a951356808c00896633e94d91445ee9bc325385822f803863eb8d"
+    },
+    {
+      "runtime": "assets/art/ui/options/frame_64.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_64.png",
+      "sha256": "c593c0181a592ed5ed917055c0c6685186bb5a3ad6ddcc5d0074ae590c331ebe"
+    },
+    {
+      "runtime": "assets/art/ui/options/frame_65.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_65.png",
+      "sha256": "23a6709c1126287b09f85c08e25f8ae582881a6a043f830655cb259ec3479d3d"
+    },
+    {
+      "runtime": "assets/art/ui/options/frame_66.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/1 Frames/Frame_66.png",
+      "sha256": "d1199d37b8175fd83b8d29da25499f8152b569000549d3b23113b47ad591bf36"
+    }
+  ]
+}

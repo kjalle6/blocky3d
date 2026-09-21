@@ -41,7 +41,7 @@ func _run() -> void:
 	player.horizontal_speed = 0.0
 	_validate_markers(player.pixel_visual)
 	_validate_selection(audio)
-	# Three distinct voices survive changes of surface, gait, and audition.
+	# Three distinct voices survive changes of surface and gait.
 	audio.reset_run()
 	audio.play_step("grass", "run")
 	var first_voice: AudioStreamPlayer = audio._voices[0]
@@ -54,8 +54,6 @@ func _run() -> void:
 	assert(audio.active_voice_count() == 3)
 	assert(first_voice.stream == first_stream)
 	assert(first_voice.get_playback_position() >= first_position)
-	_press(audio, KEY_F5)
-	assert(audio.active_voice_count() == 3, "Audition switches must not cut existing voices.")
 	for frame in 3:
 		await physics_frame
 	assert(audio.active_voice_count() == 3, "Idle must let existing recordings finish.")
@@ -92,9 +90,6 @@ func _run() -> void:
 	assert(audio.played_count == before and audio.last_event.status == "inactive")
 	audio.reset_run()
 	assert(audio.active_voice_count() == 0)
-	audio.grass_run_index = -1
-	audio.grass_walk_index = -1
-	audio.sand_index = -1
 	world.queue_free()
 	await process_frame
 	await _validate_surfaces()
@@ -138,7 +133,6 @@ func _stride_contacts(visual: PixelPlayerVisual3D, attacks: bool, tapping: bool)
 	return contacts
 
 func _validate_selection(audio: Node) -> void:
-	assert(audio.grass_run_index == -1 and audio.grass_walk_index == -1)
 	audio._random.seed = 12345
 	for mix in [["grass", "run", 3], ["grass", "walk", 3]]:
 		var seen := {}
@@ -162,14 +156,6 @@ func _validate_selection(audio: Node) -> void:
 			var expected := "01" if foot == "left" else "02"
 			assert(audio.last_event.clip == "nox_sand_walk_%s.wav" % expected)
 			assert(audio._voices[0].pitch_scale == 1.0 and audio._voices[0].volume_db == -13.0)
-	for audition in [[KEY_F5, "run", ["07", "06", "04"]], [KEY_F4, "walk", ["07", "06", "04"]]]:
-		for suffix in audition[2]:
-			_press(audio, audition[0])
-			audio.reset_run()
-			audio.play_step("grass", audition[1])
-			assert(audio.last_event.clip.ends_with("_" + suffix + ".wav"))
-		_press(audio, audition[0])
-	assert(audio.grass_run_index == -1 and audio.grass_walk_index == -1)
 	_press(audio, KEY_F9)
 	assert(audio._debug_label.visible)
 	_press(audio, KEY_F9)

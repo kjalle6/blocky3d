@@ -1,8 +1,8 @@
-[gd_resource type="Resource" script_class="PixelBackgroundProfile" load_steps=5 format=3]
+[gd_resource type="Resource" script_class="PixelBackgroundProfile" format=3 uid="uid://byuv50i53lfne"]
 
-[ext_resource type="Script" path="res://scripts/presentation/pixel_background_profile.gd" id="1_profile"]
-[ext_resource type="Script" path="res://scripts/presentation/pixel_background_layer_profile.gd" id="2_layer"]
-[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/layer_5.png" id="6_forest"]
+[ext_resource type="Script" uid="uid://qdw3psmc2geu" path="res://scripts/presentation/pixel_background_profile.gd" id="1_profile"]
+[ext_resource type="Script" uid="uid://sl0ut8fqectp" path="res://scripts/presentation/pixel_background_layer_profile.gd" id="2_layer"]
+[ext_resource type="Texture2D" uid="uid://drq5xuj0pps44" path="res://assets/art/green_zone/background/layer_5.png" id="6_forest"]
 
 [sub_resource type="Resource" id="Layer_forest"]
 script = ExtResource("2_layer")

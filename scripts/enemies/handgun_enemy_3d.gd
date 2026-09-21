@@ -4,6 +4,12 @@ extends CharacterBody3D
 ## is approved, the Level 3 encounter. Cover blocks its real projectiles.
 
 signal defeated(impact_position: Vector3)
+signal health_changed(current: int, maximum: int)
+
+@export var combat: CombatProfile = preload("res://resources/combat/gunner.tres")
+@export var group_paired_projectile_damage := true
+var health := HealthState.new()
+var _shot_hit: CombatHit
 signal shot_fired(projectile: HandgunProjectile3D)
 signal dual_shot_fired(world_position: Vector3)
 signal volley_completed(pattern: FirePattern, shot_count: int)
@@ -30,6 +36,8 @@ const BLOCKED_SHOT_RECHECK := 0.08
 @export_range(1.0, 50.0, 0.5) var projectile_distance := 22.0
 @export_range(1.0, 100.0, 0.5) var gravity := 38.0
 @export_range(1.0, 30.0, 0.1) var stomp_bounce_speed := 10.0
+## Sprite head: 0.41 visual offset + 16 source pixels at 0.04 m/pixel.
+@export_range(0.1, 3.0, 0.01) var stomp_head_height := 1.05
 
 var _initial_transform: Transform3D
 var _facing_sign := -1.0
@@ -56,6 +64,8 @@ var _active_projectiles: Array[HandgunProjectile3D] = []
 
 
 func _ready() -> void:
+	health.changed.connect(func(current: int, maximum: int) -> void: health_changed.emit(current, maximum))
+	health.reset(combat.maximum_hp)
 	_initial_transform = global_transform
 	_facing_sign = 1.0 if starts_facing_right else -1.0
 	_engagement_enabled = starts_enabled
@@ -64,7 +74,6 @@ func _ready() -> void:
 		return
 	add_to_group("run_resettable")
 	add_to_group("melee_target")
-	contact_area.body_entered.connect(_on_body_entered)
 	pixel_visual.shot_frame_reached.connect(_on_shot_frame_reached)
 
 
@@ -236,14 +245,27 @@ func is_defeated() -> bool:
 	return _defeated
 
 
-func receive_melee_hit(source_position: Vector3) -> void:
+func receive_melee_hit(source_position: Vector3, hit: CombatHit = null) -> bool:
 	if _defeated:
-		return
-	_defeat(source_position, null)
+		return false
+	if hit == null:
+		hit = CombatHit.new(preload("res://resources/combat/knife.tres").damage, &"knife", source_position)
+	if not health.damage(hit):
+		return false
+	_sequence_shots_remaining = 0
+	_sequence_shot_timer = 0.0
+	if health.current == 0:
+		_defeat(source_position, null)
+	else:
+		_state = CombatState.RECOVERY
+		_phase_remaining = maxf(recovery_duration, combat.hurt_duration)
+		pixel_visual.set_state(&"idle", true)
+		play_impact_flash()
+	return true
 
 
-func receive_projectile_hit(source_position: Vector3) -> void:
-	receive_melee_hit(source_position)
+func receive_projectile_hit(source_position: Vector3, hit: CombatHit = null) -> bool:
+	return receive_melee_hit(source_position, hit)
 
 
 func play_impact_flash() -> void:
@@ -275,6 +297,8 @@ func clear_active_projectiles() -> void:
 
 
 func reset_run() -> void:
+	health.reset(combat.maximum_hp)
+	_shot_hit = null
 	_defeat_serial += 1
 	clear_active_projectiles()
 	global_transform = _initial_transform
@@ -395,6 +419,7 @@ func _resolve_shot_direction() -> Vector3:
 func _on_shot_frame_reached() -> void:
 	if _state != CombatState.FIRING or _defeated or not _engagement_enabled:
 		return
+	_shot_hit = CombatHit.new(combat.attack_damage, &"enemy_bullet", global_position)
 	for gun_index in projectiles_per_fire_beat():
 		_spawn_projectile(_shot_direction, gun_index)
 	# One sound event represents both simultaneous guns. Per-projectile events
@@ -412,7 +437,8 @@ func _spawn_projectile(shot_direction: Vector3, gun_index: int) -> void:
 	projectile.global_position = barrel
 	projectile.speed = projectile_speed
 	projectile.maximum_distance = projectile_distance
-	projectile.launch(shot_direction, self)
+	projectile.damage = combat.attack_damage
+	projectile.launch(shot_direction, self, _shot_hit if group_paired_projectile_damage else null)
 	projectile.expired.connect(_on_projectile_expired.bind(projectile))
 	_active_projectiles.append(projectile)
 	_current_volley_shots += 1
@@ -433,16 +459,12 @@ func _on_projectile_expired(projectile: HandgunProjectile3D) -> void:
 	_active_projectiles.erase(projectile)
 
 
-func _on_body_entered(body: Node3D) -> void:
-	if _defeated or not body is PlayerCharacter:
+func receive_stomp(player: PlayerCharacter) -> void:
+	if _defeated or player.is_dead():
 		return
-	var player := body as PlayerCharacter
-	var from_above := (
-		player.was_descending_before_slide()
-		and player.global_position.y > global_position.y + 0.55
-	)
-	if from_above:
-		_defeat(player.global_position, player)
+	var hit := CombatHit.new(player.stomp_attack.damage, &"stomp", player.global_position)
+	if receive_melee_hit(player.global_position, hit):
+		player.bounce(stomp_bounce_speed)
 
 
 func _defeat(impact_position: Vector3, stomping_player: PlayerCharacter) -> void:

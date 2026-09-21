@@ -121,7 +121,7 @@ func _run() -> void:
 	app.load_developer_level(load("res://resources/dev/green_zone_finale_wip.tres"))
 	designer.open_panel()
 	assert(designer.is_editing())
-	assert(designer.document.working.size() == 7)
+	assert(designer.document.working.size() >= 7, "Keep authored objects and user-added layout objects.")
 	var level: LevelSession3D = app.current_level
 	var initial_position: Vector3 = level.get_node("OpeningPatrol").position
 	for frame in 4: await process_frame
@@ -139,7 +139,7 @@ func _run() -> void:
 	var authored_records: Dictionary = designer.document.working.duplicate(true)
 	designer.test_layout()
 	var actor: StompableEnemy3D = app.current_level.get_node("DashLandingPatrol")
-	actor.receive_melee_hit(Vector3.ZERO)
+	actor.receive_melee_hit(Vector3.ZERO, CombatHit.new(actor.health.current, &"fixture"))
 	assert(actor.is_defeated())
 	designer.return_to_editing()
 	assert(designer.document.working == authored_records)

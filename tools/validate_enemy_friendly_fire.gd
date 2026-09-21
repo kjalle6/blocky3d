@@ -52,13 +52,13 @@ func _run() -> void:
 		if shooter.shots_fired_total() > 0: break
 	assert(shooter.shots_fired_total() == 2 and shot_sounds[0] == 1)
 	assert(not skater.is_defeated() and skater.position.y == 4)
-	shooter.receive_projectile_hit(Vector3.ZERO)
+	shooter.receive_projectile_hit(Vector3.ZERO, CombatHit.new(50, &"fixture"))
 	assert(shooter.is_defeated() and shooter.active_projectile_count() == 2)
 	skater.set_physics_process(true)
 	for frame in 55:
 		await physics_frame
-		if skater.is_defeated(): break
-	assert(skater.is_defeated(), "An enemy entering a released bullet's path must take normal damage.")
+		if skater.health.current < 50: break
+	assert(skater.health.current == 25 and not skater.is_defeated(), "One paired beat deals 25 damage to an entering enemy.")
 	assert(character_impacts[0] > 0, "Friendly fire uses the existing character impact sound.")
 	_reset_enemy(shooter)
 	assert(shooter.active_projectile_count() == 0 and not shooter.is_defeated())
@@ -79,7 +79,7 @@ func _run() -> void:
 	await physics_frame
 	var round := _round(Vector3(4, 0.8, 0), shooter)
 	round._physics_process(0.5)
-	assert(ally.is_defeated() and not shooter.is_defeated(), "A fast enemy round must hit another gunner and ignore its own hurtboxes.")
+	assert(ally.health.current == 25 and not shooter.is_defeated(), "A fast enemy round must hit another gunner and ignore its own hurtboxes.")
 	assert(round._expired)
 	trigger.queue_free()
 	await physics_frame
@@ -142,7 +142,7 @@ func _run() -> void:
 			await physics_frame
 			assert(shooter._teammate_blocks_shot(direction), "Hold fire must use the actual angled firing lane.")
 	# Reset removes the hit target's defeated state and restores its hurtbox.
-	ally.receive_projectile_hit(Vector3.ZERO)
+	ally.receive_projectile_hit(Vector3.ZERO, CombatHit.new(50, &"fixture"))
 	await physics_frame
 	await physics_frame
 	_reset_enemy(ally)

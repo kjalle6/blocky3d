@@ -16,6 +16,7 @@ const PICKUP_COLOR := Color(0.72, 0.42, 1.0)
 const EXIT_COLOR := Color(0.3, 1.0, 0.38)
 const ATTACK_COLOR := Color(1.0, 0.55, 0.12)
 const OTHER_COLOR := Color(0.84, 0.86, 0.92)
+const ENEMY_CONTACT := preload("res://scripts/combat/enemy_combat_contact.gd")
 
 var _level: LevelSession3D
 var _mesh_instance: MeshInstance3D
@@ -84,6 +85,9 @@ func _rebuild() -> void:
 
 
 func _is_drawable_box(collision: CollisionShape3D) -> bool:
+	# The legacy area no longer drives stomps; draw the real head plane below.
+	if collision.name == &"ContactCollision" and collision.owner is CharacterBody3D:
+		return false
 	return (
 		collision.shape is BoxShape3D
 		and not collision.disabled
@@ -174,6 +178,15 @@ func _add_dynamic_attack_regions(
 		if enemy.is_attacking():
 			_add_rect(mesh, edges, enemy.developer_attack_bounds(), ATTACK_COLOR)
 			_dynamic_attack_region_count += 1
+	for enemy in get_tree().get_nodes_in_group("melee_target"):
+		if not _level.is_ancestor_of(enemy) or enemy.is_defeated():
+			continue
+		var bounds := ENEMY_CONTACT.stomp_bounds(enemy)
+		var head_surface := Rect2(
+			Vector2(bounds.position.x, bounds.end.y - 0.02),
+			Vector2(bounds.size.x, 0.04)
+		)
+		_add_rect(mesh, edges, head_surface, ENEMY_CONTACT_COLOR)
 
 
 func _add_rect(

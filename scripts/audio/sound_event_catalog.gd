@@ -8,6 +8,7 @@ const CATEGORIES := {
 	"interface": "Interface", "music": "Music",
 }
 const EVENTS := [
+	{"id": "combat/heal", "title": "Healing item", "gameplay": "Connected · short cue on successful healing; prototype recording."},
 	{"id": "abilities/double_jump", "title": "Double jump"},
 	{"id": "abilities/dash_ground", "title": "Dash · grounded"},
 	{"id": "abilities/dash_air", "title": "Dash · airborne"},
@@ -15,6 +16,7 @@ const EVENTS := [
 	{"id": "abilities/wall_slide", "title": "Wall slide", "loop": true},
 	{"id": "abilities/dash_ready", "title": "Dash ready again"},
 	{"id": "combat/player_gunshot", "title": "Player handgun · shot", "gameplay": "Connected · plays when the player fires, including during jumps."},
+	{"id": "combat/out_of_ammo", "title": "Player handgun · out of ammo"},
 	{"id": "combat/enemy_gunshot", "title": "Enemy handguns · paired shot", "gameplay": "Connected · one sound for each simultaneous two-gun shot."},
 	{"id": "combat/knife_swing", "title": "Knife · swing", "gameplay": "Connected · one sound when a knife swing starts, including misses."},
 	{"id": "combat/knife_hit", "title": "Knife · hit", "gameplay": "Connected · one impact when a swing hits a live enemy, even if it catches several."},

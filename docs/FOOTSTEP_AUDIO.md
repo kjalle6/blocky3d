@@ -146,14 +146,13 @@ this historical failure is no longer an outstanding test issue.
 
 ## Audition and diagnosis
 
-- F5: grass running MIX / Walk Mono 07 / 06 / 04.
-- F4: grass walking MIX / 07 / 06 / 04 (gun backpedal).
-- F6: sand PAIR / NOX Sand Walk 01 / NOX Sand Walk 02 / Gravel 006 / Dirt 004.
+- F1 → Audio tools: choose, preview, compare and save recordings for each
+  surface and movement. The old F4/F5/F6 single-recording shortcuts and their
+  temporary popup have been removed; gameplay uses the audio tool's selected mix.
 - F9: marker count, played/suppressed count, active voices, and the last eight
   events with foot/frame, surface/collider, gait, selected clip, and spacing.
 
-Walking audition uses F4 because F8 stops the project when launched from the
-Godot editor. The game does not bind F8.
+The game does not bind F8, which stops editor playtests.
 
 `tools/validate_player_footsteps.gd` checks marker crossings, reverse playback,
 short stops, knife attack cadence, random selection, independent voices,

@@ -10,6 +10,10 @@ extends Node
 @export var developer_fresh_level_runs := true
 @export var developer_tools_enabled := true
 
+var campaign_menu: CanvasLayer
+var _campaign_mode := false
+var health_inventory_hud: Control
+var loot_receipt: Control
 var current_level: LevelSession3D
 var current_level_definition: LevelDefinition
 var current_world_definition: WorldDefinition
@@ -25,6 +29,7 @@ var audio_tuning_panel: CanvasLayer
 var cave_ambience: AudioStreamPlayer
 var _audio_tools_button: Button
 var _designer_tools_button: Button
+var _restart_tools_button: Button
 var level_designer: CanvasLayer
 var _developer_tool_owner := ""
 
@@ -67,20 +72,50 @@ func _ready() -> void:
 	developer_mode_label.visible = developer_fresh_level_runs
 	_build_world_list()
 	_build_audio_tools()
+	campaign_menu = preload("res://scripts/ui/campaign_menu.gd").new()
+	campaign_menu.name = "CampaignMenu"
+	add_child(campaign_menu)
+	health_inventory_hud = preload("res://scripts/ui/health_inventory_hud.gd").new()
+	health_inventory_hud.name = "HealthInventoryHUD"
+	get_node("Interface").add_child(health_inventory_hud)
+	loot_receipt = preload("res://scripts/ui/loot_receipt.gd").new()
+	get_node("Interface").add_child(loot_receipt)
 	level_designer = preload("res://scripts/developer/level_designer.gd").new()
 	level_designer.name = "LevelDesigner"
 	add_child(level_designer)
 	_designer_tools_button = Button.new()
 	_designer_tools_button.text = "Level designer…"
-	_designer_tools_button.position = Vector2(20, 246)
+	_designer_tools_button.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	_designer_tools_button.position = Vector2(-220, 156)
 	_designer_tools_button.custom_minimum_size = Vector2(200, 44)
 	_designer_tools_button.add_theme_font_size_override("font_size", 20)
 	get_node("Interface").add_child(_designer_tools_button)
 	_designer_tools_button.pressed.connect(level_designer.open_panel)
+	_restart_tools_button = Button.new()
+	_restart_tools_button.name = "RestartLevel"
+	_restart_tools_button.text = "Restart level"
+	_restart_tools_button.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	_restart_tools_button.position = Vector2(-640, 156)
+	_restart_tools_button.custom_minimum_size = Vector2(200, 44)
+	_restart_tools_button.add_theme_font_size_override("font_size", 20)
+	_restart_tools_button.focus_mode = Control.FOCUS_NONE
+	get_node("Interface").add_child(_restart_tools_button)
+	_restart_tools_button.pressed.connect(_restart_developer_level)
 	cave_ambience = preload("res://scripts/audio/cave_ambience_player.gd").new()
 	cave_ambience.name = "CaveAmbience"
 	add_child(cave_ambience)
 	show_level_select()
+
+
+func _restart_developer_level() -> void:
+	if current_level == null or _campaign_mode:
+		return
+	if not _developer_tool_owner.is_empty() and not (_developer_tool_owner == "designer" and not level_designer.is_editing()):
+		return
+	current_level._reset_run()
+	current_level.camera.snap_to_target()
+	if current_level.background != null:
+		current_level.background.snap_to_camera()
 
 
 func _build_audio_tools() -> void:
@@ -89,7 +124,8 @@ func _build_audio_tools() -> void:
 	audio_tuning_panel.closed.connect(func() -> void: _set_gameplay_tools_visible(false))
 	_audio_tools_button = Button.new()
 	_audio_tools_button.text = "Audio tuning…"
-	_audio_tools_button.position = Vector2(20, 190)
+	_audio_tools_button.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	_audio_tools_button.position = Vector2(-430, 156)
 	_audio_tools_button.custom_minimum_size = Vector2(200, 44)
 	_audio_tools_button.add_theme_font_size_override("font_size", 20)
 	get_node("Interface").add_child(_audio_tools_button)
@@ -164,7 +200,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					return
 				_load_button_level(_level_buttons[shortcut_index])
 	elif event.physical_keycode == KEY_ESCAPE:
-		show_level_select()
+		campaign_menu.show_pause()
 	else:
 		return
 	get_viewport().set_input_as_handled()
@@ -176,7 +212,7 @@ func load_level(level_id: StringName) -> void:
 	assert(definition != null, "Unknown campaign level: %s" % level_id)
 	assert(world_definition != null, "Campaign level has no owning world: %s" % level_id)
 	var initial_session_abilities: Array[StringName] = []
-	if developer_fresh_level_runs or not persist_progression:
+	if not _campaign_mode and (developer_fresh_level_runs or not persist_progression):
 		initial_session_abilities = definition.assumed_owned_abilities.duplicate()
 	_start_session(definition, world_definition, initial_session_abilities)
 
@@ -188,6 +224,7 @@ func load_developer_room() -> void:
 
 
 func load_developer_level(definition: LevelDefinition, entry_id: StringName = &"") -> void:
+	_campaign_mode = false
 	assert(developer_tools_enabled, "Developer tools are disabled.")
 	assert(definition != null, "A developer level definition is required.")
 	assert(
@@ -251,7 +288,7 @@ func _start_session(
 			"World%02dLevel%02d"
 			% [world_definition.display_number, definition.display_number]
 		)
-	var session_store := _progression_store() if world_definition != null else null
+	var session_store := _progression_store() if world_definition != null or _campaign_mode else null
 	current_level.configure(definition, session_store, initial_session_abilities)
 	if preview_mode:
 		preload("res://scripts/developer/level_layout_preview.gd").prepare(current_level)
@@ -259,11 +296,15 @@ func _start_session(
 	if preview_mode:
 		preload("res://scripts/developer/level_layout_preview.gd").finish(current_level)
 	else:
+		current_level.death_menu_requested.connect(campaign_menu.show_death)
+		current_level.retry_requested.connect(campaign_menu.show_pause)
 		current_level.run_completed.connect(_on_run_completed)
 		current_level.transition_requested.connect(_on_transition_requested)
 		current_level.run_reset.connect(_on_run_reset)
 		current_level.ability_unlocked.connect(_on_ability_unlocked)
 		weapon_status_hud.bind_session(current_level)
+		health_inventory_hud.bind_session(current_level)
+		loot_receipt.bind_session(current_level)
 	var session_heading := definition.heading()
 	if world_definition == null:
 		session_heading = "DEVELOPER TOOLS / %s" % definition.title.to_upper()
@@ -273,7 +314,7 @@ func _start_session(
 		session_heading
 		+ "\nMove: A / D or left stick    Jump: SPACE / gamepad A"
 		+ "    Dash: SHIFT / gamepad B"
-		+ "    Attack: LEFT CLICK / J / gamepad X    Reset: R"
+		+ "    Attack: LEFT CLICK / J / gamepad X    Reload: R / gamepad Y"
 	)
 	level_select.visible = false
 	menu_hint.visible = true
@@ -292,6 +333,7 @@ func show_level_select() -> void:
 	if level_designer != null and level_designer.is_active():
 		level_designer.request_close(true)
 		return
+	_campaign_mode = false
 	_transition_serial += 1
 	_free_current_level()
 	_free_active_interstitial()
@@ -314,6 +356,7 @@ func show_level_select() -> void:
 	_configure_developer_ability_panel(false)
 	if _audio_tools_button != null: _audio_tools_button.visible = developer_tools_enabled
 	if _designer_tools_button != null: _designer_tools_button.visible = false
+	if _restart_tools_button != null: _restart_tools_button.visible = false
 	if not _level_buttons.is_empty():
 		_level_buttons.front().grab_focus()
 
@@ -462,6 +505,8 @@ func _set_gameplay_tools_visible(visible: bool) -> void:
 
 func _apply_gameplay_tools_visibility() -> void:
 	instructions.visible = _gameplay_tools_visible
+	if _restart_tools_button != null:
+		_restart_tools_button.visible = _gameplay_tools_visible and developer_tools_enabled and not _campaign_mode
 	if _audio_tools_button != null:
 		_audio_tools_button.visible = _gameplay_tools_visible and developer_tools_enabled
 	if _designer_tools_button != null:
@@ -470,6 +515,10 @@ func _apply_gameplay_tools_visibility() -> void:
 		_gameplay_tools_visible
 		and _developer_ability_panel_available
 	)
+	for panel in get_tree().get_nodes_in_group("developer_lab_tools"):
+		(panel as Control).visible = _gameplay_tools_visible and developer_tools_enabled
+	for readout in get_tree().get_nodes_in_group("developer_lab_readout"):
+		(readout as CanvasItem).visible = not _gameplay_tools_visible
 	if menu_hint.visible:
 		_update_menu_hint()
 
@@ -522,6 +571,17 @@ func _set_developer_collision_overlay_enabled(enabled: bool) -> void:
 
 
 func _process(_delta: float) -> void:
+	if _gameplay_tools_visible:
+		# Let wrapped instructions determine the dock height before placing tools.
+		var tools_y := instructions.get_rect().end.y + 12.0
+		_audio_tools_button.position.y = tools_y
+		_designer_tools_button.position.y = tools_y
+		_restart_tools_button.position.y = tools_y
+		developer_ability_panel.position.y = tools_y + 56.0
+		var lab_tools_y := tools_y + 56.0
+		for panel in get_tree().get_nodes_in_group("developer_lab_tools"):
+			(panel as Control).position.y = lab_tools_y
+			lab_tools_y = (panel as Control).get_rect().end.y + 12.0
 	if not _developer_measurement_grid_enabled or current_level == null:
 		return
 	developer_measurement_label.text = (
@@ -586,25 +646,22 @@ func _update_menu_hint() -> void:
 	)
 	if _developer_inspection_enabled:
 		menu_hint.text = (
-			"%s    %s    F11: EXIT INSPECTION    ESC: SELECT"
+			"%s    %s    F11: EXIT INSPECTION    ESC: PAUSE"
 			% [collision_hint, grid_hint]
 		)
 	elif not developer_tools_enabled:
 		menu_hint.text = (
-			"F1: HIDE TOOLS    ESC: LEVEL SELECT"
+			"F1: HIDE TOOLS    ESC: PAUSE"
 			if _gameplay_tools_visible
-			else "F1: TOOLS    ESC: LEVEL SELECT"
+			else "TAB: INVENTORY    F1: TOOLS    ESC: PAUSE"
 		)
 	elif _gameplay_tools_visible:
 		menu_hint.text = (
-			"F1: HIDE    %s    %s    F11: INSPECT    ESC: SELECT"
+			"F1: HIDE    %s    %s    F11: INSPECT    ESC: PAUSE"
 			% [collision_hint, grid_hint]
 		)
 	else:
-		menu_hint.text = (
-			"F1: TOOLS    %s    %s    F11: INSPECT    ESC: SELECT"
-			% [collision_hint, grid_hint]
-		)
+		menu_hint.text = "TAB: INVENTORY    F1: TOOLS    ESC: PAUSE"
 
 
 func _on_developer_ability_toggled(enabled: bool, ability_id: StringName) -> void:
@@ -613,9 +670,76 @@ func _on_developer_ability_toggled(enabled: bool, ability_id: StringName) -> voi
 	current_level.set_session_ability_enabled(ability_id, enabled)
 
 
+func continue_legacy_campaign() -> bool:
+	var store := get_node("/root/GameProgression") as ProgressionStore
+	if store.progress.completed_level_ids.is_empty() and store.progress.unlocked_ability_ids.is_empty():
+		return false
+	var definition: LevelDefinition = campaign.ordered_levels().back()
+	for candidate in campaign.ordered_levels():
+		if not store.has_completed(candidate.level_id):
+			definition = candidate
+			break
+	_campaign_mode = true
+	if not _start_session(definition, campaign.find_world_for_level(definition.level_id)):
+		return false
+	current_level.player.health.reset(store.progress.maximum_hp)
+	current_level._session_owned_weapon_ids.assign(store.progress.owned_weapon_ids)
+	current_level.player.configure_weapon_ownership(store.progress.owned_weapon_ids)
+	current_level.save_state.queue_entry()
+	campaign_menu.notify_user("Legacy progress restored at the level entrance with 100 HP and no supplies.")
+	return true
+
+
+func start_campaign() -> bool:
+	var store := get_node("/root/GameProgression") as ProgressionStore
+	if not store.start_new_campaign():
+		return false
+	_campaign_mode = true
+	var first: LevelDefinition = campaign.ordered_levels().front()
+	if not _start_session(first, campaign.find_world_for_level(first.level_id)):
+		return false
+	current_level.save_state.queue_entry()
+	return true
+
+
+func load_snapshot(snapshot: Dictionary, ordinary_retry := false) -> String:
+	var error := SaveSnapshot.validation_error(snapshot)
+	if not error.is_empty():
+		return error
+	var registry := preload("res://scripts/developer/level_layout_registry.gd")
+	var definition := campaign.find_by_id(StringName(snapshot.level_id))
+	if definition == null:
+		for candidate in _known_developer_definitions():
+			if String(candidate.level_id) == snapshot.level_id:
+				definition = candidate
+	if definition == null:
+		return "This saved level is unavailable."
+	var scene := load(registry.SECTIONS[snapshot.section]) as PackedScene
+	var candidate := scene.instantiate() as LevelSession3D
+	if candidate == null:
+		return "The saved section could not be created."
+	error = preload("res://scripts/developer/level_layout_resolver.gd").apply_saved(candidate)
+	candidate.free()
+	if not error.is_empty():
+		return error
+	var store := get_node("/root/GameProgression") as ProgressionStore
+	var previous := store.progress.to_dictionary()
+	# Explicit load always rolls back. Ordinary Continue may retain permanent
+	# unlocks after an autosave, but never later unlocks from a manual save.
+	if not store.restore_progress(snapshot, ordinary_retry and snapshot.kind == "auto"):
+		return store.last_error
+	_campaign_mode = true
+	if not _start_session(definition, campaign.find_world_for_level(definition.level_id), [], scene):
+		store.progress = GameProgress.from_dictionary(previous)
+		store.save_progress()
+		return "The saved section could not be loaded."
+	current_level.save_state.apply_state(snapshot, true)
+	return ""
+
+
 func _progression_store() -> ProgressionStore:
 	if level_designer != null and level_designer.is_active(): return null
-	if developer_fresh_level_runs or not persist_progression:
+	if not _campaign_mode and (developer_fresh_level_runs or not persist_progression):
 		return null
 	return get_node_or_null("/root/GameProgression") as ProgressionStore
 
@@ -624,6 +748,10 @@ func _free_current_level() -> void:
 	if audio_tuning_panel != null:
 		audio_tuning_panel.close_panel()
 	weapon_status_hud.unbind_session()
+	if health_inventory_hud != null:
+		health_inventory_hud.bind_session(null)
+	if loot_receipt != null:
+		loot_receipt.bind_session(null)
 	if current_level == null:
 		return
 	world.remove_child(current_level)
@@ -693,6 +821,7 @@ func _on_transition_requested(
 ) -> void:
 	if target_level == null and target_scene == null:
 		return
+	var carried_state := current_level.save_state.transfer_state()
 	var source_definition := current_level_definition
 	var source_world := current_world_definition
 	if completes_source_level:
@@ -760,6 +889,10 @@ func _on_transition_requested(
 			target_world,
 			_transition_entry_abilities(target_level, session_abilities)
 		)
+	if current_level != null:
+		current_level.save_state.apply_state(carried_state)
+		if current_level._progression_store != null:
+			current_level.save_state.queue_entry()
 	if current_level != null and run_duration > 0.0:
 		current_level.player.begin_transition_run(
 			run_direction,

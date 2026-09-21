@@ -133,6 +133,7 @@ var _mouse_aim_angle := 0.0
 var _handgun_aim_up := false
 var _handgun_shot_active := false
 var _handgun_shot_elapsed := 0.0
+var _reload_gesture_weight := 0.0
 var _facing_right := true
 
 @onready var body: Sprite3D = %Body
@@ -229,13 +230,18 @@ func _footstep_cursor() -> float:
 func set_state(next_state: String, force: bool) -> void:
 	if not force and next_state == _state:
 		return
+	var continuing_thrust := (
+		not force and _state in ["attack", "run_attack"]
+		and next_state in ["attack", "run_attack"]
+	)
 	# Pause the stride through grounded stops and knife swings. Rapid tapping
 	# resumes the same cycle instead of repeatedly planting the first foot.
 	if force or next_state not in ["idle", "run", "run_attack", "backpedal"]:
 		_run_elapsed = 0.0
 		_walk_elapsed = 0.0
 	_state = next_state
-	_elapsed = 0.0
+	if not continuing_thrust:
+		_elapsed = 0.0
 	_refresh_weapon_layers(0)
 
 
@@ -268,6 +274,14 @@ func _on_player_handgun_shot_fired(_projectile: HandgunProjectile3D) -> void:
 	_handgun_shot_active = true
 	_handgun_shot_elapsed = 0.0
 	shot_effect.frame = 0
+	_refresh_weapon_layers(body.frame)
+	_apply_facing(_facing_right)
+
+
+## A short reload gesture overlays the current locomotion pose. The reload
+## controller owns its timing; the animation can finish before the reload does.
+func set_reload_gesture(weight: float) -> void:
+	_reload_gesture_weight = clampf(weight, 0.0, 1.0)
 	_refresh_weapon_layers(body.frame)
 	_apply_facing(_facing_right)
 
@@ -311,6 +325,7 @@ func flash_damage() -> void:
 
 
 func reset_feedback() -> void:
+	set_reload_gesture(0.0)
 	if _flash_tween != null and _flash_tween.is_valid():
 		_flash_tween.kill()
 	for sprite in [body, weapon, gun, gun_grip]:
@@ -378,22 +393,23 @@ func _refresh_weapon_layers(preserved_frame: int) -> void:
 		body.hframes = FRAME_COUNTS[_state]
 		body.frame = mini(preserved_frame, body.hframes - 1)
 		weapon.visible = false
-		var hand_pose := "diagonal" if _handgun_aim_up else "horizontal"
+		var show_up_pose := _handgun_aim_up and _reload_gesture_weight <= 0.0
+		var hand_pose := "diagonal" if show_up_pose else "horizontal"
 		gun_grip.texture = HANDGUN_GRIP_TEXTURES[hand_pose]
 		gun.visible = true
 		gun_grip.visible = true
 		gun.texture = (
 			HANDGUN_DIAGONAL_TEXTURE
-			if _handgun_aim_up
+			if show_up_pose
 			else HANDGUN_HORIZONTAL_TEXTURE
 		)
 		# The grip folder already provides a distinct upward pose. Only the
 		# diagonal gun source points downward and needs a vertical flip.
 		gun_grip.flip_v = false
-		gun.flip_v = _handgun_aim_up
+		gun.flip_v = show_up_pose
 		shot_effect.texture = HANDGUN_HORIZONTAL_SHOT_TEXTURE
 		shot_effect.flip_v = false
-		shot_effect.visible = _handgun_shot_active
+		shot_effect.visible = _handgun_shot_active and _reload_gesture_weight <= 0.0
 		return
 
 	body.texture = BODY_TEXTURES[_state]
@@ -438,7 +454,7 @@ func _apply_facing(facing_right: bool) -> void:
 	gun_grip.offset = grip_offset
 	var gun_offset := (
 		HANDGUN_UP_GUN_OFFSET
-		if _handgun_aim_up
+		if _handgun_aim_up and _reload_gesture_weight <= 0.0
 		else HANDGUN_HORIZONTAL_GUN_OFFSET
 	)
 	gun.offset = Vector2(
@@ -446,8 +462,14 @@ func _apply_facing(facing_right: bool) -> void:
 		gun_offset.y
 	) + grip_offset
 	var angle := _mouse_aim_angle if _mouse_aim_active else 0.0
+	var facing := 1.0 if facing_right else -1.0
+	if _reload_gesture_weight > 0.0:
+		if not _mouse_aim_active and _handgun_aim_up:
+			angle = PI / 4.0 * facing
+		angle = lerp_angle(angle, deg_to_rad(-35.0) * facing, _reload_gesture_weight)
 	var shoulder := handgun_shoulder_pixels() * gun.pixel_size
 	var translation := shoulder - shoulder.rotated(angle)
+	translation += Vector2(-3.0 * facing, -1.0) * gun.pixel_size * _reload_gesture_weight
 	for sprite in [gun, gun_grip]:
 		sprite.rotation.z = angle
 		sprite.position.x = translation.x

@@ -32,6 +32,11 @@ Use `tools/run_godot_tool.ps1` for validators, imports, export/pack probes,
 repeatable capture scripts, and standalone `-Game` runs when editor playtesting
 is not the right test. Use `tools/run_validation_suite.ps1` for a broad sweep.
 
+For an enemy behavior adjustment, run the relevant combat checks and a short
+MCP playtest. The Level 2 escape stress test is an opt-in
+`tools/probe_shaft_containment.gd`; it is excluded from the routine suite and
+only relevant to changes to the machine shaft or movement escape rules.
+
 The runner retains protections MCP does not replace for these jobs:
 
 - Isolated caches and saves under ignored `build/godot_automation_profile`.

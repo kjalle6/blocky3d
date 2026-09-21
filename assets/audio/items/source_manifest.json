@@ -1,0 +1,10 @@
+{
+  "note": "Copied unchanged from the user-provided local collection. Digital healing cue is provisional; playback pitch 2.0 shortens the half-second source to the 0.25-second feedback beat.",
+  "files": [
+    {
+      "runtime": "assets/audio/items/heal_click.wav",
+      "source": "D:/GodotProjects/blocky3dassets/audio/Sounds/Click_digital_1.wav",
+      "sha256": "e116b9c7ddd0dd09ef55f8a26195fda595d15da74ae4cdc377f660c4c791d542"
+    }
+  ]
+}

@@ -87,6 +87,7 @@ func _run() -> void:
 
 	# Dash overrides an attack presentation; it is not an accidental
 	# high-speed melee strike.
+	assert(player.request_weapon(PlayerWeapon.KNIFE))
 	Input.action_press("attack")
 	for frame in 2:
 		await physics_frame

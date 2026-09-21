@@ -49,7 +49,7 @@ func _run() -> void:
 	assert(is_zero_approx(level.camera.rotation.x))
 	assert(level.get_node("Platforms").get_child_count() == 15)
 	assert(level.get_node("Checkpoints").get_child_count() == 2)
-	assert(_scoped_group_count(level, &"melee_target") == 6)
+	assert(_scoped_group_count(level, &"melee_target") >= 6, "Preserve the six authored enemies and allow designer additions.")
 	assert(_scoped_group_count(level, &"level_goal") == 0)
 	assert(_scoped_group_count(level, &"level_transition") == 1)
 
@@ -73,13 +73,13 @@ func _validate_tools_ui(game_root: Node) -> void:
 	assert(menu_hint.visible)
 	assert(
 		menu_hint.text
-		== "F1: TOOLS    F7: HITBOXES    F10: GRID    F11: INSPECT    ESC: SELECT"
+		== "F1: TOOLS    F7: HITBOXES    F10: GRID    F11: INSPECT    ESC: PAUSE"
 	)
 	_toggle_gameplay_tools(game_root)
 	assert(instructions.visible)
 	assert(
 		menu_hint.text
-		== "F1: HIDE    F7: HITBOXES    F10: GRID    F11: INSPECT    ESC: SELECT"
+		== "F1: HIDE    F7: HITBOXES    F10: GRID    F11: INSPECT    ESC: PAUSE"
 	)
 	assert(
 		not (game_root.get_node(

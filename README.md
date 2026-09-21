@@ -15,6 +15,15 @@ remain read-only design references.
 
 ## Current state
 
+- First health/save pass: 100 player HP; bat/skater 50 HP; knife 25 damage and
+  stomp 50. Hazards remain lethal. Enemy bars appear after the first damage.
+  Q/E use carried healing items; Tab opens the paused inventory for assignment,
+  and Escape opens pause. Chests show a brief receipt for collected items.
+  New campaign/Continue/Load use protected manual slots and rotating autosaves.
+  Fresh developer level entries and the Firearm Lab remain isolated from saves.
+  See [save-system guide](docs/SAVE_SYSTEM.md) and
+  [combat balance](docs/COMBAT_BALANCE.md) for controls and provisional tuning.
+
 - Arrival / Shoreline is the first completed production campaign level. Its
   route runs from the animated shoreline through Green Threshold, Thorn Garden,
   and an open-air Double Jump rise to a safe tire-swing-tree clearing. The
@@ -52,7 +61,9 @@ remain read-only design references.
   and down. Shooting continues during double jumps; grounded retreat uses a
   slower upright backpedal. Keyboard/gamepad retain
   horizontal/upward-diagonal fire. Select weapons with `1`, `2`, the
-  mouse wheel, or gamepad RB for switching. Ammo, the safe firing lesson, boss,
+  mouse wheel, or gamepad RB for switching. Loaded/reserve ammo and R reload
+  now work with a provisional 12-round magazine and 1.5-second reload.
+  The safe firing lesson, boss,
   ending, and production promotion remain deliberately open
 - The six earlier Green Zone prototype levels are deleted. Their movement
   contracts moved to permanent homes first: the Animation Lab for the ability
@@ -97,7 +108,7 @@ remain read-only design references.
   entries. The user accepted and saved the knife/stomp mix in the Combat
   category; [audio tuning](docs/AUDIO_TUNING.md) lists the choices
 - Development mode starts every level from its fresh level-defined entry state,
-  then retains session abilities through death and `R`
+  then retains session abilities through death and developer restart
 - Development review tools expose independent F7 collision/hitbox overlays, an
   F10 world grid with live player-feet and cursor coordinates, and an F11
   god/noclip/free-flight inspection mode that grants the loaded level's
@@ -127,6 +138,10 @@ The living design and authoring documents are:
 - [`docs/ideas/README.md`](docs/ideas/README.md) — future gameplay ideas to
   revisit later, separate from planned work
 - [`docs/GAME_DIRECTION.md`](docs/GAME_DIRECTION.md) — what the game is
+- [`docs/COMBAT_BALANCE.md`](docs/COMBAT_BALANCE.md) — health, damage, matchup
+  targets, and the planned combat tuning workflow
+- [`docs/HEALTH_INVENTORY_SAVE_PLAN.md`](docs/HEALTH_INVENTORY_SAVE_PLAN.md) —
+  implementation phases for combat health, healing, inventory, and persistent saves
 - [`docs/LEVEL_ROADMAP.md`](docs/LEVEL_ROADMAP.md) — the eleven legacy ideas,
   revised campaign spine, and next level
 - [`docs/LEVEL_2_VISUAL_BRIEF.md`](docs/LEVEL_2_VISUAL_BRIEF.md) — the completed
@@ -165,9 +180,10 @@ handoff or append unrelated milestones to an old one.
 - Select knife/gun: `1` / `2`, mouse wheel, gamepad RB
 - Developer tools: `F1` for Audio tuning and Level designer; `F7` hitboxes,
   `F10` grid, `F11` free-flight inspection
-- Restart current run: `R`
-- Return to level selector: `Escape` during ordinary play; while testing a
-  designer draft, `Escape` returns to editing
+- Reload handgun: `R` / gamepad Y (12-round magazine; reserve shown beside it)
+- Restart a developer run: F1's Restart level / Reset lab button
+- Pause / Options: `Escape` during ordinary play; Main Menu returns to the
+  level selector. While testing a designer draft, `Escape` returns to editing
 - Menu: click, `W` / `S` + `Enter`, or number shortcut
 
 ## Legacy references
@@ -221,8 +237,9 @@ Use the suite for broad integration changes and the runner for a focused
 contract. On 2026-09-15 the user retired the scripted Level 2 full-route
 playthrough. Its old stage-10 bot death is no longer an outstanding test failure;
 Level 2 keeps focused structure, movement, ability, and transition checks, with
-hands-on review of the full route. The suite now has **47 validators**, all of
-which passed in the immediately preceding 48-test run. The removed bot was that
+hands-on review of the full route. The suite now has **48 validators**, including
+ground-combat contact regressions. The previous 47 passed in the earlier
+48-test run. The removed bot was that
 run's sole failure; the reduced suite was not rerun just for this deletion.
 Designer and friendly-fire gameplay have user acceptance. Do not rerun the
 suite solely for documentation changes.

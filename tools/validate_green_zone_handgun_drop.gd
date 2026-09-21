@@ -59,7 +59,7 @@ func _run() -> void:
 			if weapon_id == PlayerWeapon.HANDGUN:
 				_acquired_count += 1
 	)
-	shooter.receive_melee_hit(level.player.global_position)
+	shooter.receive_melee_hit(level.player.global_position, CombatHit.new(50, &"fixture"))
 	assert(shooter.is_defeated())
 	assert(_drop_started_count == 1)
 	assert(pickup.is_airborne())
@@ -72,7 +72,7 @@ func _run() -> void:
 	assert(pickup.global_position.y > pickup.landing_position().y)
 
 	# A defeated enemy cannot create another reward from repeated hit requests.
-	shooter.receive_melee_hit(level.player.global_position)
+	shooter.receive_melee_hit(level.player.global_position, CombatHit.new(50, &"fixture"))
 	assert(_drop_started_count == 1)
 
 	for frame in 90:
@@ -129,7 +129,7 @@ func _run() -> void:
 	assert(pickup.global_position.is_equal_approx(anchor.global_position))
 
 	# Resetting during the kick cannot leave a delayed bounce or ghost pickup.
-	shooter.receive_melee_hit(level.player.global_position)
+	shooter.receive_melee_hit(level.player.global_position, CombatHit.new(50, &"fixture"))
 	for frame in 8:
 		await physics_frame
 	assert(pickup.is_airborne())
@@ -143,7 +143,7 @@ func _run() -> void:
 	assert(_settled_count == 1)
 
 	# The exact same actor can perform the complete deterministic drop again.
-	shooter.receive_melee_hit(level.player.global_position)
+	shooter.receive_melee_hit(level.player.global_position, CombatHit.new(50, &"fixture"))
 	for frame in 90:
 		await physics_frame
 		if pickup.is_available():

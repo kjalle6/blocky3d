@@ -31,6 +31,7 @@ const SOURCE_EVENT_BANKS := {
 	"combat/knife_swing": preload("res://resources/audio/combat/knife_swing.tres"),
 	"combat/knife_hit": preload("res://resources/audio/combat/knife_hit.tres"),
 	"combat/stomp": preload("res://resources/audio/combat/stomp.tres"),
+	"combat/heal": preload("res://resources/audio/combat/heal.tres"),
 }
 static var working: Dictionary = {}
 static var saved: Dictionary = {}

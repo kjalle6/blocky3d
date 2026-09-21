@@ -112,7 +112,8 @@ func _validate_double_jump_fire(level: LevelSession3D) -> void:
 	var player := level.player
 	var visual := player.pixel_visual
 	(level.get_node("HandgunEnemy") as HandgunEnemy3D).set_engagement_enabled(false)
-	assert(level.acquire_weapon(PlayerWeapon.HANDGUN))
+	assert(level.owns_weapon(PlayerWeapon.HANDGUN))
+	assert(player.request_weapon(PlayerWeapon.HANDGUN))
 	var shots: Array[Dictionary] = []
 	player.projectile_fired.connect(func(round: HandgunProjectile3D) -> void:
 		assert(visual.current_state() == "double_jump")

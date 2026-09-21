@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemDefinition" format=3 uid="uid://ln6nc36qcnvr"]
+
+[ext_resource type="Script" uid="uid://ca3ky3i2pwesb" path="res://scripts/inventory/item_definition.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://bqxrj8m1dvh8l" path="res://assets/art/ui/health/large_heal.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+item_id = &"large_heal_test"
+display_name = "Medical kit"
+icon = ExtResource("2")
+healing = 50
+use_duration = 0.25
+development_only = true

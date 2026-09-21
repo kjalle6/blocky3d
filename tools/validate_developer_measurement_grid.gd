@@ -71,7 +71,7 @@ func _run() -> void:
 		return
 	if (
 		menu_hint.text
-		!= "F7: HITBOXES    F10: HIDE GRID    F11: EXIT INSPECTION    ESC: SELECT"
+		!= "F7: HITBOXES    F10: HIDE GRID    F11: EXIT INSPECTION    ESC: PAUSE"
 	):
 		_fail("The compact HUD did not report both active development tools.")
 		return

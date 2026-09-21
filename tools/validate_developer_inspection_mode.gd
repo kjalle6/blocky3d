@@ -61,7 +61,7 @@ func _run() -> void:
 		return
 	if (
 		menu_hint.text
-		!= "F7: HITBOXES    F10: GRID    F11: EXIT INSPECTION    ESC: SELECT"
+		!= "F7: HITBOXES    F10: GRID    F11: EXIT INSPECTION    ESC: PAUSE"
 	):
 		_fail("The compact HUD does not explain how to exit inspection mode.")
 		return

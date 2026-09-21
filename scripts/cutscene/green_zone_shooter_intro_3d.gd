@@ -451,13 +451,15 @@ func _complete_intro() -> void:
 	player.call(&"finish_transition_run")
 	_restore_camera()
 	_set_trigger_enabled(false)
+	if level_session.save_state != null:
+		level_session.save_state.mark_world_flag("green_zone_shooter_intro")
 	intro_completed.emit()
 
 
 func _on_level_session_run_reset() -> void:
 	set_physics_process(true)
 	_cancel_active_sequence()
-	if encounter_checkpoint.is_activated():
+	if encounter_checkpoint.is_activated() or (level_session.save_state != null and level_session.save_state.world_flags.get("green_zone_shooter_intro", false)):
 		_phase = Phase.COMPLETE
 		_set_trigger_enabled(false)
 		_set_shooter_engagement(true)

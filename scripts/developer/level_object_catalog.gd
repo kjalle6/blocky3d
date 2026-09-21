@@ -8,13 +8,13 @@ const CORE_ENTRIES := {
 	"gunner_enemy": {"name": "Dual-gun enemy", "category": "Enemies", "kind": "gunner", "scene": "res://scenes/enemies/handgun_enemy.tscn", "image": "res://assets/art/green_zone/enemies/handgun_idle.png", "frames": 4, "description": "A stationary gunner with the existing aiming, firing, and projectile behaviour.", "anchor": "ground", "feet": 0.55},
 	"spike_row": {"name": "Spikes", "category": "Hazards", "kind": "spikes", "scene": "res://scenes/hazards/pixel_spike_row.tscn", "image": "res://assets/art/shared/hazards/spike.svg", "description": "A lethal spike row. Adjust its width after placing.", "anchor": "ground"},
 	"flying_hazard": {"name": "Flying machine", "category": "Hazards", "kind": "flyer", "scene": "res://scenes/enemies/green_zone_flyer.tscn", "image": "res://assets/art/green_zone/enemies/flyer_idle.png", "frames": 4, "description": "An indestructible flying hazard. Its existing bob and electrical discharge stay active.", "anchor": "air"},
-	"checkpoint": {"name": "Checkpoint", "category": "Checkpoints", "kind": "checkpoint", "scene": "res://scenes/level/level_checkpoint.tscn", "description": "Stand here to set a respawn point. The marked area is visible only in the designer.", "anchor": "ground"},
+	"checkpoint": {"name": "Autosave point", "category": "Autosaves", "kind": "checkpoint", "scene": "res://scenes/level/level_checkpoint.tscn", "description": "Stand safely here to autosave without healing. The marked area is visible only in the designer.", "anchor": "ground"},
 	"bush": {"name": "Bush", "category": "Decorations", "kind": "decoration", "image": "res://assets/art/green_zone/props/bush.png", "description": "Scenery only. Players and projectiles pass through it.", "anchor": "ground"},
 	"stone": {"name": "Small stone", "category": "Decorations", "kind": "decoration", "image": "res://assets/art/green_zone/props/stone_small.png", "description": "A small scenery stone. It does not block movement or bullets.", "anchor": "ground"},
 	"tree": {"name": "Small tree", "category": "Decorations", "kind": "decoration", "image": "res://assets/art/green_zone/props/tree_small_grounded.png", "description": "A tree drawn at the game's native pixel scale. Scenery only.", "anchor": "ground"},
 	"bench": {"name": "Bench", "category": "Decorations", "kind": "decoration", "image": "res://assets/art/green_zone/props/bench.png", "description": "A decorative bench. It is not a platform or bullet cover.", "anchor": "ground"},
 }
-const CATEGORIES := ["All objects", "Platforms", "Enemies", "Hazards", "Checkpoints", "Decorations", "Terrain tiles", "Scenery tiles", "Animated scenery"]
+const CATEGORIES := ["All objects", "Platforms", "Enemies", "Hazards", "Autosaves", "Decorations", "Terrain tiles", "Scenery tiles", "Animated scenery"]
 static var PACK_PATHS: Array[String] = _pack_paths()
 static var ENTRIES: Dictionary = _load_entries()
 static var _icons: Dictionary = {}

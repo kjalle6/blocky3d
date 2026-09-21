@@ -147,7 +147,7 @@ func _run() -> void:
 	var runtime: Dictionary = OBJECTS.inspect(level).nodes
 	assert(runtime.size() == original.size())
 	var skater: StompableEnemy3D = runtime[ids.skater_enemy]
-	skater.receive_melee_hit(Vector3.ZERO)
+	skater.receive_melee_hit(Vector3.ZERO, CombatHit.new(skater.health.current, &"fixture"))
 	assert(skater.is_defeated())
 	level._reset_world()
 	assert(not skater.is_defeated())

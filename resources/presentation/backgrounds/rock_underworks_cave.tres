@@ -1,12 +1,12 @@
-[gd_resource type="Resource" script_class="PixelBackgroundProfile" load_steps=13 format=3]
+[gd_resource type="Resource" script_class="PixelBackgroundProfile" format=3 uid="uid://c2h0e762add1v"]
 
-[ext_resource type="Script" path="res://scripts/presentation/pixel_background_profile.gd" id="1_profile"]
-[ext_resource type="Script" path="res://scripts/presentation/pixel_background_layer_profile.gd" id="2_layer"]
-[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/background/lower_cave_base.png" id="3_lower_base"]
-[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/background/lower_cave_distant.png" id="4_lower_distant"]
-[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/background/lower_cave_crystals.png" id="5_lower_crystals"]
-[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/background/water_cave_base.png" id="6_upper_base"]
-[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/background/water_cave_distant.png" id="7_upper_distant"]
+[ext_resource type="Script" uid="uid://qdw3psmc2geu" path="res://scripts/presentation/pixel_background_profile.gd" id="1_profile"]
+[ext_resource type="Script" uid="uid://sl0ut8fqectp" path="res://scripts/presentation/pixel_background_layer_profile.gd" id="2_layer"]
+[ext_resource type="Texture2D" uid="uid://wuh0be24k8d1" path="res://assets/art/interiors/rock_underworks/background/lower_cave_base.png" id="3_lower_base"]
+[ext_resource type="Texture2D" uid="uid://clxngay27jvmp" path="res://assets/art/interiors/rock_underworks/background/lower_cave_distant.png" id="4_lower_distant"]
+[ext_resource type="Texture2D" uid="uid://bgitc377x15pt" path="res://assets/art/interiors/rock_underworks/background/lower_cave_crystals.png" id="5_lower_crystals"]
+[ext_resource type="Texture2D" uid="uid://dpxkfjkmy3nch" path="res://assets/art/interiors/rock_underworks/background/water_cave_base.png" id="6_upper_base"]
+[ext_resource type="Texture2D" uid="uid://dq8p07t6s4gcy" path="res://assets/art/interiors/rock_underworks/background/water_cave_distant.png" id="7_upper_distant"]
 
 [sub_resource type="Resource" id="Layer_lower_base"]
 script = ExtResource("2_layer")
@@ -34,15 +34,15 @@ invert_zone_visibility = true
 script = ExtResource("2_layer")
 texture = ExtResource("6_upper_base")
 horizontal_policy = 0
-zone_tag = &"upper"
 depth = -5.6
+zone_tag = &"upper"
 
 [sub_resource type="Resource" id="Layer_upper_distant"]
 script = ExtResource("2_layer")
 texture = ExtResource("7_upper_distant")
 horizontal_parallax = 0.22
-zone_tag = &"upper"
 depth = -5.5
+zone_tag = &"upper"
 
 [resource]
 script = ExtResource("1_profile")

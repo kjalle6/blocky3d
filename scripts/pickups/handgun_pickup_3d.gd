@@ -12,6 +12,7 @@ enum DropState { LOCKED, KICKING, BOUNCING, AVAILABLE, CLAIMED }
 
 @export var source_enemy_path: NodePath
 @export var collection_enabled := false
+@export_range(0, 9999, 1) var ammunition_rounds := 30
 @export var grounded_texture: Texture2D
 @export var airborne_texture: Texture2D
 @export var source_offset := Vector3(0.0, 0.82, 0.0)
@@ -181,7 +182,7 @@ func _on_body_entered(body: Node3D) -> void:
 		return
 	var player := body as PlayerCharacter
 	collection_requested.emit(self, player)
-	if _session.acquire_weapon(PlayerWeapon.HANDGUN):
+	if _session.acquire_weapon(PlayerWeapon.HANDGUN, ammunition_rounds):
 		mark_claimed()
 	elif _session.owns_weapon(PlayerWeapon.HANDGUN):
 		mark_claimed()

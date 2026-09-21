@@ -1,24 +1,14 @@
-[gd_resource type="Resource" script_class="PixelBackgroundProfile" load_steps=17 format=3]
+[gd_resource type="Resource" script_class="PixelBackgroundProfile" format=3 uid="uid://bcxjdhfn88pk1"]
 
-[ext_resource type="Script" path="res://scripts/presentation/pixel_background_profile.gd" id="1_profile"]
-[ext_resource type="Script" path="res://scripts/presentation/pixel_background_layer_profile.gd" id="2_layer"]
-[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/night/1.png" id="3_sky"]
-[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/night/2.png" id="4_far_haze"]
-[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/night/3.png" id="5_far_trees"]
-[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/night/4.png" id="6_mid_trees"]
-[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/night/5.png" id="7_near_trees"]
-[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/night/6.png" id="8_canopy"]
-[ext_resource type="Texture2D" path="res://assets/art/green_zone/background/cave_depth/cave_composite.png" id="9_cave"]
-
-[sub_resource type="Resource" id="Layer_cave"]
-script = ExtResource("2_layer")
-texture = ExtResource("9_cave")
-pixel_scale = 3
-horizontal_parallax = 0.08
-vertical_policy = 2
-depth = -4.7
-offset_pixels = Vector2(0, -486)
-tint = Color(0.62, 0.69, 0.86, 1)
+[ext_resource type="Script" uid="uid://qdw3psmc2geu" path="res://scripts/presentation/pixel_background_profile.gd" id="1_profile"]
+[ext_resource type="Script" uid="uid://sl0ut8fqectp" path="res://scripts/presentation/pixel_background_layer_profile.gd" id="2_layer"]
+[ext_resource type="Texture2D" uid="uid://dd4ltvud1c8ua" path="res://assets/art/green_zone/background/night/1.png" id="3_sky"]
+[ext_resource type="Texture2D" uid="uid://bp6aix51vmv61" path="res://assets/art/green_zone/background/night/2.png" id="4_far_haze"]
+[ext_resource type="Texture2D" uid="uid://bf0ay6a5j0axv" path="res://assets/art/green_zone/background/night/3.png" id="5_far_trees"]
+[ext_resource type="Texture2D" uid="uid://ds1oavr7rlfj7" path="res://assets/art/green_zone/background/night/4.png" id="6_mid_trees"]
+[ext_resource type="Texture2D" uid="uid://cu1ddtq301vp5" path="res://assets/art/green_zone/background/night/5.png" id="7_near_trees"]
+[ext_resource type="Texture2D" uid="uid://gc3lfgt2kbcv" path="res://assets/art/green_zone/background/night/6.png" id="8_canopy"]
+[ext_resource type="Texture2D" uid="uid://nkal2dw2v67" path="res://assets/art/green_zone/background/cave_depth/cave_composite.png" id="9_cave"]
 
 [sub_resource type="Resource" id="Layer_sky"]
 script = ExtResource("2_layer")
@@ -55,9 +45,7 @@ tint = Color(0.27, 0.34, 0.54, 0.88)
 [sub_resource type="Resource" id="Layer_near_trees"]
 script = ExtResource("2_layer")
 texture = ExtResource("7_near_trees")
-horizontal_parallax = 0.2
 vertical_policy = 2
-depth = -5.0
 tint = Color(0.25, 0.29, 0.46, 0.94)
 
 [sub_resource type="Resource" id="Layer_canopy"]
@@ -67,6 +55,16 @@ horizontal_parallax = 0.28
 vertical_policy = 2
 depth = -4.8
 tint = Color(0.23, 0.24, 0.38, 1)
+
+[sub_resource type="Resource" id="Layer_cave"]
+script = ExtResource("2_layer")
+texture = ExtResource("9_cave")
+pixel_scale = 3
+horizontal_parallax = 0.08
+vertical_policy = 2
+depth = -4.7
+offset_pixels = Vector2(0, -486)
+tint = Color(0.62, 0.69, 0.86, 1)
 
 [resource]
 script = ExtResource("1_profile")

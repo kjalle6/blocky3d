@@ -16,7 +16,7 @@ aligned correctly during user testing.
 2. Click in the level to place one block, or drag to build a row or follow a
    shape. The brush stays active for the next stroke; **right-click or Esc**
    finishes. Each stroke is one Undo. Select another block to change pieces.
-   **Add objects…** offers props, enemies, hazards, and checkpoints. Those place
+   **Add objects…** offers props, enemies, hazards, and autosave points. Those place
    once and become selected; Shift-click keeps placing them. Grounded objects
    snap to nearby floors, while flying machines stay in the air.
 3. Choose **Test** to play a fresh attempt. **Esc** returns to editing with your
@@ -94,7 +94,7 @@ protected unless explicitly registered for editing.
 | Blocks | Green Zone tops, edges, corners, slopes, fill and scenery pieces; Beach sand pieces |
 | Enemies | Patrol enemy, skater, stationary dual-gun enemy |
 | Hazards | Spike row, flying electrical machine |
-| Checkpoints | Additional grounded respawn point |
+| Autosaves | Additional grounded autosave point (campaign); respawn point in developer tests |
 | Decorations | The original four quick choices plus all 78 Green Zone props |
 | Animated scenery | Card, money, skateboard, fountain, and chest opening |
 
@@ -157,6 +157,15 @@ Added checkpoints activate through stable grounded contact. They remember a
 respawn spot without advancing the original campaign checkpoint numbering,
 so later authored checkpoints still work. Their marked areas are visible in
 the designer and invisible during normal play.
+
+These same placeable markers now appear as **Autosave points**. Existing
+placements and layout IDs are preserved. In a campaign, activation saves without
+healing and never overwrites separate manual slots. Death offers Continue from
+last save, Load Save, and Quit; loading restores saved HP and supplies exactly.
+Developer level selections and designer tests still use a session-local respawn
+spot, keeping authoring tests separate from campaign snapshots.
+See [save-system guide](SAVE_SYSTEM.md) for the implemented behavior.
+See [Combat balance](COMBAT_BALANCE.md#autosave-points-and-recovery).
 
 You can duplicate/remove added objects and move mixed groups. Placement previews
 never enter the saved layout and cannot hurt the player or trigger encounters.

@@ -1,8 +1,9 @@
 class_name ProjectileHurtbox3D
 extends Area3D
-## Projectile-only damage surface sized to the visible enemy instead of its
-## deliberately compact movement body. Ordinary contact and stomp collision
-## remain unchanged.
+## Projectile collision surface sized to the visible enemy instead of its
+## compact movement body. EnemyCombatContact also reads this authored box for
+## knife dimensions and stomp width, with sprite registration and a separate
+## head height; it does not resize navigation or change projectile queries.
 
 @export var target_path := NodePath("..")
 
@@ -22,9 +23,10 @@ func _ready() -> void:
 	add_to_group("run_resettable")
 
 
-func receive_projectile_hit(source_position: Vector3) -> void:
+func receive_projectile_hit(source_position: Vector3, hit: CombatHit = null) -> bool:
 	if _target != null and _target.has_method("receive_projectile_hit"):
-		_target.call("receive_projectile_hit", source_position)
+		return bool(_target.call("receive_projectile_hit", source_position, hit))
+	return false
 
 
 func reset_run() -> void:

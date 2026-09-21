@@ -206,6 +206,8 @@ func _enemy(scene: PackedScene, position: Vector3) -> Node3D:
 	enemy.position = position
 	_world.add_child(enemy)
 	enemy.set_physics_process(false)
+	# Defeat/audio fixture; health validation covers nonlethal default damage.
+	enemy.health.reset(25)
 	return enemy
 
 
