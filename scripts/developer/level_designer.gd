@@ -194,7 +194,9 @@ func commit_records(label: String, records: Dictionary) -> bool:
 		if records[id] == document.saved.get(id) or records[id] == document.base.get(id): continue
 		for key in records[id].values:
 			var value: Variant = records[id].values[key]
-			if value is float and is_finite(value) and (not before.has(id) or before[id].values.get(key) != value):
+			if value is int:
+				records[id].values[key] = float(value)
+			elif value is float and is_finite(value) and (not before.has(id) or before[id].values.get(key) != value):
 				records[id].values[key] = String.num(value, 6).to_float()
 	if records == before: return false
 	document.working = records
@@ -556,7 +558,7 @@ func refresh_presentation() -> void:
 func placement_warning(id: String) -> String:
 	if not nodes.has(id) or not document.working.has(id): return ""
 	var record: Dictionary = document.working[id]
-	if record.kind not in ["enemy", "gunner", "checkpoint"]: return ""
+	if record.kind not in ["enemy", "gunner", "checkpoint", "chest"]: return ""
 	var node: Node3D = nodes[id]
 	var feet := node.global_position
 	if record.kind in ["enemy", "gunner"]:

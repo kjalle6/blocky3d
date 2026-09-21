@@ -1,7 +1,7 @@
 extends RefCounted
 ## Browser organization is separate from the saved catalog/runtime contract.
 const CATALOG := preload("res://scripts/developer/level_object_catalog.gd")
-const CATEGORIES := ["All objects", "Blocks", "Enemies", "Hazards", "Checkpoints", "Decorations", "Animated scenery"]
+const CATEGORIES := ["All objects", "Blocks", "Enemies", "Hazards", "Autosaves", "Supplies", "Decorations", "Animated scenery"]
 
 static func category(entry: Dictionary) -> String:
 	return "Blocks" if entry.kind == "tile" else str(entry.category)

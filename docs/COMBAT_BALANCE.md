@@ -306,9 +306,12 @@ flyers, stay lethal unless that decision is changed.
 
 Start the player with no consumable supplies. Enemy drops of healing items and
 ammunition are a direction to explore, alongside chests that give items, so the
-levels do not need to be cluttered with individual pickups. General enemy drop
-chances and supply placement remain open; the next ammunition pass has the
-specific accepted rewards below.
+levels do not need to be cluttered with individual pickups. Supply chests now
+use level-based weighted pools with quantity ranges, a possible second item
+type, weapon-gated ammo and repeatable save/load outcomes. They are placeable
+in the designer with pool/fixed overrides. Three movable campaign examples
+start this pass; [chest loot](CHEST_LOOT.md) owns their tuning and locations.
+General enemy drop chances remain open.
 
 Prefer judging supply availability over whole sections and save intervals.
 With no initial carry cap, reward amounts and drop rates directly affect how
@@ -320,8 +323,8 @@ uncollected source.
 ## Accepted ammunition and pickup presentation direction
 
 Loaded/reserve ammunition, reloading, inventory ammo, configurable rewards and
-exact save restoration are implemented. The reward and weapon-unlock animation
-changes below remain presentation work.
+exact save restoration are implemented. Ordinary reward icons now pop above the
+player in sequence; the separate weapon-unlock presentation remains future work.
 
 - Use concept A: an unframed gun icon and numerical loaded/reserve count in
   the bottom-left. A compact active-reload timing bar appears above the player
@@ -335,7 +338,12 @@ changes below remain presentation work.
   The first Level 3 handgun pickup also grants 30 rounds. Author reward amounts
   per source rather than making 30 the universal ammunition reward.
 - Ordinary rewards show their icon and +quantity above the player in sequence,
-  with a brief upward movement and fade while gameplay continues.
+  with a brief upward movement and fade while gameplay continues. The current
+  prototype runs at 1.15x speed: rewards appear about 0.57 seconds apart, and each
+  pops in, rises and fades over about 1.09 seconds. The original motion and fade
+  proportions are preserved. It follows the player and replaces the old receipt.
+  Inventory changes immediately; the animation only reports the granted items.
+  Inventory/pause freezes the sequence, and death/reset/scene changes clear it.
 - A newly acquired weapon gets a separate paused unlock panel showing the
   weapon, its unlock title, ammunition received, and relevant controls.
 - Save and restore ammunition together with inventory and reward claims.
@@ -436,7 +444,8 @@ designed after the basic combat and recovery loop has been tested.
 Current provisional values: handgun 25 damage, gunner 50 HP/25 damage, paired
 bullets from one beat share one damage application per target, hurt attack lock
 0.18 seconds, medicine feedback/attack lock 0.25 seconds. The 50-HP medical kit
-and 75-HP medical bag are lab-only. These are implementation test values,
+now enters the Level 2 pool; the 75-HP medical bag is available through explicit
+chest overrides and the lab. These are implementation test values,
 not accepted final balance.
 `tools/report_combat_balance.gd` generates the current matchup report from the
 resources; run it through the standard runner.

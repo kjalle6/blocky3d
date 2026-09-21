@@ -73,7 +73,7 @@ func _validate_tools_ui(game_root: Node) -> void:
 	assert(menu_hint.visible)
 	assert(
 		menu_hint.text
-		== "F1: TOOLS    F7: HITBOXES    F10: GRID    F11: INSPECT    ESC: PAUSE"
+		== "TAB: INVENTORY    F1: TOOLS    ESC: PAUSE"
 	)
 	_toggle_gameplay_tools(game_root)
 	assert(instructions.visible)

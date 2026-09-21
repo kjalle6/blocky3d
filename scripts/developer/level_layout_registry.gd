@@ -20,6 +20,7 @@ const STYLES := {
 }
 const STRUCTURAL_SCRIPTS := [
 	"res://scripts/developer/level_layout_objects.gd",
+	"res://scripts/pickups/item_reward_3d.gd",
 	"res://scripts/presentation/pixel_platform_3d.gd",
 	"res://scripts/hazards/pixel_spike_row_3d.gd",
 	"res://scripts/enemies/stompable_enemy_3d.gd",

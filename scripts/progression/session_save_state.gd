@@ -6,6 +6,7 @@ const REGISTRY := preload("res://scripts/developer/level_layout_registry.gd")
 var session: LevelSession3D
 var rewards: Dictionary = {}
 var world_flags: Dictionary = {}
+var _loot_seed := 1
 var _pending_point: LevelCheckpoint3D
 var _entry_pending := false
 var _quiet_time := 0.0
@@ -80,6 +81,7 @@ func mark_world_flag(id: String) -> void:
 func capture(position: Vector3, point_id := "") -> Dictionary:
 	var store := session._progression_store
 	var progress := store.progress if store != null else GameProgress.new()
+	if store == null: progress.loot_seed = _loot_seed
 	return {
 		"level_id": String(session.level_definition().level_id),
 		"section": REGISTRY.section_for(session),
@@ -92,11 +94,16 @@ func capture(position: Vector3, point_id := "") -> Dictionary:
 	}
 
 
+func loot_seed() -> int:
+	return session._progression_store.progress.loot_seed if session._progression_store != null else _loot_seed
+
+
 func transfer_state() -> Dictionary:
-	return {"player": session.player.capture_state(), "rewards": rewards.duplicate(true), "world_flags": world_flags.duplicate(true)}
+	return {"player": session.player.capture_state(), "rewards": rewards.duplicate(true), "world_flags": world_flags.duplicate(true), "loot_seed": loot_seed()}
 
 
 func apply_state(data: Dictionary, restore_position := false) -> void:
+	_loot_seed = int(data.get("loot_seed", data.get("progress", {}).get("loot_seed", 1)))
 	rewards = data.get("rewards", {}).duplicate(true)
 	world_flags = data.get("world_flags", {}).duplicate(true)
 	_entry_pending = false

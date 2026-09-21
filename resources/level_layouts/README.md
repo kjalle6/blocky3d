@@ -10,7 +10,7 @@ terrain/prop pack does not invalidate a layout. Changing an asset it uses still
 requires review, as does changing its structural base. Older schema 1/2 files
 remain readable when their structural fingerprint matches.
 
-Platforms, individual tiles, enemies, hazards, checkpoints, and decorations all use
+Platforms, individual tiles, enemies, hazards, supply chests, checkpoints, and decorations all use
 the same save path; never put arbitrary scene or script paths into a layout.
 
 Godot's ordinary scene editor shows the structural base. Before changing a
@@ -24,7 +24,9 @@ live under `user://level_designer`, separate from production layouts.
 
 Current section saves contain user-authored additions:
 
-- `arrival_shoreline.json`: an additional skater enemy in Level 1;
+- `arrival_shoreline.json`: an additional skater enemy and supply chest in Level 1;
+- `overgrown_coastal_ascent.json`: a supply chest on the cave approach;
+- `green_zone_shooter_area.json`: a supply chest beyond the first shooter;
 - `overgrown_coastal_ascent_interior.json`: an additional spike row in Level 2;
 - `green_zone_finale_outdoors.json`: an additional checkpoint in Level 3 WIP.
 
@@ -39,6 +41,13 @@ the original file, establish why the base changed, and validate unchanged
 records before any specific recovery; never blanket-update fingerprints.
 
 See [the designer guide](../../docs/LEVEL_DESIGNER.md) for edit/test/save behavior.
+
+The supply-chest factory addition was reviewed against the resolved layouts
+before updating the three existing project fingerprints. Every pre-existing
+record was verified identical. Review evidence and original bytes are under
+ignored `build/loot_layout_review`. The new chests use normal saved additions.
+Both local recovery drafts were already incompatible at this review's baseline;
+their files were preserved unchanged.
 
 ## Local recovery reference
 

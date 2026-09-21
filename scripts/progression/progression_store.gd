@@ -100,6 +100,7 @@ func start_new_campaign() -> bool:
 	var previous := progress
 	var previous_writable := _progress_writable
 	progress = GameProgress.new()
+	progress.loot_seed = randi_range(1, 2147483647)
 	_progress_writable = true
 	if save_progress():
 		return true

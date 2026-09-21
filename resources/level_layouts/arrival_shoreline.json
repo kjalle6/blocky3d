@@ -1,6 +1,7 @@
 {
 	"catalog": {
-		"skater_enemy": "2ad7f1789cf5e8f85b1581ccb4e616efedd24a6f3144562dc482e31853c63b73"
+		"skater_enemy": "2ad7f1789cf5e8f85b1581ccb4e616efedd24a6f3144562dc482e31853c63b73",
+		"supply_chest": "8de96d259198f82ff23fc21080b56b0be62eceff7fd0d44b25c3b3af337ab0c4"
 	},
 	"created": {
 		"object_3565f9a39bbee8b13e89594c": {
@@ -13,14 +14,26 @@
 				"x": 126.079994,
 				"y": 1.02
 			}
+		},
+		"object_shoreline_supply": {
+			"template": "supply_chest",
+			"values": {
+				"basic_heal": 1.0,
+				"handgun_ammo": 0.0,
+				"large_heal_test": 0.0,
+				"loot_pool": "level",
+				"medical_bag": 0.0,
+				"x": 62.079998,
+				"y": 1.2799999713897705
+			}
 		}
 	},
-	"fingerprint": "f6c7234f3ca64ae1d2086a71f23645c05a0ee1b5b1ba6bef9fee5f06c1c2f205",
+	"fingerprint": "e8793dfca897cf8d81bd7ec0e57658b5edeef7c9964745866d471b4b0a10729c",
 	"overrides": {
 
 	},
 	"removed": [],
-	"revision": 1.0,
-	"schema": 3.0,
+	"revision": 3,
+	"schema": 3,
 	"section": "arrival_shoreline"
 }

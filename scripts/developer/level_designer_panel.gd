@@ -83,7 +83,7 @@ func _ready() -> void:
 	var body := _scroll_tab("In level")
 	_label(body, "PLACED OBJECTS", 19)
 	_filter = OptionButton.new()
-	for text in ["All supported objects", "Blocks / platforms", "Enemies", "Hazards", "Checkpoints", "Decorations"]: _filter.add_item(text)
+	for text in ["All supported objects", "Blocks / platforms", "Enemies", "Hazards", "Autosaves", "Decorations", "Supplies"]: _filter.add_item(text)
 	body.add_child(_filter)
 	_filter.item_selected.connect(func(_index: int) -> void: refresh())
 	_show_locked = CheckButton.new()
@@ -133,7 +133,7 @@ func refresh() -> void:
 	_build.modulate = Color("73ffbc") if designer._placement_record.get("kind", "") == "tile" else Color.WHITE
 	_palette.highlight_current()
 	_list.clear()
-	var filter_kinds: Array = [[], ["platform", "tile"], ["enemy", "gunner"], ["spikes", "flyer"], ["checkpoint"], ["decoration"]][_filter.selected]
+	var filter_kinds: Array = [[], ["platform", "tile"], ["enemy", "gunner"], ["spikes", "flyer"], ["checkpoint"], ["decoration"], ["chest"]][_filter.selected]
 	for id in designer.document.working:
 		var record: Dictionary = designer.document.working[id]
 		if not filter_kinds.is_empty() and record.kind not in filter_kinds: continue
@@ -217,6 +217,25 @@ func _build_properties() -> void:
 		"decoration":
 			_toggle("Flip horizontally", "flip_h", values.flip_h)
 			_paragraph(_properties, "Scenery only. Does not block the player or projectiles.")
+		"chest":
+			var loot = preload("res://scripts/items/chest_loot.gd")
+			var pool_ids: Array = ["level"]
+			var pool_labels: Array = ["Automatic · this level"]
+			for id in loot.pools:
+				pool_ids.append(id)
+				pool_labels.append(loot.pools[id].name)
+			pool_ids.append("fixed")
+			pool_labels.append("Fixed contents")
+			_choice("Contents", "loot_pool", pool_ids, pool_labels, values.loot_pool)
+			if values.loot_pool == "fixed":
+				_numeric("Medicine · +25 HP", "basic_heal", values.basic_heal)
+				_numeric("Medicine · +50 HP", "large_heal_test", values.large_heal_test)
+				_numeric("Medicine · +75 HP", "medical_bag", values.medical_bag)
+				_numeric("Handgun rounds", "handgun_ammo", values.handgun_ammo)
+			else:
+				var pool_id: String = loot.pool_for_level(designer.app.current_level.level_definition().level_id) if values.loot_pool == "level" else values.loot_pool
+				_paragraph(_properties, "%s: one reward, %d%% chance of a second item type. Ammo requires the handgun." % [loot.pools[pool_id].name, roundi(loot.pools[pool_id].bonus_chance * 100)])
+			_paragraph(_properties, "Y is ground height. Opens on contact. Contents repeat after loading an earlier save; claimed chests stay open.")
 		"checkpoint":
 			_numeric("Trigger width (m)", "width", values.width)
 			_numeric("Trigger height (m)", "height", values.height)
@@ -252,6 +271,7 @@ func _choice(label: String, key: String, values: Array, labels: Array, current: 
 	_label(_properties, label, 16)
 	var picker := OptionButton.new()
 	for text in labels: picker.add_item(text)
+	picker.name = "Property_" + key
 	picker.select(maxi(0, values.find(current)))
 	_properties.add_child(picker)
 	picker.item_selected.connect(func(index: int) -> void:

@@ -2,22 +2,24 @@
 
 Status: first implementation pass is in place. Phases 0–5 have runtime code and
 focused checks; visual/audio acceptance and integrated balancing remain open.
-Phase 6 has lab-only chest/drop fixtures and collection receipts; production
-supplies await review. The compact left HUD and centered HP numbers are accepted.
+Phase 6 now has designer/campaign supply chests, reproducible level loot pools,
+fixed overrides, and accepted queued pickup-icon popups. Three movable examples
+start the campaign supply pass; general enemy drops and supply balance remain
+open. See [chest loot](CHEST_LOOT.md). The compact left HUD and centered HP numbers are accepted.
 Tab inventory, Q/E assignment, smaller supply chests, and matching asset-based
 menu frames now have a playable visual pass; final presentation awaits review.
 Healing icons/tiers are selected: packet 25 HP, open kit 50 HP, medical bag 75 HP.
 Phase 7 remains playtesting and tuning. See [current behavior and controls](SAVE_SYSTEM.md).
 
-Verification, 2026-09-21: all 52 validators have passing results. The full suite
-passed 50; the two failures were resolved and rerun individually (editable object
-counts and the fresh developer destination's assumed ability kit). Focused
-health/save checks also passed after the final edge-case fixes. Live MCP review
-covered enemy-bar visibility, Q-slot healing and its audio event, inventory,
-pause/load/death screens, and a cold application restart restoring 75 HP and
-three medicines. Resolved objects and authored values remain identical in all
-nine registered sections. User acceptance of feel, sound and presentation is
-still pending; no full Level 2 traversal bot was added.
+Verification, 2026-09-21: all 56 validators have passing results. The latest full
+suite passed 53; three stale HUD expectations were updated for the accepted
+F1-hidden tools and passed individual reruns. New checks cover chest loot,
+designer authoring and campaign snapshot restoration. A separate exported-pack
+probe passed with a placed supply chest and bundled loot data. Live MCP review
+covered the campaign pickup popups, chest settings and all three placements,
+with no runtime errors. Existing authored records were preserved before adding
+the three sample chests. Supply abundance and placement still need player review;
+no full Level 2 traversal bot was added.
 [Combat balance](COMBAT_BALANCE.md) owns design decisions and balance targets;
 this document owns implementation order, dependencies, and completion checks.
 Update phase status as work lands, without turning either document into a chat log.

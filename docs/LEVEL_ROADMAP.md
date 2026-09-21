@@ -609,8 +609,10 @@ possible later work.
 Feel out handgun damage in play and settle gunner values, hurt/feedback timing,
 and the remaining save/use rules. Shared resources now own implemented numbers.
 Review the first pass in the Firearm Lab and authored levels.
-The core loop is implemented. Healing chest/drop fixtures live in the Firearm Lab;
-production supplies, final presentation and gun/boss balancing still need review.
+The core loop is implemented. Designer/campaign supply chests now use repeatable
+level pools or fixed bundles, with three movable sample placements and the
+accepted pickup popups. See [chest loot](CHEST_LOOT.md). General enemy drop rates,
+supply abundance and gun/boss balancing still need review.
 
 ### Needed before the finale
 

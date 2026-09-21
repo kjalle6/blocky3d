@@ -20,6 +20,8 @@ func _run() -> void:
 	assert(store.owns_ability(PlayerAbility.DOUBLE_JUMP))
 	assert(FileAccess.file_exists(PATH + ".v1.bak"))
 	assert(FileAccess.get_sha256(PATH + ".v1.bak") == FileAccess.get_sha256(PATH))
+	assert(store.progress.loot_seed == 1, "Legacy saves need a stable fallback seed.")
+	store.progress.loot_seed = 892441
 	var snapshot := _snapshot(store)
 	assert(store.write_snapshot(snapshot, "manual", 1), store.last_error)
 	var manual_hash := FileAccess.get_sha256(store.slot_path("manual", 1))
@@ -37,6 +39,7 @@ func _run() -> void:
 	assert(not store.owns_ability(PlayerAbility.WALL_JUMP))
 	assert(PlayerWeapon.HANDGUN not in store.progress.owned_weapon_ids)
 	assert(store.progress.completed_boss_ids.is_empty())
+	assert(store.progress.loot_seed == 892441)
 	store.free()
 	var cold := ProgressionStore.new()
 	cold.save_path = PATH
@@ -44,7 +47,11 @@ func _run() -> void:
 	assert(cold.owns_ability(PlayerAbility.DOUBLE_JUMP))
 	assert(not cold.owns_ability(PlayerAbility.WALL_JUMP))
 	assert(cold.read_slot("manual", 1).data == saved)
+	assert(cold.progress.loot_seed == 892441)
 	assert(cold.start_new_campaign())
+	var new_seed := cold.progress.loot_seed
+	cold.load_progress()
+	assert(cold.progress.loot_seed == new_seed and new_seed > 0)
 	assert(FileAccess.get_sha256(cold.slot_path("manual", 1)) == manual_hash)
 	# A failed/interrupted replacement retains the prior valid payload.
 	assert(cold.write_snapshot(snapshot, "manual", 2))
@@ -61,6 +68,9 @@ func _run() -> void:
 	assert(not SaveSnapshot.validation_error(invalid).is_empty())
 	assert(not cold.write_snapshot(invalid, "manual", 1))
 	assert(FileAccess.get_sha256(cold.slot_path("manual", 1)) == manual_hash)
+	invalid = saved.duplicate(true)
+	invalid.progress.loot_seed = -2
+	assert(not SaveSnapshot.validation_error(invalid).is_empty())
 	invalid = saved.duplicate(true)
 	invalid.position = [0, INF, 0]
 	assert(not SaveSnapshot.validation_error(invalid).is_empty())

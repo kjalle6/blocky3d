@@ -32,6 +32,8 @@ static func progress_error(data: Variant) -> String:
 		return "Unsupported progress version."
 	if not string_list(data.get("completed_levels")) or not string_list(data.get("unlocked_abilities"), PlayerAbility.ALL):
 		return "Invalid campaign progress."
+	if data.has("loot_seed") and not whole(data.loot_seed, 1, 2147483647):
+		return "Invalid chest loot seed."
 	if int(data.version) >= 2:
 		if not string_list(data.get("owned_weapons"), PlayerWeapon.ALL) or not string_list(data.get("completed_bosses")):
 			return "Invalid permanent unlocks."

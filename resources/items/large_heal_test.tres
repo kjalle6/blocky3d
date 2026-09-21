@@ -10,4 +10,4 @@ display_name = "Medical kit"
 icon = ExtResource("2")
 healing = 50
 use_duration = 0.25
-development_only = true
+development_only = false

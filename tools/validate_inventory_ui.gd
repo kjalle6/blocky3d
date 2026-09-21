@@ -1,5 +1,5 @@
 extends SceneTree
-## Inventory pause ownership, assignment vs consumption, and reward receipt lifecycle.
+## Inventory pause ownership, assignment vs consumption, and pickup popup lifecycle.
 
 
 func _init() -> void:
@@ -105,15 +105,29 @@ func _run() -> void:
 	var before := player.inventory.count(&"basic_heal")
 	assert(chest.collect())
 	assert(player.inventory.count(&"basic_heal") == before + 1)
-	assert(app.loot_receipt.visible and app.loot_receipt.get("_items")[&"basic_heal"] == 1)
-	assert(not chest.collect() and app.loot_receipt.get("_items")[&"basic_heal"] == 1,
-		"Duplicate collection must not duplicate either rewards or their receipt.")
+	var popup: Control = app.loot_receipt
+	assert(popup.visible and popup.get("_active").size() == 1 and popup.get("_pending").size() == 1)
+	assert(popup.get("_active")[0].item_id == &"basic_heal" and popup.get("_active")[0].amount == 1)
+	assert(popup.get("_pending")[0].item_id == &"handgun_ammo" and popup.get("_pending")[0].amount == 30)
+	assert(not chest.collect() and popup.get("_pending").size() == 1,
+		"Duplicate collection must not duplicate rewards or their popups.")
 	menu.show_inventory()
-	var remaining: float = app.loot_receipt.get("_remaining")
+	var age: float = popup.get("_active")[0].age
+	var next_popup: float = popup.get("_next_popup")
 	await create_timer(0.1, true).timeout
-	assert(is_equal_approx(remaining, app.loot_receipt.get("_remaining")),
-		"Receipt time must pause with the inventory.")
+	assert(is_equal_approx(age, popup.get("_active")[0].age)
+		and is_equal_approx(next_popup, popup.get("_next_popup")),
+		"Both animation and stagger timing pause with the inventory.")
 	menu.close()
+	popup._process(next_popup + 0.01)
+	assert(popup.get("_active").size() == 2 and popup.get("_pending").is_empty(),
+		"The second item appears after the first, without replacing it.")
+	assert(popup.get("_active")[1].item_id == &"handgun_ammo" and popup.get("_active")[1].amount == 30)
+	popup._process(1.3)
+	assert(not popup.visible and popup.get("_active").is_empty(), "Popups expire after the rise and fade.")
+	assert(player.inventory.count(&"basic_heal") == before + 1, "Animation never awards items a second time.")
+	# Leave another notification active to exercise reset cleanup.
+	session.item_received.emit(&"basic_heal", 1)
 	session._reset_run()
 	assert(not app.loot_receipt.visible, "Reset clears old notifications.")
 	player.inventory.reset()
@@ -125,5 +139,5 @@ func _run() -> void:
 	await process_frame
 	assert(not app.loot_receipt.visible and app.current_level.player.inventory.count(&"medical_bag") == 0)
 	app.free()
-	print("Inventory UI passed: Tab/pause, Q/E assignment, 75-HP use, nested menus, chest receipt, empty inventory and session cleanup.")
+	print("Inventory UI passed: Tab/pause, Q/E assignment, 75-HP use, nested menus, queued chest popups, empty inventory and session cleanup.")
 	quit()

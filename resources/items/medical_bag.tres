@@ -8,4 +8,4 @@ display_name = "Medical bag"
 icon = ExtResource("2")
 healing = 75
 use_duration = 0.25
-development_only = true
+development_only = false

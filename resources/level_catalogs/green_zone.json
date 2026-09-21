@@ -3450,7 +3450,7 @@
     "description": "Animated scenery only; it does not grant items or end the level. Loops during play."
   },
   "gz_animated_chest_open": {
-    "name": "Chest opening",
+    "name": "Decorative chest opening",
     "zone": "Green Zone",
     "category": "Animated scenery",
     "kind": "decoration",
@@ -3466,6 +3466,6 @@
       30,
       22
     ],
-    "description": "Animated scenery only; it does not grant items or end the level. Opens once when the level starts, then stays open."
+    "description": "Scenery only; opens once when play starts. For collectible rewards choose Supply chest in Supplies."
   }
 }

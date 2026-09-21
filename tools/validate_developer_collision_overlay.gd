@@ -52,9 +52,12 @@ func _run() -> void:
 	if overlay.displayed_shape_count() < 20:
 		_fail("The collision overlay did not discover the authored level shapes.")
 		return
+	assert(menu_hint.text == "TAB: INVENTORY    F1: TOOLS    ESC: PAUSE")
+	_send_key(game_root, KEY_F1)
 	if "F7: HIDE HITBOXES" not in menu_hint.text:
-		_fail("The compact HUD does not explain how to hide hitboxes.")
+		_fail("The F1 tools hint does not explain how to hide hitboxes.")
 		return
+	_send_key(game_root, KEY_F1)
 	Input.action_press("attack")
 	level.player.call("_update_attack", 0.0)
 	Input.action_release("attack")

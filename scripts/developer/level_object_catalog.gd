@@ -9,12 +9,13 @@ const CORE_ENTRIES := {
 	"spike_row": {"name": "Spikes", "category": "Hazards", "kind": "spikes", "scene": "res://scenes/hazards/pixel_spike_row.tscn", "image": "res://assets/art/shared/hazards/spike.svg", "description": "A lethal spike row. Adjust its width after placing.", "anchor": "ground"},
 	"flying_hazard": {"name": "Flying machine", "category": "Hazards", "kind": "flyer", "scene": "res://scenes/enemies/green_zone_flyer.tscn", "image": "res://assets/art/green_zone/enemies/flyer_idle.png", "frames": 4, "description": "An indestructible flying hazard. Its existing bob and electrical discharge stay active.", "anchor": "air"},
 	"checkpoint": {"name": "Autosave point", "category": "Autosaves", "kind": "checkpoint", "scene": "res://scenes/level/level_checkpoint.tscn", "description": "Stand safely here to autosave without healing. The marked area is visible only in the designer.", "anchor": "ground"},
+	"supply_chest": {"name": "Supply chest", "category": "Supplies", "kind": "chest", "image": "res://assets/art/green_zone/goal/chest_open.png", "frame_region": [0, 0, 32, 22], "description": "Opens on contact and gives supplies. Uses this level's loot pool; select it to choose another pool or fixed items.", "anchor": "ground"},
 	"bush": {"name": "Bush", "category": "Decorations", "kind": "decoration", "image": "res://assets/art/green_zone/props/bush.png", "description": "Scenery only. Players and projectiles pass through it.", "anchor": "ground"},
 	"stone": {"name": "Small stone", "category": "Decorations", "kind": "decoration", "image": "res://assets/art/green_zone/props/stone_small.png", "description": "A small scenery stone. It does not block movement or bullets.", "anchor": "ground"},
 	"tree": {"name": "Small tree", "category": "Decorations", "kind": "decoration", "image": "res://assets/art/green_zone/props/tree_small_grounded.png", "description": "A tree drawn at the game's native pixel scale. Scenery only.", "anchor": "ground"},
 	"bench": {"name": "Bench", "category": "Decorations", "kind": "decoration", "image": "res://assets/art/green_zone/props/bench.png", "description": "A decorative bench. It is not a platform or bullet cover.", "anchor": "ground"},
 }
-const CATEGORIES := ["All objects", "Platforms", "Enemies", "Hazards", "Autosaves", "Decorations", "Terrain tiles", "Scenery tiles", "Animated scenery"]
+const CATEGORIES := ["All objects", "Platforms", "Enemies", "Hazards", "Autosaves", "Supplies", "Decorations", "Terrain tiles", "Scenery tiles", "Animated scenery"]
 static var PACK_PATHS: Array[String] = _pack_paths()
 static var ENTRIES: Dictionary = _load_entries()
 static var _icons: Dictionary = {}
@@ -29,7 +30,7 @@ static func _pack_paths() -> Array[String]:
 static func _load_entries() -> Dictionary:
 	var entries := CORE_ENTRIES.duplicate(true)
 	for id in entries:
-		entries[id].zone = "Beach" if id == "sand_platform" else "Shared" if id in ["checkpoint", "spike_row"] else "Green Zone"
+		entries[id].zone = "Beach" if id == "sand_platform" else "Shared" if id in ["checkpoint", "spike_row", "supply_chest"] else "Green Zone"
 	for path in _pack_paths():
 		var pack: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 		assert(pack is Dictionary, "Invalid asset catalog: " + path)
@@ -71,6 +72,7 @@ static func defaults(id: String) -> Dictionary:
 		"gunner": values.facing_right = false
 		"spikes": values.width = 2.56
 		"checkpoint": values.merge({"width": 2.4, "height": 2.2})
+		"chest": values.merge({"loot_pool": "level", "basic_heal": 1, "large_heal_test": 0, "medical_bag": 0, "handgun_ammo": 0})
 		"decoration": values.flip_h = false
 		"tile": values.merge({"flip_h": false, "surface": "grass" if entry.solid else "silent"})
 	return values

@@ -61,10 +61,12 @@ WIP without promoting that level into the production selector.
   assignment review; the stronger items' campaign availability remains later
   work. The existing `large_heal_test` ID is preserved for saved-item compatibility.
 - Supply chests are now 1.28 m wide and 0.88 m tall, with their trigger sized
-  to match. Successful chest, pickup, or drop collection displays a nonblocking
-  Received box with icons and quantities for four seconds; nearby receipts merge.
-  Its timer pauses with the inventory. Duplicate claims do not repeat the receipt,
-  and reset/scene changes clear it. No separate loot-selection menu is opened.
+  to match. Successful chest, pickup, or drop collection queues floating item
+  icons and +quantities above the player. At 1.15x playback speed, entries appear
+  about 0.57 seconds apart and pop in, rise and fade over 1.09 seconds each. Inventory updates
+  immediately and movement continues. Animation and queue timing pause with the
+  inventory; duplicate claims never repeat them. Death, reset and scene changes
+  clear the sequence. No separate loot-selection menu is opened.
 - Manual Save is available while standing still on static ground, with no active
   attack, hurt/heal feedback, transition or inspection mode. Wait two seconds
   after combat; active ground-enemy pursuit, nearby live enemies, their reset
@@ -80,8 +82,8 @@ WIP without promoting that level into the production selector.
   Manual replacement asks in the game before overwriting. Autosaving cannot
   target a manual slot. Slot counts and final UI presentation remain tunable.
 - Campaign death shows Continue, Load Save, Quit to main menu and Quit game.
-  No countdown forces a reload. R opens pause in a campaign; developer R retains
-  its fast full-section reset. Quitting never writes a snapshot.
+  No countdown forces a reload. Escape opens pause; R reloads the handgun.
+  Developer restart lives in the F1 tools. Quitting never writes a snapshot.
 
 ## What loads
 
@@ -99,15 +101,20 @@ and consumables exactly. It does not rewrite the selected snapshot.
 Reward claims and logical world flags travel with inventory. Already claimed
 rewards cannot be farmed from an ordinary enemy reset. Loading before collecting
 a reward restores both the earlier inventory and its unclaimed source. An
-unclaimed enemy drop is recreated by defeating the reset enemy again. No random
-drop outcomes are used yet. The completed shooter intro is a logical world flag;
+unclaimed enemy drop is recreated by defeating the reset enemy again. Supply
+chests use reproducible level pools seeded by campaign and stable chest identity;
+the seed is preserved with progression. Old saves use a stable fallback.
+See [chest loot](CHEST_LOOT.md) for authoring and eligibility.
+The completed shooter intro is a logical world flag;
 the Level 2 slide is a transition scene, so cave saves do not rerun it.
 
 The Firearm Lab supplies five basic medicines and three 50-HP test medical kits,
 a chest at X 6.4 and a basic medicine drop from the shooter. These are review
-fixtures. Fresh campaigns start with no consumables, and production healing
-placement, drop rates, stronger tiers, ammo, crafting and shops remain unassigned.
-Existing goal chests still complete levels.
+fixtures; that chest remains fixed at one basic medicine and 30 handgun rounds.
+Fresh campaigns start with no consumables. Designer supply chests and three
+movable campaign examples now use level pools. The 50-HP kit enters Level 2's
+pool; the 75-HP bag is reserved for explicit authoring. General enemy drop rates,
+crafting and shops remain open. Existing goal chests still complete levels.
 
 ## Ownership and files
 
@@ -185,13 +192,14 @@ hands-on test.
 
 `tools/validate_inventory_ui.gd` covers paused movement, assignment without
 consumption, 75-HP item use after resuming, returning to pause, empty inventory,
-receipt timing and session cleanup. It also covers fixed window size during
+pickup order/quantities, stagger and pause timing, expiry and session cleanup.
+It also covers fixed window size during
 overflow, handle synchronization and context assignment without consumption.
 MCP verified wheel movement in both directions and dragging to the final row
 using temporary overflow cells, which were removed after testing.
 It and `tools/validate_item_rewards.gd`
 passed after this presentation pass. MCP playtesting also verified actual Tab
-and Q/E input routing, the smaller chest and its receipt; visual acceptance
+and Q/E input routing, the smaller chest and its floating pickup icons; visual acceptance
 remains a user review.
 
 Generate the current numerical matchup report from the actual resources:

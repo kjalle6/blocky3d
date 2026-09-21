@@ -61,9 +61,12 @@ func _run() -> void:
 	if not initial_bounds.has_point(Vector2.ZERO):
 		_fail("The world-locked grid does not include the origin near the opening.")
 		return
+	assert(menu_hint.text == "TAB: INVENTORY    F1: TOOLS    ESC: PAUSE")
+	_send_key(game_root, KEY_F1)
 	if "F10: HIDE GRID" not in menu_hint.text:
-		_fail("The compact HUD does not explain how to hide the active grid.")
+		_fail("The F1 tools hint does not explain how to hide the active grid.")
 		return
+	_send_key(game_root, KEY_F1)
 	_send_key(game_root, KEY_F11)
 	await process_frame
 	if not level.is_developer_inspection_enabled():

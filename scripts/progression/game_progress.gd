@@ -9,6 +9,8 @@ var unlocked_ability_ids: Array[StringName] = []
 var owned_weapon_ids: Array[StringName] = [PlayerWeapon.KNIFE]
 var completed_boss_ids: Array[StringName] = []
 var maximum_hp := 100
+# Optional v2 field; old saves use a stable seed instead of rerolling on load.
+var loot_seed := 1
 
 
 func complete_level(level_id: StringName) -> bool:
@@ -48,6 +50,7 @@ func to_dictionary() -> Dictionary:
 		"owned_weapons": Array(owned_weapon_ids),
 		"completed_bosses": Array(completed_boss_ids),
 		"maximum_hp": maximum_hp,
+		"loot_seed": loot_seed,
 	}
 
 
@@ -72,6 +75,7 @@ static func from_dictionary(data: Dictionary) -> GameProgress:
 				loaded.unlocked_ability_ids.append(ability_id)
 	if int(data.get("version", -1)) == SAVE_VERSION:
 		loaded.maximum_hp = maxi(100, int(data.get("maximum_hp", 100)))
+		loaded.loot_seed = int(data.get("loot_seed", 1))
 		for id in data.get("owned_weapons", []):
 			if PlayerWeapon.is_known(StringName(id)) and StringName(id) not in loaded.owned_weapon_ids:
 				loaded.owned_weapon_ids.append(StringName(id))

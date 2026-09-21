@@ -95,6 +95,7 @@ protected unless explicitly registered for editing.
 | Enemies | Patrol enemy, skater, stationary dual-gun enemy |
 | Hazards | Spike row, flying electrical machine |
 | Autosaves | Additional grounded autosave point (campaign); respawn point in developer tests |
+| Supplies | Supply chest: automatic level pool, chosen pool, or fixed item counts |
 | Decorations | The original four quick choices plus all 78 Green Zone props |
 | Animated scenery | Card, money, skateboard, fountain, and chest opening |
 
@@ -134,8 +135,12 @@ The catalog also includes benches, bushes, fences, fountains, grass tufts,
 leaves, stones, trees, bins, boxes, ladders, ramps, and skateboards. These props
 are scenery: a ladder picture does not introduce climbing, and a ramp picture
 does not create a rideable ramp. Animated scenery freezes during editing and
-plays during Test/normal play. The chest opens once and stays open; it is not a
-level exit. The other four animations loop.
+plays during Test/normal play. Decorative chest opening is scenery only.
+Choose **Supplies → Supply chest** for rewards: its Settings panel selects
+the automatic level pool, a named pool, or fixed medicine/ammo counts. It stays
+closed in editing, opens on player contact in Test/play, and saves its claim
+alongside inventory. See [chest loot](CHEST_LOOT.md) for pools and sample
+placements. The other four scenery animations loop.
 
 Each section supports up to 4,096 added objects in total, with up to 512 of those
 being props, platforms, enemies, or other non-tile objects. A single tile stroke

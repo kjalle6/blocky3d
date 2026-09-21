@@ -20,7 +20,7 @@ func _init() -> void:
 		document.working["platform_probe"] = DOCUMENT.new_platform_record({"x": 50.56, "y": 1.92, "width": 5.12, "height": 1.28,
 			"style": "sand", "surface": "sand", "left_cap": true, "right_cap": true, "bottom_cap": true})
 		var x := 58.88
-		for template in ["skater_enemy", "gunner_enemy", "spike_row", "flying_hazard", "checkpoint", "bush", "gz_tile_42", "gz_tile_75", "gz_animated_fountain", "gz_prop_other_tree1"]:
+		for template in ["skater_enemy", "gunner_enemy", "spike_row", "flying_hazard", "checkpoint", "bush", "gz_tile_42", "gz_tile_75", "gz_animated_fountain", "gz_prop_other_tree1", "supply_chest"]:
 			var values := CATALOG.defaults(template)
 			values.x = x
 			values.y = 3.84 if template == "flying_hazard" else float(CATALOG.ENTRIES[template].get("feet", 0))

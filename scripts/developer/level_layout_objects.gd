@@ -12,6 +12,7 @@ const FIELDS := {
 	"flyer": ["x", "y"],
 	"decoration": ["x", "y", "flip_h"],
 	"tile": ["x", "y", "flip_h", "surface"],
+	"chest": ["x", "y", "loot_pool", "basic_heal", "large_heal_test", "medical_bag", "handgun_ammo"],
 }
 
 static func inspect(level: Node) -> Dictionary:
@@ -50,6 +51,7 @@ static func inspect(level: Node) -> Dictionary:
 
 static func _matches(node: Node, kind: String) -> bool:
 	match kind:
+		"chest": return node is ItemReward3D and node.presentation == ItemReward3D.Presentation.CHEST
 		"platform": return node is PixelPlatform3D
 		"enemy": return node is StompableEnemy3D
 		"gunner": return node is HandgunEnemy3D
@@ -73,6 +75,10 @@ static func read_values(node: Node3D, kind: String) -> Dictionary:
 				"left_cap": node.cap_left_edge, "right_cap": node.cap_right_edge, "bottom_cap": node.cap_bottom_edge})
 		"enemy": values.merge({"speed": node.patrol_speed, "left": node.patrol_left_distance,
 			"right": node.patrol_right_distance, "facing_right": node.starts_moving_right})
+		"chest":
+			values.loot_pool = str(node.loot_pool)
+			for id in ["basic_heal", "large_heal_test", "medical_bag", "handgun_ammo"]:
+				values[id] = int(node.additional_items.get(StringName(id), 0)) + (node.quantity if node.item_id == StringName(id) else 0)
 		"spikes": values.width = node.row_width
 		"gunner": values.facing_right = node.starts_facing_right
 		"decoration": values.flip_h = node.get_node("Visual").flip_h
@@ -89,7 +95,7 @@ static func validate(kind: String, values: Dictionary) -> String:
 	for key in values:
 		if key not in FIELDS[kind]: return "Unsupported property: " + str(key)
 		var value: Variant = values[key]
-		if key in ["style", "surface"]:
+		if key in ["style", "surface", "loot_pool"]:
 			if not value is String: return "Invalid style/surface."
 		elif key in ["left_cap", "right_cap", "bottom_cap", "facing_right", "flip_h"]:
 			if not value is bool: return "Expected an on/off value."
@@ -98,6 +104,14 @@ static func validate(kind: String, values: Dictionary) -> String:
 	if absf(values.x) > 10000.0 or absf(values.y) > 10000.0: return "Position is outside the supported workspace."
 	if values.has("width") and (values.width < 0.1 or values.width > 327.68): return "Width must be between 0.1 and 327.68 m."
 	if values.has("height") and (values.height < 0.1 or values.height > 81.92): return "Height must be between 0.1 and 81.92 m."
+	if kind == "chest":
+		var loot = preload("res://scripts/items/chest_loot.gd")
+		if values.loot_pool not in ["level", "fixed"] and not loot.pools.has(values.loot_pool): return "Choose a known loot pool."
+		var total := 0
+		for id in ["basic_heal", "large_heal_test", "medical_bag", "handgun_ammo"]:
+			if not SaveSnapshot.whole(values[id], 0, 999): return "Item counts must be whole numbers from 0 to 999."
+			total += int(values[id])
+		if values.loot_pool == "fixed" and total == 0: return "A fixed chest needs at least one item."
 	if kind == "platform":
 		if not REGISTRY.STYLES.has(values.style) or values.surface not in ["grass", "sand", "silent"]:
 			return "Choose an approved grass/sand style and surface."
@@ -138,6 +152,13 @@ static func apply(node: Node3D, kind: String, values: Dictionary, rebuild := fal
 		"gunner":
 			node.starts_facing_right = values.facing_right
 			if rebuild and node.pixel_visual != null: node.pixel_visual.tick(0.0, &"idle", values.facing_right)
+		"chest":
+			node.loot_pool = StringName(values.loot_pool)
+			node.item_id = &"basic_heal"
+			node.quantity = int(values.basic_heal)
+			node.additional_items.clear()
+			for id in ["large_heal_test", "medical_bag", "handgun_ammo"]:
+				if values[id] > 0: node.additional_items[StringName(id)] = int(values[id])
 		"decoration": node.get_node("Visual").flip_h = values.flip_h
 		"tile":
 			node.set_horizontal_flip(values.flip_h)
@@ -156,6 +177,7 @@ static func bounds(record: Dictionary) -> Rect2:
 		"platform": return Rect2(center - Vector2(v.width, v.height) * 0.5, Vector2(v.width, v.height))
 		"enemy": return Rect2(center - Vector2(0.55, 0.45), Vector2(1.1, 1.5))
 		"gunner": return Rect2(center - Vector2(0.6, 0.55), Vector2(1.2, 1.95))
+		"chest": return Rect2(center - Vector2(0.64, 0), Vector2(1.28, 0.88))
 		"flyer": return Rect2(center - Vector2(0.55, 0.92), Vector2(1.1, 1.6))
 		"decoration":
 			var extent: Vector2 = CATALOG.icon(record.template).get_size() * 0.04
@@ -175,7 +197,10 @@ static func new_record(template: String, values: Dictionary) -> Dictionary:
 static func instantiate_record(record: Dictionary) -> Node3D:
 	var entry: Dictionary = CATALOG.ENTRIES[record.template]
 	var node: Node3D
-	if entry.kind == "platform": node = PixelPlatform3D.new()
+	if entry.kind == "chest":
+		node = ItemReward3D.new()
+		node.presentation = ItemReward3D.Presentation.CHEST
+	elif entry.kind == "platform": node = PixelPlatform3D.new()
 	elif entry.kind == "tile":
 		node = preload("res://scripts/developer/level_catalog_tile_3d.gd").new()
 		node.configure(entry)

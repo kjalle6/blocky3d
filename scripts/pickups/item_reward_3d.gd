@@ -1,8 +1,11 @@
 class_name ItemReward3D
 extends Area3D
-## Prototype carried-item reward. Claim IDs are saved with inventory; ordinary
+## Carried-item reward. Claim IDs are saved with inventory; ordinary
 ## enemy resets cannot grant an already claimed reward a second time.
 enum Presentation { PICKUP, CHEST, ENEMY_DROP }
+const LOOT := preload("res://scripts/items/chest_loot.gd")
+const PREVIEW := preload("res://scripts/developer/level_layout_preview.gd")
+@export var loot_pool: StringName = &"fixed"
 const CHEST := preload("res://assets/art/green_zone/goal/chest_open.png")
 @export var item_id: StringName = &"basic_heal"
 @export_range(1, 999, 1) var quantity := 1
@@ -25,7 +28,7 @@ func _ready() -> void:
 	while parent != null and not parent is LevelSession3D:
 		parent = parent.get_parent()
 	session = parent as LevelSession3D
-	assert(session != null and ItemCatalog.definition(item_id) != null)
+	assert(PREVIEW.is_preview(self) or (session != null and ItemCatalog.definition(item_id) != null))
 	var trigger := CollisionShape3D.new()
 	var shape := BoxShape3D.new()
 	shape.size = Vector3(1.25, 0.9, 1.2) if presentation == Presentation.CHEST else Vector3(1.5, 1.3, 1.2)
@@ -33,12 +36,20 @@ func _ready() -> void:
 	trigger.position.y = shape.size.y * 0.5
 	add_child(trigger)
 	visual = Sprite3D.new()
+	visual.name = "Visual"
 	visual.position = Vector3(0, 0.44 if presentation == Presentation.CHEST else 0.66, 0.9)
 	visual.pixel_size = 0.04 if presentation == Presentation.CHEST else 0.035
 	visual.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	visual.shaded = false
 	visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(visual)
+	if PREVIEW.is_preview(self):
+		collision_mask = 0
+		monitoring = false
+		monitorable = false
+		if presentation == Presentation.CHEST: _chest_frame(0)
+		else: visual.texture = ItemCatalog.definition(item_id).icon
+		return
 	body_entered.connect(_on_body_entered)
 	if presentation == Presentation.ENEMY_DROP:
 		_source = get_node(source_enemy_path) as Node3D
@@ -83,11 +94,9 @@ func _on_body_entered(body: Node3D) -> void:
 
 
 func collect() -> bool:
-	if not _available or session.player.is_dead() or session.player.is_developer_inspection_enabled():
+	if not _available or session == null or session.player.is_dead() or session.player.is_developer_inspection_enabled():
 		return false
-	var contents: Dictionary = {item_id: quantity}
-	for extra_id in additional_items:
-		contents[extra_id] = int(contents.get(extra_id, 0)) + additional_items[extra_id]
+	var contents := reward_contents()
 	if not session.save_state.claim_rewards(self, contents):
 		return false
 	_available = false
@@ -99,6 +108,20 @@ func collect() -> bool:
 	else:
 		hide()
 	return true
+
+
+func reward_contents() -> Dictionary:
+	if loot_pool != &"fixed":
+		var pool_id := str(loot_pool)
+		if loot_pool == &"level":
+			pool_id = LOOT.pool_for_level(session.level_definition().level_id)
+		return LOOT.roll(pool_id, session.save_state.loot_seed(), session.save_state.source_id(self), session.player.owned_weapon_ids())
+	var contents := {}
+	if quantity > 0: contents[item_id] = quantity
+	for extra_id in additional_items:
+		if additional_items[extra_id] > 0:
+			contents[extra_id] = int(contents.get(extra_id, 0)) + additional_items[extra_id]
+	return contents
 
 
 func _chest_frame(index: int) -> void:

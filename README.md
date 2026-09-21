@@ -18,8 +18,11 @@ remain read-only design references.
 - First health/save pass: 100 player HP; bat/skater 50 HP; knife 25 damage and
   stomp 50. Hazards remain lethal. Enemy bars appear after the first damage.
   Q/E use carried healing items; Tab opens the paused inventory for assignment,
-  and Escape opens pause. Chests show a brief receipt for collected items.
+  and Escape opens pause. Chest rewards pop up above the player as staggered
+  item icons and +quantities, then rise and fade while play continues.
   New campaign/Continue/Load use protected manual slots and rotating autosaves.
+  Supply chests now work in campaign levels and the level designer, with
+  level-based loot pools or fixed contents; see [chest loot](docs/CHEST_LOOT.md).
   Fresh developer level entries and the Firearm Lab remain isolated from saves.
   See [save-system guide](docs/SAVE_SYSTEM.md) and
   [combat balance](docs/COMBAT_BALANCE.md) for controls and provisional tuning.

@@ -35,6 +35,9 @@ func _run() -> void:
 	assert(objects.object_probe_flying_hazard is HoveringHazard3D)
 	assert(objects.object_probe_checkpoint.get_meta("layout_added_checkpoint", false))
 	assert(objects.object_probe_bush.get_node("Visual").texture != null)
+	var supply: ItemReward3D = objects.object_probe_supply_chest
+	assert(supply.loot_pool == &"level" and not supply.reward_contents().is_empty())
+	assert(FileAccess.file_exists("res://resources/loot/chest_pools.json"))
 	assert(objects.object_probe_gz_tile_42.get_node("Collision").shape is ConvexPolygonShape3D)
 	assert(objects.object_probe_gz_tile_75.get_node_or_null("Collision") == null)
 	assert(objects.object_probe_gz_animated_fountain.get_node("Visual")._frames.size() == 4)

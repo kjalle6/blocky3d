@@ -76,7 +76,8 @@ Do not restore that bot or carry its old stage-10 death as an outstanding bug.
 Keep focused movement, ability, Level 2 structure, and transition checks;
 hands-on playtesting owns the complete Level 2 route.
 
-The suite contains 55 validators, including focused inventory UI and ammunition checks.
+The suite contains 56 validators, including focused inventory UI, ammunition,
+and campaign/designer chest loot checks.
 All 54 then-existing validators passed in the 2026-09-21 windowed run
 (426.7 seconds), before moving the independent shaft-containment stress test
 out of the suite at the user's request. Its removal does not need another full
