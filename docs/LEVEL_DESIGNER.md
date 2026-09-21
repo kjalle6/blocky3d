@@ -170,7 +170,7 @@ last save, Load Save, and Quit; loading restores saved HP and supplies exactly.
 Developer level selections and designer tests still use a session-local respawn
 spot, keeping authoring tests separate from campaign snapshots.
 See [save-system guide](SAVE_SYSTEM.md) for the implemented behavior.
-See [Combat balance](COMBAT_BALANCE.md#autosave-points-and-recovery).
+See [Combat balance](COMBAT_BALANCE.md#saves-and-recovery).
 
 You can duplicate/remove added objects and move mixed groups. Placement previews
 never enter the saved layout and cannot hurt the player or trigger encounters.
@@ -282,12 +282,8 @@ combat/checkpoints/hazards, and frozen previews in every registered section).
 Use `capture_level_designer.gd` with `-Visual` for the real interface at 1080p
 and 720p. `capture_green_zone_catalog.gd` captures the zone browsers and a
 temporary tile-building example, leaving the sandbox empty. The regular
-validation suite includes all four contracts. The accepted checkpoint passed
-46/47 checks in 293.2 s; the sole failure was the Level 2 route bot, retired
-at the user's request on 2026-09-15. See README for current validation status.
-`validate_enemy_friendly_fire.gd` separately covers
+validation suite includes all four contracts. `validate_enemy_friendly_fire.gd` separately covers
 placed-enemy firing discipline, damage, live bullets after defeat, and reset.
-The user accepted both the designer and friendly-fire gameplay.
 
 The `LayoutSmoke` export preset includes layout JSON and curated production
 resources while excluding the source-art catalog. It is a validation preset,

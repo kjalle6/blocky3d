@@ -58,8 +58,8 @@ WIP without promoting that level into the production selector.
   gameplay carrying cap.
 - Healing icons: medicine packet = 25 HP, open medical kit = 50 HP, medical
   bag with a cross = 75 HP. All three are available in the Firearm Lab for
-  assignment review; the stronger items' campaign availability remains later
-  work. The existing `large_heal_test` ID is preserved for saved-item compatibility.
+  assignment review. The 50-HP kit enters the Level 2 pool; the 75-HP bag
+  is available through explicit chest overrides. The existing `large_heal_test` ID is preserved for saved-item compatibility.
 - Supply chests are now 1.28 m wide and 0.88 m tall, with their trigger sized
   to match. Successful chest, pickup, or drop collection queues floating item
   icons and +quantities above the player. At 1.15x playback speed, entries appear
@@ -149,15 +149,13 @@ the unreadable original is archived separately before replacement.
 
 ### Visual direction
 
-The user selected the assembled layouts in the
-[Cyberpunk GUI pack](https://craftpix.net/freebies/free-gui-for-cyberpunk-pixel-art/)
-as the visual target. Use those compositions, pixel typography, title strips,
-inset grids, red X controls and colored action buttons. The earlier wide,
-generic inventory/menu composition is superseded; keep its gameplay and save
-logic while replacing its presentation.
+The menus use the assembled layouts in the
+[Cyberpunk GUI pack](https://craftpix.net/freebies/free-gui-for-cyberpunk-pixel-art/):
+pixel typography, title strips, inset grids, red X controls, and colored action
+buttons.
 
-- Inventory follows the user's exact cropped reference: one compact five-column,
-  six-row window, closely fitted title, red Close and gold Sort against the
+- Inventory uses one compact five-column, six-row window, closely fitted title,
+  red Close and gold Sort against the
   bottom frame, and a grey side handle. There is no split inventory or persistent
   details panel. Hover tooltips and the context menu provide item details and
   Q/E assignment. Empty cells are presentation, never a carrying limit.
@@ -173,16 +171,15 @@ logic while replacing its presentation.
   last save, Load save and Quit. The reference's stars and level-rating rules
   are not game features.
 - Settings and tutorial tips should follow their corresponding reference
-  panels when implemented. Wall-jump guidance should explain the useful slow
-  wall slide before kicking away, as discussed during Level 2 testing.
+  panels when implemented. Wall-jump guidance should explain how the slow wall
+  slide lets the player wait for hazard clearance before kicking away.
 - Crafting can use the shown inventory-plus-recipe layout once crafting is
   designed. Character equipment, skill trees, vehicle upgrades and gun
   construction are reference examples, not approved feature commitments.
 
-The compact inventory and subtle hover treatment have user acceptance. Options
-and its confirmation/save/load pages now share their reference-based layout,
-ready for visual review. The title/development selector and the final wired
-Game Over composition remain separate presentation work.
+The compact inventory, subtle hover treatment, Options menu, and its
+confirmation/save/load pages are in use. The title/development selector and
+the final wired Game Over composition remain separate presentation work.
 
 Use MCP to review HUD, healing feedback, pause/inventory and save/death menus.
 Focused contracts cover health/interruption, reward claims, migration/rotation/
@@ -195,12 +192,6 @@ consumption, 75-HP item use after resuming, returning to pause, empty inventory,
 pickup order/quantities, stagger and pause timing, expiry and session cleanup.
 It also covers fixed window size during
 overflow, handle synchronization and context assignment without consumption.
-MCP verified wheel movement in both directions and dragging to the final row
-using temporary overflow cells, which were removed after testing.
-It and `tools/validate_item_rewards.gd`
-passed after this presentation pass. MCP playtesting also verified actual Tab
-and Q/E input routing, the smaller chest and its floating pickup icons; visual acceptance
-remains a user review.
 
 Generate the current numerical matchup report from the actual resources:
 

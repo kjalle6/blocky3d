@@ -1,8 +1,5 @@
 # In-game level designer: implemented scope and build plan
 
-Accepted checkpoint: `e620abb` (2026-09-12), including the designer, its
-block-building/browser follow-ups, and enemy friendly fire. Use Git for any
-newer changes.
 The first version is complete. The stages below record its original build and
 acceptance contract, with the approved expansions here taking precedence.
 
@@ -13,8 +10,8 @@ are retired. Green Zone offers 96 tiles, 78 static props, and 5 animated props;
 Beach offers six sand pieces. Background selection remains deferred.
 
 Both the picture-card browser and quick sidebar support search, categories,
-and zones. Prepared enemies, hazards, checkpoints, and scenery can be added in
-every registered game section/lab. Single sidebar clicks and browser double-clicks
+and zones. Prepared enemies, hazards, autosave points, supply chests, and scenery
+can be added in every registered game section/lab. Single sidebar clicks and browser double-clicks
 start previews. The accepted right-click menu provides object and general actions.
 This expands the original v1 scope on individual blocks and prepared additions;
 scripted assemblies, camera controls, and arbitrary prefabs remain outside it.
@@ -25,13 +22,7 @@ separate fresh testing, document undo, verified saving/conflict checks, backups,
 and compatible recovery are implemented. Production layout saves are still
 user-authored, and no automated fixture was left in the sandbox.
 
-All four designer/layout/browser/catalog validators, fresh-process reload, and
-isolated exported-pack loading pass. UI/placement captures were reviewed at
-720p/1080p. The final suite, including friendly fire, passed **46/47** in
-293.2 s; the sole failure was the Level 2 route bot, subsequently retired at
-the user's request on 2026-09-15. No native fault occurred. Saved audio was
-unchanged at that checkpoint. See
-[the current user guide](LEVEL_DESIGNER.md) for controls and
+See [the current user guide](LEVEL_DESIGNER.md) for controls and
 [the saved-layout notes](../resources/level_layouts/README.md) for preservation.
 
 Further features are optional future work, not hidden completion requirements.

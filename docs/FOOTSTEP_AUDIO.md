@@ -122,7 +122,7 @@ samples the destination surface independently of the takeoff surface. It plays
 for grass and sand touchdowns after at least 0.05s airborne and 1.5 units/s
 downward impact, including falls off ledges. A grass-to-sand jump uses grass
 takeoff and sand landing; the reverse uses sand takeoff and grass landing.
-Tiny snap changes are silent. Cave has no jump bank yet and remains silent.
+Tiny snap changes are silent. Cave and Underground use their saved jump banks.
 
 Initial spawn settling stays silent until the player has had floor support.
 `movement_reset` clears that support history on repositioning and inspection
@@ -133,22 +133,10 @@ voices so takeoff, landing, and the existing footstep tails can finish.
 grass-to-sand and sand-to-grass jumps, ledge falls, coyote takeoff, air abilities,
 respawn/inspection silence, independent tails, all ten variants per grass bank,
 and all five variants per sand bank.
-The scoped visible validator passed after adding the sand banks, including
-stationary sand jumps and both directions across the grass/sand boundary.
-
-Validation after adding grass jump audio (2026-09-06): the scoped visible
-jump validator passed. The full headless suite passed 37/38 in 209.2s, including
-footsteps, jump audio, movement, air abilities, and player handgun checks. The
-only failure repeated the existing Level 2 traversal stage-10 death near
-(64.54, 29.02); log `build/godot_tool_logs/script_headless_20260906_052156_15916.log`.
-That full-route Level 2 bot was retired at the user's request on 2026-09-15;
-this historical failure is no longer an outstanding test issue.
-
 ## Audition and diagnosis
 
-- F1 → Audio tools: choose, preview, compare and save recordings for each
-  surface and movement. The old F4/F5/F6 single-recording shortcuts and their
-  temporary popup have been removed; gameplay uses the audio tool's selected mix.
+- F1 → Audio tuning: choose, preview, compare and save recordings for each
+  surface and movement.
 - F9: marker count, played/suppressed count, active voices, and the last eight
   events with foot/frame, surface/collider, gait, selected clip, and spacing.
 
@@ -163,7 +151,7 @@ runner, or use `tools/run_validation_suite.ps1` for the full suite.
 feet and measured event spacing, and captures the F9 panel. It needs the runner's
 `-Visual` switch. Technical checks do not establish that the sound mix feels good.
 
-## Source-frame review (2026-09-06)
+## Source-frame review
 
 `tools/capture_player_foot_contacts.gd` renders enlarged poses in playback order,
 with current contact markers highlighted. Run with `-Visual -Width 1440 -Height
@@ -186,7 +174,7 @@ recordings, sample offsets, or gameplay timing were changed by that review.
 The subsequent audition used the walking mix for running too, and the user
 accepted it for both gaits. The run recordings remain available on disk.
 
-## Accepted cave and underground jumps (2026-09-06)
+## Cave and underground jumps
 
 The saved project mix now contains all four jump banks: Cave has three takeoff
 recordings and eight landings; Underground has three takeoffs and five landings.

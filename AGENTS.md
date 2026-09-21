@@ -70,20 +70,10 @@ powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -EditorImpor
 
 Use `tools/run_validation_suite.ps1` rather than looping over `validate_*.gd`
 by hand. It runs every validator and reports a single pass or fail rather than a wall
-of output. On 2026-09-15 the user requested removal of the scripted Level 2
-full-route playthrough: maintaining its automated input sequence was not useful.
-Do not restore that bot or carry its old stage-10 death as an outstanding bug.
+of output. The suite discovers the current `tools/validate_*.gd` files.
+The scripted Level 2 full-route playthrough is retired; do not restore it.
 Keep focused movement, ability, Level 2 structure, and transition checks;
 hands-on playtesting owns the complete Level 2 route.
-
-The suite contains 56 validators, including focused inventory UI, ammunition,
-and campaign/designer chest loot checks.
-All 54 then-existing validators passed in the 2026-09-21 windowed run
-(426.7 seconds), before moving the independent shaft-containment stress test
-out of the suite at the user's request. Its removal does not need another full
-run. The new inventory UI check and existing item reward check passed separately
-after the inventory presentation work. Timing and test count are checkpoint
-observations, not limits.
 
 `tools/probe_shaft_containment.gd` is opt-in only. It repeats four ten-second
 jump/dash attempts against the Level 2 machine shaft to check for an escape;
@@ -92,11 +82,6 @@ rules could allow an escape. Do not include it in routine suites or combat work.
 For isolated enemy behavior changes, prefer the relevant focused combat checks
 and an MCP playtest; sharing an enemy script across levels is not by itself a
 reason to run unrelated cave, audio, background, and authoring checks.
-
-It still takes a `-Scope` switch even though only `All` exists today. The six
-prototype levels used to be a separate scope worth skipping, at roughly 60% of
-a full run; they are deleted, and the switch is kept because a slow set will
-almost certainly reappear.
 
 `tools/probe_level_2_background_jump_drift.gd` is deliberately outside the
 suite. It drives one real jump and samples after `frame_post_draw`, so it needs

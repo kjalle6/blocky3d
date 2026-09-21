@@ -6,18 +6,13 @@ previously offset cursor targeting during user testing.
 The panel pauses the game. **Try in game**, **F1**, or **Esc** closes it and
 resumes play with the selected mix. Changes survive deaths and level changes.
 Opening the Level designer closes this panel while retaining its unsaved mix;
-designer previews are silent and Test uses the selected settings. The designer
-and friendly-fire checkpoint did not change `movement_mix.tres`.
+designer previews are silent and Test uses the selected settings.
 
-## Knife and stomp audio (accepted 2026-09-15)
+## Knife and stomp audio
 
-Validation scope update: the user subsequently retired the scripted Level 2
-full-route bot on 2026-09-15. All 47 retained validators passed in the 48-test
-run recorded below. Dated stage-10 failures in this guide belong to that retired
-test, not an outstanding issue; the reduced suite was not rerun for its deletion.
-
-Three more Combat entries now play in-game. Use **F1 -> Audio tuning -> Combat**,
-choose the event, and change **Fixed recording** to compare its candidates.
+Knife swings, knife hits, and stomps have live Combat entries. Use
+**F1 -> Audio tuning -> Combat**, choose the event, and change **Fixed recording**
+to compare its candidates.
 The user accepted and saved the following mix after in-game listening.
 `movement_mix.tres` is authoritative, including the disabled swing alternative.
 
@@ -27,38 +22,21 @@ The user accepted and saved the following mix after in-game listening.
 | Knife · hit | Knife Stab - Mixedupmoviestuff, fixed | One recording | -10 dB |
 | Enemy stomp | Punch_2, fixed | Kick, Bump | -18 dB |
 
-Pitch starts at 1.0 with no variation. The initial collection candidates were
-selected using source names and measured onset/tail characteristics; automation
-verified mixer output but could not listen to the recordings. The user rejected
-both Blood and the subsequent Punch/Kick alternatives for knife impacts while
-retaining the Blood mix for bullet impacts.
-
-The user then downloaded two chosen Freesound originals into the source Sounds
-folder. Both are copied unchanged into `assets/audio/combat`:
+Pitch starts at 1.0 with no variation. Two Freesound recordings are included
+unchanged in `assets/audio/combat`:
 
 - [Knife Stab.wav by Mixedupmoviestuff](https://freesound.org/people/Mixedupmoviestuff/sounds/179222/)
-  replaces the rejected knife-hit choices and is selected by default.
+  is the selected knife-hit recording.
 - [Slicing through flesh by NeoSpica](https://freesound.org/people/NeoSpica/sounds/504615/)
-  is an additional **swing** choice, as requested despite the source name.
+  is an additional **swing** choice.
   It is retained in the tool but disabled in the accepted mix. Re-enable it
   before including it in playback.
 
 Both sources are CC0 1.0. `assets/audio/combat/source_manifest.json` records
 creators, source pages, licenses, original paths, and SHA-256 hashes. The WAV is
 about 1.72 seconds and the MP3 about 0.89 seconds. No trimming, fades, pitch,
-or contact-timing changes were applied. Knife hit was initially -19 dB before
-the user's -10 dB adjustment above. Stomp, bullet impacts, movement, and room
-settings retain their saved values.
-
-After adding the Freesound originals, guarded editor import and the focused
-`validate_melee_audio.gd` check passed, including live selection of the MP3
-swing alternative. Comparing the saved mix before/after confirmed that only
-the knife swing and hit resources changed.
-
-The three previously empty saved entries were populated in `movement_mix.tres`.
-Their initial fallback banks remain in `resources/audio/combat`; saved choices
-take precedence over those starting settings. Fixed selection gives a consistent
-comparison; **Random pool** is the user's chosen mode for knife swings.
+or contact-timing changes were applied. Saved bank settings control playback
+levels and selection.
 
 Knife swing audio follows an accepted attack, including misses. Hit audio follows
 confirmed damage at the existing knife impact timing (0.13 seconds).
@@ -80,23 +58,7 @@ cleanup, connected tuning pages, and silent previews. It never saves the mix.
 `tools/capture_melee_audio.gd`, run with **-Visual**, captures the real game
 mixer and the three tuning pages under `build/previews/melee_audio`.
 
-Validation on 2026-09-15: the full windowed suite passed **47/48** checks in
-339.7 seconds. The sole failure was the existing Level 2 stage-10 traversal
-death at (64.54, 29.02), logged in
-`build/godot_tool_logs/script_20260915_060153_22096.log`. All three tuning pages
-were visually reviewed. Before the knife hit candidate replacement, captured
-peaks were approximately -26.2 dB for the knife miss/hit samples and -25.8 dB
-for stomp, with no clipping. Those captures contain the original Blood_1 hit.
-The user subsequently accepted the saved mix listed above; these older captures
-do not represent that final recording selection or balance.
-
-The initial editor import reported the previously documented native access
-violation after generating the five new WAV imports
-(`build/godot_tool_logs/editor_import_20260915_054544_19596.log`). Subsequent
-windowed validation and capture completed without another native fault; this
-does not establish a fix or root cause for the engine issue.
-
-## Gunfire and bullet impacts (2026-09-12)
+## Gunfire and bullet impacts
 
 The user subsequently saved a new mix: player **Shot_2 at -12 dB**, enemy
 **Shot_2 at -15 dB**, scenery **Hammer_1 at -24 dB with pitch 1.65**, and
@@ -157,7 +119,7 @@ four tuning pages under `build/previews/combat_audio`. Initial captured peaks
 were approximately -14.1 dB for player shots/cover and -17.7 dB for the enemy
 volley/cover, leaving headroom. These checks do not establish listening approval.
 
-## Sound-event tool expansion (2026-09-12)
+## Sound events
 
 Choose a **Category**, then a surface/action or named sound event. Categories
 are Footsteps & jumps, Abilities, Combat, Pickups & progress, World objects,
@@ -221,19 +183,10 @@ test tones and saved test mixes stay under `build/sound_event_tuning_test`.
 The validator hashes the production mix before/after. Extended graphical
 captures are under `build/previews/audio_tuning`.
 
-Validation on 2026-09-12: the full suite passed 40/41 checks in about 230 seconds.
-The only failure was the previously known Level 2 traversal stage 10 at
-(64.54, 29.02). The new event validator also passed additional Repeat/Stop and
-pause-ownership checks. Grass, empty event, loop, and room-ambience layouts were
-captured at 1920x1080; the grass, combat, and room-ambience captures were visually
-reviewed. This is tool validation, not approval of any new audio selections.
-
-The surface-specific instructions and earlier validation history follow.
-
 The user accepted the saved movement and environment mix on 2026-09-06.
 All Grass, Sand, Cave, and Underground footstep/takeoff/landing banks are now
 populated. `movement_mix.tres` contains the chosen recordings and final levels;
-the initial values and validation history below are reference points.
+the controls below let you audition and adjust those choices.
 Cave intentionally uses DirtyGround Jump Land 03 for takeoff and Jump Start 03
 for landing: the user identified incorrect source filenames by listening.
 
@@ -371,12 +324,6 @@ Tests save only to `build/audio_environment_test` and hash production defaults.
 
 ## Implementation and validation
 
-Accepted checkpoint, 2026-09-12: 46/47 suite checks passed in 293.2 s, including
-all audio checks and friendly-fire cue checks. The sole failure was the Level 2
-route bot, retired at the user's request on 2026-09-15. Older dated validation
-results below describe earlier milestones, not the current suite status.
-
-
 - `scripts/developer/audio_tuning_panel.gd`: developer UI and independent
   preview voices; restores the prior pause state on close or level exit.
 - `scripts/audio/movement_audio_mix.gd`: separate saved/working bank copies,
@@ -404,35 +351,3 @@ surface tests. `tools/capture_audio_tuning.gd` requires the runner's **-Visual**
 switch and captures grass, sand, and cave layouts under
 `build/previews/audio_tuning`. Automated checks and captures do not establish
 whether a chosen sound mix feels right during play.
-
-Validation on 2026-09-06 after adding reverb: the full headless suite passed
-36/39 in 265 seconds. Two test issues were corrected and passed scoped reruns:
-the tuning test now compares effect floats approximately, and the Level 3
-transition test allows a physics tick before requiring player displacement
-after an idle scene swap. No transition gameplay was changed. Tuning rerun:
-`build/godot_tool_logs/script_headless_20260906_081026_16392.log`.
-The remaining failure repeats the previously recorded Level 2 traversal
-stage-10 death at (64.54, 29.02):
-`build/godot_tool_logs/script_headless_20260906_080828_25692.log`.
-The full suite was not repeated after those test-only fixes. Cave panel layout
-was captured and inspected; final reverb strength still needs in-game listening.
-
-After adding the drip ambience, the full headless suite passed 38/39 in
-219 seconds. Audio tuning (including ambience), both movement-audio validators,
-and level transitions passed. The only failure was the same Level 2 stage-10
-traversal death, logged in
-`build/godot_tool_logs/script_headless_20260906_082433_24512.log`.
-The new ambience controls were captured and inspected at 1920x1080. The saved
-production mix remained unchanged; ambience loudness awaits user listening.
-
-After adding Underground and both ambience pickers, the full headless suite
-passed 39/40 in 224 seconds. Both audio validators, Level 3 geometry/transition,
-and footstep/jump checks passed. The only failure remained Level 2 traversal
-stage 10 at (64.54, 29.02), logged in
-`build/godot_tool_logs/script_headless_20260906_094409_27644.log`.
-Cave and Underground panel layouts were captured and inspected at 1920x1080.
-The user's saved mix hash was unchanged; Underground sound selection and
-acoustic balance remain for their listening review.
-
-The user subsequently completed the Cave and Underground jump selections and
-accepted the mix. No gameplay code changed during that final listening pass.

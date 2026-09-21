@@ -1,281 +1,101 @@
-# Working title: TBD
+# blocky3d
 
-`blocky3d` is the internal codename for a Godot 4.6 pixel-art precision
-platformer. The public title is still undecided. The game combines fast,
-expressive side-scroller movement with light combat and a larger cyberpunk
-setting that begins on a beach and in the natural Green Zone.
+A pixel-art action platformer about fast movement, precise jumps, and fighting
+through a cyberpunk world. The journey begins on a quiet shoreline, crosses the
+overgrown Green Zone, and gradually introduces the machinery and armed enemies
+beyond it. `blocky3d` is the working codename; the final title is undecided.
 
-The game is 2D and stays 2D. The implementation uses Godot 3D nodes to stage
-pixel art on layered depth planes, which is an internal presentation choice, not
-a claim that the finished game is a 3D platformer. Gameplay never leaves its
-single flat plane.
+Running, double jumping, wall jumping, and dashing form the core of the game.
+Knife attacks and stomps keep combat close to the platforming, while a handgun
+adds ranged combat later in the opening world. The aim is demanding, readable
+challenges with room to learn and improve.
 
-Godot is the canonical implementation. The Python game and Unreal prototype
-remain read-only design references.
+## What's playable
 
-## Current state
+The project is in development. The opening world has two complete levels and a
+third in progress:
 
-- First health/save pass: 100 player HP; bat/skater 50 HP; knife 25 damage and
-  stomp 50. Hazards remain lethal. Enemy bars appear after the first damage.
-  Q/E use carried healing items; Tab opens the paused inventory for assignment,
-  and Escape opens pause. Chest rewards pop up above the player as staggered
-  item icons and +quantities, then rise and fade while play continues.
-  New campaign/Continue/Load use protected manual slots and rotating autosaves.
-  Supply chests now work in campaign levels and the level designer, with
-  level-based loot pools or fixed contents; see [chest loot](docs/CHEST_LOOT.md).
-  Fresh developer level entries and the Firearm Lab remain isolated from saves.
-  See [save-system guide](docs/SAVE_SYSTEM.md) and
-  [combat balance](docs/COMBAT_BALANCE.md) for controls and provisional tuning.
+| Level | What to expect | Status |
+| --- | --- | --- |
+| Arrival / Shoreline | Beach and forest paths, early combat, and the Double Jump introduction | Complete |
+| Overgrown Coastal Ascent | A dusk approach and connected cave route that teaches Wall Jump and Dash | Complete |
+| Green Zone Finale | Nighttime traversal, a descent into the underworks, and the first handgun encounter | In progress; the shooting lesson, later encounters, and boss remain |
 
-- Arrival / Shoreline is the first completed production campaign level. Its
-  route runs from the animated shoreline through Green Threshold, Thorn Garden,
-  and an open-air Double Jump rise to a safe tire-swing-tree clearing. The
-  clearing now carries the player through a matched run-out/run-in transition
-  into Level 2, recording Level 1 completion without interrupting the journey
-  with a completion overlay
-- Overgrown Coastal Ascent is the second completed production campaign level.
-  Two patrols guard its dusk approach; a cave threshold leads through a short
-  slide cutscene into the enclosed route, which teaches Wall Jump and Dash
-  before two hovering-machine chambers, a Dash-required exit gauntlet, and a
-  construction-lift departure
-- Green Zone Finale now has a development-only Level 3 WIP. It begins on the
-  same construction lift at its upper landing, then opens across one continuous
-  ravine: a Double Jump island, two Dash-required crossings, and a spike-side
-  final landing lead into safe continuation ground. One familiar ground patrol
-  and a paired vertical-flyer gap followed by another patrol recap the existing
-  enemy language against the accepted dark-blue night forest treatment. One
-  more ground enemy free-roams from the spike strip's far edge to the final
-  ledge, while a faster flyer sweeps the entire joined platform over those
-  spikes with only a slight vertical sway. That mixed recap leads
-  into a plausible but deliberately unreachable 20.48 m gap. A committed jump
-  carries the player safely about 25.6 m into a short rock-underworks pocket,
-  while the first three lower-floor tiles are cut away beneath the takeoff so
-  a straight step into the gap still falls to the kill plane. The forest
-  ends at a fixed underground boundary at Y -3.78, where a subdued
-  blue-grey cave backdrop rises into view during the open fall. One patrol, a
-  5.12 m spike strip, and a long hazard-free 5.12 m two-wall Wall Jump shaft
-  merge back into the extended Green Zone shelf from underneath. A same-level
-  fade handoff then enters the sealed shooter section, where the approved
-  mutual-surprise introduction runs the player to real cover before the live
-  three-beat shooter encounter. Killing that enemy with the existing knife now
-  produces one deterministic physical gun drop. Collecting it gives the player
-  a session-local two-slot knife/handgun loadout, auto-equips the pack-1 pistol,
-  and enables mouse aiming that turns with the cursor and reaches straight up
-  and down. Shooting continues during double jumps; grounded retreat uses a
-  slower upright backpedal. Keyboard/gamepad retain
-  horizontal/upward-diagonal fire. Select weapons with `1`, `2`, the
-  mouse wheel, or gamepad RB for switching. Loaded/reserve ammo and R reload
-  now work with a provisional 12-round magazine and 1.5-second reload.
-  The safe firing lesson, boss,
-  ending, and production promotion remain deliberately open
-- The six earlier Green Zone prototype levels are deleted. Their movement
-  contracts moved to permanent homes first: the Animation Lab for the ability
-  kit, Arrival for camera stability, and the Level 2 interior for progression
-  and background coverage
-- World 1 is being re-authored as approximately three substantial levels:
-  Arrival / Shoreline, Overgrown Coastal Ascent, and Green Zone Finale
-- The World 1 production selector exposes Arrival / Shoreline and Overgrown
-  Coastal Ascent. Its cave interior is a same-level Level 2 section, and focused
-  tools load that section under the production Level 2 identity. Development
-  entries include Firearm Review Lab (the former Animation Lab), the reusable
-  Level Design Lab, Level 3 WIP, its Gun encounter shortcut, and Level Designer
-  Sandbox. The older design lab retains cave-terrain and lift fixtures
-- A reusable profile-driven pixel-background rig provides native-scale,
-  seam-safe horizontal coverage, authored coastal-to-green transitions, and
-  stable framing during vertical camera travel. Level 2 actively uses authored
-  cave regions for a reversible lower/upper blend, plus independent horizontal
-  shaft focus while its vertical camera follows the climb. Height-aware opacity
-  controls remain available as a separate opt-in extension
-- The intended finale starts by recapping the current movement and enemy
-  language with one ground patrol followed by two flyers and another patrol,
-  then proves the full traversal kit through the surprise descent and Wall Jump
-  return. One new armed Green Zone humanoid then introduces ranged attacks;
-  defeating that enemy guarantees the now-collectible first gun. A combined
-  movement-and-shooting stretch will lead to the simple first boss while melee
-  remains viable. Moving saws were cut from this level and remain available for
-  a later campaign fit
-- Typed world catalog and world-grouped mouse or `W`/`S` + `Enter` level
-  selector
-- Development-only Firearm Review Lab with a full-speed runway, ability
-  toggles, shooter/cover tests, and no campaign/save effects
-- Accepted in-game level designer: F1 opens the tool; menu 7 opens its empty
-  sandbox. Build block by block, browse assets by zone, place enemies/props,
-  adjust patrols, and use Test/Undo/Save. Green Zone terrain and props plus six
-  Beach sand pieces are available across every registered section. Scripted
-  sequences and camera wiring remain with Codex
-- Enemy friendly fire: gunners wait when a teammate blocks either barrel, while
-  released bullets can damage enemies and remain live after the shooter dies
-- F1 audio tuning persists recording choices, movement/room mixes, and combat
-  audio directly to the project; saved settings remain authoritative
-- Gunfire, bullet impacts, knife swings/hits, and enemy stomps have live audio
-  entries. The user accepted and saved the knife/stomp mix in the Combat
-  category; [audio tuning](docs/AUDIO_TUNING.md) lists the choices
-- Development mode starts every level from its fresh level-defined entry state,
-  then retains session abilities through death and developer restart
-- Development review tools expose independent F7 collision/hitbox overlays, an
-  F10 world grid with live player-feet and cursor coordinates, and an F11
-  god/noclip/free-flight inspection mode that grants the loaded level's
-  available abilities for the current session
-- Arrival has a curated, typed Green Zone dressing palette and paired clean /
-  diagnostic capture workflow. Its accepted landmarks include the biome-seam
-  outcrop, garden gates and hedges, the non-colliding skate half-pipe at the
-  aerial takeoff, and the tire-swing-tree finish clearing
-- 1920x1080 presentation baseline
-- Overgrown Coastal Ascent's full interior is authored and accepted: the
-  familiar recap, Double Jump rise, Wall Jump shaft, left-turn Dash pickup,
-  Dash-only return, machine chambers, final enemy-and-spike run, and lift ending
-  share one coherent cave. Its five-layer lower/upper blend, regional grade,
-  water vistas, upper ceiling, focused shaft camera, and fixed lift framing are
-  part of that accepted presentation
+Current systems include player and enemy health, carried healing items, a paused
+inventory with two quick-use slots, ammunition and active reloads, supply chests,
+manual saves, and autosaves. Spikes, pits, and flying hazards remain lethal.
+Combat values and supply amounts are still being balanced.
 
-The living design and authoring documents are:
+The project also includes a Firearm Review Lab and an in-game level designer
+for building terrain and placing enemies, hazards, props, autosave points, and
+supply chests.
 
-- [`AGENTS.md`](AGENTS.md) — automation, validation, and preservation rules
-- [`docs/GODOT_MCP.md`](docs/GODOT_MCP.md) — editor bridge installation and connection
-- [`docs/LEVEL_DESIGNER.md`](docs/LEVEL_DESIGNER.md) — building, object browsers,
-  patrol controls, testing, saving, and adding new asset zones
-- [`docs/DEVELOPER_LEVEL_EDITOR_PLAN.md`](docs/DEVELOPER_LEVEL_EDITOR_PLAN.md)
-  — the implemented scope, original build contract, and deferred features
-- [`docs/AUDIO_TUNING.md`](docs/AUDIO_TUNING.md) and
-  [`docs/FOOTSTEP_AUDIO.md`](docs/FOOTSTEP_AUDIO.md) — audio controls and contact events
-- [`docs/ideas/README.md`](docs/ideas/README.md) — future gameplay ideas to
-  revisit later, separate from planned work
-- [`docs/GAME_DIRECTION.md`](docs/GAME_DIRECTION.md) — what the game is
-- [`docs/COMBAT_BALANCE.md`](docs/COMBAT_BALANCE.md) — health, damage, matchup
-  targets, and the planned combat tuning workflow
-- [`docs/HEALTH_INVENTORY_SAVE_PLAN.md`](docs/HEALTH_INVENTORY_SAVE_PLAN.md) —
-  implementation phases for combat health, healing, inventory, and persistent saves
-- [`docs/LEVEL_ROADMAP.md`](docs/LEVEL_ROADMAP.md) — the eleven legacy ideas,
-  revised campaign spine, and next level
-- [`docs/LEVEL_2_VISUAL_BRIEF.md`](docs/LEVEL_2_VISUAL_BRIEF.md) — the completed
-  Level 2 route and accepted visual contracts
-- [`docs/TECHNICAL_FOUNDATION.md`](docs/TECHNICAL_FOUNDATION.md) — architecture,
-  gameplay contracts, asset pipeline, and validation
-- [`docs/SET_DRESSING_WORKFLOW.md`](docs/SET_DRESSING_WORKFLOW.md) — curated
-  scenery, gameplay exclusions, visual review, and accepted-placement rules
+## Run the project
 
-## Continuing work and handoffs
+Use **Godot 4.6.3, standard build**, with the **Compatibility** renderer.
+The game plays in 2D; Godot's 3D scene system provides layered pixel-art
+presentation. There is no C# dependency.
 
-Start here and in `AGENTS.md`, then read the guide relevant to the task.
-The canonical checkout is `D:\GodotProjects\blocky3d`. Check `git status --short`
-and `git log -3 --oneline` before editing: newer user changes take precedence
-over a dated checkpoint description. Preserve saved layouts and the user's
-`resources/audio/movement_mix.tres`; commit only when requested.
+1. Clone this repository and import `project.godot` in Godot.
+2. Let the editor finish importing the assets, then press **F5**.
+3. Choose **New campaign**, **Continue**, or **Load save** to play with persistent
+   progress. The development selector opens individual levels and labs with
+   fresh test states, separate from campaign saves.
 
-Keep lasting decisions in the relevant guide and outstanding campaign work in
-`docs/LEVEL_ROADMAP.md`. Implementation plans record scope and completion; they
-should not become running conversation logs.
-
-Create a handoff only when requested for an actual chat transition. Write it
-fresh from the current files: the active task, accepted decisions, exact Git
-state, unfinished work or blockers, and the next useful action. Link to the
-regular docs for background. Record relevant test results and evidence, and
-distinguish technical validation from user approval. Do not maintain a standing
-handoff or append unrelated milestones to an old one.
+The assets needed to run the project are included. The separate
+`blocky3dassets` folder holds original downloaded packs and editable source
+files used during development; it is not required to play this checkout.
 
 ## Controls
 
-- Move: `A` / `D`, arrow keys, left stick
-- Jump: `Space`, `W`, up arrow, gamepad south button
-- Dash: `Shift`, gamepad east button
-- Attack: left mouse, `J`, gamepad west button
-- Aim handgun: mouse; keyboard/gamepad also support upward-diagonal fire
-- Select knife/gun: `1` / `2`, mouse wheel, gamepad RB
-- Developer tools: `F1` for Audio tuning and Level designer; `F7` hitboxes,
-  `F10` grid, `F11` free-flight inspection
-- Reload handgun: `R` / gamepad Y (12-round magazine; reserve shown beside it)
-- Restart a developer run: F1's Restart level / Reset lab button
-- Pause / Options: `Escape` during ordinary play; Main Menu returns to the
-  level selector. While testing a designer draft, `Escape` returns to editing
-- Menu: click, `W` / `S` + `Enter`, or number shortcut
+Abilities become available as they are learned during the campaign.
 
-## Legacy references
+| Action | Keyboard / mouse | Gamepad |
+| --- | --- | --- |
+| Move | A / D or left / right arrows | Left stick |
+| Jump / wall jump | Space, W, or up arrow | South button |
+| Dash | Shift | East button |
+| Attack / shoot | Left mouse or J | West button |
+| Aim handgun | Mouse; W / up also aims diagonally upward | Stick up for diagonal aim |
+| Switch weapon | 1 / 2 or mouse wheel | Right shoulder |
+| Reload | R | North button |
+| Use quick items | Q / E | D-pad left / right |
+| Inventory | Tab | Available through the pause menu |
+| Pause | Escape | Start |
 
-- Python level blueprint:
-  `C:\Users\kappe\Code\platformertwo\platformersecond`
-- Archived Unreal prototype: `D:\UnrealProjects\Blocky3D`
+In the inventory, hover an item and press **Q** or **E** to assign it. The game
+pauses while the inventory is open. During a reload, press reload again while
+the marker is inside the highlighted window to finish early.
 
-These paths are not runtime dependencies. Legacy coordinates, physics values,
-and architecture are not copied blindly.
+Autosave points record health and supplies without healing. Manual saves are
+available from the pause menu while safely grounded and out of combat. The
+[save guide](docs/SAVE_SYSTEM.md) explains slots, recovery, and how loading an
+older save affects progression.
 
-## Assets
+## Development
 
-The complete downloaded packs stay outside this repository at
-`D:\GodotProjects\blocky3dassets`. Mirror all runtime-ready visual files into
-the project's searchable source-art catalog with:
+**F1** shows the development tools, including the level designer, audio tuning,
+and restart controls. **F7** shows hitboxes, **F10** shows the world grid, and
+**F11** enables free-flight inspection.
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\tools\sync_visual_asset_library.ps1
-```
+| Guide | Contents |
+| --- | --- |
+| [Game direction](docs/GAME_DIRECTION.md) | Movement, combat, setting, and intended player experience |
+| [Level roadmap](docs/LEVEL_ROADMAP.md) | Campaign progress and remaining work |
+| [Combat balance](docs/COMBAT_BALANCE.md) | Health, damage, healing, and tuning targets |
+| [Inventory and saves](docs/SAVE_SYSTEM.md) | Current controls, save behavior, and recovery |
+| [Supply chests](docs/CHEST_LOOT.md) | Loot pools, fixed rewards, and chest authoring |
+| [Level designer](docs/LEVEL_DESIGNER.md) | Building, placement, testing, and saving layouts |
+| [Audio tuning](docs/AUDIO_TUNING.md) | Assigning and tuning sounds |
+| [Technical foundation](docs/TECHNICAL_FOUNDATION.md) | Runtime architecture, rendering, and asset workflow |
+| [Godot MCP](docs/GODOT_MCP.md) | Editor automation setup and live playtesting |
 
-Refresh the curated green-zone production set with:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\tools\prepare_green_zone_assets.ps1
-```
-
-## Validate
-
-Use Godot MCP for ordinary editor work, live screenshots, and starting/stopping
-playtests (`game_start` with `scene_path: "main"`). Reuse the open editor, or
-open it through `tools/run_godot_tool.ps1 -Editor`. The editor stays available
-while standalone checks run; it no longer holds their automation lock. See
-[`docs/GODOT_MCP.md`](docs/GODOT_MCP.md) for setup and workflow.
-
-Use the guarded runner for standalone checks rather than launching Godot
-directly. It preserves the running editor/game by default and uses the standard
-non-.NET Godot 4.6.3 build
-with the Compatibility renderer. Use the runner's optional `-Headless` switch
-for contract checks; use `-Visual` for rendered captures. Never pass raw
-`--headless` to these jobs or bypass the runner. Pass
-`-CloseRunningGodot` only when a particular automation run genuinely requires
-exclusive access.
+Standalone checks run through the project's PowerShell tools:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\tools\run_validation_suite.ps1 -Scope All -Headless
-powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Headless -Script res://tools/validate_enemy_friendly_fire.gd
+powershell -ExecutionPolicy Bypass -File .\tools\run_validation_suite.ps1
 ```
 
-Use the suite for broad integration changes and the runner for a focused
-contract. On 2026-09-15 the user retired the scripted Level 2 full-route
-playthrough. Its old stage-10 bot death is no longer an outstanding test failure;
-Level 2 keeps focused structure, movement, ability, and transition checks, with
-hands-on review of the full route. The suite now has **48 validators**, including
-ground-combat contact regressions. The previous 47 passed in the earlier
-48-test run. The removed bot was that
-run's sole failure; the reduced suite was not rerun just for this deletion.
-Designer and friendly-fire gameplay have user acceptance. Do not rerun the
-suite solely for documentation changes.
-
-The runner's `-EditorImport` mode uses Godot's dedicated `--import` command and
-waits on the real editor executable, not only its console launcher. Every mode
-uses the real process exit code and a per-run log. Standalone modes also hold
-an exclusive automation lock; interactive `-Editor` does not. Avoid editor
-mutations/imports during standalone checks. Do not substitute `--editor --quit`;
-it can exit while import workers are still active. The complete source-art
-catalog under `assets/library` is
-available in Godot for searching and auditioning; only selected production
-files are referenced from scenes and promoted into `assets/art`. Bulk asset
-activity is not treated as the proven cause or cure for the outstanding native
-automation crash.
-
-Generate graphical review captures with:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Visual -Script res://tools/capture_enemy_friendly_fire.gd
-powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Visual -Script res://tools/capture_animation_lab.gd
-powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Visual -Script res://tools/capture_arrival_shoreline_slice.gd
-```
-
-The runner gives standalone automation its own writable Windows profile at
-`build/godot_automation_profile`. Godot's editor cache and `user://` therefore
-stay inside the ignored build directory during validators and captures instead
-of touching the interactive editor profile or the player's campaign save. The
-runner checks both its Roaming and Local profile roots before standalone launches.
-Interactive `-Editor` uses the normal profile and skips these probes. The runner
-uses the standard build because this project contains no C# and the Mono build
-repeatedly crashed inside CoreCLR. Use
-`res://tools/validate_automation_environment.gd` to verify the isolated profile
-and non-.NET engine contracts.
-
-Pass any other `res://tools/capture_*.gd` script through the same runner.
+For a focused check, use `tools/run_godot_tool.ps1 -Script res://tools/<script>.gd`.
+The runner accepts `-GodotExecutable` when Godot is installed at a different
+path from the local default. Automation details are in [AGENTS.md](AGENTS.md).

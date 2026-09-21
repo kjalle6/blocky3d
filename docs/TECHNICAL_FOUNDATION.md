@@ -39,11 +39,12 @@ scene tree is three-dimensional.
 | Firearms and ammo | Typed firearm tuning, ownership, loaded rounds, inventory reserve, reload and exact snapshot restoration; capacity and reload timing remain provisional |
 | Boss encounters | Boss-specific state machines using shared damage, projectile, feedback, and deterministic-reset contracts |
 | Feedback | `CombatFeedback3D` owns impact presentation and emits live character/scenery cues; `combat_audio_3d.gd` owns their bounded spatial voice pool |
-| Progression | `ProgressionStore` owns versioned `GameProgress` save data and permanent ability ownership |
+| Health and inventory | Per-actor `HealthState`, shared combat/item definitions, and `PlayerInventory` quantities and quick-slot references |
+| Saves and progression | `SessionSaveState` captures sessions, `SaveSnapshot` validates payloads, and `ProgressionStore` owns versioned profiles and save slots |
 | Ability pickups | Focused pickup actors request unlocks through `LevelSession3D`; they never write save data directly |
 | Layout authoring | `LevelDesigner` owns edit/test state; document, resolver, store, and registered catalog helpers own validated persistent layout data |
 | Developer audio | Audio tuning owns the working mix; `GameRoot` coordinates tool ownership so designer previews and audio tuning do not compete for input/pause state |
-| Interface theme | Intended curated Godot `Theme` resources shared by start, selector, pause, options, HUD, and development tools |
+| Interface | Shared Cyberpunk GUI components for inventory, options, save/load, and recovery menus; separate HUD components read gameplay state |
 
 `GameRoot` has two stable top-level containers:
 
@@ -75,7 +76,7 @@ save recovery menu; developer death still resets quickly. See
 `GameRoot.developer_tools_enabled` adds separate Firearm Review Lab and Level
 Design Lab entries to the selector. Both are development-only `LevelSession3D`
 fixtures, not campaign worlds or levels. Firearm Review Lab is the repurposed
-Animation Lab and retains its session-local test abilities: they survive `R`,
+Animation Lab and retains its session-local test abilities: they survive F1's Reset lab,
 never enter the save payload, and never mark campaign completion. Its in-room
 panel still toggles each implemented ability immediately.
 The lab grants and equips the handgun on entry and manual restart, alongside
@@ -111,7 +112,7 @@ existing camera without route clamps. Exiting keeps the inspected position but
 restores body collision, the separate hazard sensor, gravity, and normal camera
 policy. Entering F11 also grants every ability available in that level as a
 session-local test unlock. Those abilities remain after exiting inspection and
-through death or `R`, allowing a real-physics test from the inspected position;
+through death or a developer restart, allowing a real-physics test from the inspected position;
 reloading the level restores its genuine unlock state. The mode is gated by
 `developer_tools_enabled`, never writes progression, and displays a persistent
 warning so footage cannot be mistaken for release play.
@@ -143,11 +144,11 @@ problem justifies them.
 
 ### Level designer and layout persistence
 
-The accepted in-game designer opens through F1 in every registered section/lab.
+The in-game designer opens through F1 in every registered section/lab.
 The separate menu-7 sandbox supplies an empty protected foundation. Build uses
 one persistent block brush organized by zone; browser/sidebar picture cards add
-prepared enemies, hazards, checkpoints, and scenery. The user guide is
-[LEVEL_DESIGNER.md](LEVEL_DESIGNER.md); the original build contract is retained
+prepared enemies, hazards, autosave points, supply chests, and scenery. The user guide is
+[LEVEL_DESIGNER.md](LEVEL_DESIGNER.md); the implementation record is retained
 in [DEVELOPER_LEVEL_EDITOR_PLAN.md](DEVELOPER_LEVEL_EDITOR_PLAN.md).
 
 `level_layout_registry.gd` maps stable section IDs to known scenes and structural
@@ -420,13 +421,12 @@ each ability's resource ownership independent.
 
 ## Firearm and ammunition contract
 
-Player firearm collection, session ownership, two-slot selection, presentation,
-and firing are implemented. Ammunition is deliberately not implemented yet: no
-counter, hidden reserve, infinite-ammo marker, pickup, depletion, or drop rule
-exists. The approved shooter, projectile, impact feedback, short introduction,
-death-gated physical handgun drop, and collectible player handgun now run in the
-Level 3 WIP's sealed second section; Firearm Review Lab remains a temporary
-cadence comparison until the firearm lesson is complete.
+Player firearm collection, two-slot selection, aiming, firing, ammunition, and
+active reloads are implemented. Loaded rounds belong to `PlayerHandgun3D`, and
+reserve rounds are an inventory stack. Campaign snapshots preserve both.
+The shooter, projectile, impact feedback, introduction, and physical handgun
+pickup run in Level 3's second section. Firearm Review Lab provides isolated
+combat, animation, and reload tests.
 The first approved player firearm remains a fixed weapon introduced shortly
 before the World 1 boss. Green Zone enemy 2 is the selected first shooter visual
 set; its death guarantees the gun pickup after an isolated encounter completed
@@ -461,8 +461,8 @@ with the existing movement and melee kit.
   originates at its actual barrel in the chosen directional pose; prospective
   lane checks and released shots use the same muzzle math.
 - A firearm definition owns projectile choice, cadence, supported directions,
-  muzzle offsets, speed, and range; it does not own player locomotion or a future
-  ammunition economy.
+  muzzle offsets, speed, range, magazine capacity, and reload timing. Inventory
+  and loot definitions own reserve quantities and supplies.
 - Shooter presentation, ranged-enemy behavior, and projectile behavior remain
   separate contracts. The selected art does not define the AI.
 - The selected first-shooter cadence is three quick dual-gun beats: two
@@ -498,9 +498,9 @@ with the existing movement and melee kit.
   `run_resettable` `weapon_pickup`, so a reset during flight cancels the motion
   instead of leaving a delayed duplicate. On contact it asks `LevelSession3D`
   for the one authoritative acquisition, becomes claimed, and auto-equips the
-  handgun. Death/checkpoint respawn preserves that session ownership and keeps
-  the reward claimed; a full section restart clears ownership and rearms the
-  shooter and drop together.
+  handgun. Developer respawn retains session ownership, while a fresh section
+  restart reconstructs the entry state. Campaign recovery restores weapon
+  ownership, ammunition, and reward claims through the save system.
 - The reward and player rig use pistol 4 from `weapons/guns_pack_1`:
   `2 Guns/4_1.png` and `4_2.png`, Biker set-1 idle/run/jump bodies,
   single firing-arm overlays `3.png`/`4.png`, the compact muzzle effect, and
@@ -538,26 +538,28 @@ with the existing movement and melee kit.
   melee route or a deterministic replenishment rule.
 - The firearm auto-equips on first pickup and briefly reveals the weapon-switch
   controls. The compact bottom-left weapon HUD shows a gun icon, loaded/reserve
-  counts. A screen-sized bar above the player shows the moving reload marker and
+  counts. A fixed-size screen-space bar above the player shows the moving reload marker and
   a 0.2-second active window, randomly positioned once per reload with a start
   between 0.4 and 1.0 seconds; one timed second press completes the reload.
   A miss keeps the original duration. The knife has no weapon HUD. The separate aiming
   reticle remains active for mouse aiming.
 
-Gun construction, crafting, inventories, skill trees, and permanent firearm
-progression are not current technical milestones. The asset library makes them
-possible; it does not authorize speculative architecture for them.
+Consumable inventory and persistent weapon ownership are implemented; their
+state and UI are described in [SAVE_SYSTEM.md](SAVE_SYSTEM.md). Gun construction,
+crafting, and skill trees remain possible future systems.
 
-## Checkpoint contract
+## Autosaves and recovery
 
-A checkpoint:
+Placeable autosave points keep the internal `checkpoint` identity for existing
+scenes and layouts. They activate on stable grounded contact at the authored
+support height. Campaign activation writes a snapshot without healing; developer
+runs use the same placement for session-local respawn without writing saves.
 
-- activates only after stable grounded contact at the authored support height;
-- never activates from an airborne pass or nearby fall;
-- respawns the player fully supported and clear of edges and hazards;
-- provides readable space before any reset enemy can attack;
-- persists across ordinary death;
-- clears on a manual full restart or when the run is abandoned.
+Recovery positions need solid support, clearance from hazards, and space before
+a reset enemy can attack. Manual saves add out-of-combat and stationary-ground
+checks. `SessionSaveState` captures logical session state, `SaveSnapshot`
+validates it, and `ProgressionStore` owns disk access. See
+[SAVE_SYSTEM.md](SAVE_SYSTEM.md) for exact load and progression policies.
 
 ## Level authoring
 
@@ -605,62 +607,20 @@ use this to test later abilities independently, and the campaign levels use the
 same contract while introducing more than one ability within a substantial
 level where appropriate.
 
-The production `CampaignCatalog` contains two completed Green Zone levels:
-Arrival / Shoreline and Overgrown Coastal Ascent. The six prototypes that
-proved the movement kit are deleted, their contracts having moved to Firearm
-Review Lab and those production levels. The target campaign structure
-remains approximately three re-authored levels. Green Zone Finale now has a
-development-only WIP proving its parked lift-top spawn and opening ravine: one
-Double Jump gap, two Dash-required gaps, a Level 2-style paired vertical-flyer
-patrol, a second ground enemy, a final spike-side landing, then another patrol
-with a faster horizontal flyer across the joined continuation ground. The same
-WIP adds a 20.48 m deceptive gap, safe 25.6 m fall, short deep-cave patrol and
-5.12 m spike strip, then a hazard-free 5.12 m two-wall Wall Jump shaft back to
-the surface. The drop has no hanging cave face. A three-tile (3.84 m) notch
-under the takeoff starts the deep floor at world X 111.36, so a committed jump
-reaches the safe route while a straight vertical drop reaches the kill plane.
-The shaft's cave walls begin
-under one-tile Green Zone shelf extensions at Y -6.40. The two Green Zone
-underside junctions repeat the ordinary `deep_right` and `deep_left` side tiles
-from directly above instead of introducing bottom corners. The same uncapped
-deep row now finishes every Green Zone platform in this level, allowing the
-surface terrain to read as continuing into the underground backdrop. The two
-cave-wall faces are mirrored to match the Green Zone edges above them, making
-the separate terrain materials read as one joined structure. Just beyond that
-exit, a direct same-level `target_scene` threshold fades out and unloads the
-traversal scene. A sealed shooter-area scene loads behind black under the same
-Green Zone Finale definition with the full movement kit retained, but with its
-own spawn and checkpoint state. It contains the real cover rock, turned-away
-dormant enemy, ordered player-panic and enemy-panic close-ups, first-shot camera
-whip and run to cover, and post-introduction checkpoint. The cutscene-owned
-player notice uses the promoted six-frame reaction sheet as a deliberate
-1 -> 2 -> 1 -> 6 pose sequence and keeps the idle knife overlay frozen on frame
-1 to avoid a weapon pop. The enemy has no native reaction sheet, so its
-presentation uses idle frames 1 -> 2 -> 1 -> 1 and an `AtlasTexture` containing
-only the same nine overhead-mark pixels. The existing reveal marker becomes a
-phase-driven camera target: it eases between close-up centers, then returns
-size, target, look-ahead, and follow response without leaving a live tween that
-could survive reset. Its solid left boundary and the freed source scene make
-backtracking structurally impossible. The level is not yet catalogued as
-production.
-`resources/campaign/level_02.tres`
-identifies Overgrown Coastal Ascent and loads
-`scenes/levels/overgrown_coastal_ascent.tscn`; its cave threshold
-continues into `scenes/levels/overgrown_coastal_ascent_interior.tscn` without
-creating another campaign identity.
-Missing future levels are not represented by fake scenes or disabled
-placeholder buttons. Development mode keeps all authored levels selectable.
-Production prerequisite/locking presentation is added only when campaign flow
-is ready to be tested.
+The production catalog contains Arrival / Shoreline and Overgrown Coastal
+Ascent. Green Zone Finale remains a developer entry, while persistent campaign
+flow can reach its unfinished sections. The [roadmap](LEVEL_ROADMAP.md) describes
+content status and remaining work.
 
-Completed level IDs and permanent ability IDs remain globally stable, so
-introducing world grouping does not require changing the version-1 save
-payload. World completion can be derived from its member levels until a real
-world-specific reward requires persisted state.
+A level can span several authored scenes under one stable level identity.
+Level 2's approach transitions into its cave, and Level 3's traversal transitions
+into its shooter section. `GameRoot` swaps those scenes behind a fade, carrying
+player state forward while each destination owns its local session and spawn.
+Saved section IDs resolve to registered scenes when a campaign snapshot loads.
 
-World data owns organization, not gameplay. Level geometry stays in composed
-scenes; themes select curated assets; movement abilities remain player
-contracts; no mechanic branches on a world number.
+Completed level and ability IDs remain stable across presentation changes.
+World completion can be derived from its member levels until a world-specific
+reward needs additional persisted state.
 
 ## Asset pipeline
 
@@ -747,273 +707,19 @@ low 48-pixel foam strip plays once at contact, preventing stacked effects.
 Both systems are presentation-only; explicit hazard areas continue to own
 death and reset behavior.
 
-Approved replacement levels enter `CampaignCatalog`.
-`GameRoot.developer_level_definitions` is reserved for tools and focused review
-fixtures with a null world definition: Firearm Review Lab, Level Design Lab, and
-the Green Zone Finale Level 3 WIP. Labs are temporary and single-purpose: once
-their active experiment is integrated and their lasting contracts have moved,
-delete them rather than repurposing them; create a fresh fixture for a future
-experiment. Level 3 WIP starts with the full current movement kit on a parked
-construction lift. Across two authored scenes, its isolated developer route now
-contains four ground patrols, three hovering hazards, the live handgun shooter,
-two spike rows, and four recovery checkpoints, but no goal or production
-campaign identity. Its same-level handoff keeps the one Level 3 identity and
-movement abilities while giving the shooter scene its own spawn, local
-checkpoints, death, and restart lifecycle. The deep slice lowers the player's
-authored fall-reset limit
-to Y -31 and the global kill plane to Y -32 so the 25.6 m descent remains
-playable. A second kill plane stays at Y -8 across only X 0.00–79.36, preserving
-quick deaths in the three earlier gaps without touching the intended drop.
-Level 3 WIP uses a spatial variation on Level 2's two-background structure. A
-restrained blue-grey cave composition is shown at three-times integer scale and
-world-locked vertically from Y -3.78 to Y -29.70. It meets six vertically
-world-locked night-forest tracks at the same boundary, so the cave rises from
-the bottom of the frame during the fall instead of dissolving the entire viewport. The
-existing `surface` zone now drives only the synchronized regional grade, which
-darkens the lower route without moving the authored background boundary. Reused
-rock-underworks terrain forms the floor and two-face Wall Jump shaft. The
-production Level 2 approach uses a direct
-same-level `target_scene` handoff into its live interior. Focused validators,
-captures, and probes load that interior scene directly under
-`resources/campaign/level_02.tres`, preserving its production Level 2 identity
-without a separate selector entry. Level 3 WIP uses the same identity-preserving
-handoff pattern between its traversal and shooter scenes. Its destination begins
-a forward run while black lifts, and neither authored section receives a second
-selector entry or campaign identity.
-
 ## Validation and visual review
 
-Every lasting system receives focused validation. On 2026-09-15 the user
-retired the scripted Level 2 full-route playthrough. Maintain focused movement,
-ability, level-structure, and transition checks; full-route timing belongs to
-hands-on review. The old stage-10 bot death is no longer an outstanding issue.
-The remaining 47 validators all passed in the preceding 48-test windowed run;
-the removed bot was its sole failure. This deletion did not require a full rerun.
-The user accepted designer and friendly-fire gameplay after rendered review.
+Use focused validators for the systems affected by a change, and
+`tools/run_validation_suite.ps1` for changes spanning several systems. The suite
+finds the current `tools/validate_*.gd` scripts automatically. Standalone checks
+run through `tools/run_godot_tool.ps1`, which isolates test saves and records
+process exits and script errors.
 
-Historical evidence for checkpoint `e620abb` (46/47 at that time): the suite summary is
-`build/friendly_fire_validation_suite.txt`; the Level 2 failure log is
-`build/godot_tool_logs/script_headless_20260912_212240_5168.log`.
-No native fault occurred. Designer/layout/browser/catalog contracts,
-fresh-process reload, and isolated LayoutSmoke pack loading passed; browser,
-palette, context-menu, and block-building captures were reviewed at 720p/1080p.
-`tools/capture_enemy_friendly_fire.gd` produced the reviewed
-`build/previews/enemy_holding_fire.png` and `enemy_friendly_fire_hit.png`.
-These ignored local artifacts are reproducible through the guarded runner;
-their availability is not a runtime dependency.
+Use Godot MCP for live editor inspection, input, screenshots, and playtests.
+Rendered probes cover camera/background cases that require frame output.
+Hands-on review covers the full Level 2 route and establishes difficulty, pacing,
+and feel. Automation setup and runner details live in [AGENTS.md](../AGENTS.md)
+and [GODOT_MCP.md](GODOT_MCP.md).
 
-The current suite covers:
-
-- layout documents/storage, early application, designer isolation, browser input,
-  block strokes/replacement, catalogs, fresh testing, undo, collisions, and resets;
-- friendly-fire lane checks for both barrels/directions, wait/resume across beats,
-  no false audio/flash, real moving targets, cover, source exclusions, bullet
-  lifetime after shooter defeat, and reset;
-- saved audio settings, movement contact events, room routing/ambience, combat
-  shot/impact voices, double-jump firing, and event-tool persistence;
-
-- application and world-grouped level-selector structure, including keyboard
-  navigation and the development-only Firearm Review Lab, Level Design Lab, and
-  Level 3 WIP;
-- Firearm Review Lab isolation, movement geometry, immediate ability toggles,
-  reset, session-local ability policy, shooter cadence, real projectile damage,
-  and collision-cover blocking;
-- Level Design Lab isolation and its retained cave-terrain and construction-lift
-  prototyping fixtures;
-- Level 3 WIP isolation, full-kit entry state, parked lift-top spawn, grounded
-  night scenery, measured ravine gaps, quick early-gap death planes, vertical
-  flyers, patrol and spike placements, safe deep fall, rock terrain, regional
-  grade, camera regions, checkpoints, and hazard-free two-wall return shaft;
-- Level 3's same-definition section handoff, including fade-out, source unload,
-  retained movement abilities, fresh destination spawn/checkpoint ownership,
-  left-side containment, and death/manual restart remaining in the shooter area;
-- the first shooter's fade-in approach, player close-up, pan to the enemy's
-  matching panic, aim recovery, first-shot camera whip and evade, full run to
-  cover, cover-and-volley completion barrier, cover respawn, and
-  shooter-section restart behavior;
-- the first shooter's one authored death-gated weapon actor, deterministic
-  two-pose kick and landing, duplicate guard, and reset cancellation both after
-  settlement and during flight;
-- campaign catalog integrity, versioned progress serialization, and
-  per-level ability filtering, including the two-level World 1 order;
-- fresh level-defined development entry state versus same-session restart
-  retention;
-- output-pixel camera stability during long horizontal travel;
-- native background scale and import settings, flat-camera cross-depth
-  projection, allocation-free pooled recycling through travel and teleports,
-  16:9 and ultrawide edge coverage, mirrored joins, and screen-locked vertical
-  coverage using the Level 2 interior's 28 m shaft as its fixture;
-- movement, jump envelope, coyote time, buffering, and reset;
-- Double Jump coyote, momentum, release, consumption, landing-refresh, and
-  animation contracts;
-- Wall Jump contact, slide, kick, same-wall lockout, opposite-wall refresh,
-  Double Jump interaction, and Firearm Review Lab contracts;
-- Dash direction, burst speed, gravity suspension, charge, jump cancellation,
-  wall impact, attack priority, and Firearm Review Lab contracts;
-- the completed Level 2 approach's native cave entrance, two broad patrol
-  routes, continuous ground, slide interstitial, and ability-preserving
-  same-level transition into the live interior;
-- the completed Level 2 interior's enclosed terrain, pickup order, Wall Jump
-  shaft, Dash crossings, hovering hazards, checkpoints, waterline death and
-  splash presentation, zoned cave background, regional grade, shared ceiling,
-  independent vertical and horizontal camera regions, exit gauntlet, fixed lift
-  framing, stillness-gated departure, completion fade, and containment;
-- production Arrival / Shoreline's catalog identity, typed sand style,
-  synchronized animated water, collision-free travelling shore wave, grounded
-  scenery, session-local Double Jump pickup, checkpoint/reset policy, Green
-  Threshold and Thorn Garden geometry, open-air rise, concealed-spike reveal,
-  bounded patrol lanes, typed dressing palette, half-pipe support/depth rules,
-  tire-swing-tree finish, matched transition into Level 2, overlay-free source
-  completion, and focused real-input completion;
-- development F7 collision overlays, F10 measurement grid and player-feet /
-  cursor coordinates, and F11 inspection-mode isolation, ability policy,
-  collision restoration, and camera behavior;
-- Arrival dressing definition integrity, authored support contact, clean
-  platform undersides, non-collision, gameplay-plane separation, and paired
-  clean/diagnostic visual captures.
-- pixel-art invariants across every checked level scene: authored scenery on the
-  shared pixel scale, unique render priorities wherever props overlap at one
-  depth, and a coverage guard that fails on any level scene the validator has
-  not been told about;
-- the Level 2 cave approach: a native-resolution entrance that still matches its
-  4x art source pixel for pixel, authored ground contact, moving patrol bounds,
-  and the Level Design Lab's retained cave-terrain grammar;
-- the Level 2 interior: one-grid enclosed topology, pickup order,
-  checkpoint policy, hazard dimensions, camera region, a validated 13.28 m
-  17-spike Dash crossing beyond Double Jump reach, a 14.08 m
-  single- and dual-machine gaps, the final Dash-required spike strip, enemy
-  placement, and lift boarding/ascent/completion timing. Double Jump, repeated
-  Wall Jumps, and Dashes retain their focused runtime checks; hands-on testing
-  covers the complete Level 2 route.
-
-Graphical capture scripts render deterministic 1920x1080 review positions for
-all current levels. Visual changes are inspected in the running game;
-screenshots do not replace hands-on movement and collision testing.
-The rendered Level 2 background-drift and wall-jump-camera probes deliberately
-remain outside the headless suite because they sample after `frame_post_draw`.
-The repeated jump/dash escape test, `tools/probe_shaft_containment.gd`, is also
-outside the routine suite. It is opt-in for changes to the machine shaft or
-movement rules that could permit climbing out, not an enemy-combat check.
-
-Automated playthroughs are technical legality checks, not difficulty judges.
-They may prove that collision, inputs, checkpoints, and completion work, but
-they cannot approve fairness, challenge, pacing, readability at speed, or feel.
-A bot failure must first be treated as an automation limitation or a case for
-human review; it does not authorize simplifying authored geometry. Human
-playtesting owns those design decisions.
-
-Before committing a gameplay milestone:
-
-1. Use `tools/run_validation_suite.ps1` for changes with broad gameplay reach;
-   retain an already completed implementation run when only docs changed. Use
-   focused checks for isolated contracts and never launch Godot directly.
-2. Capture representative visual states.
-3. Inspect silhouettes, scenery grounding, hazard clarity, camera framing,
-   background phase, seams, repetition, gameplay/background separation, and
-   platform spacing.
-4. Review the affected gameplay at normal speed. Complete-route review is
-   needed for route changes; do not redesign untouched levels around a bot failure.
-5. Confirm `git diff --check` and review the staged file set.
-
-## Current baseline - 12 September 2026
-
-The accepted designer/catalog and enemy-friendly-fire checkpoint follows
-`9d8df81`. Handgun mouse-facing/backpedal, double-jump shooting, directional
-paired enemy shots, the gun-encounter shortcut, and saved audio tuning are
-accepted. The designer now supports user-built layouts across registered
-sections; original campaign assemblies remain protected.
-
-The authored World 1 content baseline remains as follows.
-
-The movement, collision, enemy, checkpoint and restart behaviour that Prototype
-Levels 1-6 used to protect is now proven in Firearm Review Lab, Arrival, and the
-Level 2 interior. New abilities and systems must not silently change it.
-
-The typed world catalog and grouped selector, versioned progression payload,
-permanent ability ownership, per-level ability policy, Double Jump, reusable
-pickup actors, non-pausing ability tutorials, Wall Jump, opt-in vertical camera
-framing, flat cross-depth camera projection, the typed reusable background rig,
-Dash, and fresh level-defined development entry mode are established.
-The public title is TBD and `blocky3d` remains the internal codename. Arrival /
-Shoreline is the completed first production campaign level, locked at commit
-`59a034b`. Its shoreline, Green Threshold, Thorn Garden, open-air Double Jump
-rise, concealed-spike lesson, patrol flow, typed set dressing, skate half-pipe,
-and tire-swing-tree finish form the authored baseline. The rejected
-stitched-tree and folded-corridor experiments remain removed rather than hidden
-as production baggage.
-
-Overgrown Coastal Ascent is the completed second production level. Its dusk
-approach carries two broad-roaming patrols into a matched cave threshold, short
-slide interstitial, and momentum-preserving interior run-in. The connected cave
-then carries a combat-and-spike recap, Double Jump rise, Wall Jump pickup and
-shaft, forced left turn to Dash, 13.28 m Dash return, two hovering-machine
-chambers, and a final enemy-and-spike gauntlet into the lift departure. The
-sustained shaft combines the reusable vertical camera region, capped at the
-28.0 m upper-floor framing, with an independent horizontal focus that holds the
-composition during rapid wall jumps.
-
-The presentation uses a reversible five-layer smoky-lower to pale-upper cave
-blend, matching regional grade, localized water vistas, raised foreground roof,
-and shared upper ceiling. Green Zone enemy 5 remains a dedicated indestructible
-flying-hazard archetype outside the `melee_target` and stomp contracts, with
-explicit lethal body/electric contact and deterministic reset behavior. The
-archetype's optional constant-speed horizontal triangle patrol defaults to zero
-amplitude, preserving every established vertical-only machine. Level 3 opts one
-flyer into a 4.0 m/s sweep across the entire joined runway, including its spike
-strip, with only 0.64 m of vertical sway.
-The first machine chamber offers above-air-Dash and below-ground-Dash routes; the
-second places two opposite-phase flyers in its outer thirds. The final cave
-lift waits for one continuous second of supported stillness, rises under fixed
-camera framing, and begins the one-second completion fade at 62 percent ascent.
-Its cave exit instance and Level 3's receiving instance both hide the reusable
-lift's near-black shaft backdrop so their authored environments remain visible
-through the framework. The packed lift keeps the backdrop available for labs or
-future enclosed uses.
-Arrival's final threshold marks Level 1 complete without showing its completion
-overlay, then uses matched run-out/run-in presentation to preserve momentum into
-the Level 2 approach. The cave threshold in turn uses a direct same-level scene
-handoff into the slide and interior, preserving the Level 2 identity and run
-state.
-
-Green Zone Finale's development WIP now carries the parked receiving lift into
-a night ravine recap with one Double Jump gap, two Dash gaps, paired vertical
-flyers, three ground patrols, a faster horizontal flyer, and the spike-controlled
-final landing. Its next 20.48 m gap intentionally exceeds the complete movement
-envelope without advertising failure: a missed crossing becomes a safe 25.6 m
-descent into a short, darkened rock-underworks pocket. One further patrol and a
-5.12 m spike strip lead to a long, hazard-free 5.12 m two-wall Wall Jump shaft
-that returns to the surface. The night forest gives way at a fixed Y -3.78
-boundary to its dedicated subdued cave backdrop, then the spatial boundary
-falls away on the climb. A grounded threshold beyond the return now fades to
-black and unloads this traversal scene without completing Level 3. The sealed
-shooter scene loads behind black under the same level identity and with the
-learned abilities retained, but its fresh `LevelSession3D` owns all subsequent
-spawns, checkpoints, death, and restart. The removed source and solid left
-boundary prevent backtracking.
-
-The destination starts the player running as black lifts. A close player frame
-hides the dormant enemy, the player reacts, and the camera pans across the real
-cover rock to reveal the enemy's matching surprise. The enemy recovers first;
-its opening shot drives a quick camera return and sends the input-locked player
-all the way to genuine collision cover while the view widens back to gameplay.
-The cutscene releases only after both arrival and the full opening volley, and
-its local checkpoint prevents it replaying after death. The required physical
-gun now kicks free and settles safely after the knife kill. It can be collected
-once for session-local ownership, auto-equips, and uses the exact source-family
-arm-free body, one complete directional grip, gun, muzzle, and projectile
-layers. `1` and `2`
-select knife or gun;
-the mouse wheel and gamepad RB cycle; a switch requested during an attack waits
-for that action to resolve. The first gun supports mouse aiming with cursor-selected facing, straight
-up/down aim, double-jump firing, and keyboard/gamepad horizontal or upward-diagonal fire
-into ordinary cover and explicit enemy projectile hurtboxes. Its contextual
-two-slot HUD intentionally contains no ammo display. Ammo design, the firing
-lesson, later practice, and the boss remain future milestones in this section.
-
-Reusable height-aware background fades remain unused and opt-in; authored zone
-regions are active. Structural, visual, and regression automation owns
-technical confidence, while hands-on human review remains the gate for
-presentation, difficulty, fairness, pacing, and feel. Ammunition, bosses, a
-broader Combat Lab, and the curated cyberpunk UI theme follow only when their
-campaign milestones require them. Moving saws are no longer a Level 3
-prerequisite and remain reserved for a later level whose route benefits from them.
+The architecture above describes reusable behavior. Current campaign content
+and upcoming work are tracked in [LEVEL_ROADMAP.md](LEVEL_ROADMAP.md).

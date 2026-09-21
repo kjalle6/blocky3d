@@ -1,9 +1,6 @@
 # Level 2 visual brief
 
-This is the visual source of truth for the completed Overgrown Coastal Ascent.
-Runtime validators prove structure and progression only after the route passes
-hands-on review. A passing bot never authorizes geometry or presentation that
-contradicts this page.
+This guide describes the route and visual composition of Overgrown Coastal Ascent.
 
 The accepted production build spans
 `scenes/levels/overgrown_coastal_ascent.tscn` and
@@ -15,7 +12,7 @@ identity. Focused validators, captures, and probes load the interior scene
 directly under `resources/campaign/level_02.tres`, preserving that production
 Level 2 identity without a separate developer selector entry.
 
-## Designer and validation checkpoint (2026-09-12)
+## Editing the level
 
 Both Level 2 sections now support prepared additions through the in-game
 designer. Their original connected terrain, camera regions, and scripted
@@ -23,12 +20,6 @@ sequence assemblies remain protected; this does not reopen the accepted route
 or add cave-painting tools. Inspect resolved layout data before further scene
 work. The cave entrance texture was promoted unchanged from the source catalog
 to production art for isolated export loading.
-
-On 2026-09-15 the user retired the scripted full-route Level 2 playthrough.
-Its fragile automated inputs were not worth maintaining. Focused structure,
-movement, ability, and transition validators remain; human playtesting owns
-the full route and its timing. The old stage-10 bot death is no longer an open
-issue and does not authorize changing the accepted geometry or restoring the bot.
 
 ## Approved route
 

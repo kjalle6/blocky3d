@@ -2,7 +2,7 @@
 
 Place **Add objects → Supplies → Supply chest** in the level designer. It
 snaps to existing ground, opens on contact during play, and grants its complete
-bundle immediately. The accepted item-icon/+quantity popups play one after
+bundle immediately. Item-icon/+quantity popups play one after
 another above the player. Editing previews never collect rewards.
 
 Select a chest and open **Settings → Contents**:
@@ -71,9 +71,3 @@ actual contact collection and full campaign snapshot reconstruction.
 `validate_save_snapshots.gd` covers seed persistence, legacy fallback and invalid
 seed rejection. The existing pack probe includes a supply chest and checks that
 the pool JSON ships in exported builds.
-
-Current verification: all 56 validators have passing results (53 in the full
-suite, then three corrected HUD expectations rerun separately). The standalone
-exported-pack probe passed. Live MCP captures confirmed ground placement,
-automatic/fixed controls, and the Level 2 contact pickup with medicine popups;
-runtime logs contained no errors.
