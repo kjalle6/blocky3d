@@ -7,11 +7,14 @@ static func can_step(enemy: CharacterBody3D, direction: float, distance := 0.72)
 	return _floor_at(enemy, ahead, _excluded_bodies(enemy)) and not _hazard_between(enemy, ahead)
 
 
-static func can_reach(enemy: CharacterBody3D, target_x: float) -> bool:
+static func can_reach(enemy: CharacterBody3D, target_x: float, ignore_breakable_cover := false) -> bool:
 	var destination := Vector3(target_x, enemy.global_position.y, enemy.global_position.z)
 	if _hazard_between(enemy, destination):
 		return false
 	var exclude := _excluded_bodies(enemy)
+	if ignore_breakable_cover:
+		for cover in enemy.get_tree().get_nodes_in_group("breakable_cover"):
+			if cover is CollisionObject3D: exclude.append(cover.get_rid())
 	var query := PhysicsRayQueryParameters3D.create(enemy.global_position, destination, 1, exclude)
 	if not enemy.get_world_3d().direct_space_state.intersect_ray(query).is_empty():
 		return false

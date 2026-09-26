@@ -24,6 +24,10 @@ const SOURCE_BANKS := {
 	"sand/jump_land": preload("res://resources/audio/sand_jump_land.tres"),
 }
 const SOURCE_EVENT_BANKS := {
+	"combat/tank_psychic": preload("res://resources/audio/combat/tank_psychic.tres"),
+	"combat/tank_shot": preload("res://resources/audio/combat/tank_shot.tres"),
+	"world/tank_tracks": preload("res://resources/audio/combat/tank_tracks.tres"),
+	"world/crate_break": preload("res://resources/audio/combat/crate_break.tres"),
 	"combat/player_gunshot": preload("res://resources/audio/combat/player_gunshot.tres"),
 	"combat/enemy_gunshot": preload("res://resources/audio/combat/enemy_gunshot.tres"),
 	"combat/bullet_scenery": preload("res://resources/audio/combat/bullet_scenery.tres"),

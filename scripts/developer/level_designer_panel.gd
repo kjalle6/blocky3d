@@ -133,7 +133,7 @@ func refresh() -> void:
 	_build.modulate = Color("73ffbc") if designer._placement_record.get("kind", "") == "tile" else Color.WHITE
 	_palette.highlight_current()
 	_list.clear()
-	var filter_kinds: Array = [[], ["platform", "tile"], ["enemy", "gunner"], ["spikes", "flyer"], ["checkpoint"], ["decoration"], ["chest"]][_filter.selected]
+	var filter_kinds: Array = [[], ["platform", "tile", "scaffold"], ["enemy", "gunner", "tank"], ["spikes", "flyer"], ["checkpoint"], ["decoration"], ["chest", "crate"]][_filter.selected]
 	for id in designer.document.working:
 		var record: Dictionary = designer.document.working[id]
 		if not filter_kinds.is_empty() and record.kind not in filter_kinds: continue
@@ -191,6 +191,20 @@ func _build_properties() -> void:
 	_numeric("X position", "x", values.x)
 	_numeric("Y position", "y", values.y)
 	match record.kind:
+		"scaffold":
+			_numeric("Width", "width", values.width)
+			_numeric("Height", "height", values.height)
+			_numeric("Open passage height", "underpass", values.underpass)
+			_paragraph(_properties, "The bright uprights and top/bottom girders are solid. Dark rear bracing leaves the gaps open.")
+		"tank":
+			_numeric("Ammo on defeat", "ammo_reward", values.get("ammo_reward", 30))
+			_numeric("Patrol speed (m/s)", "speed", values.speed)
+			_toggle("Start facing right", "facing_right", values.facing_right)
+			_patrol_side("Left", "left", values.left)
+			_patrol_side("Right", "right", values.right)
+			_paragraph(_properties, "200 HP. Hits do not interrupt movement or firing. Shells destroy one box per hit.")
+		"crate":
+			_paragraph(_properties, "Solid temporary cover. Two ordinary hits or one tank shell break this box. Blocks both sides' shots; no loot yet.")
 		"tile":
 			_toggle("Flip horizontally", "flip_h", values.flip_h)
 			if designer.CATALOG.ENTRIES[record.template].solid:

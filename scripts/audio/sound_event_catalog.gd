@@ -8,6 +8,10 @@ const CATEGORIES := {
 	"interface": "Interface", "music": "Music",
 }
 const EVENTS := [
+	{"id": "combat/tank_psychic", "title": "Tank · psychic pulse", "gameplay": "Connected · once when landing on the brain triggers its damaging freeze; independent of shell firing."},
+	{"id": "combat/tank_shot", "title": "Tank · shot", "gameplay": "Connected · on the tank's actual shell release."},
+	{"id": "world/tank_tracks", "title": "Tank · moving tracks", "loop": true, "gameplay": "Connected · while a nearby living tank moves; stops when paused or defeated."},
+	{"id": "world/crate_break", "title": "Crate cover · break", "gameplay": "Connected · once when an individual destructible box breaks; prototype crate recording."},
 	{"id": "combat/heal", "title": "Healing item", "gameplay": "Connected · short cue on successful healing; prototype recording."},
 	{"id": "abilities/double_jump", "title": "Double jump", "gameplay": "Connected · On the second jump."},
 	{"id": "abilities/dash_ground", "title": "Dash · grounded", "gameplay": "Connected · When a grounded dash starts."},

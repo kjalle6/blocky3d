@@ -1,6 +1,9 @@
 extends RefCounted
 ## Prepared gameplay objects only. Saves refer to these IDs, never asset paths.
 const CORE_ENTRIES := {
+	"wall_jump_scaffold": {"name": "Wall-jump scaffold", "category": "Platforms", "kind": "scaffold", "scene": "res://scenes/props/wall_jump_scaffold.tscn", "description": "Solid steel uprights for wall jumping, with open space between them. Set an underpass for tanks and players.", "anchor": "ground", "feet": 0.0},
+	"tank_enemy": {"name": "Green Zone tank", "category": "Enemies", "kind": "tank", "scene": "res://scenes/enemies/green_zone_tank.tscn", "image": "res://assets/art/green_zone/enemies/tank/Idle.png", "frames": 4, "description": "Moving tank: eight handgun hits, uninterrupted slow fire, shells break crate cover.", "anchor": "ground", "feet": 0.45},
+	"breakable_crates": {"name": "Breakable wooden crate", "category": "Supplies", "kind": "crate", "scene": "res://scenes/props/breakable_crate.tscn", "image": "res://assets/art/green_zone/catalog/props/other/Box.png", "description": "One solid wooden box. One tank shell or two ordinary hits break it; unsupported boxes fall. No loot yet.", "anchor": "ground", "feet": 0.48},
 	"grass_platform": {"name": "Grass platform", "category": "Platforms", "kind": "platform", "style": "grass", "description": "Solid grass blocks. Choose a size, then click to place.", "anchor": "ground"},
 	"sand_platform": {"name": "Sand platform", "category": "Platforms", "kind": "platform", "style": "sand", "description": "Solid sand blocks with the sand footstep sound.", "anchor": "ground"},
 	"patrol_enemy": {"name": "Patrol enemy", "category": "Enemies", "kind": "enemy", "scene": "res://scenes/enemies/pixel_patrol_enemy.tscn", "image": "res://assets/art/green_zone/enemies/green_idle.png", "frames": 4, "description": "Walks, turns at edges, and attacks nearby players. Edit its patrol after placing.", "anchor": "ground", "feet": 0.38},
@@ -67,6 +70,8 @@ static func defaults(id: String) -> Dictionary:
 	var entry: Dictionary = ENTRIES[id]
 	var values := {"x": 0.0, "y": 0.0}
 	match entry.kind:
+		"scaffold": values.merge({"width": 5.12, "height": 11.52, "underpass": 3.84})
+		"tank": values.merge({"speed": 1.25, "left": 5.76, "right": 5.76, "facing_right": false})
 		"platform": values.merge({"width": 5.12, "height": 1.28, "style": entry.style, "surface": entry.style, "left_cap": true, "right_cap": true, "bottom_cap": true})
 		"enemy": values.merge({"speed": 2.0, "left": 2.56, "right": 2.56, "facing_right": false})
 		"gunner": values.facing_right = false

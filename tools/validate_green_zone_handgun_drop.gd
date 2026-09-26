@@ -132,6 +132,15 @@ func _run() -> void:
 	assert(not pickup.collection_is_active())
 	assert(pickup.collection_shape.disabled)
 
+	assert(level.combat_feedback.combat_audio._voices.any(func(voice: AudioStreamPlayer3D) -> bool:
+		return voice.process_mode == Node.PROCESS_MODE_ALWAYS and not voice.stream_paused),
+		"The collection cue must remain unpaused during the reveal.")
+	await _validate_unlock_reveal(game_root, level)
+	var restored := level.save_state.transfer_state()
+	level.save_state.apply_state(restored)
+	assert(game_root.campaign_menu.page.is_empty() and not paused,
+		"Restoring ownership must not reopen the first-pickup showcase.")
+
 	# A death/checkpoint world reset retains the earned weapon and cannot reveal
 	# or duplicate its one pickup.
 	level.call(&"_reset_world")
@@ -143,6 +152,7 @@ func _run() -> void:
 	assert(not pickup.visible)
 	assert(_acquired_count == 1)
 	assert(_pickup_sounds.size() == 1, "Restoring an owned gun must not replay pickup audio.")
+	assert(game_root.campaign_menu.page.is_empty() and not paused)
 
 	# Manual R is the authored full-section restart: it clears the session gun,
 	# rearms the shooter, and reuses the same locked pickup actor.
@@ -188,11 +198,88 @@ func _run() -> void:
 	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(anchor.global_position.x, 0.7, 0.0)))
 	for frame in 8: await physics_frame
 	assert(pickup.is_claimed() and _pickup_sounds.size() == 1, "Muted pickups still grant the weapon silently.")
+	await _validate_unlock_reveal(game_root, level, &"mouse")
+	game_root.campaign_menu.show_weapon_unlock(PlayerWeapon.HANDGUN)
+	await _validate_unlock_reveal(game_root, level, &"controller")
+	# Switching sections while a reveal is open must release its pause.
+	game_root.campaign_menu.show_weapon_unlock(PlayerWeapon.HANDGUN)
+	game_root.load_level(&"arrival_shoreline")
+	assert(game_root.campaign_menu.page.is_empty() and not paused)
 	assert(FileAccess.get_sha256(MIX.SAVE_PATH) == original_mix)
 	print(
 		"Green Zone handgun drop passed: one authored pickup, crisp two-pose "
 		+ "kick, one acquisition, death persistence, full-restart rearm, and "
-		+ "reset cancellation; selected pickup audio, mute and saved-mix preservation."
+		+ "reset cancellation; selected pickup audio, mute and saved-mix preservation; "
+		+ "first-pickup showcase, pause, input protection, mouse/keyboard dismissal and restore cleanup."
 	)
 	_completed = true
 	quit(0)
+
+
+func _validate_unlock_reveal(app: Node, level: LevelSession3D, control := &"keyboard") -> void:
+	var menu: CanvasLayer = app.campaign_menu
+	assert(menu.page == "weapon_unlock" and paused)
+	assert(not app.weapon_status_hud.hint_is_visible())
+	var origin := level.player.global_position
+	var loaded := level.player.player_handgun.loaded_rounds
+	# Neither a leftover release nor an early press can skip the reveal.
+	_key(KEY_SPACE, true)
+	_key(KEY_SPACE, false)
+	await process_frame
+	assert(paused and menu.page == "weapon_unlock")
+	await create_timer(0.35).timeout
+	assert(level.player.global_position.is_equal_approx(origin), "The world must stay still during the reveal.")
+	assert(menu.weapon_unlock_panel.is_armed())
+	_key(KEY_TAB, true)
+	_key(KEY_TAB, false)
+	_key(KEY_J, true)
+	_key(KEY_J, false)
+	await process_frame
+	assert(menu.page == "weapon_unlock" and paused, "Inventory and attack cannot replace or dismiss the showcase.")
+	if control == &"mouse":
+		var point: Vector2 = menu.weapon_unlock_panel.continue_button.get_global_rect().get_center()
+		_mouse(point, true)
+		await process_frame
+		assert(paused)
+		_mouse(point, false)
+	elif control == &"controller":
+		_joy(true)
+		await process_frame
+		assert(paused)
+		_joy(false)
+	else:
+		_key(KEY_SPACE, true)
+		await process_frame
+		assert(paused, "Confirmation must wait for release to avoid an accidental jump.")
+		_key(KEY_SPACE, false)
+	for frame in 2: await physics_frame
+	assert(not paused and menu.page.is_empty(), "%s did not dismiss the reveal." % control)
+	assert(level.player.velocity.y <= 0.0, "Dismissing must not jump.")
+	assert(level.player.player_handgun.loaded_rounds == loaded, "Dismissing must not fire.")
+	# Once owned, further contact cannot replay either the reveal or its cue.
+	level.get_node("ShooterEncounterStaging/GunDropAnchor/HandgunPickup")._on_body_entered(level.player)
+	assert(menu.page.is_empty())
+
+
+func _key(code: Key, pressed: bool) -> void:
+	var event := InputEventKey.new()
+	event.keycode = code
+	event.physical_keycode = code
+	event.pressed = pressed
+	Input.parse_input_event(event)
+
+
+func _joy(pressed: bool) -> void:
+	var event := InputEventJoypadButton.new()
+	event.button_index = JOY_BUTTON_A
+	event.pressed = pressed
+	root.push_input(event)
+
+
+func _mouse(position: Vector2, pressed: bool) -> void:
+	var event := InputEventMouseButton.new()
+	event.position = position
+	event.global_position = position
+	event.button_index = MOUSE_BUTTON_LEFT
+	event.pressed = pressed
+	Input.parse_input_event(event)

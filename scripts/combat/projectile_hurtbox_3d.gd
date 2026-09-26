@@ -33,6 +33,10 @@ func reset_run() -> void:
 	collision_layer = _authored_collision_layer
 
 
+func is_enemy_target() -> bool:
+	return is_instance_valid(_target) and _target.is_in_group("melee_target")
+
+
 func _on_target_defeated(_impact_position: Vector3) -> void:
 	# Damage may arrive during a physics query, so remove the target from future
 	# raycasts after the current step instead of mutating space while locked.

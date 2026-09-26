@@ -1,0 +1,9 @@
+[gd_resource type="Resource" load_steps=3 format=3]
+[ext_resource type="Script" path="res://scripts/audio/sound_event_bank.gd" id="1"]
+[ext_resource type="AudioStream" path="res://assets/audio/combat/tank_psychic.wav" id="2"]
+[resource]
+script = ExtResource("1")
+clips = Array[AudioStream]([ExtResource("2")])
+labels = PackedStringArray("Psychic pulse · electric impact")
+volume_db = -16.0
+use_room_reverb = false

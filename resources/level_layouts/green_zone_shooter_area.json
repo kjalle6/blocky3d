@@ -1,27 +1,37 @@
 {
 	"catalog": {
+		"checkpoint": "b018d9addd4200cb7a14ffdf691da39015c951d80cc6fad15bc8bb5f2c575290",
 		"supply_chest": "8de96d259198f82ff23fc21080b56b0be62eceff7fd0d44b25c3b3af337ab0c4"
 	},
 	"created": {
+		"object_b935842df1c8933414cf846a": {
+			"template": "checkpoint",
+			"values": {
+				"height": 2.2,
+				"width": 2.4,
+				"x": 46.079998,
+				"y": 0.0
+			}
+		},
 		"object_shooter_supply": {
 			"template": "supply_chest",
 			"values": {
-				"basic_heal": 1,
-				"handgun_ammo": 0,
-				"large_heal_test": 0,
+				"basic_heal": 1.0,
+				"handgun_ammo": 0.0,
+				"large_heal_test": 0.0,
 				"loot_pool": "level",
-				"medical_bag": 0,
-				"x": 30.719999313354492,
+				"medical_bag": 0.0,
+				"x": 24.959999,
 				"y": 0.0
 			}
 		}
 	},
-	"fingerprint": "10372be1a1a7b909759d93c7ccdad9446d94a8d75017cd65a995b2698a38c68a",
+	"fingerprint": "42216d84e2f55bf3bf02ae1afc7ae9910fb1d18a20ddb26b7befe969b7a2e1a8",
 	"overrides": {
 
 	},
 	"removed": [],
-	"revision": 1,
+	"revision": 3,
 	"schema": 3,
 	"section": "green_zone_shooter_area"
 }

@@ -49,6 +49,9 @@ func play_event(event_id: String, world_position: Vector3) -> bool:
 		_next_voice = (_next_voice + 1) % VOICE_COUNT
 		voice.stop()
 	_previous_choices[event_id] = selected
+	# The first-weapon showcase pauses the world immediately on collection.
+	# Let this pickup cue finish through the menu, using the same selected bank.
+	voice.process_mode = Node.PROCESS_MODE_ALWAYS if event_id == "pickups/handgun" else Node.PROCESS_MODE_INHERIT
 	voice.global_position = world_position
 	voice.stream = PLAYBACK.playback_copy(bank.clips[selected], false)
 	voice.volume_db = bank.volume_db

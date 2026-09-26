@@ -1,0 +1,32 @@
+{
+  "creator": "Craftpix",
+  "pack": "Green Zone enemies, enemy 6",
+  "license_record": "assets/art/green_zone/licenses/green_zone_enemies.txt",
+  "files": {
+    "Attack.png": {
+      "source": "D:\\GodotProjects\\blocky3dassets\\enemies\\green_zone_enemies\\6\\Attack.png",
+      "sha256": "a5d06e760bba090985802c16d372f1ef84f4e7636732fae9e8510d3d7041651f",
+      "modifications": "None; original image copied unchanged."
+    },
+    "Ball1.png": {
+      "source": "D:\\GodotProjects\\blocky3dassets\\enemies\\green_zone_enemies\\6\\Ball1.png",
+      "sha256": "b46b2ee383e7489567b716690ac37973496c26b181d3be001a867fa265d2fb0f",
+      "modifications": "None; original image copied unchanged."
+    },
+    "Death.png": {
+      "source": "D:\\GodotProjects\\blocky3dassets\\enemies\\green_zone_enemies\\6\\Death.png",
+      "sha256": "05e2b4bc2cc32e6f8022f9cd304417c755388c1603826986e6709a3a150013b3",
+      "modifications": "None; original image copied unchanged."
+    },
+    "Idle.png": {
+      "source": "D:\\GodotProjects\\blocky3dassets\\enemies\\green_zone_enemies\\6\\Idle.png",
+      "sha256": "d799c3f7f2488acfdcee2671edd7c1be96fb20d1ddbdf914f430bc8de6f82d2e",
+      "modifications": "None; original image copied unchanged."
+    },
+    "Walk.png": {
+      "source": "D:\\GodotProjects\\blocky3dassets\\enemies\\green_zone_enemies\\6\\Walk.png",
+      "sha256": "6dc05ac1867f4f9b57e2ce2b69e870e57df5926179be41e2e65328568e670672",
+      "modifications": "None; original image copied unchanged."
+    }
+  }
+}

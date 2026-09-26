@@ -1,0 +1,11 @@
+{
+  "files": [
+    {
+      "runtime": "assets/art/ui/weapon_unlock/cable_blue.png",
+      "source": "D:/GodotProjects/blocky3dassets/gui/cyberpunk gui/9 Other/1 Decor/8.png",
+      "sha256": "16f583b60f65fc74b95d40e99fd0b972533a9a33a8131b918950758e134fa1c6"
+    }
+  ],
+  "note": "Unchanged Craftpix Cyberpunk GUI blue cable art for the weapon-unlock casing. Framing, font and button reuse the shared UI assets. The left connector and red leads, additional trim, lighting and scan animation are drawn in Godot.",
+  "license": "assets/art/ui/weapon_unlock/License.txt"
+}

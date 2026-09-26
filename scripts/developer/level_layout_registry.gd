@@ -19,6 +19,9 @@ const STYLES := {
 	"sand": preload("res://resources/presentation/platform_styles/shoreline_sand.tres"),
 }
 const STRUCTURAL_SCRIPTS := [
+	"res://scripts/enemies/tank_enemy_3d.gd",
+	"res://scripts/props/breakable_crate_3d.gd",
+	"res://scripts/props/wall_jump_scaffold_3d.gd",
 	"res://scripts/developer/level_layout_objects.gd",
 	"res://scripts/pickups/item_reward_3d.gd",
 	"res://scripts/presentation/pixel_platform_3d.gd",

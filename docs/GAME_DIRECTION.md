@@ -44,7 +44,8 @@ The current starting balance is:
 - Bat patrols and skaters have 50 HP: two knife hits or one stomp defeat them.
   Their behavior and timing distinguish them, with equal damage for now.
 - Ground-enemy body contact is solid and harmless. Damage comes from the
-  attack's visible impact, and hits can interrupt attacks on either side.
+  attack's visible impact, and ordinary enemies and the player can have attacks
+  interrupted by hits. The tank keeps moving and firing through damage.
 - Ordinary damage uses attack recovery and interruptions without a general
   invulnerability period. Overlapping threats and repeated hits need playtesting.
 - Spikes, pits, and flying enemies are lethal hazards. Flyers are indestructible.
@@ -61,7 +62,15 @@ weapon values, and encounter questions still to test.
 The first handgun comes from defeating an armed enemy in Level 3 with the
 existing movement and melee kit. The encounter uses a natural rock as real
 projectile cover. The defeated enemy drops a guaranteed weapon pickup that
-settles safely and auto-equips on collection.
+settles safely and auto-equips on collection. The first collection pauses for
+a weapon-unlock showcase: a separate raised heading connects to a metal display
+through exposed supports and cables. Recessed cyan and magenta strips cast a soft
+glow over the frame and Continue button; a blue line drifts behind the gun above
+a faint grid.
+A short scan reveal and subtle idle motion bring the display to life. The
+player continues by button, Enter/Space, Escape, or gamepad confirm/Start.
+The collection sound uses its existing audio-tool bank and finishes during
+the reveal. Loading an owned weapon from a save does not replay the showcase.
 
 Mouse aim follows the cursor independently of travel direction, including
 retreating fire and shooting during Double Jump. Knife and handgun remain
@@ -74,10 +83,21 @@ second reload press can finish early; its timing window changes each reload.
 The gun HUD shows the weapon and ammunition counts, and hides when the knife is
 equipped.
 
-The next campaign steps are a safe firing lesson, encounters combining shooting
-with traversal, and the first boss. Melee should remain viable throughout, so
-running out of ammo cannot make a required encounter impossible. A distinct
-weapon-unlock showcase is planned for acquiring a new gun.
+The next campaign stretch introduces shooting through gun enemies: a moving,
+slow-firing tank with enough health to encourage reloading, a moving dual-gun
+enemy, and a stationary elevated gunner behind cover. An enclosed spike pit
+requiring Dash provides a traversal beat between acquiring the handgun and
+entering the tank clearing. The tank keeps its firing cycle when hit and destroys
+layered crate cover, encouraging the player to reposition. The first boss follows
+the remaining encounter sequence. Melee should remain viable throughout, so
+running out of ammo cannot make a required encounter impossible.
+
+Most ordinary enemies can be bypassed, with supplies rewarding players who
+choose to fight. The tank exit makes that choice immediate: its defeat
+earns ammunition and a safe wall-jump climb, while a surviving tank moves below
+the climber and fires upward until the player reaches the sheltered upper route.
+The [level roadmap](LEVEL_ROADMAP.md#tank-exit-wall-jumping-under-fire)
+records the scaffold climb, shelter and encounter boundaries.
 
 ## Healing, inventory, and supplies
 

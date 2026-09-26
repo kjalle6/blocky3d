@@ -1,0 +1,40 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/enemies/handgun_enemy.tscn" id="1"]
+[ext_resource type="Script" path="res://scripts/enemies/tank_enemy_3d.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/presentation/pixel_tank_visual_3d.gd" id="3"]
+[ext_resource type="Resource" path="res://resources/combat/tank.tres" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/tank_shell.tscn" id="5"]
+
+[sub_resource type="BoxShape3D" id="Body"]
+size = Vector3(1.12, 0.9, 0.72)
+[sub_resource type="BoxShape3D" id="Contact"]
+size = Vector3(1.18, 0.96, 0.82)
+[sub_resource type="BoxShape3D" id="Hurt"]
+size = Vector3(1.2, 1.36, 0.72)
+
+[node name="GreenZoneTank" instance=ExtResource("1")]
+script = ExtResource("2")
+combat = ExtResource("4")
+projectile_scene = ExtResource("5")
+shot_sound_event = "combat/tank_shot"
+projectile_hit_kind = &"tank_shell"
+detection_range = 18.0
+telegraph_duration = 0.65
+recovery_duration = 1.15
+projectile_speed = 9.0
+projectile_distance = 22.0
+stomp_head_height = 0.91
+metadata/combat_center_x_pixels = -8.0
+
+[node name="BodyCollision" parent="." index="0"]
+shape = SubResource("Body")
+[node name="PixelVisual" parent="." index="1"]
+position = Vector3(0.32, 0.51, 1.2)
+script = ExtResource("3")
+[node name="ContactCollision" parent="ContactArea" index="0"]
+shape = SubResource("Contact")
+[node name="ProjectileHurtbox" parent="." index="3"]
+position = Vector3(0, 0.23, 0)
+[node name="Collision" parent="ProjectileHurtbox" index="0"]
+shape = SubResource("Hurt")

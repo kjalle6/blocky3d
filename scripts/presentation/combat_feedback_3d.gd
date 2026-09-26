@@ -17,6 +17,7 @@ var _pause_serial := 0
 var _active_projectile_impacts: Array[PixelProjectileImpact3D] = []
 var combat_audio: Node3D
 var _knife_hit_sound_played := false
+var _psychic_effect: Node3D
 
 
 func _ready() -> void:
@@ -55,14 +56,20 @@ func bind_handgun_enemy(enemy: HandgunEnemy3D) -> void:
 	var callback := _on_handgun_projectile_fired
 	if not enemy.shot_fired.is_connected(callback):
 		enemy.shot_fired.connect(callback)
-	if not enemy.dual_shot_fired.is_connected(_on_enemy_dual_shot):
-		enemy.dual_shot_fired.connect(_on_enemy_dual_shot)
+	var shot_callback := _on_enemy_dual_shot.bind(enemy.shot_sound_event)
+	if not enemy.dual_shot_fired.is_connected(shot_callback):
+		enemy.dual_shot_fired.connect(shot_callback)
+	if enemy.has_signal("psychic_pulsed") and not enemy.is_connected("psychic_pulsed", _on_psychic_pulsed):
+		enemy.connect("psychic_pulsed", _on_psychic_pulsed)
 
 
 func reset_feedback() -> void:
 	_pause_serial += 1
 	Engine.time_scale = 1.0
 	_knife_hit_sound_played = false
+	if is_instance_valid(_psychic_effect):
+		_psychic_effect.reset_run()
+	_psychic_effect = null
 	if is_instance_valid(combat_audio):
 		combat_audio.reset_run()
 	while not _active_projectile_impacts.is_empty():
@@ -86,7 +93,17 @@ func _exit_tree() -> void:
 func _on_player_damage(source_position: Vector3, player: PlayerCharacter) -> void:
 	player.play_damage_flash()
 	audio_cue_requested.emit(&"player_damage", source_position)
-	_begin_impact_pause(player_damage_pause)
+	if not player.is_psychically_frozen():
+		_begin_impact_pause(player_damage_pause)
+
+
+func _on_psychic_pulsed(origin: Vector3, player: PlayerCharacter, duration: float) -> void:
+	combat_audio.play_event("combat/tank_psychic", origin)
+	# A new hit refreshes the active presentation instead of stacking old cages.
+	if not is_instance_valid(_psychic_effect) or _psychic_effect.is_queued_for_deletion():
+		_psychic_effect = preload("res://scripts/presentation/psychic_pulse_3d.gd").new()
+		get_parent().add_child(_psychic_effect)
+	_psychic_effect.play(origin, player, duration)
 
 
 func _on_enemy_defeated(impact_position: Vector3, enemy: StompableEnemy3D) -> void:
@@ -128,8 +145,8 @@ func _on_handgun_empty_triggered(world_position: Vector3) -> void:
 	combat_audio.play_event("combat/out_of_ammo", world_position)
 
 
-func _on_enemy_dual_shot(world_position: Vector3) -> void:
-	combat_audio.play_event("combat/enemy_gunshot", world_position)
+func _on_enemy_dual_shot(world_position: Vector3, event_id := "combat/enemy_gunshot") -> void:
+	combat_audio.play_event(event_id, world_position)
 
 
 func _on_handgun_projectile_impacted(
@@ -145,7 +162,7 @@ func _on_handgun_projectile_impacted(
 	impact.play_impact(world_position, surface_normal)
 	projectile_impact_presented.emit(world_position, surface_normal)
 	audio_cue_requested.emit(&"projectile_impact", world_position)
-	var character_hit := collider is PlayerCharacter or (collider != null and collider.has_method("receive_projectile_hit"))
+	var character_hit: bool = collider is PlayerCharacter or collider is ProjectileHurtbox3D or (collider is Node and collider.is_in_group("melee_target"))
 	combat_audio.play_event("combat/bullet_character" if character_hit else "combat/bullet_scenery", world_position)
 
 

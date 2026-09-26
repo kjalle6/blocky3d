@@ -17,6 +17,8 @@ extends Camera3D
 @export var minimum_vertical_offset := 0.0
 @export var maximum_vertical_offset := 0.0
 @export var vertical_follow_response := 7.0
+## Ease changes between authored compositions without slowing ordinary follow.
+@export_range(0.0, 2.0, 0.05) var region_transition_duration := 0.65
 @export var pixel_snap_enabled := true
 
 var _initialized := false
@@ -26,6 +28,11 @@ var _vertical_regions: Array[VerticalCameraRegion3D] = []
 var _active_vertical_region: VerticalCameraRegion3D
 var _active_horizontal_focus_region: VerticalCameraRegion3D
 var _developer_inspection_enabled := false
+## Cutscenes own target, look-ahead and zoom until they release this flag.
+var cinematic_override_enabled := false
+var _framing_goal := Vector2.ZERO
+var _region_blend_from := Vector2.ZERO
+var _region_blend_elapsed := Vector2.ZERO
 
 
 func _ready() -> void:
@@ -38,6 +45,8 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if target == null:
 		return
+	var previous_vertical_region := _active_vertical_region
+	var previous_horizontal_region := _active_horizontal_focus_region
 	var desired_x := target.global_position.x
 	var desired_vertical_offset := 0.0
 	if _developer_inspection_enabled:
@@ -73,6 +82,28 @@ func _process(delta: float) -> void:
 			minimum_vertical_offset,
 			maximum_vertical_offset
 		)
+	var desired_framing := Vector2(desired_x, desired_vertical_offset)
+	if not _initialized or _developer_inspection_enabled:
+		# Spawn, load and inspection jumps deliberately restore exact framing.
+		_region_blend_elapsed = Vector2.ONE * region_transition_duration
+		_region_blend_from = desired_framing
+	else:
+		# Retarget from the current blended goal, including when the player turns
+		# back across a boundary before the previous handover has finished.
+		if previous_horizontal_region != _active_horizontal_focus_region:
+			_region_blend_from.x = _framing_goal.x
+			_region_blend_elapsed.x = 0.0
+		if previous_vertical_region != _active_vertical_region:
+			_region_blend_from.y = _framing_goal.y
+			_region_blend_elapsed.y = 0.0
+		for axis in 2:
+			_region_blend_elapsed[axis] += delta
+			if _region_blend_elapsed[axis] < region_transition_duration:
+				var weight := smoothstep(0.0, region_transition_duration, _region_blend_elapsed[axis])
+				desired_framing[axis] = lerpf(_region_blend_from[axis], desired_framing[axis], weight)
+	_framing_goal = desired_framing
+	desired_x = desired_framing.x
+	desired_vertical_offset = desired_framing.y
 	if _developer_inspection_enabled:
 		_smoothed_x = desired_x
 		_smoothed_vertical_offset = desired_vertical_offset

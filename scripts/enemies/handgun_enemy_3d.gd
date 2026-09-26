@@ -21,11 +21,11 @@ const RECOVERY_AIM_HOLD := 0.12
 const BLOCKED_SHOT_RECHECK := 0.08
 
 @export var starts_enabled := true
+@export var shot_sound_event := "combat/enemy_gunshot"
+@export var projectile_hit_kind: StringName = &"enemy_bullet"
 @export var starts_facing_right := false
 @export var fire_pattern := FirePattern.TRIPLE
-@export var projectile_scene: PackedScene = preload(
-	"res://scenes/projectiles/handgun_projectile.tscn"
-)
+@export var projectile_scene: PackedScene
 @export_range(2.0, 30.0, 0.5) var detection_range := 18.0
 @export_range(0.5, 8.0, 0.1) var vertical_tolerance := 3.0
 @export_range(0.1, 1.5, 0.05) var telegraph_duration := 0.55
@@ -64,6 +64,10 @@ var _active_projectiles: Array[HandgunProjectile3D] = []
 
 
 func _ready() -> void:
+	# Load the default after scripts finish resolving: the projectile references
+	# the player/session, whose layout catalog also includes enemy subclasses.
+	if projectile_scene == null:
+		projectile_scene = load("res://scenes/projectiles/handgun_projectile.tscn") as PackedScene
 	health.changed.connect(func(current: int, maximum: int) -> void: health_changed.emit(current, maximum))
 	health.reset(combat.maximum_hp)
 	_initial_transform = global_transform
@@ -398,7 +402,7 @@ func _teammate_blocks_shot(direction: Vector3) -> bool:
 		var hit := HandgunProjectile3D.cast_shot(get_world_3d().direct_space_state, start,
 			start + direction * projectile_distance, 1 | HandgunProjectile3D.ENEMY_HURTBOX_LAYER, excluded)
 		var collider: Object = hit.get("collider")
-		if collider != null and collider.has_method("receive_projectile_hit"):
+		if (collider is ProjectileHurtbox3D and collider.is_enemy_target()) or (collider is Node and collider.is_in_group("melee_target")):
 			return true
 	return false
 
@@ -419,7 +423,7 @@ func _resolve_shot_direction() -> Vector3:
 func _on_shot_frame_reached() -> void:
 	if _state != CombatState.FIRING or _defeated or not _engagement_enabled:
 		return
-	_shot_hit = CombatHit.new(combat.attack_damage, &"enemy_bullet", global_position)
+	_shot_hit = CombatHit.new(combat.attack_damage, projectile_hit_kind, global_position)
 	for gun_index in projectiles_per_fire_beat():
 		_spawn_projectile(_shot_direction, gun_index)
 	# One sound event represents both simultaneous guns. Per-projectile events

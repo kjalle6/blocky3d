@@ -76,7 +76,7 @@ func _run() -> void:
 	assert(gun_drop_anchor != null and spawn_point != null)
 	assert(route_extent != null and shooter_cover != null)
 	assert(is_equal_approx(route_extent.route_start_x, 0.0))
-	assert(is_equal_approx(route_extent.route_end_x, 40.96))
+	assert(route_extent.route_end_x >= 84.48, "The intro's route must remain available as the level grows.")
 	assert(is_equal_approx(spawn_point.global_position.x, 0.64))
 	assert(is_equal_approx(trigger_anchor.global_position.x, 5.12))
 	assert(is_equal_approx(notice_anchor.global_position.x, 9.6))

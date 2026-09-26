@@ -3,6 +3,8 @@ extends RefCounted
 
 
 static func hurt_bounds(enemy: Node3D) -> Rect2:
+	if enemy.has_method("combat_hurt_bounds"):
+		return enemy.combat_hurt_bounds()
 	var collision := enemy.get_node("ProjectileHurtbox/Collision") as CollisionShape3D
 	var half_size := (collision.shape as BoxShape3D).size * 0.5
 	var transform := collision.global_transform
@@ -14,7 +16,8 @@ static func hurt_bounds(enemy: Node3D) -> Rect2:
 	# and mirror the source offset with the sprite, without moving navigation.
 	var visual := enemy.get_node("PixelVisual") as Sprite3D
 	var facing := -1.0 if visual.flip_h else 1.0
-	var body_x := visual.global_position.x - 10.0 * visual.pixel_size * facing
+	var center_pixels := float(enemy.get_meta("combat_center_x_pixels", -10.0))
+	var body_x := visual.global_position.x + center_pixels * visual.pixel_size * facing
 	bounds.position.x = body_x - bounds.size.x * 0.5
 	return bounds
 

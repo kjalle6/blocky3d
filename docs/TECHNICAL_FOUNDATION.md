@@ -190,6 +190,12 @@ not a release configuration.
 
 ## Camera and background
 
+The Level 3 gun-encounter section trials Phantom Camera with a visually authored
+`Path3D` rail. Phantom owns following and damping; a small adapter preserves
+pixel snapping, inspection and cinematic ownership. See
+[Phantom Camera](PHANTOM_CAMERA.md) for editing, validation and addon limitations.
+The region-based camera described below remains active in the other sections.
+
 `PixelSideCamera3D` keeps a continuous follow position and quantizes its
 rendered transform to the current output-pixel grid. The default side camera is
 flat (`camera_height == target_height`), so equal world Y projects to equal
@@ -203,6 +209,13 @@ A region declares when vertical tracking becomes active and the permitted
 offset range; leaving or restarting restores deterministic framing. This keeps
 ordinary jumps in the approved shoreline, threshold, and garden sections from
 moving the camera while allowing sustained later climbs to reframe naturally.
+
+Entering, leaving, or switching framing regions blends the camera's target
+composition over 0.65 seconds with an eased start and finish, before ordinary
+follow smoothing. Horizontal and vertical handovers are independent; changing
+shaft focus does not delay vertical tracking. Turning back across a boundary
+starts from the in-progress framing. Ordinary follow response is unchanged,
+and explicit spawn/load/inspection snaps clear the handover immediately.
 
 `PixelBackgroundRig3D` owns presentation behind the route. It consumes a typed
 `PixelBackgroundProfile` made of ordered `PixelBackgroundLayerProfile` tracks.

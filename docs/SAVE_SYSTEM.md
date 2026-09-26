@@ -89,7 +89,10 @@ WIP without promoting that level into the production selector.
 
 All loads restore the selected current HP, inventory quantities, quick assignments,
 equipped weapon, section and saved position. Ordinary enemies reset to full health
-and projectiles disappear. Scene transitions carry current HP/items/loadout.
+and projectiles disappear. Tanks are an exception: their saved defeat persists
+with their ammo reward, so loading after a kill keeps them absent. Loading before
+the kill restores the tank and earlier inventory. Scene transitions carry current
+HP/items/loadout.
 
 An explicitly selected save rolls back all progression to that snapshot. Manual
 saves also do this through Continue: unlocks earned before the save are present;

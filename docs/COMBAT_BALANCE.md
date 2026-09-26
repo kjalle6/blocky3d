@@ -16,6 +16,8 @@ are implemented; the remaining work is tuning them together in actual levels.
 | Stomp | 50 damage | Rewards positioning above an enemy and preserves the bounce |
 | Handgun | 25 damage, 0.20 seconds between shots or empty trigger clicks | Provisional; compare its reach and firing opportunities with melee |
 | Dual-gun enemy | 50 HP, 25 attack damage | Provisional; each paired firing beat damages a target once |
+| Green Zone tank | 200 HP, 25 attack damage | Eight handgun hits or eight knife hits; immune to stomps and nonlethal interruption |
+| Individual wooden crate | 50 HP | Two ordinary hits or one tank shell; the breaking shot is absorbed |
 | Flyer | Indestructible, lethal on contact | Platforming hazard with no health bar |
 | Spikes and pits | Lethal regardless of HP | Platforming challenge remains intact |
 
@@ -28,6 +30,70 @@ An initial target is three or four well-used openings, with viable melee and no
 requirement to arrive with ammunition. Bosses should use the same weapon damage
 rules as ordinary enemies unless a readable resistance is deliberately designed.
 
+### Level 3 tank and later gunner variants
+
+The gun-enemy stretch now begins with the moving Green Zone tank, using
+`resources/combat/tank.tres`: 200 HP, eight 25-damage handgun hits. Initial
+movement is 1.25 m/s. One shell travels at 9 m/s after a 0.65-second
+tell, followed by the 0.36-second firing animation and 1.15-second recovery.
+That gives roughly 2.2 seconds between shells. These values remain provisional.
+
+The initial approach still starts the fight near the crates. Once engaged, the
+tank pursues the player at its normal movement speed, turns after a jump-over,
+and closes to a four-unit firing distance. Idle patrol endpoints do not leash
+an active pursuit. Crates stop its body but do not break engagement: it shoots
+them apart. Ledges, hazards and solid walls stop ordinary ground pursuit.
+The Level 3 clearing and climb use an authored engagement boundary, so camera
+scrolling does not reset the fight. After engagement, that tank keeps shooting
+up the authored shaft while any of the wall-jump area remains in camera view,
+including from the upper route and chest roof. It cannot acquire a new target
+off screen. Other placed tanks still disengage when they leave
+the camera. A player hit can also draw attention.
+
+The tank is an explicit exception to ordinary hit interruption. Nonlethal hits
+deal normal damage but do not stagger it, knock it back, cancel a pending shot,
+or reset its firing timer or movement. Its chosen attack cycle continues under
+fire. Use impact sparks, sound, and the health strip to acknowledge damage without
+replacing its attack animation with a blocking hurt animation. Defeat still
+stops movement and cancels unfired attacks; released projectiles remain live.
+
+Landing on the brain triggers a psychic pulse: 25 damage and a 0.7-second
+player freeze, without damaging or interrupting the tank. It retreats at 2 m/s
+during the freeze, then resumes its normal movement; the shell firing cycle
+continues unchanged. A shell can damage the player during the freeze as a separate hit. Each landing triggers one pulse,
+rearming after the player leaves the head area. Purple rings, a tinted player,
+a brief label, and a separate audio-tool cue identify the attack. Knife and
+handgun hits still deal their normal damage. Repeat pulses restart the same
+effect rather than stacking rings and labels.
+
+A full 12-round magazine would retain four rounds after eight accurate shots.
+The tank's defeat should provide a clear opportunity and cue to reload before
+the next encounter; it does not guarantee an empty magazine. Normal reloads
+remain sufficient, and the timed second press is an optional faster finish.
+
+The following encounter uses a moving variant of the existing dual-gun enemy;
+an elevated gunner behind cover stays stationary. Those later variants are not
+built yet. Judge the tank's cadence by the time available to recognise breaking
+crate cover and move before the next shot. The tank's interruption immunity does not imply
+damage reduction; the other enemies retain their existing interruption rules.
+
+Player bullets stop just outside the current camera view, with an edge allowance
+of 2.5% of the viewport's smaller dimension for partially visible targets. The
+whole movement segment is clipped before collision detection, so a fast round
+cannot damage distant off-screen enemies or crates. The tall Level 3 shaft's
+tank has a 48 m shell range to cover its visible roof; other tank placements retain 22 m.
+
+The clearing now ends in a wall-jump climb between a solid steel scaffold and
+the upper ground. A surviving tank moves beneath it and aims upward, retaining
+the clearing cadence and 9 m/s shell speed. Two spike patches interrupt the
+right-hand wall. The firing animation commits the direction; shells do
+not home. Solid upper ground blocks shots, but pursuit and firing end only once
+the shaft/scaffold leaves the view. Defeat grants 30
+reserve handgun rounds (22 net after eight accurate hits), without refilling
+the magazine. The reward and defeat persist together in saves. Reward amounts
+remain provisional until the later encounters exist. The
+[level roadmap](LEVEL_ROADMAP.md#tank-exit-wall-jumping-under-fire) owns the layout.
+
 ## Damage and enemy behavior
 
 Each attack can damage a target once. Separate attacks remain separate damage
@@ -35,8 +101,9 @@ opportunities: there is no general invulnerability period after an ordinary hit.
 The gunner's two simultaneous bullets share one hit identity per beat, preventing
 an accidental double application on one target.
 
-Nonlethal hits interrupt attacks on both sides. Pending attack damage is
-cancelled, while already-fired projectiles remain live. The current hurt attack
+For the current player and ordinary enemies, nonlethal hits interrupt attacks
+on both sides. The tank is the exception described above. Pending attack
+damage is cancelled, while already-fired projectiles remain live. The current hurt attack
 lock is 0.18 seconds. Repeated knife interruptions, simultaneous attacks, and
 multiple enemies need continued testing for unavoidable stun loops.
 
@@ -120,9 +187,10 @@ the player in sequence, rising and fading while movement continues. Entries are
 about 0.57 seconds apart and last about 1.09 seconds each. Pausing freezes the
 sequence; death, reset, and scene changes clear it.
 
-New weapons are intended to receive a separate paused unlock panel with the
-weapon, name, ammunition received, and relevant controls. That presentation
-remains to be built.
+The first handgun opens a separate paused unlock showcase with the weapon,
+its name, and a Continue button. Its 30-round reward is added on collection;
+the gun HUD shows loaded and reserve ammunition. The firing and reload lesson
+will introduce the controls in play.
 
 With unlimited carrying capacity, balance supply amounts over whole sections
 and between saves. Check whether players accumulate enough healing or ammo to

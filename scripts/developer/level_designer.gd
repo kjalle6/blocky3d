@@ -36,7 +36,6 @@ var _source_packed: PackedScene
 var _abilities: Array[StringName] = []
 var _was_paused := false
 var _time_scale := 1.0
-var _mouse_mode := Input.MOUSE_MODE_VISIBLE
 var _camera_transform := Transform3D.IDENTITY
 var _camera_size := 16.0
 var _recovery_due := -1.0
@@ -90,7 +89,6 @@ func open_panel() -> void:
 	_abilities = level.session_unlocked_abilities()
 	_was_paused = get_tree().paused
 	_time_scale = Engine.time_scale
-	_mouse_mode = Input.mouse_mode
 	_camera_transform = level.camera.global_transform
 	_camera_size = level.camera.size
 	var error := _read_document()
@@ -442,7 +440,9 @@ func _finish_close(to_menu: bool) -> void:
 	camera = null
 	get_tree().paused = _was_paused
 	Engine.time_scale = _time_scale
-	Input.mouse_mode = _mouse_mode
+	# The old session may have hidden the pointer for its aiming crosshair.
+	# That session is replaced; the new HUD owns whether aiming hides it again.
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_release_inputs()
 	app.release_developer_tool("designer")
 	if to_menu: app.show_level_select()
@@ -493,7 +493,7 @@ func _exit_tree() -> void:
 		_flush_recovery()
 		get_tree().paused = _was_paused
 		Engine.time_scale = _time_scale
-		Input.mouse_mode = _mouse_mode
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func _input(event: InputEvent) -> void:
 	if not is_active() or dialog_open() or not event is InputEventKey or not event.pressed or event.echo: return
@@ -575,10 +575,10 @@ func refresh_presentation() -> void:
 func placement_warning(id: String) -> String:
 	if not nodes.has(id) or not document.working.has(id): return ""
 	var record: Dictionary = document.working[id]
-	if record.kind not in ["enemy", "gunner", "checkpoint", "chest"]: return ""
+	if record.kind not in ["enemy", "gunner", "tank", "crate", "checkpoint", "chest"]: return ""
 	var node: Node3D = nodes[id]
 	var feet := node.global_position
-	if record.kind in ["enemy", "gunner"]:
+	if record.kind in ["enemy", "gunner", "tank", "crate"]:
 		var collision := node.get_node("BodyCollision") as CollisionShape3D
 		if collision == null: return ""
 		feet = collision.global_position

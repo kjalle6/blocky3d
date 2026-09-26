@@ -20,7 +20,7 @@ required notices. Some source questions remain listed below.
 | Expanded designer terrain and scenery | Remaining Craftpix terrain packs, nature/trees/rocks/clouds, bridges, doors, graffiti, signs and vehicles; [world scenery manifest](../assets/art/world_scenery/manifest.json) records unchanged images, source hashes and per-file supplied license paths | Supplied license files are copied beside the promoted packs; cave entrance source notes retain the separate Pixie Haus attribution |
 | Cave backgrounds | Craftpix Pixel Cave Game Parallax Backgrounds; [source archive and layer mapping](../assets/art/interiors/rock_underworks/background/SOURCE.txt) | License reference in the source record |
 | Cave lift and slide dust | Craftpix Piratebay Zone, Industrial Zone, Doors and Portals, and Pixel Effects; [lift sources](../assets/art/interiors/rock_underworks/props/cave_lift/SOURCE.txt), [dust source](../assets/art/interiors/rock_underworks/effects/SOURCE.txt), and the cave manifest above | Individual catalog license paths in the cave manifest |
-| Health HUD, inventory, options, and pixel font | Craftpix Cyberpunk GUI; [health/font manifest](../assets/art/ui/health/source_manifest.json), [inventory manifest](../assets/art/ui/inventory/source_manifest.json), [options manifest](../assets/art/ui/options/source_manifest.json) | [Cyberpunk GUI license](<../assets/library/gui/cyberpunk gui/License.txt>) |
+| Health HUD, inventory, options, weapon showcase, and pixel font | Craftpix Cyberpunk GUI; [health/font manifest](../assets/art/ui/health/source_manifest.json), [inventory manifest](../assets/art/ui/inventory/source_manifest.json), [options manifest](../assets/art/ui/options/source_manifest.json), [weapon showcase manifest](../assets/art/ui/weapon_unlock/source_manifest.json) | [Cyberpunk GUI license](../assets/art/ui/weapon_unlock/License.txt) |
 | Healing icons | Craftpix Radioactive Icons; [health manifest](../assets/art/ui/health/source_manifest.json) | [Radioactive Icons license](../assets/library/icons/radioactive_icons/License.txt) |
 | Handgun ammo icon | Craftpix Resource Icons, `Icon1_02.png`; [source manifest](../assets/art/ui/items/source_manifest.json) | [Resource Icons license](../assets/library/icons/resource_icons/License.txt) |
 | Shared spike and ability symbols | Four local SVG files in [shared art](../assets/art/shared); no separate source/authorship record | Unresolved; see follow-up list |
@@ -34,6 +34,7 @@ they do not grant rights beyond those terms.
 | Family | Creator / source | Evidence and recorded license |
 | --- | --- | --- |
 | Combat sounds from the flattened local collection | Craftpix audio packs 1, 3, 4, 5, and 7 | All 15 files matched original ZIP entries by SHA-256. [Combat manifest](../assets/audio/combat/source_manifest.json) and [archive evidence](../assets/audio/source_archive_matches.json) retain file hashes, archive hashes, member names, and each pack's license reference. |
+| Tank shot, moving tracks, psychic pulse, and provisional crate break | Craftpix packs 5, 2, and 7 | [Tank audio manifest](../assets/audio/combat/tank_source_manifest.json) records unchanged copies, exact ZIP matches and supplied license references. `Crate_open_1.wav` is the temporary break cue; `Punch_with_electricity.wav` is the provisional psychic pulse. |
 | Knife impact and alternative flesh slice | Mixedupmoviestuff, “Knife Stab.wav”; NeoSpica, “Slicing through flesh” | Individual Freesound pages and CC0 1.0 declarations are retained in the combat manifest. |
 | Healing cue and handgun reload | Craftpix packs 6 and 4 respectively | Exact ZIP matches in the archive evidence; [healing source record](../assets/audio/items/source_manifest.json). |
 | Grass and sand footsteps / jumps, plus comparison candidates | NOX Sound Essentials Series (recorded CC0), Dryoma Footsteps sounds (recorded CC BY 4.0), Craftpix pack 7, and one Antons candidate with license pending | [Credits and source pages](../assets/audio/footsteps/CREDITS.txt), [file hashes](../assets/audio/footsteps/sources.json), and [trimmed run derivation](../assets/audio/footsteps/tight_run/SOURCE.txt). Craftpix's footstep also has an exact archive match. |
@@ -47,6 +48,12 @@ collection. It used the seven original Craftpix audio ZIPs under
 entries in six of those archives. The audit changed metadata only.
 
 ## Bundled tools
+
+Phantom Camera 0.11.0.3 is vendored unchanged under
+[`addons/phantom_camera`](../addons/phantom_camera), with its
+[MIT license](../addons/phantom_camera/LICENSE), copyright 2022 Marcus Skov.
+Keep the notice with redistributed copies. The [camera guide](PHANTOM_CAMERA.md)
+records its source release, integration and checks.
 
 The vendored [Godot MCP Toolkit](../addons/godot_mcp_toolkit) has an
 [MIT license](../addons/godot_mcp_toolkit/LICENSE), copyright 2026 NPGameDev.
@@ -74,6 +81,13 @@ before release, or make a separate, reviewed replacement choice. Current
 sounds and visuals remain intact.
 
 ## Adding or promoting an asset
+
+The tank's five promoted enemy-6 sheets have their own
+[source and hash record](../assets/art/green_zone/enemies/tank/source_manifest.json),
+using the existing Green Zone enemies license record. The upward firing pose
+reuses a cropped barrel from the idle sheet and masks the horizontal barrel at
+runtime; the source images remain unchanged. The wall-jump scaffold uses
+project-authored procedural steel beams and collision shapes.
 
 1. Keep the original download, editable source, and supplied license in
    `blocky3dassets`. Record its publisher/creator, source page when known, and

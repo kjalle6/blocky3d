@@ -309,6 +309,11 @@ func _start_session(
 		weapon_status_hud.bind_session(current_level)
 		health_inventory_hud.bind_session(current_level)
 		loot_receipt.bind_session(current_level)
+		# Only a successful physical first pickup opens the reveal. Grants in
+		# labs, save restoration and equipping an owned weapon stay silent.
+		for pickup in get_tree().get_nodes_in_group("weapon_pickup"):
+			if pickup is HandgunPickup3D and current_level.is_ancestor_of(pickup):
+				pickup.collected.connect(_on_handgun_collected)
 	var session_heading := definition.heading()
 	if world_definition == null:
 		session_heading = "DEVELOPER TOOLS / %s" % definition.title.to_upper()
@@ -751,7 +756,14 @@ func _progression_store() -> ProgressionStore:
 	return get_node_or_null("/root/GameProgression") as ProgressionStore
 
 
+func _on_handgun_collected(_world_position: Vector3) -> void:
+	weapon_status_hud._hide_hint()
+	campaign_menu.show_weapon_unlock(PlayerWeapon.HANDGUN)
+
+
 func _free_current_level() -> void:
+	if campaign_menu != null and campaign_menu.page == "weapon_unlock":
+		campaign_menu.close()
 	if audio_tuning_panel != null:
 		audio_tuning_panel.close_panel()
 	weapon_status_hud.unbind_session()

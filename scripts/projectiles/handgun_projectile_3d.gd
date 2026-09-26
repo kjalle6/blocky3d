@@ -9,6 +9,8 @@ signal impacted(world_position: Vector3, surface_normal: Vector3, collider: Obje
 
 enum Allegiance { ENEMY, PLAYER }
 const ENEMY_HURTBOX_LAYER := 4
+## A little edge tolerance for partially visible targets, scaled with the viewport.
+const PLAYER_SCREEN_GRACE := 0.025
 
 @export_range(1.0, 40.0, 0.1) var speed := 8.5
 @export_range(1.0, 50.0, 0.5) var maximum_distance := 22.0
@@ -53,6 +55,12 @@ func _physics_process(delta: float) -> void:
 	var travel_distance := minf(speed * delta, _remaining_distance)
 	var start := global_position
 	var destination := start + _direction * travel_distance
+	var screen_fraction := _visible_travel_fraction(start, destination) if is_player_owned() else 1.0
+	if screen_fraction <= 0.0:
+		_expire()
+		return
+	destination = start.lerp(destination, screen_fraction)
+	travel_distance *= screen_fraction
 	var hit := cast_shot(get_world_3d().direct_space_state, start, destination, collision_mask, _excluded)
 	if not hit.is_empty():
 		global_position = hit.position
@@ -70,8 +78,28 @@ func _physics_process(delta: float) -> void:
 		return
 	global_position = destination
 	_remaining_distance -= travel_distance
-	if _remaining_distance <= 0.0:
+	if _remaining_distance <= 0.0 or screen_fraction < 1.0:
 		_expire()
+
+
+func _visible_travel_fraction(start: Vector3, destination: Vector3) -> float:
+	var camera := get_viewport().get_camera_3d()
+	if camera == null: return 1.0 # Pure physics fixtures have no viewing boundary.
+	if camera.is_position_behind(start): return 0.0
+	var bounds := get_viewport().get_visible_rect()
+	bounds = bounds.grow(minf(bounds.size.x, bounds.size.y) * PLAYER_SCREEN_GRACE)
+	var from := camera.unproject_position(start)
+	if not bounds.has_point(from): return 0.0
+	var to := camera.unproject_position(destination)
+	var travel := to - from
+	var fraction := 1.0
+	# Clip before collision queries so a fast shot cannot skip the screen edge.
+	for axis in 2:
+		if travel[axis] > 0.0:
+			fraction = minf(fraction, (bounds.end[axis] - from[axis]) / travel[axis])
+		elif travel[axis] < 0.0:
+			fraction = minf(fraction, (bounds.position[axis] - from[axis]) / travel[axis])
+	return clampf(fraction, 0.0, 1.0)
 
 
 static func source_exclusions(source: CollisionObject3D) -> Array[RID]:

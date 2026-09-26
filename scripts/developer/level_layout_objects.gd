@@ -6,6 +6,9 @@ const TILE := 1.28
 const MIN_DECORATION_LAYER := -100
 const MAX_DECORATION_LAYER := 100
 const FIELDS := {
+	"scaffold": ["x", "y", "width", "height", "underpass"],
+	"tank": ["x", "y", "speed", "left", "right", "facing_right", "ammo_reward"],
+	"crate": ["x", "y"],
 	"platform": ["x", "y", "width", "height", "style", "surface", "left_cap", "right_cap", "bottom_cap"],
 	"enemy": ["x", "y", "speed", "left", "right", "facing_right"],
 	"spikes": ["x", "y", "width"],
@@ -53,6 +56,9 @@ static func inspect(level: Node) -> Dictionary:
 
 static func _matches(node: Node, kind: String) -> bool:
 	match kind:
+		"scaffold": return node is StaticBody3D and node.get_script() == preload("res://scripts/props/wall_jump_scaffold_3d.gd")
+		"tank": return node is TankEnemy3D
+		"crate": return node is BreakableCrate3D
 		"chest": return node is ItemReward3D and node.presentation == ItemReward3D.Presentation.CHEST
 		"platform": return node is PixelPlatform3D
 		"enemy": return node is StompableEnemy3D
@@ -67,6 +73,12 @@ static func _matches(node: Node, kind: String) -> bool:
 static func read_values(node: Node3D, kind: String) -> Dictionary:
 	var values := {"x": node.position.x, "y": node.position.y}
 	match kind:
+		"scaffold": values.merge({"width": node.width, "height": node.height, "underpass": node.underpass_height})
+		"tank":
+			values.merge({"speed": node.patrol_speed, "left": node.patrol_left_distance,
+			"right": node.patrol_right_distance, "facing_right": node.starts_facing_right})
+			# The default stays implicit so existing saved placements are unchanged.
+			if node.ammo_reward != 30: values.ammo_reward = node.ammo_reward
 		"platform":
 			var style_id := ""
 			for key in REGISTRY.STYLES:
@@ -100,6 +112,7 @@ static func read_values(node: Node3D, kind: String) -> Dictionary:
 static func validate(kind: String, values: Dictionary) -> String:
 	if not FIELDS.has(kind): return "Incomplete or unsupported object properties."
 	var expected_count: int = FIELDS[kind].size()
+	if kind == "tank" and not values.has("ammo_reward"): expected_count -= 1
 	if kind == "chest" and not values.has("flip_h"): expected_count -= 1
 	if kind == "decoration" and not values.has("decoration_layer"): expected_count -= 1
 	if values.size() != expected_count:
@@ -133,10 +146,17 @@ static func validate(kind: String, values: Dictionary) -> String:
 			if values[key] < TILE - 0.0001 or absf(values[key] / TILE - roundf(values[key] / TILE)) > 0.001:
 				return "Platform dimensions must be whole tiles."
 		if values.width * values.height / (TILE * TILE) > 4096: return "Keep each platform below 4096 tiles."
-	if kind == "enemy":
+	if kind == "scaffold":
+		if values.width < 2.56 or values.width > 20.48 or values.height < 2.56 or values.height > 51.2:
+			return "Scaffold width must be 2.56–20.48 m and height 2.56–51.2 m."
+		if values.underpass < 0 or values.underpass > values.height - 1.28:
+			return "Leave at least 1.28 m of frame above the underpass."
+	if kind in ["enemy", "tank"]:
 		if values.speed < 0.1 or values.speed > 10.0: return "Patrol speed must be 0.1–10 m/s."
 		if values.left < 0.0 or values.left > 50.0 or values.right < 0.0 or values.right > 50.0:
 			return "Patrol limits must be automatic (0) or up to 50 m from the spawn."
+	if kind == "tank" and not SaveSnapshot.whole(values.get("ammo_reward", 30), 0, 999):
+		return "Ammo reward must be a whole number from 0 to 999."
 	if kind == "spikes" and values.width < 0.6: return "A spike row must be at least 0.6 m wide."
 	if kind == "tile" and values.surface not in ["grass", "sand", "cave", "silent"]: return "Choose an approved footstep surface."
 	return ""
@@ -145,6 +165,18 @@ static func apply(node: Node3D, kind: String, values: Dictionary, rebuild := fal
 	node.position.x = values.x
 	node.position.y = values.y
 	match kind:
+		"scaffold":
+			node.width = values.width
+			node.height = values.height
+			node.underpass_height = values.underpass
+			if rebuild: node.rebuild_geometry()
+		"tank":
+			node.ammo_reward = int(values.get("ammo_reward", 30))
+			node.patrol_speed = values.speed
+			node.patrol_left_distance = values.left
+			node.patrol_right_distance = values.right
+			node.starts_facing_right = values.facing_right
+			if rebuild and node.pixel_visual != null: node.pixel_visual.tick(0.0, &"idle", values.facing_right)
 		"platform":
 			node.size = Vector3(values.width, values.height, node.size.z)
 			node.style = REGISTRY.STYLES[values.style]
@@ -195,13 +227,16 @@ static func _apply_chest_flip(node: ItemReward3D) -> void:
 
 static func horizontal_flip_field(kind: String) -> String:
 	if kind in ["chest", "decoration", "tile"]: return "flip_h"
-	if kind in ["enemy", "gunner"]: return "facing_right"
+	if kind in ["enemy", "gunner", "tank"]: return "facing_right"
 	return ""
 
 static func bounds(record: Dictionary) -> Rect2:
 	var v: Dictionary = record.values
 	var center: Vector2 = Vector2(v.x, v.y) + record.get("offset", Vector2.ZERO)
 	match record.kind:
+		"scaffold": return Rect2(center - Vector2(v.width * 0.5, 0), Vector2(v.width, v.height))
+		"tank": return Rect2(center - Vector2(0.6, 0.45), Vector2(1.2, 1.36))
+		"crate": return Rect2(center - Vector2(0.64, 0.48), Vector2(1.28, 0.96))
 		"tile": return Rect2(center - Vector2.ONE * TILE * 0.5, Vector2.ONE * TILE)
 		"platform": return Rect2(center - Vector2(v.width, v.height) * 0.5, Vector2(v.width, v.height))
 		"enemy": return Rect2(center - Vector2(0.55, 0.45), Vector2(1.1, 1.5))
@@ -289,7 +324,7 @@ static func nearby_floor(level: Node, point: Vector2, tolerance: float, ignore: 
 	for collision in level.find_children("*", "CollisionShape3D", true, false):
 		if ignore != null and ignore.is_ancestor_of(collision): continue
 		var body: Node = collision.get_parent()
-		if not (body is StaticBody3D or body is AnimatableBody3D): continue
+		if not (body is StaticBody3D or body is AnimatableBody3D or body is BreakableCrate3D): continue
 		var top := INF
 		if body.has_method("layout_floor_y_at"):
 			top = body.layout_floor_y_at(point.x)

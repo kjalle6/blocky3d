@@ -1,0 +1,81 @@
+{
+  "creator": "Craftpix",
+  "note": "Exact source copies. Crate_open_1 is a provisional break cue; replace through the audio tool when desired.",
+  "files": [
+    {
+      "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Tank_shot.wav",
+      "runtime": "assets/audio/combat/tank_shot.wav",
+      "sha256": "6869505dc976de72d1cffc42478b3dbfc8fa6e07073340f8186cb179426c9296",
+      "modifications": "None; original recording copied unchanged.",
+      "archive_matches": [
+        {
+          "archive": "craftpix-net-682092-free-retro-futuristic-audio-pack-5-for-cyberpunk-games.zip",
+          "archive_sha256": "f25b805695865fae1a5f3489d78d7f1317068edff86dbca4d17361ef67d2835f",
+          "entry": "Sounds/Tank_shot.wav",
+          "licenses": [
+            {
+              "entry": "license.txt",
+              "text": "https://craftpix.net/file-licenses/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Tank_walk.wav",
+      "runtime": "assets/audio/combat/tank_tracks.wav",
+      "sha256": "fe362435583a05a18ac5516e150409120a2f429cfbe9aa579a3c92464b599006",
+      "modifications": "None; original recording copied unchanged.",
+      "archive_matches": [
+        {
+          "archive": "craftpix-net-608340-free-futuristic-sounds-and-music-pack-for-pixel-games.zip",
+          "archive_sha256": "97d1863c11ecdd0db824d0e877244a281933abf2bfae38c5270de12de80f78fd",
+          "entry": "Sounds/Tank_walk.wav",
+          "licenses": [
+            {
+              "entry": "license.txt",
+              "text": "https://craftpix.net/file-licenses/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Crate_open_1.wav",
+      "runtime": "assets/audio/combat/crate_break.wav",
+      "sha256": "f5e1d661c8c04741fdc23b199d2ccec12f9d9adf15cc7339e316dc7792996f9a",
+      "modifications": "None; original recording copied unchanged.",
+      "archive_matches": [
+        {
+          "archive": "craftpix-net-608340-free-futuristic-sounds-and-music-pack-for-pixel-games.zip",
+          "archive_sha256": "97d1863c11ecdd0db824d0e877244a281933abf2bfae38c5270de12de80f78fd",
+          "entry": "Sounds/Crate_open_1.wav",
+          "licenses": [
+            {
+              "entry": "license.txt",
+              "text": "https://craftpix.net/file-licenses/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Punch_with_electricity.wav",
+      "runtime": "assets/audio/combat/tank_psychic.wav",
+      "sha256": "a67287e950a58097e5bb636075a1732154f399cbf21ff7690ef999ca12ee596e",
+      "modifications": "None; provisional psychic attack cue.",
+      "archive_matches": [
+        {
+          "archive": "craftpix-net-566158-free-futuristic-audio-pack-7-for-retro-and-pixel-games.zip",
+          "entry": "Sounds/Punch_with_electricity.wav",
+          "licenses": [
+            {
+              "entry": "license.txt",
+              "text": "https://craftpix.net/file-licenses/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

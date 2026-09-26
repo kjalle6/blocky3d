@@ -487,6 +487,7 @@ func _activate_camera_override() -> void:
 	if _camera_override_active:
 		return
 	_camera_override_active = true
+	camera.cinematic_override_enabled = true
 	_previous_camera_target = camera.target
 	_previous_camera_look_ahead = camera.look_ahead
 	_previous_camera_follow_response = camera.follow_response
@@ -573,6 +574,7 @@ func _restore_camera() -> void:
 	if not _camera_override_active or camera == null:
 		return
 	_camera_override_active = false
+	camera.cinematic_override_enabled = false
 	camera.target = (
 		_previous_camera_target
 		if is_instance_valid(_previous_camera_target)

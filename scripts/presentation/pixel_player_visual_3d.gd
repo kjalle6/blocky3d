@@ -313,6 +313,13 @@ func tick_authored_state(
 	_advance_handgun_shot(delta)
 
 
+func set_psychic_frozen(active: bool) -> void:
+	if _flash_tween != null and _flash_tween.is_valid():
+		_flash_tween.kill()
+	for sprite in [body, weapon, gun, gun_grip]:
+		sprite.modulate = Color(1.6, 0.5, 2.0) if active else Color.WHITE
+
+
 func flash_damage() -> void:
 	if _flash_tween != null and _flash_tween.is_valid():
 		_flash_tween.kill()

@@ -116,6 +116,8 @@ func _physics_process(_delta: float) -> void:
 				play("world/enemy_step", actor)
 			_states[id] = {"attack": attacking, "pursuit": pursuing, "frame": frame}
 		elif actor is HandgunEnemy3D:
+			if actor is TankEnemy3D:
+				_loop("world/tank_tracks", actor, nearby and actor.is_on_floor() and absf(actor.velocity.x) > 0.1 and not actor.is_defeated())
 			var warning: bool = actor._state == HandgunEnemy3D.CombatState.TELEGRAPH or actor._holding_notice_pose
 			if nearby and warning and not previous.get("warning", false): play("combat/enemy_notice", actor)
 			_states[id] = {"warning": warning}

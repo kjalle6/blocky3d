@@ -316,6 +316,21 @@ audio panel's unsaved mix is preserved when changing tools.
   80 completed actions. Rebuilds replace generated platform/spike children;
   painting a different template replaces that tile instance while keeping its ID.
 
+**Wall-jump scaffold** is under Platforms. Width, height and open passage height
+control its frame. Bright uprights and horizontal girders are solid; dark rear
+legs and diagonal braces stay open. The existing decorative props remain scenery.
+
+**Green Zone tank** is available under Enemies, with patrol speed, facing,
+left/right idle patrol limits and ammo on defeat (30 rounds by default). Combat
+pursuit can leave those limits, but stops at ledges, hazards, solid walls, or when
+a normally placed tank leaves the camera. Level 3's authored tank climb has its
+own engagement boundary and sheltered exit. A zero idle limit uses automatic
+ledge/wall turns. **Breakable
+wooden crate** is under Supplies. Each placed object is one box: it blocks shots,
+breaks after one tank shell or two ordinary hits, falls when unsupported, and
+currently gives no loot.
+Existing wooden scenery remains decorative.
+
 Inspect all effective layouts through the runner:
 
 ```powershell

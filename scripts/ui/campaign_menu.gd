@@ -10,6 +10,8 @@ var rows: VBoxContainer
 var menu_panel: PanelContainer
 var inventory_panel: PanelContainer
 var options_panel: PanelContainer
+var weapon_unlock_panel: PanelContainer
+var _unlock_confirm_pressed := false
 var _inventory_return_page := ""
 var launcher: VBoxContainer
 var notice: Label
@@ -49,6 +51,10 @@ func _ready() -> void:
 	center.add_child(inventory_panel)
 	inventory_panel.close_requested.connect(_leave_inventory)
 	inventory_panel.hide()
+	weapon_unlock_panel = preload("res://scripts/ui/weapon_unlock_panel.gd").new()
+	weapon_unlock_panel.name = "WeaponUnlock"
+	center.add_child(weapon_unlock_panel)
+	weapon_unlock_panel.continue_requested.connect(close)
 	overlay.hide()
 	launcher = VBoxContainer.new()
 	launcher.theme = STYLE.make_theme()
@@ -84,6 +90,9 @@ func notify_user(message: String) -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if overlay.visible and page == "weapon_unlock":
+		_handle_weapon_unlock_input(event)
+		return
 	if event.is_echo():
 		return
 	if event.is_action_pressed("inventory"):
@@ -136,6 +145,8 @@ func _leave_inventory() -> void:
 func _begin(title: String, next_page: String) -> void:
 	inventory_panel.unbind()
 	options_panel.hide()
+	weapon_unlock_panel.hide()
+	_unlock_confirm_pressed = false
 	menu_panel.show()
 	for child in rows.get_children():
 		rows.remove_child(child)
@@ -180,9 +191,39 @@ func _button(title: String, action: Callable, disabled := false) -> void:
 
 func close() -> void:
 	inventory_panel.unbind()
+	weapon_unlock_panel.hide()
+	_unlock_confirm_pressed = false
 	page = ""
 	overlay.hide()
 	get_tree().paused = false
+
+
+func show_weapon_unlock(weapon_id: StringName) -> void:
+	if weapon_id != PlayerWeapon.HANDGUN:
+		return
+	_begin("WEAPON UNLOCKED", "weapon_unlock")
+	menu_panel.hide()
+	weapon_unlock_panel.begin_reveal()
+
+
+func _handle_weapon_unlock_input(event: InputEvent) -> void:
+	# Mouse activation belongs to the Continue button. Keyboard/controller
+	# confirmation waits for a fresh press AND release, so Space cannot jump
+	# and an attack used to reach the pickup cannot dismiss the reveal.
+	if event is InputEventMouse:
+		return
+	get_viewport().set_input_as_handled()
+	if event.is_echo() or not weapon_unlock_panel.is_armed():
+		return
+	var confirm := event.is_action("ui_accept") or event.is_action("ui_cancel")
+	if event is InputEventJoypadButton and event.button_index in [JOY_BUTTON_A, JOY_BUTTON_B, JOY_BUTTON_START]:
+		confirm = true
+	if not confirm:
+		return
+	if event.is_pressed():
+		_unlock_confirm_pressed = true
+	elif _unlock_confirm_pressed:
+		weapon_unlock_panel.continue_button.pressed.emit()
 
 
 func show_pause() -> void:

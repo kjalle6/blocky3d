@@ -19,7 +19,7 @@ third in progress:
 | --- | --- | --- |
 | Arrival / Shoreline | Beach and forest paths, early combat, and the Double Jump introduction | Complete |
 | Overgrown Coastal Ascent | A dusk approach and connected cave route that teaches Wall Jump and Dash | Complete |
-| Green Zone Finale | Nighttime traversal, a descent into the underworks, and the first handgun encounter | In progress; the shooting lesson, later encounters, and boss remain |
+| Green Zone Finale | Nighttime traversal, the first handgun encounter, destructible cover and a tank fight leading into a wall-jump escape | In progress; later gunners and the boss remain |
 
 Current systems include player and enemy health, carried healing items, a paused
 inventory with two quick-use slots, ammunition and active reloads, supply chests,
@@ -87,6 +87,7 @@ and restart controls. **F7** shows hitboxes, **F10** shows the world grid, and
 | [Supply chests](docs/CHEST_LOOT.md) | Loot pools, fixed rewards, and chest authoring |
 | [Level designer](docs/LEVEL_DESIGNER.md) | Building, placement, testing, and saving layouts |
 | [Audio tuning](docs/AUDIO_TUNING.md) | Assigning and tuning sounds |
+| [Phantom Camera trial](docs/PHANTOM_CAMERA.md) | Editing the Level 3 camera rail and testing transitions |
 | [Asset sources and credits](docs/ASSET_CREDITS.md) | Art, font, audio, tool licenses, and remaining source questions |
 | [Technical foundation](docs/TECHNICAL_FOUNDATION.md) | Runtime architecture, rendering, and asset workflow |
 | [Maintenance priorities](docs/MAINTENANCE_PLAN.md) | Small fixes now, improvements alongside features, and release preparation |

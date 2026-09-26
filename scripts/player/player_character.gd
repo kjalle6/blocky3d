@@ -47,6 +47,7 @@ var inventory := PlayerInventory.new()
 var healing_remaining := 0.0
 var last_healing_amount := 0
 var _attack_lock_remaining := 0.0
+var _psychic_freeze_remaining := 0.0
 var _melee_hit: CombatHit
 var horizontal_speed := 0.0
 var _coyote_remaining := 0.0
@@ -118,6 +119,13 @@ func _physics_process(delta: float) -> void:
 
 	healing_remaining = maxf(0.0, healing_remaining - delta)
 	_attack_lock_remaining = maxf(0.0, _attack_lock_remaining - delta)
+	if is_psychically_frozen():
+		_psychic_freeze_remaining = maxf(0.0, _psychic_freeze_remaining - delta)
+		velocity = Vector3.ZERO
+		horizontal_speed = 0.0
+		if pixel_visual != null:
+			pixel_visual.set_psychic_frozen(is_psychically_frozen())
+		return
 	if Input.is_action_just_pressed("quick_item_1"):
 		use_quick_item(0)
 	if Input.is_action_just_pressed("quick_item_2"):
@@ -247,6 +255,7 @@ func kill(kind: StringName = DEATH_KIND_GENERIC) -> void:
 	if _dead or _developer_inspection_enabled or is_transition_running():
 		return
 	_dead = true
+	_clear_psychic_freeze()
 	if health.current > 0:
 		health.reset(health.maximum, 0)
 	_death_kind = kind
@@ -298,6 +307,7 @@ func disappear_for_transition() -> void:
 
 
 func reset_at(spawn_transform: Transform3D) -> void:
+	_clear_psychic_freeze()
 	health.reset(combat.maximum_hp)
 	_attack_lock_remaining = 0.0
 	healing_remaining = 0.0
@@ -339,7 +349,7 @@ func reset_at(spawn_transform: Transform3D) -> void:
 
 
 func can_save_state(stationary := true) -> bool:
-	return not _dead and not is_transition_running() and not _developer_inspection_enabled and not is_attacking() and not player_handgun.is_reloading() and healing_remaining <= 0.0 and _attack_lock_remaining <= 0.0 and (not stationary or absf(velocity.x) < 0.1) and absf(velocity.y) < 0.1
+	return not _dead and not is_psychically_frozen() and not is_transition_running() and not _developer_inspection_enabled and not is_attacking() and not player_handgun.is_reloading() and healing_remaining <= 0.0 and _attack_lock_remaining <= 0.0 and (not stationary or absf(velocity.x) < 0.1) and absf(velocity.y) < 0.1
 
 
 func is_dead() -> bool:
@@ -498,6 +508,41 @@ func developer_melee_bounds() -> Rect2:
 	)
 
 
+func is_psychically_frozen() -> bool:
+	return _psychic_freeze_remaining > 0.0
+
+
+func receive_psychic_hit(source_position: Vector3, hit: CombatHit, duration: float) -> bool:
+	# Mark the freeze before damage feedback: this attack never pauses the world.
+	var previous_freeze := _psychic_freeze_remaining
+	_psychic_freeze_remaining = maxf(previous_freeze, duration)
+	if not receive_enemy_hit(source_position, hit):
+		_psychic_freeze_remaining = previous_freeze
+		return false
+	if _dead: return true
+	_dash_remaining = 0.0
+	_double_jump_visual_remaining = 0.0
+	_wall_sliding = false
+	_wall_jump_control_lock_remaining = 0.0
+	_jump_buffer_remaining = 0.0
+	_coyote_remaining = 0.0
+	_descending_before_slide = false
+	floor_snap_length = 0.0
+	velocity = Vector3.ZERO
+	horizontal_speed = 0.0
+	player_handgun.cancel_reload()
+	if pixel_visual != null:
+		pixel_visual.tick_authored_state(0.0, "hurt", _facing_sign > 0.0)
+		pixel_visual.set_psychic_frozen(true)
+	return true
+
+
+func _clear_psychic_freeze() -> void:
+	_psychic_freeze_remaining = 0.0
+	if pixel_visual != null:
+		pixel_visual.set_psychic_frozen(false)
+
+
 func receive_enemy_hit(source_position: Vector3, hit: CombatHit) -> bool:
 	if _dead or _developer_inspection_enabled or is_transition_running():
 		return false
@@ -512,7 +557,7 @@ func receive_enemy_hit(source_position: Vector3, hit: CombatHit) -> bool:
 
 
 func use_quick_item(slot: int) -> bool:
-	if _dead or is_transition_running() or _developer_inspection_enabled or healing_remaining > 0.0:
+	if _dead or is_psychically_frozen() or is_transition_running() or _developer_inspection_enabled or healing_remaining > 0.0:
 		return false
 	if slot < 0 or slot >= inventory.quick_slots.size():
 		return false
@@ -545,6 +590,7 @@ func capture_state() -> Dictionary:
 
 
 func restore_state(data: Dictionary) -> void:
+	_clear_psychic_freeze()
 	health.reset(int(data.health.maximum), int(data.health.current))
 	inventory.restore(data.inventory)
 	var weapons: Array[StringName] = []
@@ -567,6 +613,7 @@ func set_developer_inspection_enabled(enabled: bool) -> void:
 	if _developer_inspection_enabled == enabled:
 		return
 	_developer_inspection_enabled = enabled
+	_clear_psychic_freeze()
 	velocity = Vector3.ZERO
 	horizontal_speed = 0.0
 	_dash_remaining = 0.0
@@ -748,7 +795,7 @@ func _cancel_active_attack(apply_pending: bool) -> void:
 
 
 func _perform_melee_hit() -> void:
-	for candidate in get_tree().get_nodes_in_group("melee_target"):
+	for candidate in get_tree().get_nodes_in_group("melee_target") + get_tree().get_nodes_in_group("breakable_cover"):
 		if not candidate is Node3D or not candidate.has_method("receive_melee_hit"):
 			continue
 		# Defeated actors remain in the group during their death presentation.
@@ -936,6 +983,8 @@ func _update_wall_contact() -> void:
 
 func _update_pixel_visual(delta: float) -> void:
 	if pixel_visual == null:
+		return
+	if is_psychically_frozen():
 		return
 	_update_weapon_presentation()
 	pixel_visual.tick(

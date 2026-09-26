@@ -1,14 +1,44 @@
-[gd_scene load_steps=16 format=3]
+[gd_scene load_steps=34 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="2_platform"]
 [ext_resource type="Resource" path="res://resources/presentation/platform_styles/green_zone.tres" id="3_green_style"]
-[ext_resource type="Resource" path="res://resources/presentation/backgrounds/green_zone_night.tres" id="4_background"]
+[ext_resource type="Resource" path="res://resources/presentation/backgrounds/green_zone_shooter_climb.tres" id="4_background"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/stone_cover.png" id="5_cover"]
 [ext_resource type="PackedScene" path="res://scenes/level/level_checkpoint.tscn" id="6_checkpoint"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/handgun_enemy.tscn" id="7_handgun_enemy"]
 [ext_resource type="Script" path="res://scripts/cutscene/green_zone_shooter_intro_3d.gd" id="8_shooter_intro"]
 [ext_resource type="PackedScene" path="res://scenes/pickups/handgun_pickup.tscn" id="9_handgun_pickup"]
+[ext_resource type="Resource" path="res://resources/presentation/platform_styles/green_zone_stone.tres" id="10_stone"]
+[ext_resource type="PackedScene" path="res://scenes/hazards/pixel_spike_row.tscn" id="11_spikes"]
+[ext_resource type="Script" path="res://scripts/hazards/hazard_3d.gd" id="12_hazard"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/green_zone_tank.tscn" id="13_tank"]
+[ext_resource type="PackedScene" path="res://scenes/props/breakable_crate.tscn" id="14_crates"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/catalog/props/fence/1.png" id="15_fence"]
+[ext_resource type="Script" path="res://scripts/level/tank_climb_encounter.gd" id="16_climb"]
+[ext_resource type="PackedScene" path="res://scenes/props/wall_jump_scaffold.tscn" id="18_scaffold"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/catalog/props/bushes/6.png" id="19_bush"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/catalog/props/grass/3.png" id="20_grass"]
+
+[ext_resource type="Script" path="res://scripts/camera/phantom_pixel_camera_3d.gd" id="21_phantom_adapter"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="22_phantom_host"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="23_phantom_camera"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/resources/camera_3d_resource.gd" id="24_camera_resource"]
+
+[ext_resource type="Script" path="res://scripts/pickups/item_reward_3d.gd" id="25_reward"]
+
+[sub_resource type="Resource" id="Camera3DResource_pixel"]
+script = ExtResource("24_camera_resource")
+projection = 1
+size = 12.9375
+
+[sub_resource type="Curve3D" id="Curve3D_tank_camera"]
+bake_interval = 0.1
+_data = {
+"points": PackedVector3Array(0, 0, 0, 12, 0, 0, 11.52, 2.7, 24, -8, 0, 0, 3, 0, 0, 60, 2.7, 24, -3, 0, 0, 1.5, 0, 0, 69, 4.8, 24, -1.5, 0, 0, 3, 0, 0, 80.64, 4.8, 24, -4, 0, 0, 3, 0, 0, 87, 25.18, 24, -2, 0, 0, 0, 0, 0, 93.44, 25.18, 24),
+"tilts": PackedFloat32Array(0, 0, 0, 0, 0, 0)
+}
+point_count = 6
 
 [sub_resource type="Environment" id="Environment_night"]
 background_mode = 1
@@ -25,7 +55,10 @@ adjustment_saturation = 0.76
 size = Vector3(0.24, 12.8, 2)
 
 [sub_resource type="BoxShape3D" id="Shape_kill_plane"]
-size = Vector3(60, 1, 8)
+size = Vector3(132, 1, 8)
+
+[sub_resource type="BoxShape3D" id="Shape_dash_pit_fill"]
+size = Vector3(14.08, 10.6, 1.2)
 
 [sub_resource type="BoxShape3D" id="Shape_cover_tall"]
 size = Vector3(1.6, 1.55, 1.2)
@@ -44,15 +77,15 @@ environment = SubResource("Environment_night")
 
 [node name="RouteExtent" parent="." index="2"]
 route_start_x = 0.0
-route_end_x = 40.96
+route_end_x = 104.96
 
 [node name="Background" parent="." index="3"]
 profile = ExtResource("4_background")
 
 [node name="ShooterEncounterGround" type="StaticBody3D" parent="Platforms" index="0"]
-position = Vector3(20.48, -3.2, 0)
+position = Vector3(15.36, -6.4, 0)
 script = ExtResource("2_platform")
-size = Vector3(40.96, 6.4, 2)
+size = Vector3(30.72, 12.8, 2)
 style = ExtResource("3_green_style")
 cap_bottom_edge = false
 
@@ -63,10 +96,69 @@ position = Vector3(-0.12, 6.4, 0)
 shape = SubResource("Shape_boundary")
 
 [node name="WipRightBoundary" type="StaticBody3D" parent="Platforms" index="2"]
-position = Vector3(41.08, 6.4, 0)
+position = Vector3(105.08, 31.36, 0)
 
 [node name="Collision" type="CollisionShape3D" parent="Platforms/WipRightBoundary" index="0"]
 shape = SubResource("Shape_boundary")
+
+[node name="DashPitBed" type="StaticBody3D" parent="Platforms" index="3"]
+position = Vector3(37.76, -8.8, 0)
+script = ExtResource("2_platform")
+size = Vector3(14.08, 10.24, 2)
+face_depth = 1.0
+style = ExtResource("10_stone")
+cap_left_edge = false
+cap_right_edge = false
+cap_bottom_edge = false
+metadata/layout_locked = "Enclosed dash pit. Keep the bed, full-width spikes and lethal fill aligned."
+
+[node name="TankClearingGround" type="StaticBody3D" parent="Platforms" index="4"]
+position = Vector3(58.88, -6.4, 0)
+script = ExtResource("2_platform")
+size = Vector3(28.16, 12.8, 2)
+style = ExtResource("3_green_style")
+cap_right_edge = false
+cap_bottom_edge = false
+
+[node name="TankClimbScaffold" parent="Platforms" instance=ExtResource("18_scaffold")]
+position = Vector3(65.92, 0, 0)
+height = 35.84
+maintenance_ledge_y = 30.72
+metadata/layout_locked = "Solid steel wall-jump frame; keep its underpass and the tank firing lane open."
+
+[node name="TankClimbUpperGround" type="StaticBody3D" parent="Platforms"]
+position = Vector3(88.96, 6.4, 0)
+script = ExtResource("2_platform")
+size = Vector3(32, 38.4, 2)
+style = ExtResource("3_green_style")
+cap_bottom_edge = false
+metadata/layout_locked = "Wall-jump exit and solid shelter from the tank's upward shots."
+
+[node name="DashPitSpikes" parent="Hazards" instance=ExtResource("11_spikes")]
+position = Vector3(37.76, -3.68, 0)
+row_width = 14.08
+collision_end_inset = 0.0
+
+[node name="DashPitFill" type="Area3D" parent="Hazards"]
+position = Vector3(37.76, -8.62, 0)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("12_hazard")
+
+[node name="Collision" type="CollisionShape3D" parent="Hazards/DashPitFill"]
+shape = SubResource("Shape_dash_pit_fill")
+
+[node name="ClimbLowerWallSpikes" parent="Hazards" instance=ExtResource("11_spikes")]
+position = Vector3(72.96, 10.24, 0)
+rotation = Vector3(0, 0, 1.5707963)
+row_width = 2.56
+metadata/layout_locked = "Right-wall climb hazard; keep safe wall contacts above and below."
+
+[node name="ClimbUpperWallSpikes" parent="Hazards" instance=ExtResource("11_spikes")]
+position = Vector3(72.96, 19.2, 0)
+rotation = Vector3(0, 0, 1.5707963)
+row_width = 2.56
+metadata/layout_locked = "Second right-wall climb hazard; leave the final exit lip clear."
 
 [node name="ShooterCover" type="StaticBody3D" parent="Props" index="0"]
 position = Vector3(15.36, 0, 0)
@@ -98,13 +190,30 @@ position = Vector3(0.64, 0.7, 0)
 [node name="Player" parent="." index="9"]
 position = Vector3(0.64, 0.7, 0)
 
-[node name="GameplayCamera" parent="." index="10"]
+[node name="GameplayCamera" parent="." index="10" node_paths=PackedStringArray("phantom_camera")]
+script = ExtResource("21_phantom_adapter")
+projection = 1
+size = 12.9375
+phantom_camera = NodePath("../CameraDirection/RouteCamera")
+upper_follow_enabled = true
+upper_follow_start_y = 9.0
+upper_follow_return_y = 7.0
+upper_route_return_y = 26.8
+upper_follow_offset = Vector3(4, -1, 24)
 look_ahead = 5.76
 minimum_center_x = 11.52
-maximum_center_x = 29.44
+maximum_center_x = 93.44
+vertical_follow_enabled = true
+vertical_anchor_y = 0.7
+maximum_vertical_offset = 7.68
+
+[node name="PhantomCameraHost" type="Node" parent="GameplayCamera"]
+script = ExtResource("22_phantom_host")
+host_layers = 2
+interpolation_mode = 1
 
 [node name="KillPlane" parent="." index="11"]
-position = Vector3(20.48, -8, 0)
+position = Vector3(42.24, -15, 0)
 
 [node name="Collision" parent="KillPlane" index="0"]
 shape = SubResource("Shape_kill_plane")
@@ -159,4 +268,147 @@ position = Vector3(23.04, 0.18, 0)
 [node name="HandgunPickup" parent="ShooterEncounterStaging/GunDropAnchor" index="0" instance=ExtResource("9_handgun_pickup")]
 source_enemy_path = NodePath("../../ShooterEnemyAnchor/HandgunEnemy")
 
+[node name="TankEncounter" type="Node3D" parent="."]
+
+[node name="SafeLanding" type="Marker3D" parent="TankEncounter"]
+position = Vector3(48.64, 0, 0)
+
+[node name="InnerCrates" type="Node3D" parent="TankEncounter"]
+position = Vector3(51.84, 0, 0)
+
+[node name="Left" parent="TankEncounter/InnerCrates" instance=ExtResource("14_crates")]
+position = Vector3(-0.64, 0.48, 0)
+flip_art = false
+metadata/layout_id = "tank_cover_inner_left"
+metadata/layout_kind = "crate"
+
+[node name="Right" parent="TankEncounter/InnerCrates" instance=ExtResource("14_crates")]
+position = Vector3(0.64, 0.48, 0)
+flip_art = true
+metadata/layout_id = "tank_cover_inner_right"
+metadata/layout_kind = "crate"
+
+[node name="Top" parent="TankEncounter/InnerCrates" instance=ExtResource("14_crates")]
+position = Vector3(-0.68, 1.44, 0)
+flip_art = false
+metadata/layout_id = "tank_cover_inner_top"
+metadata/layout_kind = "crate"
+
+[node name="OuterCrates" type="Node3D" parent="TankEncounter"]
+position = Vector3(55.04, 0, 0)
+
+[node name="Left" parent="TankEncounter/OuterCrates" instance=ExtResource("14_crates")]
+position = Vector3(-0.64, 0.48, 0)
+flip_art = false
+metadata/layout_id = "tank_cover_outer_left"
+metadata/layout_kind = "crate"
+
+[node name="Right" parent="TankEncounter/OuterCrates" instance=ExtResource("14_crates")]
+position = Vector3(0.64, 0.48, 0)
+flip_art = true
+metadata/layout_id = "tank_cover_outer_right"
+metadata/layout_kind = "crate"
+
+[node name="Top" parent="TankEncounter/OuterCrates" instance=ExtResource("14_crates")]
+position = Vector3(0.68, 1.44, 0)
+flip_art = false
+metadata/layout_id = "tank_cover_outer_top"
+metadata/layout_kind = "crate"
+
+[node name="Tank" parent="TankEncounter" instance=ExtResource("13_tank")]
+position = Vector3(63.36, 0.45, 0)
+projectile_distance = 48.0
+patrol_left_distance = 5.76
+patrol_right_distance = 1.92
+landing_gate_path = NodePath("../SafeLanding")
+climb_encounter_path = NodePath("../Climb")
+metadata/layout_id = "clearing_tank"
+metadata/layout_kind = "tank"
+
+[node name="FarCover" type="Node3D" parent="TankEncounter"]
+position = Vector3(74.24, 25.6, 0)
+
+[node name="Left" parent="TankEncounter/FarCover" instance=ExtResource("14_crates")]
+position = Vector3(-0.64, 0.48, 0)
+flip_art = false
+metadata/layout_id = "tank_cover_far_left"
+metadata/layout_kind = "crate"
+
+[node name="Right" parent="TankEncounter/FarCover" instance=ExtResource("14_crates")]
+position = Vector3(0.64, 0.48, 0)
+flip_art = true
+metadata/layout_id = "tank_cover_far_right"
+metadata/layout_kind = "crate"
+
+[node name="Top" parent="TankEncounter/FarCover" instance=ExtResource("14_crates")]
+position = Vector3(-0.68, 1.44, 0)
+flip_art = false
+metadata/layout_id = "tank_cover_far_top"
+metadata/layout_kind = "crate"
+
+[node name="FenceLeft" type="Sprite3D" parent="TankEncounter"]
+position = Vector3(59.52, 1.12, 0.85)
+texture = ExtResource("15_fence")
+pixel_size = 0.04
+texture_filter = 0
+shaded = false
+modulate = Color(0.52, 0.64, 0.72, 1)
+
+[node name="FenceRight" type="Sprite3D" parent="TankEncounter"]
+position = Vector3(67.2, 1.12, 0.85)
+texture = ExtResource("15_fence")
+pixel_size = 0.04
+texture_filter = 0
+shaded = false
+modulate = Color(0.52, 0.64, 0.72, 1)
+
+[node name="Climb" type="Node3D" parent="TankEncounter"]
+script = ExtResource("16_climb")
+encounter_top_y = 28.16
+
+[node name="FiringPosition" type="Marker3D" parent="TankEncounter/Climb"]
+position = Vector3(70.72, 0.45, 0)
+
+[node name="ScaffoldReward" type="Area3D" parent="TankEncounter/Climb"]
+position = Vector3(65.28, 35.84, 0)
+script = ExtResource("25_reward")
+presentation = 1
+loot_pool = &"rare_supplies"
+metadata/layout_id = "scaffold_rooftop_reward"
+metadata/layout_kind = "chest"
+metadata/layout_removable = true
+
+[node name="UpperBush" type="Sprite3D" parent="TankEncounter/Climb"]
+position = Vector3(87.04, 26.02, 1.08)
+texture = ExtResource("19_bush")
+pixel_size = 0.04
+texture_filter = 0
+shaded = false
+
+[node name="ExitGrass" type="Sprite3D" parent="TankEncounter/Climb"]
+position = Vector3(76.8, 25.82, 1.08)
+texture = ExtResource("20_grass")
+pixel_size = 0.04
+texture_filter = 0
+shaded = false
+
 [editable path="Player"]
+
+[node name="CameraDirection" type="Node3D" parent="."]
+
+[node name="CameraRail" type="Path3D" parent="CameraDirection"]
+curve = SubResource("Curve3D_tank_camera")
+
+[node name="RouteCamera" type="Node3D" parent="CameraDirection" node_paths=PackedStringArray("follow_target", "follow_path")]
+position = Vector3(11.52, 2.7, 24)
+script = ExtResource("23_phantom_camera")
+priority = 10
+follow_mode = 4
+follow_target = NodePath("../../Player")
+follow_path = NodePath("../CameraRail")
+follow_offset = Vector3(4, 1.7, 24)
+follow_damping = true
+follow_damping_value = Vector3(0.25, 0.35, 0.1)
+tween_on_load = false
+host_layers = 2
+camera_3d_resource = SubResource("Camera3DResource_pixel")

@@ -4,6 +4,7 @@ extends SceneTree
 
 func _init() -> void:
 	call_deferred("_validate")
+	create_timer(45).timeout.connect(func(): printerr("Project smoke check timed out."); quit(1))
 
 
 func _validate() -> void:
@@ -111,7 +112,9 @@ func _validate() -> void:
 		"Level 1 must expose its complete production route."
 	)
 	assert(level.player.movement.ideal_jump_height() > 2.0)
-	assert(level.get_node("Platforms").get_child_count() == 15)
+	for terrain_name in ["SandArrival", "ThornBasinA", "AerialLanding", "GardenExitPit"]:
+		assert(level.get_node_or_null("Platforms/" + terrain_name) != null,
+			"Level 1 must retain its arrival, enclosed pits, and aerial landing.")
 	assert(level.get_node_or_null("ApproachPatrol") is StompableEnemy3D)
 	assert(level.get_node_or_null("DoubleJumpPickup") is AbilityPickup3D)
 	var level_2_transition := level.get_node_or_null(
@@ -216,7 +219,7 @@ func _validate_gun_entry(game_root: Node, definition: LevelDefinition, entry: Le
 	assert(game_root.current_level_definition == definition)
 	assert(game_root.current_world_definition == null)
 	assert(level.scene_file_path == entry.scene.resource_path)
-	assert(level.route_extent.route_end_x == 40.96)
+	assert(is_equal_approx(level.route_extent.route_end_x, 104.96))
 	assert(is_equal_approx(level.player.global_position.x, level.spawn_point.global_position.x))
 	assert(level.active_checkpoint_index() == -1)
 	for ability_id in definition.assumed_owned_abilities:

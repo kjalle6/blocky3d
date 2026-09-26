@@ -89,9 +89,74 @@ func _run() -> void:
 	target.global_position = Vector3(18.0, 17.1, 0.0)
 	camera.snap_to_target()
 	_assert_camera_y(camera, BASE_CAMERA_Y + 3.12)
+	# Region changes must ease their initial acceleration on both axes, including
+	# quick boundary reversals. Normal tracking and explicit reset remain direct.
+	for fps in [30.0, 60.0, 144.0]:
+		_check_framing_handover(camera, target, region, 1.0 / fps)
 
 	print("Vertical camera-region validation passed.")
 	quit(0)
+
+
+func _check_framing_handover(camera: PixelSideCamera3D, target: Node3D, region: VerticalCameraRegion3D, delta: float) -> void:
+	region.position = Vector3(10.0, 2.0, 0.0)
+	region.size = Vector2(20.0, 20.0)
+	region.horizontal_focus_enabled = true
+	camera.look_ahead = 2.6
+	target.position = Vector3(-0.05, 7.1, 0)
+	camera.snap_to_target()
+	var before := camera.global_position
+	target.position.x = 0.05
+	camera._process(delta)
+	assert(camera.active_horizontal_focus_region() == region)
+	assert(absf(camera.global_position.x - before.x) < 0.04,
+		"Entering focus should ease in, not lurch toward its new centre.")
+	assert(absf(camera.global_position.y - before.y) < 0.04)
+	for frame in ceili(1.8 / delta):
+		camera._process(delta)
+		_assert_pixel_phase(camera)
+	assert(absf(camera.global_position.x - 10.0) < 0.03)
+	_assert_camera_y(camera, BASE_CAMERA_Y + 3.12)
+	# A larger exit shift, like leaving the tank shaft, needs the same easing.
+	target.position.x = 20.05
+	before = camera.global_position
+	camera._process(delta)
+	assert(absf(camera.global_position.x - before.x) < 0.04)
+	assert(absf(camera.global_position.y - before.y) < 0.04)
+	for frame in ceili(0.1 / delta): camera._process(delta)
+	target.position.x = 19.95
+	before = camera.global_position
+	camera._process(delta)
+	assert(camera.global_position.distance_to(before) < 0.25, "Re-entry must continue from the in-flight framing.")
+	for frame in ceili(0.1 / delta): camera._process(delta)
+	target.position.x = 20.05
+	for frame in ceili(1.8 / delta): camera._process(delta)
+	assert(absf(camera.global_position.x - 22.65) < 0.03)
+	_assert_camera_y(camera, BASE_CAMERA_Y)
+	# An X-only framing change must not defer a simultaneous vertical climb.
+	region.vertical_framing_enabled = false
+	camera.vertical_follow_enabled = true
+	camera.vertical_anchor_y = 0.7
+	camera.maximum_vertical_offset = 8.0
+	target.position = Vector3(-0.05, 0.7, 0)
+	camera.snap_to_target()
+	target.position = Vector3(0.05, 1.7, 0)
+	camera._process(delta)
+	_assert_camera_y(camera, BASE_CAMERA_Y + (1.0 - exp(-7.0 * delta)))
+	# Loading within a handover restores the exact authored composition.
+	region.vertical_framing_enabled = true
+	camera.vertical_follow_enabled = false
+	target.position = Vector3(5, 7.1, 0)
+	camera.snap_to_target()
+	assert(absf(camera.global_position.x - 10.0) < 0.02)
+	_assert_camera_y(camera, BASE_CAMERA_Y + 3.12)
+	target.position = Vector3(40, 0.7, 0)
+	camera.snap_to_target()
+	target.position.x = 41
+	camera._process(delta)
+	var expected_x := 42.6 + (1.0 - exp(-camera.follow_response * delta))
+	assert(absf(camera.global_position.x - expected_x) <= camera.world_units_per_screen_pixel(),
+		"Ordinary follow response must remain unchanged.")
 
 
 func _assert_camera_y(camera: PixelSideCamera3D, expected_y: float) -> void:

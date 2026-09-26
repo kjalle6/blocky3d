@@ -146,8 +146,9 @@ func apply_state(data: Dictionary, restore_position := false) -> void:
 			if absf(local_player.x) <= bounds.x and absf(local_player.y) <= bounds.y:
 				point.set("_activated", true)
 	# Pickups and logical intro controllers see restored ownership/flags, after
-	# fresh actors have been reset. Ordinary enemies always restart at full HP.
-	for group in ["ability_pickup", "weapon_pickup", "item_reward"]:
+	# fresh actors have been reset. Tanks restore their saved defeat/reward;
+	# other ordinary enemies still restart at full HP.
+	for group in ["ability_pickup", "weapon_pickup", "item_reward", "breakable_cover", "persistent_enemy"]:
 		for node in session.get_tree().get_nodes_in_group(group):
 			if session.is_ancestor_of(node) and node.has_method("reset_run"):
 				node.reset_run()
@@ -180,6 +181,10 @@ func safety_error(manual := true) -> String:
 	for enemy in session.get_tree().get_nodes_in_group("melee_target"):
 		if not session.is_ancestor_of(enemy):
 			continue
+		if enemy.is_in_group("persistent_enemy") and enemy.is_defeated():
+			continue
+		if enemy is TankEnemy3D and enemy.is_pursuing():
+			return "Lose pursuing enemies before saving."
 		if enemy is StompableEnemy3D and not enemy.is_defeated() and enemy.is_pursuing():
 			return "Lose pursuing enemies before saving."
 		var radius := float(enemy.detection_range) + 1.0 if enemy is HandgunEnemy3D else 5.0

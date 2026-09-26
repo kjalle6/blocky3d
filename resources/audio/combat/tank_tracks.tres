@@ -1,0 +1,10 @@
+[gd_resource type="Resource" load_steps=3 format=3]
+[ext_resource type="Script" path="res://scripts/audio/sound_event_bank.gd" id="1"]
+[ext_resource type="AudioStream" path="res://assets/audio/combat/tank_tracks.wav" id="2"]
+[resource]
+script = ExtResource("1")
+clips = Array[AudioStream]([ExtResource("2")])
+labels = PackedStringArray("Tank walk")
+volume_db = -22.0
+looping = true
+use_room_reverb = false
