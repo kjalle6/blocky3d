@@ -2,6 +2,7 @@ extends Control
 const CATALOG := preload("res://scripts/developer/level_object_catalog.gd")
 const LIBRARY := preload("res://scripts/developer/level_object_library.gd")
 const THUMBNAIL := preload("res://scripts/developer/level_object_thumbnail.gd")
+const PAGE_SIZE := 48
 var designer: CanvasLayer
 var selected_id := "gz_tile_02"
 var category := "All objects"
@@ -14,6 +15,9 @@ var _categories: VBoxContainer
 var _hint: Label
 var _place_button: Button
 var _results: Array[String] = []
+var _pager: HBoxContainer
+var _page := 0
+var _scroll: ScrollContainer
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -50,6 +54,15 @@ func _ready() -> void:
 	_search.placeholder_text = "Search objects…"
 	filters.add_child(_search)
 	_search.text_changed.connect(func(_text: String) -> void: _refresh())
+	var layer_picker := preload("res://scripts/developer/level_decoration_layer_picker.gd").new(designer.decoration_layer, "New decoration layer")
+	filters.add_child(layer_picker)
+	layer_picker.layer_changed.connect(designer.set_decoration_layer)
+	designer.decoration_layer_changed.connect(layer_picker.set_layer)
+	_pager = preload("res://scripts/developer/level_catalog_pager.gd").new()
+	body.add_child(_pager)
+	_pager.page_changed.connect(func(step: int) -> void:
+		_page += step
+		_refresh(false))
 	var columns := HBoxContainer.new()
 	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	columns.add_theme_constant_override("separation", 18)
@@ -62,6 +75,7 @@ func _ready() -> void:
 			category = name
 			_refresh())
 	var scrolling := ScrollContainer.new()
+	_scroll = scrolling
 	scrolling.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scrolling.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	columns.add_child(scrolling)
@@ -85,8 +99,7 @@ func _ready() -> void:
 	detail_scroll.add_child(_detail)
 	_place_button = _button(detail_column, "Place in level", _place)
 	_place_button.add_theme_color_override("font_color", Color("73ffbc"))
-	_hint = _label(detail_column, "", 16)
-	_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_hint = _label(detail_column, "", 16, true)
 	resized.connect(_layout)
 	visible = false
 	_layout()
@@ -112,18 +125,24 @@ func _layout() -> void:
 	_window.size = extent
 	_cards.columns = 3 if extent.x >= 1090 else 2
 
-func _refresh() -> void:
+func _refresh(reset_page := true) -> void:
 	_results.clear()
 	for id in CATALOG.ENTRIES:
 		var entry: Dictionary = CATALOG.ENTRIES[id]
 		if not LIBRARY.matches(entry, _zone.get_item_text(_zone.selected), category, _search.text): continue
 		_results.append(id)
 	if selected_id not in _results: selected_id = _results[0] if not _results.is_empty() else ""
+	if reset_page: _page = maxi(0, _results.find(selected_id)) / PAGE_SIZE
+	_page = clampi(_page, 0, maxi(0, ceili(float(_results.size()) / PAGE_SIZE) - 1))
+	var page_ids := _results.slice(_page * PAGE_SIZE, (_page + 1) * PAGE_SIZE)
+	if selected_id not in page_ids: selected_id = page_ids[0] if not page_ids.is_empty() else ""
+	_pager.update_page(_page, _results.size(), PAGE_SIZE)
+	_scroll.scroll_vertical = 0
 	for button in _categories.get_children(): button.modulate = Color("73ffbc") if button.text == category else Color.WHITE
 	for child in _cards.get_children():
 		_cards.remove_child(child)
 		child.queue_free()
-	for id in _results:
+	for id in page_ids:
 		var card := Button.new()
 		card.set_meta("catalog_id", id)
 		card.custom_minimum_size = Vector2(154, 154)
@@ -143,8 +162,7 @@ func _refresh() -> void:
 		thumb.catalog_id = id
 		thumb.custom_minimum_size.y = 96
 		content.add_child(thumb)
-		var caption := _label(content, LIBRARY.title(id), 16)
-		caption.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		var caption := _label(content, LIBRARY.title(id), 16, true)
 		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		caption.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		card.pressed.connect(func() -> void:
@@ -176,18 +194,15 @@ func _refresh_detail() -> void:
 		child.queue_free()
 	if selected_id.is_empty(): return
 	var entry: Dictionary = CATALOG.ENTRIES[selected_id]
-	var heading := _label(_detail, LIBRARY.title(selected_id), 22)
-	heading.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_label(_detail, LIBRARY.title(selected_id), 22, true)
 	var thumb := THUMBNAIL.new()
 	thumb.catalog_id = selected_id
 	thumb.custom_minimum_size.y = 140
 	_detail.add_child(thumb)
-	var description := _label(_detail, LIBRARY.description(selected_id), 17)
-	description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_label(_detail, LIBRARY.description(selected_id), 17, true)
 	_place_button.text = "Build with this block" if entry.kind == "tile" else "Place in level"
 	_hint.text = "Click or drag to build.\nOne stroke = one Undo.\nRight-click or Esc to finish." if entry.kind == "tile" else "Click to place once.\nShift-click to keep placing.\nRight-click or Esc to cancel."
-	var placement := _label(_detail, "Place or drag across the tile grid." if entry.anchor == "grid" else "Place it in the air." if entry.anchor == "air" else "The preview sits on nearby floors automatically.", 16)
-	placement.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var placement := _label(_detail, "Place or drag across the tile grid." if entry.anchor == "grid" else "Place it in the air." if entry.anchor == "air" else "The preview sits on nearby floors automatically.", 16, true)
 	placement.add_theme_color_override("font_color", Color("b3d6e4"))
 
 func _place() -> void:
@@ -206,8 +221,11 @@ func _gui_input(event: InputEvent) -> void:
 		close()
 		accept_event()
 
-func _label(parent: Node, text: String, font_size: int) -> Label:
+func _label(parent: Node, text: String, font_size: int, wrap := false) -> Label:
 	var label := Label.new()
+	# Set wrapping before insertion so long asset descriptions never expand
+	# the window's containers to their unwrapped text width.
+	if wrap: label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.text = text
 	label.add_theme_font_size_override("font_size", font_size)
 	parent.add_child(label)

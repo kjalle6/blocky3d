@@ -624,6 +624,9 @@ reward needs additional persisted state.
 
 ## Asset pipeline
 
+Source manifests, license records, and the short promotion workflow are indexed
+in [Asset sources and credits](ASSET_CREDITS.md).
+
 The complete downloaded packs and editable source documents remain outside the
 repository at `D:\GodotProjects\blocky3dassets`. Runtime-ready visual files are
 mirrored without modification beneath `assets/library` so the full owned

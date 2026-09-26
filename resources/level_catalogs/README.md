@@ -1,7 +1,7 @@
 # Zone asset catalogs
 
-Accepted catalog checkpoint: 2026-09-12. Green Zone and Beach are available
-through the shared Build/sidebar/full-browser workflow. Future zones extend
+All installed terrain packs and the world-building prop collections are available
+through the shared Build/sidebar/full-browser workflow. Additional zones extend
 these catalogs without requiring another browser. See
 [the designer guide](../../docs/LEVEL_DESIGNER.md).
 
@@ -24,6 +24,15 @@ and Pillow to regenerate the metadata and promote byte-for-byte images from
 `assets/library/tilesets/green_zone` to `assets/art/green_zone/catalog`.
 The generator refuses to overwrite a production image with different bytes.
 `assets/art/green_zone/catalog/manifest.json` records source/output hashes.
+
+`world_scenery.json` adds 2,129 entries from the other terrain zones and the
+environment/vehicle collections. Regenerate with Python + Pillow using
+`tools/prepare_world_scenery_catalog.py`. Original images and supplied licenses
+are retained under `assets/art/world_scenery`, with source paths and SHA-256
+hashes in its manifest. Marketing previews, overview atlases, duplicate graffiti
+copies and enlarged duplicates are omitted. Screen backgrounds, character
+combat sheets and GUI assets continue to use their own systems. The browsers
+page results so the full collection does not create thousands of UI controls.
 
 To add another terrain/prop zone, prepare another JSON catalog using the same
 entry types and a new stable ID prefix. Promote its approved runtime images

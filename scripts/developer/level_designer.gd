@@ -8,6 +8,7 @@ const PREVIEW := preload("res://scripts/developer/level_layout_preview.gd")
 const MIX := preload("res://scripts/audio/movement_audio_mix.gd")
 const CATALOG := preload("res://scripts/developer/level_object_catalog.gd")
 enum Mode { CLOSED, EDITING, TESTING, SAVING }
+signal decoration_layer_changed(value: int)
 
 var mode := Mode.CLOSED
 var document: RefCounted
@@ -21,6 +22,7 @@ var canvas: Control
 var context_menu: PopupMenu
 var object_browser: Control
 var _placement_record: Dictionary = {}
+var decoration_layer := 0
 var _ghost_root: Node3D
 var _ghost: Node3D
 var tool := "move"
@@ -233,7 +235,7 @@ func _restore_records(records: Dictionary) -> void:
 				nodes[id] = OBJECTS.create_object(app.current_level, id, record)
 			elif not previous.has(id) or previous[id].values != record.values:
 				OBJECTS.apply(nodes[id], record.kind, record.values, true)
-		OBJECTS.order_decorations(nodes)
+		_order_decorations()
 		PREVIEW.finish(app.current_level)
 		if camera != null: camera.make_current()
 	selection.assign(selection.filter(func(id: String) -> bool: return records.has(id)))
@@ -272,6 +274,21 @@ func add_platform(rect: Rect2) -> void:
 	var records: Dictionary = document.working.duplicate(true)
 	records[id] = DOCUMENT.new_platform_record(values)
 	if commit_records("Build platform", records): choose(id)
+
+func can_flip_selected() -> bool:
+	if selection.is_empty(): return false
+	for id in selection:
+		if OBJECTS.horizontal_flip_field(document.working[id].kind).is_empty(): return false
+	return true
+
+func flip_selected() -> void:
+	if not is_editing() or not can_flip_selected(): return
+	canvas.cancel_gesture()
+	var records: Dictionary = document.working.duplicate(true)
+	for id in selection:
+		var key := OBJECTS.horizontal_flip_field(records[id].kind)
+		records[id].values[key] = not bool(records[id].values.get(key, false))
+	commit_records("Flip horizontally", records)
 
 func can_duplicate_selected() -> bool:
 	if selection.is_empty(): return false
@@ -588,12 +605,16 @@ func begin_placement(template: String, values: Dictionary) -> void:
 	canvas.cancel_gesture()
 	selection.clear()
 	_placement_record = OBJECTS.new_record(template, values)
+	if _placement_record.kind == "decoration":
+		_set_layer_value(_placement_record.values, decoration_layer)
 	_ghost_root = Node3D.new()
 	_ghost_root.name = "PlacementPreview"
 	PREVIEW.prepare(_ghost_root)
 	app.current_level.add_child(_ghost_root)
 	_ghost = OBJECTS.instantiate_record(_placement_record)
+	_ghost.set_meta("layout_kind", _placement_record.kind)
 	_ghost_root.add_child(_ghost)
+	_order_decorations()
 	PREVIEW.finish(_ghost_root)
 	for sprite in _ghost_root.find_children("*", "Sprite3D", true, false): sprite.modulate = Color(0.7, 1.0, 0.85, 0.55)
 	tool = "place"
@@ -611,8 +632,55 @@ func cancel_placement() -> bool:
 	_ghost_root = null
 	_ghost = null
 	_placement_record.clear()
+	_order_decorations()
 	if tool == "place": tool = "move"
 	return active
+
+func set_decoration_layer(value: int) -> void:
+	decoration_layer = clampi(value, OBJECTS.MIN_DECORATION_LAYER, OBJECTS.MAX_DECORATION_LAYER)
+	if not _placement_record.is_empty() and _placement_record.kind == "decoration":
+		_set_layer_value(_placement_record.values, decoration_layer)
+		OBJECTS.apply(_ghost, "decoration", _placement_record.values)
+		_order_decorations()
+	decoration_layer_changed.emit(decoration_layer)
+
+func can_layer_selected() -> bool:
+	if mode != Mode.EDITING or selection.is_empty(): return false
+	for id in selection:
+		if document.working[id].kind != "decoration": return false
+	return true
+
+func set_selected_decoration_layer(value: int) -> void:
+	if not can_layer_selected(): return
+	canvas.cancel_gesture()
+	var records: Dictionary = document.working.duplicate(true)
+	for id in selection: _set_layer_value(records[id].values, value)
+	commit_records("Change decoration layer", records)
+
+func shift_decoration_layer(step: int) -> void:
+	if not can_layer_selected(): return
+	canvas.cancel_gesture()
+	var records: Dictionary = document.working.duplicate(true)
+	for id in selection:
+		var value := int(records[id].values.get("decoration_layer", 0)) + step
+		if value < OBJECTS.MIN_DECORATION_LAYER or value > OBJECTS.MAX_DECORATION_LAYER:
+			set_status("Decoration layers range from -100 to 100")
+			return
+		_set_layer_value(records[id].values, value)
+	commit_records("Move decoration layer forward" if step > 0 else "Move decoration layer backward", records)
+
+static func _set_layer_value(values: Dictionary, value: int) -> void:
+	if value == 0: values.erase("decoration_layer")
+	else: values.decoration_layer = value
+
+func _order_decorations() -> void:
+	# Include the placement preview so its overlap matches the chosen layer.
+	var ordered := nodes.duplicate()
+	if is_instance_valid(_ghost): ordered["placement_preview"] = _ghost
+	# Scene changes can leave old preview references until inspect() refreshes them.
+	for id in ordered.keys():
+		if not is_instance_valid(ordered[id]): ordered.erase(id)
+	OBJECTS.order_decorations(ordered)
 
 func update_placement(point: Vector2) -> void:
 	if _placement_record.is_empty() or not is_instance_valid(_ghost): return

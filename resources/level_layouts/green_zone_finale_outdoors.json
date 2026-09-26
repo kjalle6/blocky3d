@@ -1,8 +1,71 @@
 {
 	"catalog": {
-		"checkpoint": "b018d9addd4200cb7a14ffdf691da39015c951d80cc6fad15bc8bb5f2c575290"
+		"bush": "b1e145af55aa521b9d673b41bbb8fb05ca5df71f22cf44efeafbd16843e610bc",
+		"checkpoint": "b018d9addd4200cb7a14ffdf691da39015c951d80cc6fad15bc8bb5f2c575290",
+		"gz_prop_benches_1": "53e875e2831e009357abe23045ac01c2475df5b8e635350f7ff8a6461a0710b4",
+		"gz_prop_benches_2": "9fb52ee242b993efbdc8e86fa62e66269f217e846bb0017e646f43968fb1e199",
+		"gz_prop_benches_3": "e670e570111b1ddefcc9bf14b36b5768670c11f56857f808764dae7bf155c52d",
+		"gz_prop_bushes_1": "1295a89bbc9932c5019c0063341b218e5d35fa979dbd71240c4930a1c7e7191f",
+		"gz_prop_bushes_17": "5a9acfd2c7f03bb085012302ad4b9f113fdf1e14c732309ad25886489d804604",
+		"gz_prop_bushes_18": "fae7afa1161ce3970bf603a34666d93bcf1cdfec95b252d187c8d59a5f62b0a4",
+		"gz_prop_bushes_19": "dcd22d74a9e976691b562726bc2c5b8a45f316c589fa5604b11ef86bbac263d3",
+		"gz_prop_bushes_2": "0f5dadcdf6c64c49cc5513be2316d02cf5b437117bbd9b0d6f21ff24c1fbcb30",
+		"gz_prop_bushes_20": "5463b562b945a0d04169b4795e3df7b2b5fa257d22814d557121d4a53069d88a",
+		"gz_prop_bushes_7": "ad98c0977b863b1a3a5224854b28a660540d9254ca4260332e7d4f52d4ae2bd8",
+		"gz_prop_fence_2": "a62a082508317e3297abbd04618a9cd2f9ce200aea256b5bb28d4e68b227e2ab",
+		"gz_prop_fence_6": "fe42f699a010a61613cce3adf7c2edb7de5d35e35e22cb02fa1fb2028c2cbe6d",
+		"gz_prop_fence_7": "be9d682f29b4d4c87911ac15048c4e279b6f4640e03e743237f800c034a2ed73",
+		"gz_prop_fountain_1": "1145716d0bb3e523304f1f51d6abe95cf9627a1ad9735d0d117efb880b943e65",
+		"gz_prop_grass_1": "92579682398778129ed4d458c6be1cb78f4c51febdb657fe6e3f61505486776e",
+		"gz_prop_grass_10": "f3660badb391e415c9a64fac49fdabcee7d7f9668b0c442a2df1ea323065107b",
+		"gz_prop_grass_11": "4ae058d79c69e585b6e0eb7ef2f40d9287c42c9831e3b5aaa1aa84bae74badb4",
+		"gz_prop_grass_12": "cac341c5eed2a8005961f8bc16b1ff9346729a467596ef46b3dd4e20e653af74",
+		"gz_prop_grass_14": "4f278c5d6b23e90b32d9f0f0874dfeefe8eeb50a18c4b1b25525ee0fa4f1e608",
+		"gz_prop_grass_15": "f0c2a30f94fbbe297a3df4708782ed66b1dd3483320d2036682d2872f0e2a128",
+		"gz_prop_grass_4": "ec7b159a02d62dab624228fbadace24020ee4180073a249cfb2986d36910ae74",
+		"gz_prop_grass_5": "529bf1cdae0498a165d01019389b54e3b8023a49eae7e7434cc6d2d5deceebab",
+		"gz_prop_grass_8": "75752677223ba0147cc6f9aaf25e1bd3207fa5dab824fbb3f34991add50eb302",
+		"gz_prop_grass_9": "3d3ef5526bdc8f4778a0a47b0a419356685dea0787fc32ae378ab20cf3b00b68",
+		"gz_prop_leaf_1": "fa0ddd6f2b002c115d4b3ef3d7cbaeaef27eada287156a9c6b3cd7903c3bf8fc",
+		"gz_prop_leaf_2": "fc5cec8b1c1635e27547a94808a9a3306d6f0c7e6ce3441fc91abf0d4807d4bc",
+		"gz_prop_leaf_3": "855ef18131f8a8205289034af47024264ced607483da635506d69e6d912054c0",
+		"gz_prop_leaf_4": "8cda9d060df6400509a0e46541a41be49c04ea548a7c87901fae0cd42a221a30",
+		"gz_prop_leaf_6": "55622ead25c58fb89969d6206c9ddf15a6923d1f8c6e72366f1222156dd72cb1",
+		"gz_prop_other_box": "92d4a5262476d093b05e87f389e1f8dbc652c8078b42841ad7ca6ee5f166d4fc",
+		"gz_prop_other_garbage_can1": "b73be85bceedf4d4efe9dc01c10b87c15acc2be3fab9632e8f83d635ecfb791d",
+		"gz_prop_other_garbage_can2": "7883d1c8b0cee9c297301a5234d13fc9db78a254b88212cba788115dbb6f7d1a",
+		"gz_prop_other_skateboard3": "73e2630392460e62d7b5ddb221fbe417595246e12cd4807fef9a0f26f47bfa62",
+		"gz_prop_other_skateboard4": "aaa875e5a15d660aae846d9ac59ce986f4749be4b44a67530cecb98637de3ec9",
+		"gz_prop_other_tree2": "ac5ca6eeec74b5b3431605c206af6f6d606c3f33aadb2b23ac89b2ae5e8e88db",
+		"gz_prop_other_tree4": "1c32a2270485ab2fb3be4141d8d7b7a199071ff68d09ce799bd0cce1da2fc845",
+		"gz_prop_stones_1": "3e04b7166784fd699b3affde594cfef62ac7a7f7c052a2b856a60e242e553858",
+		"gz_prop_stones_4": "54502ca0341d292ff92c5bee7acae5d3239ef5742f558e0960cf574f84023447",
+		"gz_prop_stones_5": "e6c0f630675051009455ae00249c0a0113d9759f1e838dee8767a7711cc7d2c6",
+		"gz_prop_stones_6": "37601179c0134e881dd9a6a7548cea31b06d35828782732db10336ef2b10e9f3",
+		"scenery_environment_rocks_png_canyon_rocks_canyon_rock3": "57bd1366769ba911bc7cea7c95c0e0710a7a8029db27369bac0699dfae72d12f",
+		"scenery_environment_rocks_png_canyon_rocks_canyon_rock5": "5f9ae8fe3cf2f8698d23a8e14b1181b235a35805eb2f018a1db94c3f91d9d936",
+		"scenery_environment_rocks_png_cave_rocks_cave_rock5": "0850517e8f1c042381fbd4c830975781af455e09b7bc3993856a1bbc61c23f11",
+		"scenery_environment_rocks_png_stalagmites_stalagmite1": "71e24b3a04adddc5c452b732bfe8e4e4d959c2cd833e4214f0cf66034403b138",
+		"scenery_environment_rocks_png_stalagmites_stalagmite2": "fdb9b85af9279d25b0f46374e3a30f4f72f8ec33cbd2007ebe23079725115974",
+		"scenery_environment_rocks_png_stalagmites_stalagmite3": "2ae4aeed84d3e340175a7cbbbf17bdec8f7f9afd0814b1ad8fd0c7fb20faa850",
+		"scenery_environment_rocks_png_stalagmites_stalagmite4": "9b1ff6aa0736b1955e601cf930bf5ade703e4f251b3c0701071d5e722d3b2dd0",
+		"scenery_environment_rocks_png_stalagmites_stalagmite5": "50ea730125a9d58bafc259e035195e907a0a9360a8a74ab81e31091114f0ec35",
+		"scenery_environment_vegetation_nature_4_roots_7": "eab72dcc93cd6d0d6aad5f9846a66a6d849506c97c8f94b75b3c0bff75491eb2",
+		"scenery_environment_vegetation_nature_4_roots_8": "2f3324472909fd3ea8faf3871a676508f13b996af3c2c11fb79ca34838a0da80",
+		"skater_enemy": "2ad7f1789cf5e8f85b1581ccb4e616efedd24a6f3144562dc482e31853c63b73",
+		"stone": "8af9194bda7a20e782c99f90fbd3d3d645b6c51ae6ca4d0316393b49e2295a67",
+		"supply_chest": "8de96d259198f82ff23fc21080b56b0be62eceff7fd0d44b25c3b3af337ab0c4"
 	},
 	"created": {
+		"object_018104ee4d4741889a76ecce": {
+			"template": "gz_prop_bushes_20",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 51.159995,
+				"y": 0.0
+			}
+		},
 		"object_05818c6832e4a4d653f06274": {
 			"template": "checkpoint",
 			"values": {
@@ -11,14 +74,864 @@
 				"x": 69.199998,
 				"y": 0.0
 			}
+		},
+		"object_0659022c60efa2e423eb4378": {
+			"template": "scenery_environment_rocks_png_cave_rocks_cave_rock5",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 140.740007,
+				"y": -26.239999
+			}
+		},
+		"object_081c417e069e8277fd07a08d": {
+			"template": "gz_prop_stones_4",
+			"values": {
+				"flip_h": false,
+				"x": 52.013542,
+				"y": 0.0
+			}
+		},
+		"object_084b8eed6f30a778eaec6b5b": {
+			"template": "gz_prop_bushes_17",
+			"values": {
+				"flip_h": false,
+				"x": 50.28,
+				"y": 0.0
+			}
+		},
+		"object_1cd726b45c2def92dfb6bb1a": {
+			"template": "gz_prop_bushes_20",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 49.679998,
+				"y": 0.0
+			}
+		},
+		"object_1f3bbdf65adc53ebd84498b9": {
+			"template": "scenery_environment_rocks_png_stalagmites_stalagmite1",
+			"values": {
+				"flip_h": false,
+				"x": 114.080003,
+				"y": -28.159999
+			}
+		},
+		"object_2114b31516457c54db804f19": {
+			"template": "gz_prop_fence_6",
+			"values": {
+				"flip_h": false,
+				"x": 8.0,
+				"y": 0.0
+			}
+		},
+		"object_2ab4f7fc0393913cb3d73925": {
+			"template": "gz_prop_bushes_7",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 97.279999,
+				"y": 0.0
+			}
+		},
+		"object_2b4244f0c9ea6a4611a93016": {
+			"template": "gz_prop_grass_8",
+			"values": {
+				"flip_h": false,
+				"x": 9.897513,
+				"y": 0.0
+			}
+		},
+		"object_2b936415d1eae6bd18a6ec06": {
+			"template": "supply_chest",
+			"values": {
+				"basic_heal": 1.0,
+				"handgun_ammo": 0.0,
+				"large_heal_test": 0.0,
+				"loot_pool": "level",
+				"medical_bag": 0.0,
+				"x": 142.72,
+				"y": 0.0
+			}
+		},
+		"object_2bfd71257b7f18e997c42600": {
+			"template": "gz_prop_fence_6",
+			"values": {
+				"flip_h": false,
+				"x": 6.08,
+				"y": 0.0
+			}
+		},
+		"object_2e8956796b56f1ba428ee62d": {
+			"template": "gz_prop_grass_15",
+			"values": {
+				"flip_h": false,
+				"x": 9.032291,
+				"y": 0.0
+			}
+		},
+		"object_346a421ee94d534f723829d6": {
+			"template": "gz_prop_stones_6",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 170.129776,
+				"y": 0.0
+			}
+		},
+		"object_3471caf2e9478c9e30974c26": {
+			"template": "gz_prop_grass_1",
+			"values": {
+				"flip_h": false,
+				"x": 7.990104,
+				"y": 0.0
+			}
+		},
+		"object_358e402e57c203819c843347": {
+			"template": "gz_prop_bushes_7",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 103.679998,
+				"y": 0.0
+			}
+		},
+		"object_399e75b4d0f6e720255d0dbe": {
+			"template": "scenery_environment_rocks_png_stalagmites_stalagmite5",
+			"values": {
+				"flip_h": true,
+				"x": 123.84,
+				"y": -25.599999
+			}
+		},
+		"object_3b6e96cbe2936fc5f08dca70": {
+			"template": "bush",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 14.56,
+				"y": 0.0
+			}
+		},
+		"object_40089be2f7dd8dffa7d6d57c": {
+			"template": "gz_prop_grass_9",
+			"values": {
+				"flip_h": false,
+				"x": 10.115316,
+				"y": 0.0
+			}
+		},
+		"object_4433cfefa9c83062404b31f3": {
+			"template": "scenery_environment_rocks_png_stalagmites_stalagmite3",
+			"values": {
+				"flip_h": false,
+				"x": 122.639999,
+				"y": -26.879999
+			}
+		},
+		"object_450a456c1d61bb9eb0871687": {
+			"template": "gz_prop_leaf_4",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 30.639999,
+				"y": 2.48
+			}
+		},
+		"object_4512c1b587ceb630f470e35f": {
+			"template": "gz_prop_other_tree2",
+			"values": {
+				"flip_h": false,
+				"x": 108.495331,
+				"y": -0.155729
+			}
+		},
+		"object_4b63b3d422734aa95277a7c8": {
+			"template": "gz_prop_bushes_7",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 106.239998,
+				"y": 0.0
+			}
+		},
+		"object_4d812fee268043cb7753c728": {
+			"template": "gz_prop_grass_8",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 166.121008,
+				"y": -0.03366
+			}
+		},
+		"object_4d8c70d141572c2694f1435b": {
+			"template": "gz_prop_grass_9",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 167.672791,
+				"y": -0.019976
+			}
+		},
+		"object_4f27450715f32c9a2c358e4c": {
+			"template": "gz_prop_grass_4",
+			"values": {
+				"flip_h": false,
+				"x": 10.510085,
+				"y": 0.0
+			}
+		},
+		"object_559357d2d53ec49843ca9a5e": {
+			"template": "gz_prop_leaf_3",
+			"values": {
+				"decoration_layer": -2.0,
+				"flip_h": false,
+				"x": 109.190109,
+				"y": 2.089062
+			}
+		},
+		"object_55fd83fc03fe510a14b148d1": {
+			"template": "stone",
+			"values": {
+				"flip_h": false,
+				"x": 71.815109,
+				"y": -0.01198
+			}
+		},
+		"object_571fb1aec64908bfd4bd08c9": {
+			"template": "gz_prop_bushes_17",
+			"values": {
+				"flip_h": false,
+				"x": 164.756378,
+				"y": 0.0
+			}
+		},
+		"object_5e2c3a508e19af70502a7461": {
+			"template": "gz_prop_other_garbage_can2",
+			"values": {
+				"flip_h": false,
+				"x": 96.940004,
+				"y": 0.0
+			}
+		},
+		"object_5fc35dde32e7248db2e8bc74": {
+			"template": "gz_prop_grass_15",
+			"values": {
+				"flip_h": false,
+				"x": 9.643229,
+				"y": 0.0
+			}
+		},
+		"object_61f18dfa507a5be9f5b5c496": {
+			"template": "gz_prop_leaf_1",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 28.68,
+				"y": 2.92
+			}
+		},
+		"object_62cc16d42c6b27a669cbeef8": {
+			"template": "gz_prop_bushes_7",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 102.39999,
+				"y": 0.0
+			}
+		},
+		"object_63b6626a51ab9440f8cda0cc": {
+			"template": "gz_prop_bushes_7",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 101.119998,
+				"y": 0.0
+			}
+		},
+		"object_65515dc6a255a9279cf7fddb": {
+			"template": "gz_prop_bushes_7",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 104.959998,
+				"y": 0.0
+			}
+		},
+		"object_656b291dc8b5e308c2677200": {
+			"template": "gz_prop_grass_8",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 166.43903,
+				"y": -0.015258
+			}
+		},
+		"object_670cdde8987e80ad41023236": {
+			"template": "gz_prop_leaf_2",
+			"values": {
+				"decoration_layer": -2.0,
+				"flip_h": false,
+				"x": 106.878128,
+				"y": 2.879687
+			}
+		},
+		"object_68e76e35371f5f9707cc0950": {
+			"template": "gz_prop_bushes_7",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 98.559999,
+				"y": 0.0
+			}
+		},
+		"object_6a001eb339b46181e37d4bce": {
+			"template": "gz_prop_bushes_18",
+			"values": {
+				"flip_h": false,
+				"x": 163.517899,
+				"y": 0.0
+			}
+		},
+		"object_6bea770f3e9f976244362782": {
+			"template": "gz_prop_grass_8",
+			"values": {
+				"flip_h": false,
+				"x": 10.319507,
+				"y": 0.0
+			}
+		},
+		"object_6daf8ee321142b64c5ae823e": {
+			"template": "gz_prop_fence_2",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 69.778641,
+				"y": -0.414583
+			}
+		},
+		"object_6e3075f10747aa7b9f55e699": {
+			"template": "gz_prop_grass_11",
+			"values": {
+				"flip_h": false,
+				"x": 8.469271,
+				"y": 0.0
+			}
+		},
+		"object_6f5c96573bd204eed1228499": {
+			"template": "gz_prop_grass_9",
+			"values": {
+				"flip_h": false,
+				"x": 9.775,
+				"y": 0.0
+			}
+		},
+		"object_7479b6df9135489fd57cd801": {
+			"template": "gz_prop_bushes_17",
+			"values": {
+				"flip_h": false,
+				"x": 52.48,
+				"y": 0.0
+			}
+		},
+		"object_7719501c45f97db9d7eecb0f": {
+			"template": "gz_prop_other_skateboard4",
+			"values": {
+				"decoration_layer": 2.0,
+				"flip_h": false,
+				"x": 29.4,
+				"y": 0.0
+			}
+		},
+		"object_78007e49d918b339299767ac": {
+			"template": "gz_prop_fence_7",
+			"values": {
+				"flip_h": false,
+				"x": 15.679999,
+				"y": 0.0
+			}
+		},
+		"object_78551c9a43c632db38e33068": {
+			"template": "gz_prop_grass_10",
+			"values": {
+				"flip_h": false,
+				"x": 8.265625,
+				"y": 0.0
+			}
+		},
+		"object_7d05d523a433dd94b1869123": {
+			"template": "scenery_environment_vegetation_nature_4_roots_7",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 153.919998,
+				"y": -23.639999
+			}
+		},
+		"object_804ac8a28bf0abe3e25d833b": {
+			"template": "gz_prop_grass_14",
+			"values": {
+				"flip_h": false,
+				"x": 9.367708,
+				"y": 0.0
+			}
+		},
+		"object_85e57c35234713a1c3dd38cf": {
+			"template": "gz_prop_other_garbage_can1",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 167.453064,
+				"y": 0.0
+			}
+		},
+		"object_8bc8930c6cffa9446663be5e": {
+			"template": "scenery_environment_rocks_png_stalagmites_stalagmite5",
+			"values": {
+				"flip_h": false,
+				"x": 120.399994,
+				"y": -25.6
+			}
+		},
+		"object_8ff5addce3d5d969f5dbd815": {
+			"template": "gz_prop_benches_2",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 106.559998,
+				"y": 0.0
+			}
+		},
+		"object_9a82a60e3fc0b1b504feca23": {
+			"template": "gz_prop_bushes_18",
+			"values": {
+				"flip_h": false,
+				"x": 49.279999,
+				"y": 0.0
+			}
+		},
+		"object_9ecf134b52fe77797914decc": {
+			"template": "scenery_environment_vegetation_nature_4_roots_8",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 154.519989,
+				"y": -23.719999
+			}
+		},
+		"object_a4b0127fdf6e91195e53ce95": {
+			"template": "stone",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 31.08,
+				"y": 0.0
+			}
+		},
+		"object_a4b38df5b1445cd239b86c03": {
+			"template": "gz_prop_other_tree4",
+			"values": {
+				"flip_h": false,
+				"x": 168.030762,
+				"y": 0.019975
+			}
+		},
+		"object_a6304366f4823eab345c629a": {
+			"template": "gz_prop_grass_8",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 167.055116,
+				"y": -0.038378
+			}
+		},
+		"object_aa7cdc0e3e6f2822d074abf0": {
+			"template": "bush",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 15.84,
+				"y": 0.0
+			}
+		},
+		"object_aee21ef25910cd5a126e7ecf": {
+			"template": "gz_prop_fence_6",
+			"values": {
+				"flip_h": false,
+				"x": 11.84,
+				"y": 0.0
+			}
+		},
+		"object_aeffbaecc5b74640124f6d29": {
+			"template": "gz_prop_grass_12",
+			"values": {
+				"flip_h": false,
+				"x": 8.708854,
+				"y": 0.0
+			}
+		},
+		"object_afcfcc112d895ee365697575": {
+			"template": "scenery_environment_rocks_png_canyon_rocks_canyon_rock5",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 111.779998,
+				"y": -26.24
+			}
+		},
+		"object_b01fa42c28cf7b8eba537763": {
+			"template": "gz_prop_other_box",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 7.079687,
+				"y": 0.0
+			}
+		},
+		"object_b2e1104e258ec0f8f15300be": {
+			"template": "gz_prop_grass_5",
+			"values": {
+				"flip_h": false,
+				"x": 10.795951,
+				"y": 0.0
+			}
+		},
+		"object_b30f4be78ae5875a44875e48": {
+			"template": "gz_prop_stones_5",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 48.359898,
+				"y": 0.0
+			}
+		},
+		"object_b3f660acd95d4c4e1f3dbadf": {
+			"template": "scenery_environment_rocks_png_canyon_rocks_canyon_rock3",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 112.28,
+				"y": -27.519998
+			}
+		},
+		"object_b5a2c7081bcd9d9ba0bd390f": {
+			"template": "gz_prop_bushes_7",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 107.519998,
+				"y": 0.0
+			}
+		},
+		"object_ba9e66761ac2737aa5c5e187": {
+			"template": "gz_prop_other_box",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 6.58677,
+				"y": 0.932604
+			}
+		},
+		"object_bc08dcf53e93f7aa8048a379": {
+			"template": "gz_prop_grass_1",
+			"values": {
+				"flip_h": false,
+				"x": 11.503811,
+				"y": 0.0
+			}
+		},
+		"object_bce9343d007dd1807a5faf92": {
+			"template": "gz_prop_bushes_19",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 28.279999,
+				"y": 0.0
+			}
+		},
+		"object_bda34b59ada7c55b63294ce4": {
+			"template": "gz_prop_bushes_2",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 12.52,
+				"y": 0.0
+			}
+		},
+		"object_bed5404e4112a88998700cc5": {
+			"template": "gz_prop_stones_1",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 29.200001,
+				"y": 0.0
+			}
+		},
+		"object_c14ac655f959415b9110e8ea": {
+			"template": "bush",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 13.32,
+				"y": 0.0
+			}
+		},
+		"object_c1b35fd2fc8818c3a7de5543": {
+			"template": "scenery_environment_rocks_png_stalagmites_stalagmite4",
+			"values": {
+				"flip_h": false,
+				"x": 121.659998,
+				"y": -26.239999
+			}
+		},
+		"object_c5b22a067c633bbd63d9bbda": {
+			"template": "gz_prop_leaf_6",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 94.0186,
+				"y": 2.081268
+			}
+		},
+		"object_cef200eb6d8446f329a49c7e": {
+			"template": "gz_prop_fence_6",
+			"values": {
+				"flip_h": false,
+				"x": 9.92,
+				"y": 0.0
+			}
+		},
+		"object_d083daca75e74a4365b320a9": {
+			"template": "gz_prop_fountain_1",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 102.399993,
+				"y": 0.0
+			}
+		},
+		"object_d085e7f9adff7bb326d0de19": {
+			"template": "gz_prop_bushes_18",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 31.719999,
+				"y": 0.0
+			}
+		},
+		"object_d343510bf8e8cd4418719a25": {
+			"template": "gz_prop_leaf_6",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 95.404069,
+				"y": 1.779214
+			}
+		},
+		"object_d51eb8f53dbc2b5e8e7e796a": {
+			"template": "gz_prop_other_tree2",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 30.08,
+				"y": 0.0
+			}
+		},
+		"object_d67eae9a8bcf611f41496991": {
+			"template": "scenery_environment_rocks_png_stalagmites_stalagmite2",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 118.219995,
+				"y": -26.879999
+			}
+		},
+		"object_d6bddd54e012306d4aaeffdc": {
+			"template": "gz_prop_bushes_7",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 99.839999,
+				"y": 0.0
+			}
+		},
+		"object_d73d176075c43d0a61179420": {
+			"template": "gz_prop_grass_8",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 167.393127,
+				"y": 0.0
+			}
+		},
+		"object_d89b37d7d2b77c75ea8c0d53": {
+			"template": "gz_prop_bushes_20",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 53.079998,
+				"y": 0.0
+			}
+		},
+		"object_da84e515a6abf587622b1728": {
+			"template": "gz_prop_other_garbage_can2",
+			"values": {
+				"flip_h": false,
+				"x": 107.82,
+				"y": 0.0
+			}
+		},
+		"object_db07f38ddd7b0aae8ae33036": {
+			"template": "gz_prop_bushes_1",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 70.972191,
+				"y": -0.083854
+			}
+		},
+		"object_dc4e4ba9bdb4665794efaff4": {
+			"template": "gz_prop_bushes_20",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 48.439999,
+				"y": 0.0
+			}
+		},
+		"object_de5da8d9fcc3ccdd6008eb60": {
+			"template": "gz_prop_leaf_1",
+			"values": {
+				"decoration_layer": -2.0,
+				"flip_h": false,
+				"x": 108.243752,
+				"y": 3.167187
+			}
+		},
+		"object_dedb6b74c66aeaf2327e9273": {
+			"template": "stone",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 14.2,
+				"y": 0.0
+			}
+		},
+		"object_e0a88bd076abc6aea28500cb": {
+			"template": "gz_prop_leaf_6",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 94.434038,
+				"y": 1.828728
+			}
+		},
+		"object_e1b00795caa2097faa8ef749": {
+			"template": "gz_prop_benches_3",
+			"values": {
+				"decoration_layer": 2.0,
+				"flip_h": false,
+				"x": 15.499999,
+				"y": 0.0
+			}
+		},
+		"object_e808a6dd98a0ca74850d73e8": {
+			"template": "gz_prop_grass_4",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 165.835052,
+				"y": 0.0
+			}
+		},
+		"object_e9ed2e0ce3806e99a05f8980": {
+			"template": "skater_enemy",
+			"values": {
+				"facing_right": false,
+				"left": 10.786728,
+				"right": 0.49939,
+				"speed": 2.0,
+				"x": 170.868866,
+				"y": 0.38
+			}
+		},
+		"object_ecd7517ceb5f9ef973720eb1": {
+			"template": "gz_prop_leaf_4",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 31.799999,
+				"y": 2.96
+			}
+		},
+		"object_ed1daf65e4d2cf2aa5a90389": {
+			"template": "gz_prop_other_skateboard3",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 167.752686,
+				"y": 0.0
+			}
+		},
+		"object_f0baff0713d1e3dcd385a3db": {
+			"template": "gz_prop_other_box",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 5.965625,
+				"y": 0.0
+			}
+		},
+		"object_f241490c2cd0f7b2f49b8288": {
+			"template": "gz_prop_bushes_1",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 68.591875,
+				"y": -0.055833
+			}
+		},
+		"object_f27e1ca72e3adfab4848a6dd": {
+			"template": "gz_prop_fence_6",
+			"values": {
+				"flip_h": false,
+				"x": 13.76,
+				"y": 0.0
+			}
+		},
+		"object_f322a5090357783d6edb4fea": {
+			"template": "gz_prop_benches_1",
+			"values": {
+				"decoration_layer": 1.0,
+				"flip_h": false,
+				"x": 98.18,
+				"y": 0.0
+			}
+		},
+		"object_f6b5b6413c6ba7d527fced2d": {
+			"template": "gz_prop_grass_10",
+			"values": {
+				"flip_h": false,
+				"x": 11.163494,
+				"y": 0.0
+			}
+		},
+		"object_f905095269fe203ad836c59d": {
+			"template": "gz_prop_grass_8",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 166.71712,
+				"y": 0.003145
+			}
 		}
 	},
-	"fingerprint": "4c434e1e1d5f18452d850640dccf30fe095bc37d89c2ea878c5e5650c204d6c0",
+	"fingerprint": "16294ef423483d2b7f043e8cd1ce721540b3e8c4048077fe45e3cbbe941e30d9",
 	"overrides": {
 
 	},
 	"removed": [],
-	"revision": 1.0,
-	"schema": 3.0,
+	"revision": 17,
+	"schema": 3,
 	"section": "green_zone_finale_outdoors"
 }

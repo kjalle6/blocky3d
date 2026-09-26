@@ -153,7 +153,7 @@ func _build() -> void:
 	title.add_theme_color_override("font_color", Color("6fffc1"))
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_button(header, "Try in game  ·  F1 / Esc", close_panel)
-	_label(layout, "Gameplay paused • Preview and compare recordings. Save your choices for future launches.", 16)
+	_label(layout, "Gameplay paused • Assigned sounds play in game; empty slots stay silent. Save your choices for future launches.", 16)
 	var category_row := HBoxContainer.new()
 	category_row.add_theme_constant_override("separation", 14)
 	layout.add_child(category_row)
@@ -264,8 +264,8 @@ func _build() -> void:
 	add_child(_ambience_file_dialog)
 	_ambience_file_dialog.file_selected.connect(func(path: String) -> void:
 		_set_ambience_recording(path, _ambience_picker_environment))
-	var nature_directory := SOURCE_DIRECTORY.get_base_dir().path_join("Nature_Essentials_NOX_SOUND")
-	_ambience_file_dialog.current_dir = nature_directory if DirAccess.dir_exists_absolute(nature_directory) else ProjectSettings.globalize_path("res://assets/audio/ambience")
+	var ambience_directory := SOURCE_DIRECTORY.get_base_dir().path_join("ambience")
+	_ambience_file_dialog.current_dir = ambience_directory if DirAccess.dir_exists_absolute(ambience_directory) else ProjectSettings.globalize_path("res://assets/audio/ambience")
 
 func _label(parent: Node, text: String, font_size := 18) -> Label:
 	var label := Label.new()
@@ -336,7 +336,9 @@ func _refresh() -> void:
 		_kind_picker.select(kinds.find(kind))
 	else:
 		for entry in EVENTS.entries_for(category):
-			_kind_picker.add_item(entry.title)
+			var connected: bool = entry.has("gameplay") or entry.has("room")
+			_kind_picker.add_item(entry.title if connected else "PREVIEW ONLY · " + str(entry.title))
+			_kind_picker.set_item_tooltip(_kind_picker.item_count - 1, str(entry.get("gameplay", "Room ambience" if entry.has("room") else "Not connected to gameplay.")))
 			_kind_picker.set_item_metadata(_kind_picker.item_count - 1, entry.id)
 			if entry.id == event_id:
 				_kind_picker.select(_kind_picker.item_count - 1)
@@ -361,7 +363,8 @@ func _refresh() -> void:
 	if category != "movement":
 		var connection := str(EVENTS.definition(event_id).get("gameplay", "Preview only · gameplay connection pending. Saved choices will be ready when this event is connected."))
 		if EVENTS.definition(event_id).has("gameplay"):
-			connection += " Live sounds play once; Loop and Repeat are preview controls."
+			connection += " Loops while active in game." if EVENTS.definition(event_id).get("loop", false) else " Plays once per event in game."
+			connection += " Ready · uses the selected recording(s)." if bank.has_playable_recording() else " Silent · add/enable a recording and select it in the mix."
 		var hint := _label(_body, connection, 16)
 		hint.name = "EventConnectionStatus"
 		hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

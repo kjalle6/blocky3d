@@ -6,5 +6,6 @@
       "source": "D:/GodotProjects/blocky3dassets/audio/Sounds/Click_digital_1.wav",
       "sha256": "e116b9c7ddd0dd09ef55f8a26195fda595d15da74ae4cdc377f660c4c791d542"
     }
-  ]
+  ],
+  "archive_evidence": "assets/audio/source_archive_matches.json"
 }

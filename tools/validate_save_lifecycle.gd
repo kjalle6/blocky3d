@@ -6,6 +6,18 @@ func _init() -> void:
 
 
 func _run() -> void:
+	var mix := preload("res://scripts/audio/movement_audio_mix.gd")
+	var mix_hash := FileAccess.get_sha256(mix.SAVE_PATH)
+	mix.initialize()
+	var respawn_bank: Resource = mix.event_bank_for("combat/player_respawn")
+	var cue := AudioStreamWAV.new()
+	cue.data = PackedByteArray([0, 0, 0, 0])
+	respawn_bank.clips.clear()
+	respawn_bank.clips.append(cue)
+	respawn_bank.enabled = true
+	respawn_bank.disabled_indices.clear()
+	respawn_bank.selection_mode = 0
+	respawn_bank.volume_db = -70.0
 	var store := root.get_node("GameProgression") as ProgressionStore
 	store.save_path = "user://lifecycle_validation_" + str(Time.get_ticks_usec()) + "/progress.json"
 	store.load_progress()
@@ -27,7 +39,7 @@ func _run() -> void:
 	assert(session.save_state.safety_error(false).is_empty(), "Pursuit does not change autosave activation.")
 	pursuer.reset_run()
 	assert(session.save_state.safety_error().is_empty(), session.save_state.safety_error())
-	session.player.receive_enemy_hit(Vector3.ZERO)
+	session.player.receive_enemy_hit(Vector3.ZERO, CombatHit.new(25, &"test_enemy"))
 	session.player.inventory.add(&"basic_heal", 9)
 	assert(session.acquire_weapon(PlayerWeapon.HANDGUN))
 	session.player.player_handgun.set_loaded_rounds(7)
@@ -49,6 +61,7 @@ func _run() -> void:
 	assert(app.load_snapshot(manual).is_empty())
 	app.campaign_menu.close()
 	session = app.current_level
+	assert(session.combat_feedback.combat_audio.last_event.get("id") == "combat/player_respawn", "Loading after death must play the selected respawn bank in the new scene.")
 	assert(session.player.health.current == 75 and session.player.inventory.count(&"basic_heal") == 9)
 	assert(session.player.player_handgun.loaded_rounds == 7 and session.player.player_handgun.reserve_rounds() == 18)
 	assert(not session.player.has_ability(PlayerAbility.DOUBLE_JUMP))
@@ -74,6 +87,7 @@ func _run() -> void:
 	assert(app.current_level.player.player_handgun.loaded_rounds == 7 and app.current_level.player.player_handgun.reserve_rounds() == 18)
 	app.free()
 	paused = false
+	assert(FileAccess.get_sha256(mix.SAVE_PATH) == mix_hash)
 	print("Save lifecycle passed: initial autosave, grounded manual save, exact HP/items, death menu, unlock rollback, no load rewrite, section identity and invalid-destination rejection.")
 	quit()
 

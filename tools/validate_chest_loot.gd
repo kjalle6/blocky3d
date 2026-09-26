@@ -4,12 +4,16 @@ const OBJECTS := preload("res://scripts/developer/level_layout_objects.gd")
 const DOCUMENT := preload("res://scripts/developer/level_layout_document.gd")
 const STORE := preload("res://scripts/developer/level_layout_store.gd")
 const REGISTRY := preload("res://scripts/developer/level_layout_registry.gd")
+const MIX := preload("res://scripts/audio/movement_audio_mix.gd")
+const EVENTS := preload("res://scripts/audio/sound_event_catalog.gd")
+var opening_sounds: Array[Dictionary] = []
 
 func _init() -> void:
 	call_deferred("_run")
 	create_timer(35.0, true).timeout.connect(func() -> void: quit(1))
 
 func _run() -> void:
+	var original_mix := FileAccess.get_sha256(MIX.SAVE_PATH)
 	_check_pools()
 	# Designer preview -> placement -> settings -> undo -> disk -> live Test.
 	# Runner profile only; never write sandbox.json or the user's recovery.
@@ -18,6 +22,23 @@ func _run() -> void:
 	app.persist_progression = false
 	root.add_child(app)
 	app.load_developer_level(load("res://resources/dev/level_designer_sandbox.tres"))
+	# Add through the actual tool, using only in-memory test settings.
+	MIX.saved_events["world/chest_open"] = EVENTS.default_banks()["world/chest_open"]
+	MIX.working_events["world/chest_open"] = MIX.copy_banks(MIX.saved_events)["world/chest_open"]
+	var panel: CanvasLayer = app.audio_tuning_panel
+	panel.open_panel()
+	panel.select_event("world/chest_open")
+	assert(panel.category == "world" and panel.event_id == "world/chest_open")
+	var bank: Resource = panel._bank()
+	assert(not bank.has_playable_recording())
+	panel._add_files(PackedStringArray(["res://assets/audio/combat/shot_1.wav", "res://assets/audio/combat/shot_2.wav"]))
+	bank.selection_mode = 1
+	bank.fixed_index = 1
+	bank.volume_db = -65.0
+	bank.pitch_scale = 1.1
+	bank.pitch_variation = 0.0
+	bank.use_room_reverb = false
+	panel.close_panel()
 	var designer: CanvasLayer = app.level_designer
 	designer.open_panel()
 	var count: int = app.current_level.player.inventory.count(&"basic_heal")
@@ -30,6 +51,8 @@ func _run() -> void:
 	assert(designer.placement_warning(id).is_empty())
 	designer.update_values({"loot_pool":"fixed", "basic_heal":2, "handgun_ammo":17})
 	assert(designer.nodes[id].reward_contents() == {&"basic_heal":2, &"handgun_ammo":17})
+	assert(not designer.nodes[id].collect() and opening_sounds.is_empty())
+	assert(app.current_level.get_node_or_null("EventAudio") == null, "Designer previews must have no gameplay audio owner.")
 	designer.undo()
 	assert(designer.document.working[id].values.loot_pool == "level")
 	designer.redo()
@@ -60,6 +83,13 @@ func _run() -> void:
 	var session: LevelSession3D = app.current_level
 	var chest: ItemReward3D = OBJECTS.inspect(session).nodes[id]
 	var before := session.save_state.transfer_state()
+	var sound: Node3D = session.get_node("EventAudio").sound
+	sound.event_played.connect(func(event: Dictionary) -> void:
+		if event.id == "world/chest_open": opening_sounds.append(event))
+	MIX.listening_to_saved = true
+	assert(chest.collect() and opening_sounds.is_empty(), "An unassigned saved bank opens silently, including A/B comparison.")
+	session.save_state.apply_state(before)
+	MIX.listening_to_saved = false
 	# Use real Area3D overlap, not only collect() calls.
 	session.player.reset_at(Transform3D(Basis.IDENTITY, chest.global_position + Vector3(-2, 0.1, 0)))
 	Input.action_press("move_right")
@@ -69,14 +99,37 @@ func _run() -> void:
 	Input.action_release("move_right")
 	assert(not chest._available and session.player.inventory.count(&"basic_heal") == count + 2)
 	assert(session.player.inventory.count(&"handgun_ammo") == 17)
+	assert(opening_sounds.size() == 1, "Real contact must sound once for the whole chest, not once per item.")
+	assert(opening_sounds[0].clip_index == 1 and opening_sounds[0].volume_db == -65.0)
+	assert(is_equal_approx(opening_sounds[0].pitch, 1.1) and opening_sounds[0].bus == &"Master")
+	assert(opening_sounds[0].position.is_equal_approx(chest.global_position))
 	assert(not chest.collect())
 	var after := session.save_state.transfer_state()
 	session._reset_world()
 	assert(not chest.collect(), "An ordinary reset cannot farm a claimed chest.")
+	assert(opening_sounds.size() == 1)
 	session.save_state.apply_state(before)
 	assert(chest._available and chest.collect())
+	assert(opening_sounds.size() == 2 and chest._opening_time == 0.0, "A restored unopened chest sounds at the start of its next opening.")
 	session.save_state.apply_state(after)
 	assert(not chest.collect())
+	assert(opening_sounds.size() == 2, "Restoring an opened chest must stay silent.")
+	bank.enabled = false
+	session.save_state.apply_state(before)
+	assert(chest.collect() and opening_sounds.size() == 2, "Muting the cue must not prevent rewards.")
+	bank.enabled = true
+	var loose := ItemReward3D.new()
+	loose.position = Vector3(30, 10, 0)
+	session.add_child(loose)
+	assert(loose.collect() and opening_sounds.size() == 2, "Loose rewards must not sound like a chest.")
+	loose.free()
+	var empty := ItemReward3D.new()
+	empty.presentation = ItemReward3D.Presentation.CHEST
+	empty.quantity = 0
+	empty.position = Vector3(30, 10, 0)
+	session.add_child(empty)
+	assert(not empty.collect() and opening_sounds.size() == 2, "Rejected reward bundles must remain silent.")
+	empty.free()
 	designer.return_to_editing()
 	assert(designer.document.working == before_test)
 	designer.document.saved = {}
@@ -114,7 +167,8 @@ func _run() -> void:
 	assert(chest.collect())
 	assert(session.player.inventory.count(&"basic_heal") == contents[&"basic_heal"])
 	campaign.free()
-	print("Chest loot passed: weights, weapon gating, quantity ranges, stable rolls, preview/author/test/save, contact collection, full campaign snapshot restore.")
+	assert(FileAccess.get_sha256(MIX.SAVE_PATH) == original_mix)
+	print("Chest loot passed: pools, author/test/save, contact collection, campaign restore, audio-tool selection, one opening cue per bundle, empty/muted slots, silent previews/restores and preserved saved mix.")
 	quit()
 
 func _check_pools() -> void:

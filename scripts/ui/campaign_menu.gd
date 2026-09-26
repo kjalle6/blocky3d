@@ -88,6 +88,7 @@ func _input(event: InputEvent) -> void:
 		return
 	if event.is_action_pressed("inventory"):
 		if overlay.visible and page == "inventory":
+			if app.event_audio != null: app.event_audio.menu_back()
 			_leave_inventory()
 		elif (not overlay.visible or page == "pause") and _can_open_inventory():
 			show_inventory()
@@ -103,6 +104,7 @@ func _input(event: InputEvent) -> void:
 	if not event.is_action_pressed("ui_cancel") and not start_pressed:
 		return
 	if overlay.visible:
+		if app.event_audio != null and page != "death": app.event_audio.menu_back()
 		if page == "pause":
 			close()
 		elif page == "inventory":

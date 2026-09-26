@@ -14,7 +14,7 @@ are implemented; the remaining work is tuning them together in actual levels.
 | Skater | 50 HP, 25 attack damage | Same toughness as the bat; movement and attack behavior differ |
 | Knife | 25 damage | Close-range commitment |
 | Stomp | 50 damage | Rewards positioning above an enemy and preserves the bounce |
-| Handgun | 25 damage, 0.28 seconds between shots | Provisional; compare its reach and firing opportunities with melee |
+| Handgun | 25 damage, 0.20 seconds between shots or empty trigger clicks | Provisional; compare its reach and firing opportunities with melee |
 | Dual-gun enemy | 50 HP, 25 attack damage | Provisional; each paired firing beat damages a target once |
 | Flyer | Indestructible, lethal on contact | Platforming hazard with no health bar |
 | Spikes and pits | Lethal regardless of HP | Platforming challenge remains intact |

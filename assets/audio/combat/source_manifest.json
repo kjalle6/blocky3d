@@ -1,6 +1,6 @@
 {
   "source_collection": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds",
-  "note": "Selected from the user-provided downloaded sound collection. Files are copied unchanged. Freesound entries record their creators, pages and licenses; original pack attribution for older flattened collection entries is unknown.",
+  "note": "Files copied unchanged from the local collection. The 15 Craftpix sounds are matched by SHA-256 to original ZIP entries in the archive evidence record. Freesound entries retain their individual creators, source pages, and licenses.",
   "files": [
     {
       "source": "D:\\GodotProjects\\blocky3dassets\\audio\\Sounds\\Shot_1.wav",
@@ -99,5 +99,6 @@
       "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
       "modifications": "None; original download copied unchanged."
     }
-  ]
+  ],
+  "archive_evidence": "assets/audio/source_archive_matches.json"
 }

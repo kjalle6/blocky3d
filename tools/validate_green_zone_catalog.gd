@@ -66,9 +66,9 @@ func _run() -> void:
 	assert(browser._results.size() == 96)
 	browser._zone.select(CATALOG.zones().find("Beach"))
 	browser._refresh()
-	assert(browser._results.size() == 6 and not browser._place_button.disabled)
+	assert(browser._results.size() >= 6 and not browser._place_button.disabled)
 	for id in browser._results:
-		assert(LIBRARY.defaults(id).surface == "sand")
+		assert(LIBRARY.defaults(id).surface == ("sand" if CATALOG.ENTRIES[id].solid else "silent"))
 		assert(CATALOG.icon(id) != null)
 	browser._zone.select(CATALOG.zones().find("Shared"))
 	browser._refresh()

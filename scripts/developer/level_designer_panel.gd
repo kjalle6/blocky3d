@@ -175,6 +175,8 @@ func _build_properties() -> void:
 	if designer.selection.size() > 1:
 		_label(_properties, "%d objects selected" % designer.selection.size(), 20)
 		_paragraph(_properties, "Drag any selected object to move the group. Their spacing stays the same.")
+		if designer.can_layer_selected(): _decoration_layer_controls()
+		_button(_properties, "Flip horizontally", designer.flip_selected).disabled = not designer.can_flip_selected()
 		_button(_properties, "Duplicate selection", designer.duplicate_selected).disabled = not designer.can_duplicate_selected()
 		_button(_properties, "Remove selection", designer.remove_selected).disabled = not designer.can_remove_selected()
 		return
@@ -216,8 +218,10 @@ func _build_properties() -> void:
 		"flyer": _paragraph(_properties, "Uses the existing vertical bob and electrical discharge. Place it in the air and test the space around it.")
 		"decoration":
 			_toggle("Flip horizontally", "flip_h", values.flip_h)
+			_decoration_layer_controls()
 			_paragraph(_properties, "Scenery only. Does not block the player or projectiles.")
 		"chest":
+			_toggle("Flip horizontally", "flip_h", values.get("flip_h", false))
 			var loot = preload("res://scripts/items/chest_loot.gd")
 			var pool_ids: Array = ["level"]
 			var pool_labels: Array = ["Automatic · this level"]
@@ -243,6 +247,20 @@ func _build_properties() -> void:
 	if record.removable:
 		_button(_properties, "Duplicate · Ctrl+D", designer.duplicate_selected)
 		_button(_properties, "Remove · Delete", designer.remove_selected)
+
+func _decoration_layer_controls() -> void:
+	var values: Dictionary = designer.document.working[designer.selection[0]].values
+	var layer_picker := preload("res://scripts/developer/level_decoration_layer_picker.gd").new(int(values.get("decoration_layer", 0)))
+	_properties.add_child(layer_picker)
+	layer_picker.layer_changed.connect(designer.set_selected_decoration_layer)
+	for id in designer.selection:
+		if designer.document.working[id].values.get("decoration_layer", 0) != values.get("decoration_layer", 0):
+			_paragraph(_properties, "Mixed layers. Entering a number sets the whole selection to that layer.")
+			break
+	var actions := HBoxContainer.new()
+	_properties.add_child(actions)
+	_button(actions, "Layer back", func() -> void: designer.shift_decoration_layer(-1))
+	_button(actions, "Layer forward", func() -> void: designer.shift_decoration_layer(1))
 
 func _numeric(label: String, key: String, value: float, factor := 1.0) -> void:
 	var row := HBoxContainer.new()
@@ -281,6 +299,7 @@ func _choice(label: String, key: String, values: Array, labels: Array, current: 
 
 func _toggle(label: String, key: String, checked: bool) -> void:
 	var toggle := CheckButton.new()
+	toggle.name = "Property_" + key
 	toggle.text = label
 	toggle.button_pressed = checked
 	_properties.add_child(toggle)

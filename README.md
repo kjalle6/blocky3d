@@ -87,7 +87,9 @@ and restart controls. **F7** shows hitboxes, **F10** shows the world grid, and
 | [Supply chests](docs/CHEST_LOOT.md) | Loot pools, fixed rewards, and chest authoring |
 | [Level designer](docs/LEVEL_DESIGNER.md) | Building, placement, testing, and saving layouts |
 | [Audio tuning](docs/AUDIO_TUNING.md) | Assigning and tuning sounds |
+| [Asset sources and credits](docs/ASSET_CREDITS.md) | Art, font, audio, tool licenses, and remaining source questions |
 | [Technical foundation](docs/TECHNICAL_FOUNDATION.md) | Runtime architecture, rendering, and asset workflow |
+| [Maintenance priorities](docs/MAINTENANCE_PLAN.md) | Small fixes now, improvements alongside features, and release preparation |
 | [Godot MCP](docs/GODOT_MCP.md) | Editor automation setup and live playtesting |
 
 Standalone checks run through the project's PowerShell tools:

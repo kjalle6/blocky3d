@@ -24,6 +24,19 @@ Double Jump rise. Ground enemies, gaps, and spikes establish the basic combat
 and platforming language. A skate half-pipe marks the aerial takeoff, and a
 tire-swing-tree clearing ends the route.
 
+The first Thorn Garden gap is an enclosed spike pit: its ground walls extend
+downward around a stone bed, with lethal coverage across the entire bottom.
+The original takeoff and landing heights and jump gap are preserved.
+
+The second Thorn Garden spike pit and the long spike bed after the skate ramp
+also have stone floors beneath their existing spikes. The tall ground beside
+the second pit extends downward; the floating platforms above the long pit
+retain their original shapes and positions.
+
+The gap just before the skate park also has a recessed spike bed. All four lower
+spike beds share the same depth and stone surface, with spikes covering each pit
+from wall to wall.
+
 The finish records completion and carries the player directly into Level 2
 through a matched exit and entrance. A supply chest on the threshold landing
 uses the Shoreline loot pool. The route is complete; ongoing combat and supply
@@ -52,6 +65,10 @@ uses that timing intentionally.
 The player arrives on the construction lift at night. A ravine tests Double
 Jump and Dash among familiar enemies, followed by a surprise descent into the
 underworks and a long, hazard-free Wall Jump return to the surface.
+
+The sparse surface stretch deliberately suggests a reachable jump before the
+fall. Its isolated chest rewards exploration of the apparently empty area;
+the bare surroundings are intentional.
 
 A section transition leads into the first armed encounter. The player and
 shooter notice each other, the opening volley sends the player to real cover,

@@ -12,6 +12,7 @@ const EPSILON := 0.01
 
 func _init() -> void:
 	call_deferred("_run")
+	create_timer(35.0, true).timeout.connect(func() -> void: quit(1))
 
 
 func _run() -> void:
@@ -47,7 +48,7 @@ func _run() -> void:
 	assert(is_equal_approx(level.camera.target_height, 3.98))
 	assert(not level.camera.vertical_follow_enabled)
 	assert(is_zero_approx(level.camera.rotation.x))
-	assert(level.get_node("Platforms").get_child_count() == 15)
+	assert(level.get_node("Platforms").get_child_count() == 19)
 	assert(level.get_node("Checkpoints").get_child_count() == 2)
 	assert(_scoped_group_count(level, &"melee_target") >= 6, "Preserve the six authored enemies and allow designer additions.")
 	assert(_scoped_group_count(level, &"level_goal") == 0)
@@ -128,8 +129,9 @@ func _validate_geometry(level: LevelSession3D) -> void:
 		threshold_crown, Vector3(47.36, 3.2, 0), Vector3(5.12, 1.28, 2)
 	)
 	_assert_platform(
-		threshold_landing, Vector3(59.52, -0.64, 0), Vector3(10.24, 3.84, 2)
+		threshold_landing, Vector3(59.52, -5.76, 0), Vector3(10.24, 14.08, 2)
 	)
+	assert(not threshold_landing.cap_bottom_edge)
 	assert(is_equal_approx(_gap(approach, threshold_run), 3.2))
 	assert(is_equal_approx(_gap(threshold_run, threshold_crown), 4.48))
 	assert(is_equal_approx(_top(threshold_crown) - _top(threshold_run), 3.2))
@@ -138,12 +140,13 @@ func _validate_geometry(level: LevelSession3D) -> void:
 	# Thorn Garden is terrain-shaped: two lethal sunken beds separated by
 	# raised safe ground, followed by a committed descent to the exit.
 	_assert_platform(
-		garden_entry, Vector3(73.6, -1.28, 0), Vector3(10.24, 3.84, 2)
+		garden_entry, Vector3(73.6, -5.76, 0), Vector3(10.24, 12.8, 2)
 	)
 	_assert_platform(
-		terrace, Vector3(90.24, 0, 0), Vector3(7.68, 3.84, 2)
+		terrace, Vector3(90.24, -5.12, 0), Vector3(7.68, 14.08, 2)
 	)
-	_assert_platform(wall, Vector3(103.04, 1.28, 0), Vector3(7.68, 3.84, 2))
+	_assert_platform(wall, Vector3(103.04, -4.48, 0), Vector3(7.68, 15.36, 2))
+	assert(not wall.cap_bottom_edge)
 	_assert_platform(
 		garden_exit, Vector3(119.04, -1.28, 0), Vector3(15.36, 3.84, 2)
 	)
@@ -203,40 +206,37 @@ func _validate_geometry(level: LevelSession3D) -> void:
 	var pocket_spikes := level.get_node(
 		"Hazards/ThornPocketSpikes"
 	) as PixelSpikeRow3D
-	assert(is_equal_approx(basin_spikes.row_width, 6.2))
+	assert(is_equal_approx(basin_spikes.row_width, 7.68))
 	assert(is_equal_approx(basin_spikes.global_position.x, 82.56))
 	assert(is_equal_approx(basin_spikes.global_position.y, -2.4))
-	assert(
-		basin_spikes.global_position.x - basin_spikes.row_width * 0.5
-		> _right(garden_entry)
-	)
-	assert(
-		basin_spikes.global_position.x + basin_spikes.row_width * 0.5
-		< _left(terrace)
-	)
-	assert(is_equal_approx(pocket_spikes.row_width, 4.0))
+	assert(is_equal_approx(basin_spikes.global_position.x - basin_spikes.row_width * 0.5, _right(garden_entry)))
+	assert(is_equal_approx(basin_spikes.global_position.x + basin_spikes.row_width * 0.5, _left(terrace)))
+	var basin_floor := _platform(level, "ThornBasinA")
+	_assert_platform(basin_floor, Vector3(82.56, -7.52, 0), Vector3(7.68, 10.24, 2))
+	assert(is_equal_approx(_top(basin_floor), basin_spikes.global_position.y))
+	assert(is_zero_approx(basin_spikes.collision_end_inset))
+	assert(not garden_entry.cap_bottom_edge and not terrace.cap_bottom_edge and not basin_floor.cap_bottom_edge)
+	var pit_fill := level.get_node("Hazards/ThornBasinFill/Collision") as CollisionShape3D
+	assert(pit_fill.shape.size.x > basin_floor.size.x and pit_fill.shape.size.y > basin_floor.size.y)
+	assert(is_equal_approx(pit_fill.global_position.y + pit_fill.shape.size.y * 0.5, basin_spikes.global_position.y + basin_spikes.collision_height))
+	assert(is_equal_approx(pocket_spikes.row_width, 5.12))
 	assert(is_equal_approx(pocket_spikes.global_position.x, 96.64))
 	assert(is_equal_approx(pocket_spikes.global_position.y, -2.4))
-	assert(
-		is_equal_approx(
-			basin_spikes.global_position.y,
-			pocket_spikes.global_position.y
-		),
-		"Both open thorn beds must read as one consistent low spike floor."
-	)
-	assert(
-		pocket_spikes.global_position.x - pocket_spikes.row_width * 0.5
-		> _right(terrace)
-	)
-	assert(
-		pocket_spikes.global_position.x + pocket_spikes.row_width * 0.5
-		< _left(wall)
-	)
-	assert(
-		level.get_node_or_null("Platforms/ThornBasinA") == null
-		and level.get_node_or_null("Platforms/ThornPocket") == null,
-		"Long thorn beds must be open spike pits, not decorated platforms."
-	)
+	assert(is_equal_approx(pocket_spikes.global_position.x - pocket_spikes.row_width * 0.5, _right(terrace)))
+	assert(is_equal_approx(pocket_spikes.global_position.x + pocket_spikes.row_width * 0.5, _left(wall)))
+	assert(is_zero_approx(pocket_spikes.collision_end_inset))
+	var pocket_floor := _platform(level, "ThornPocket")
+	_assert_platform(pocket_floor, Vector3(96.64, -7.52, 0), Vector3(5.12, 10.24, 2))
+	assert(is_equal_approx(_top(pocket_floor), pocket_spikes.global_position.y))
+	assert(is_equal_approx(_left(pocket_floor), _right(terrace)))
+	assert(is_equal_approx(_right(pocket_floor), _left(wall)))
+	var exit_floor := _platform(level, "GardenExitPit")
+	var exit_spikes := level.get_node("Hazards/GardenExitPitSpikes") as PixelSpikeRow3D
+	_assert_platform(exit_floor, Vector3(109.12, -7.52, 0), Vector3(5.12, 10.24, 2))
+	assert(is_equal_approx(_top(exit_floor), exit_spikes.global_position.y))
+	assert(is_equal_approx(exit_spikes.global_position.x - exit_spikes.row_width * 0.5, _right(wall)))
+	assert(is_equal_approx(exit_spikes.global_position.x + exit_spikes.row_width * 0.5, _left(garden_exit)))
+	assert(is_zero_approx(exit_spikes.collision_end_inset))
 	var aerial_basin := level.get_node(
 		"Hazards/AerialBasinSpikes"
 	) as PixelSpikeRow3D
@@ -246,6 +246,12 @@ func _validate_geometry(level: LevelSession3D) -> void:
 	assert(aerial_basin != null and blind_landing != null)
 	assert(is_equal_approx(aerial_basin.global_position.y, -2.4))
 	assert(is_equal_approx(aerial_basin.row_width, 32.0))
+	assert(is_zero_approx(aerial_basin.collision_end_inset))
+	var aerial_floor := _platform(level, "AerialBasin")
+	_assert_platform(aerial_floor, Vector3(142.72, -7.52, 0), Vector3(32, 10.24, 2))
+	assert(is_equal_approx(_top(aerial_floor), aerial_basin.global_position.y))
+	assert(is_equal_approx(_left(aerial_floor), aerial_basin.global_position.x - aerial_basin.row_width * 0.5))
+	assert(is_equal_approx(_right(aerial_floor), aerial_basin.global_position.x + aerial_basin.row_width * 0.5))
 	assert(is_equal_approx(
 		aerial_basin.global_position.x - aerial_basin.row_width * 0.5,
 		_right(garden_exit)

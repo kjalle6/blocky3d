@@ -1,0 +1,11 @@
+{
+  "note": "Unchanged item icon matched by SHA-256 to the Craftpix Resource Icons catalog. See docs/ASSET_CREDITS.md for the family index.",
+  "files": [
+    {
+      "runtime": "assets/art/ui/items/handgun_ammo.png",
+      "source": "assets/library/icons/resource_icons/1 Icons/Icon1_02.png",
+      "sha256": "891972d2f060b0cac245ee24f27206b0dfc01578c19c358816b14200e24ee597",
+      "license_file": "assets/library/icons/resource_icons/License.txt"
+    }
+  ]
+}

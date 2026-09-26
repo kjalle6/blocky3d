@@ -66,7 +66,7 @@ static func initialize(use_project_defaults := true) -> void:
 	if use_project_defaults:
 		saved_events.merge(copy_banks(SOURCE_EVENT_BANKS), true)
 		# Explicit saved choices, including empty banks, remain authoritative.
-		saved_events.merge(copy_banks(DEFAULTS.event_banks), true)
+		saved_events.merge(copy_saved_events(DEFAULTS.event_banks), true)
 	working_events = copy_banks(saved_events)
 	saved_reverb = DEFAULTS.cave_reverb.duplicate() if use_project_defaults else REVERB.new()
 	working_reverb = saved_reverb.duplicate()
@@ -92,6 +92,17 @@ static func copy_banks(banks: Dictionary) -> Dictionary:
 		bank.foot_indices = banks[key].foot_indices.duplicate()
 		bank.disabled_indices = banks[key].disabled_indices.duplicate()
 		result[key] = bank
+	return result
+
+static func copy_saved_events(banks: Dictionary) -> Dictionary:
+	var result := copy_banks(banks)
+	# Older mixes used one forest bank for both levels. Seed Level 2 once,
+	# preserving an independently saved Level 2 bank even when it is empty.
+	if result.has("ambience/forest") and not result.has("ambience/level_2_forest"):
+		result.merge(copy_banks({"ambience/level_2_forest": result["ambience/forest"]}))
+	# The old player_death bank covered both surviving damage and death.
+	if result.has("combat/player_death") and not result.has("combat/player_hit"):
+		result.merge(copy_banks({"combat/player_hit": result["combat/player_death"]}))
 	return result
 
 static func bank_for(key: String) -> Resource:

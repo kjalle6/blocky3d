@@ -1,8 +1,26 @@
 {
 	"catalog": {
+		"gz_prop_leaf_1": "fa0ddd6f2b002c115d4b3ef3d7cbaeaef27eada287156a9c6b3cd7903c3bf8fc",
+		"gz_prop_leaf_6": "55622ead25c58fb89969d6206c9ddf15a6923d1f8c6e72366f1222156dd72cb1",
 		"supply_chest": "8de96d259198f82ff23fc21080b56b0be62eceff7fd0d44b25c3b3af337ab0c4"
 	},
 	"created": {
+		"object_875b0a8c8953ebc57a7f17f4": {
+			"template": "gz_prop_leaf_1",
+			"values": {
+				"flip_h": false,
+				"x": 10.613542,
+				"y": 0.867188
+			}
+		},
+		"object_b0d78a5164021ecbda7e8035": {
+			"template": "gz_prop_leaf_6",
+			"values": {
+				"flip_h": false,
+				"x": 11.032812,
+				"y": 1.657812
+			}
+		},
 		"object_cave_approach_supply": {
 			"template": "supply_chest",
 			"values": {
@@ -16,12 +34,12 @@
 			}
 		}
 	},
-	"fingerprint": "1d21f8a360e86b15d1f5c6b79b51756e12ea04299a7001436e7cf88eab19ebfc",
+	"fingerprint": "7a5a5686ab0804027f322f2e614e9b0b367c8b9b44a19707fb27d3001d36ada1",
 	"overrides": {
 
 	},
 	"removed": [],
-	"revision": 2,
+	"revision": 3,
 	"schema": 3,
 	"section": "overgrown_coastal_ascent"
 }

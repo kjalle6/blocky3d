@@ -138,6 +138,12 @@ func _ready() -> void:
 	camera.snap_to_target()
 	if background != null:
 		background.snap_to_camera(true)
+	var event_audio := preload("res://scripts/audio/level_event_audio.gd").new()
+	event_audio.name = "EventAudio"
+	add_child(event_audio)
+	var falling_leaves := preload("res://scripts/presentation/falling_leaves_3d.gd").new()
+	falling_leaves.name = "FallingLeaves"
+	add_child(falling_leaves)
 
 
 func _physics_process(delta: float) -> void:

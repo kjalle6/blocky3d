@@ -1,6 +1,6 @@
 extends PopupMenu
 ## A shortcut to the same editor commands; no separate mutation/save path.
-enum Action { SETTINGS, FRAME, DUPLICATE, REVERT, REMOVE, BUILD, UNDO, REDO, TEST, SAVE, PROTECTED, ADD }
+enum Action { SETTINGS, FRAME, DUPLICATE, REVERT, REMOVE, BUILD, UNDO, REDO, TEST, SAVE, PROTECTED, ADD, FLIP, LAYER_BACK, LAYER_FORWARD }
 var designer: CanvasLayer
 var _protected_reason := ""
 
@@ -35,6 +35,10 @@ func open_at(point: Vector2, protected_id := "") -> void:
 		add_separator(designer.document.working[designer.selection[0]].name if count == 1 else "%d selected objects" % count)
 		add_item("Edit settings…", Action.SETTINGS)
 		add_item("Frame selection", Action.FRAME, KEY_F)
+		_item("Flip horizontally", Action.FLIP, designer.can_flip_selected(),
+			"Flip chests, scenery, blocks or enemy starting direction without moving them.")
+		_item("Move back one layer", Action.LAYER_BACK, designer.can_layer_selected(), "Decorations: lower numbers appear behind higher numbers.")
+		_item("Move forward one layer", Action.LAYER_FORWARD, designer.can_layer_selected(), "Decorations: higher numbers appear in front.")
 		add_separator()
 		_item("Duplicate" if count == 1 else "Duplicate selection", Action.DUPLICATE,
 			designer.can_duplicate_selected(), "Added objects and approved independent platforms can be duplicated.", KEY_MASK_CTRL | KEY_D)
@@ -72,6 +76,9 @@ func _activate(id: int) -> void:
 	match id:
 		Action.SETTINGS: designer.panel.focus_selected_settings()
 		Action.FRAME: designer.frame_selection()
+		Action.FLIP: designer.flip_selected()
+		Action.LAYER_BACK: designer.shift_decoration_layer(-1)
+		Action.LAYER_FORWARD: designer.shift_decoration_layer(1)
 		Action.DUPLICATE: designer.duplicate_selected()
 		Action.REVERT: designer.revert_selected()
 		Action.REMOVE: designer.remove_selected()

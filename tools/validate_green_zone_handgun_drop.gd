@@ -3,11 +3,13 @@ extends SceneTree
 ## collection, and run-local ownership lifecycle.
 
 const SHOOTER_AREA := preload("res://tools/level_3_shooter_area_fixture.gd")
+const MIX := preload("res://scripts/audio/movement_audio_mix.gd")
 
 var _completed := false
 var _drop_started_count := 0
 var _settled_count := 0
 var _acquired_count := 0
+var _pickup_sounds: Array[Dictionary] = []
 
 
 func _init() -> void:
@@ -23,6 +25,7 @@ func _on_watchdog_timeout() -> void:
 
 
 func _run() -> void:
+	var original_mix := FileAccess.get_sha256(MIX.SAVE_PATH)
 	var packed_root := load("res://scenes/app/game_root.tscn") as PackedScene
 	assert(packed_root != null)
 	var game_root := packed_root.instantiate()
@@ -40,6 +43,26 @@ func _run() -> void:
 		"ShooterEncounterStaging/GunDropAnchor"
 	) as Marker3D
 	var pickup := anchor.get_node("HandgunPickup") as HandgunPickup3D
+	var panel: CanvasLayer = game_root.audio_tuning_panel
+	panel.open_panel()
+	panel.select_event("pickups/handgun")
+	var bank: Resource = panel._bank()
+	bank.clips.clear()
+	bank.labels.clear()
+	bank.disabled_indices.clear()
+	panel._add_files(PackedStringArray(["res://assets/audio/combat/shot_1.wav", "res://assets/audio/combat/shot_2.wav"]))
+	bank.enabled = true
+	bank.selection_mode = 1
+	bank.fixed_index = 1
+	bank.volume_db = -31.0
+	bank.pitch_scale = 1.1
+	bank.pitch_variation = 0.0
+	bank.use_room_reverb = false
+	panel.close_panel()
+	level.combat_feedback.combat_audio.event_played.connect(func(event: Dictionary) -> void:
+		if event.id == "pickups/handgun": _pickup_sounds.append(event))
+	pickup._on_body_entered(level.player)
+	assert(_pickup_sounds.is_empty(), "A locked pickup must not play collection audio.")
 	assert(shooter != null and anchor != null and pickup != null)
 	assert(level.get_tree().get_nodes_in_group("weapon_pickup").size() == 1)
 	assert(pickup.validation_errors().is_empty())
@@ -96,6 +119,11 @@ func _run() -> void:
 	for frame in 8:
 		await physics_frame
 	assert(_acquired_count == 1)
+	assert(_pickup_sounds.size() == 1, "Real pickup contact must play its audio-tool bank exactly once.")
+	assert(_pickup_sounds[0].clip_index == 1 and _pickup_sounds[0].volume_db == -31.0)
+	assert(is_equal_approx(_pickup_sounds[0].pitch, 1.1) and _pickup_sounds[0].bus == &"Master")
+	pickup._on_body_entered(level.player)
+	assert(_pickup_sounds.size() == 1)
 	assert(level.owns_weapon(PlayerWeapon.HANDGUN))
 	assert(level.player.owns_weapon(PlayerWeapon.HANDGUN))
 	assert(level.player.equipped_weapon_id() == PlayerWeapon.HANDGUN)
@@ -114,6 +142,7 @@ func _run() -> void:
 	assert(pickup.is_claimed())
 	assert(not pickup.visible)
 	assert(_acquired_count == 1)
+	assert(_pickup_sounds.size() == 1, "Restoring an owned gun must not replay pickup audio.")
 
 	# Manual R is the authored full-section restart: it clears the session gun,
 	# rearms the shooter, and reuses the same locked pickup actor.
@@ -155,10 +184,15 @@ func _run() -> void:
 	assert(pickup.collection_is_active())
 	assert(level.get_tree().get_nodes_in_group("weapon_pickup").size() == 1)
 
+	bank.enabled = false
+	level.player.reset_at(Transform3D(Basis.IDENTITY, Vector3(anchor.global_position.x, 0.7, 0.0)))
+	for frame in 8: await physics_frame
+	assert(pickup.is_claimed() and _pickup_sounds.size() == 1, "Muted pickups still grant the weapon silently.")
+	assert(FileAccess.get_sha256(MIX.SAVE_PATH) == original_mix)
 	print(
 		"Green Zone handgun drop passed: one authored pickup, crisp two-pose "
 		+ "kick, one acquisition, death persistence, full-restart rearm, and "
-		+ "reset cancellation."
+		+ "reset cancellation; selected pickup audio, mute and saved-mix preservation."
 	)
 	_completed = true
 	quit(0)

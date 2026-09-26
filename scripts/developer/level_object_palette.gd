@@ -3,11 +3,16 @@ extends VBoxContainer
 const CATALOG := preload("res://scripts/developer/level_object_catalog.gd")
 const LIBRARY := preload("res://scripts/developer/level_object_library.gd")
 const THUMBNAIL := preload("res://scripts/developer/level_object_thumbnail.gd")
+const PAGE_SIZE := 24
 var designer: CanvasLayer
 var _search: LineEdit
 var _category: OptionButton
 var _zone: OptionButton
 var _cards: GridContainer
+var _pager: HBoxContainer
+var _page := 0
+var _scroll: ScrollContainer
+var _results: Array[String] = []
 
 func _ready() -> void:
 	add_theme_constant_override("separation", 10)
@@ -29,6 +34,10 @@ func _ready() -> void:
 	for category in LIBRARY.CATEGORIES: _category.add_item(category)
 	_category.select(LIBRARY.CATEGORIES.find("Blocks"))
 	add_child(_category)
+	var layer_picker := preload("res://scripts/developer/level_decoration_layer_picker.gd").new(designer.decoration_layer, "New decoration layer")
+	add_child(layer_picker)
+	layer_picker.layer_changed.connect(designer.set_decoration_layer)
+	designer.decoration_layer_changed.connect(layer_picker.set_layer)
 	var browse := Button.new()
 	browse.text = "Open full browser…"
 	browse.custom_minimum_size.y = 34
@@ -39,7 +48,13 @@ func _ready() -> void:
 		browser.category = _category.get_item_text(_category.selected)
 		browser._search.text = _search.text
 		browser.open())
+	_pager = preload("res://scripts/developer/level_catalog_pager.gd").new()
+	add_child(_pager)
+	_pager.page_changed.connect(func(step: int) -> void:
+		_page += step
+		_refresh(false))
 	var scroll := ScrollContainer.new()
+	_scroll = scroll
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	add_child(scroll)
@@ -60,15 +75,20 @@ func show_blocks() -> void:
 	if _zone.get_item_text(_zone.selected) == "Shared": _zone.select(CATALOG.zones().find("Green Zone"))
 	_refresh()
 
-func _refresh() -> void:
-	for child in _cards.get_children():
-		_cards.remove_child(child)
-		child.queue_free()
+func _refresh(reset_page := true) -> void:
+	if reset_page: _page = 0
+	_results.clear()
 	var query := _search.text.strip_edges().to_lower()
 	var category := _category.get_item_text(_category.selected)
 	for id in CATALOG.ENTRIES:
-		var entry: Dictionary = CATALOG.ENTRIES[id]
-		if not LIBRARY.matches(entry, _zone.get_item_text(_zone.selected), category, query): continue
+		if LIBRARY.matches(CATALOG.ENTRIES[id], _zone.get_item_text(_zone.selected), category, query): _results.append(id)
+	_page = clampi(_page, 0, maxi(0, ceili(float(_results.size()) / PAGE_SIZE) - 1))
+	_pager.update_page(_page, _results.size(), PAGE_SIZE)
+	_scroll.scroll_vertical = 0
+	for child in _cards.get_children():
+		_cards.remove_child(child)
+		child.queue_free()
+	for id in _results.slice(_page * PAGE_SIZE, (_page + 1) * PAGE_SIZE):
 		var card := Button.new()
 		card.set_meta("catalog_id", id)
 		card.custom_minimum_size = Vector2(126, 118)

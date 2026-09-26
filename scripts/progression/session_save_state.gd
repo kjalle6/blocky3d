@@ -2,6 +2,8 @@ class_name SessionSaveState
 extends RefCounted
 ## Logical save state for one live section. Scene nodes and projectiles are
 ## rebuilt, never serialized. Stable source IDs also prevent reward farming.
+signal reward_claimed(source: Node)
+
 const REGISTRY := preload("res://scripts/developer/level_layout_registry.gd")
 var session: LevelSession3D
 var rewards: Dictionary = {}
@@ -71,6 +73,8 @@ func claim_rewards(node: Node, contents: Dictionary) -> bool:
 	rewards[id] = true
 	for item_id in contents:
 		session.player.inventory.add(StringName(item_id), int(contents[item_id]))
+	# Publish once per accepted bundle, never when restoring saved ownership.
+	reward_claimed.emit(node)
 	return true
 
 

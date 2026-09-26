@@ -7,6 +7,7 @@ extends Area3D
 signal drop_started
 signal settled
 signal collection_requested(pickup: HandgunPickup3D, player: PlayerCharacter)
+signal collected(world_position: Vector3)
 
 enum DropState { LOCKED, KICKING, BOUNCING, AVAILABLE, CLAIMED }
 
@@ -184,6 +185,7 @@ func _on_body_entered(body: Node3D) -> void:
 	collection_requested.emit(self, player)
 	if _session.acquire_weapon(PlayerWeapon.HANDGUN, ammunition_rounds):
 		mark_claimed()
+		collected.emit(player.global_position)
 	elif _session.owns_weapon(PlayerWeapon.HANDGUN):
 		mark_claimed()
 

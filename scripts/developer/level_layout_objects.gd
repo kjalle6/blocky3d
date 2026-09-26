@@ -3,6 +3,8 @@ extends RefCounted
 const REGISTRY := preload("res://scripts/developer/level_layout_registry.gd")
 const CATALOG := preload("res://scripts/developer/level_object_catalog.gd")
 const TILE := 1.28
+const MIN_DECORATION_LAYER := -100
+const MAX_DECORATION_LAYER := 100
 const FIELDS := {
 	"platform": ["x", "y", "width", "height", "style", "surface", "left_cap", "right_cap", "bottom_cap"],
 	"enemy": ["x", "y", "speed", "left", "right", "facing_right"],
@@ -10,9 +12,9 @@ const FIELDS := {
 	"checkpoint": ["x", "y", "width", "height"],
 	"gunner": ["x", "y", "facing_right"],
 	"flyer": ["x", "y"],
-	"decoration": ["x", "y", "flip_h"],
+	"decoration": ["x", "y", "flip_h", "decoration_layer"],
 	"tile": ["x", "y", "flip_h", "surface"],
-	"chest": ["x", "y", "loot_pool", "basic_heal", "large_heal_test", "medical_bag", "handgun_ammo"],
+	"chest": ["x", "y", "loot_pool", "basic_heal", "large_heal_test", "medical_bag", "handgun_ammo", "flip_h"],
 }
 
 static func inspect(level: Node) -> Dictionary:
@@ -77,11 +79,17 @@ static func read_values(node: Node3D, kind: String) -> Dictionary:
 			"right": node.patrol_right_distance, "facing_right": node.starts_moving_right})
 		"chest":
 			values.loot_pool = str(node.loot_pool)
+			# Omit the default to keep older unflipped records byte-for-byte compatible.
+			if node.get_meta("layout_flip_h", false): values.flip_h = true
 			for id in ["basic_heal", "large_heal_test", "medical_bag", "handgun_ammo"]:
 				values[id] = int(node.additional_items.get(StringName(id), 0)) + (node.quantity if node.item_id == StringName(id) else 0)
 		"spikes": values.width = node.row_width
 		"gunner": values.facing_right = node.starts_facing_right
-		"decoration": values.flip_h = node.get_node("Visual").flip_h
+		"decoration":
+			values.flip_h = node.get_node("Visual").flip_h
+			# Layer zero is implicit so existing layouts retain their original values.
+			var layer: int = node.get_meta("layout_decoration_layer", 0)
+			if layer != 0: values.decoration_layer = layer
 		"tile": values.merge({"flip_h": node.get_node("Visual").flip_h, "surface": str(node.get_meta("footstep_surface", "silent"))})
 		"checkpoint":
 			var shape := node.get_node("Trigger").shape as BoxShape3D
@@ -90,7 +98,11 @@ static func read_values(node: Node3D, kind: String) -> Dictionary:
 	return JSON.parse_string(JSON.stringify(values, "", true)) as Dictionary
 
 static func validate(kind: String, values: Dictionary) -> String:
-	if not FIELDS.has(kind) or values.size() != FIELDS[kind].size():
+	if not FIELDS.has(kind): return "Incomplete or unsupported object properties."
+	var expected_count: int = FIELDS[kind].size()
+	if kind == "chest" and not values.has("flip_h"): expected_count -= 1
+	if kind == "decoration" and not values.has("decoration_layer"): expected_count -= 1
+	if values.size() != expected_count:
 		return "Incomplete or unsupported object properties."
 	for key in values:
 		if key not in FIELDS[kind]: return "Unsupported property: " + str(key)
@@ -102,6 +114,8 @@ static func validate(kind: String, values: Dictionary) -> String:
 		elif (not value is float and not value is int) or not is_finite(float(value)):
 			return "Expected a finite number for " + str(key)
 	if absf(values.x) > 10000.0 or absf(values.y) > 10000.0: return "Position is outside the supported workspace."
+	if kind == "decoration" and not SaveSnapshot.whole(values.get("decoration_layer", 0), MIN_DECORATION_LAYER, MAX_DECORATION_LAYER):
+		return "Decoration layers must be whole numbers from -100 to 100."
 	if values.has("width") and (values.width < 0.1 or values.width > 327.68): return "Width must be between 0.1 and 327.68 m."
 	if values.has("height") and (values.height < 0.1 or values.height > 81.92): return "Height must be between 0.1 and 81.92 m."
 	if kind == "chest":
@@ -153,13 +167,20 @@ static func apply(node: Node3D, kind: String, values: Dictionary, rebuild := fal
 			node.starts_facing_right = values.facing_right
 			if rebuild and node.pixel_visual != null: node.pixel_visual.tick(0.0, &"idle", values.facing_right)
 		"chest":
+			node.set_meta("layout_flip_h", values.get("flip_h", false))
+			# The chest builds its sprite in _ready; layouts are applied before that.
+			var update_flip := _apply_chest_flip.bind(node)
+			if node.is_node_ready(): _apply_chest_flip(node)
+			elif not node.ready.is_connected(update_flip): node.ready.connect(update_flip, CONNECT_ONE_SHOT)
 			node.loot_pool = StringName(values.loot_pool)
 			node.item_id = &"basic_heal"
 			node.quantity = int(values.basic_heal)
 			node.additional_items.clear()
 			for id in ["large_heal_test", "medical_bag", "handgun_ammo"]:
 				if values[id] > 0: node.additional_items[StringName(id)] = int(values[id])
-		"decoration": node.get_node("Visual").flip_h = values.flip_h
+		"decoration":
+			node.get_node("Visual").flip_h = values.flip_h
+			node.set_meta("layout_decoration_layer", int(values.get("decoration_layer", 0)))
 		"tile":
 			node.set_horizontal_flip(values.flip_h)
 			node.set_meta("footstep_surface", StringName(values.surface))
@@ -168,6 +189,14 @@ static func apply(node: Node3D, kind: String, values: Dictionary, rebuild := fal
 			trigger.shape = trigger.shape.duplicate()
 			trigger.shape.size = Vector3(values.width, values.height, trigger.shape.size.z)
 			trigger.position.y = values.height * 0.5
+
+static func _apply_chest_flip(node: ItemReward3D) -> void:
+	node.visual.flip_h = node.get_meta("layout_flip_h", false)
+
+static func horizontal_flip_field(kind: String) -> String:
+	if kind in ["chest", "decoration", "tile"]: return "flip_h"
+	if kind in ["enemy", "gunner"]: return "facing_right"
+	return ""
 
 static func bounds(record: Dictionary) -> Rect2:
 	var v: Dictionary = record.values
@@ -242,7 +271,11 @@ static func create_object(level: Node, id: String, record: Dictionary) -> Node3D
 
 static func order_decorations(nodes: Dictionary) -> void:
 	var ids := nodes.keys()
-	ids.sort()
+	ids = ids.filter(func(id: String) -> bool: return nodes[id].get_meta("layout_kind", "") == "decoration")
+	ids.sort_custom(func(a: String, b: String) -> bool:
+		var a_layer: int = nodes[a].get_meta("layout_decoration_layer", 0)
+		var b_layer: int = nodes[b].get_meta("layout_decoration_layer", 0)
+		return a < b if a_layer == b_layer else a_layer < b_layer)
 	var rank := 0
 	for id in ids:
 		var node: Node = nodes[id]

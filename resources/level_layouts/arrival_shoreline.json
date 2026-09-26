@@ -1,9 +1,81 @@
 {
 	"catalog": {
+		"gz_prop_bushes_13": "543f382de0f3602fcdf271a88cbcbec066068ed1a74ffc39c5443f213447b594",
+		"gz_prop_bushes_18": "fae7afa1161ce3970bf603a34666d93bcf1cdfec95b252d187c8d59a5f62b0a4",
+		"gz_prop_bushes_19": "dcd22d74a9e976691b562726bc2c5b8a45f316c589fa5604b11ef86bbac263d3",
+		"gz_prop_leaf_1": "fa0ddd6f2b002c115d4b3ef3d7cbaeaef27eada287156a9c6b3cd7903c3bf8fc",
+		"gz_prop_leaf_2": "fc5cec8b1c1635e27547a94808a9a3306d6f0c7e6ce3441fc91abf0d4807d4bc",
+		"gz_prop_leaf_3": "855ef18131f8a8205289034af47024264ced607483da635506d69e6d912054c0",
+		"gz_prop_leaf_4": "8cda9d060df6400509a0e46541a41be49c04ea548a7c87901fae0cd42a221a30",
+		"gz_prop_leaf_5": "feb87791a14881ba5b047ee46b9aef2bd531a3e4d430d6f394cfcdce77e28ecd",
+		"gz_prop_leaf_6": "55622ead25c58fb89969d6206c9ddf15a6923d1f8c6e72366f1222156dd72cb1",
+		"gz_tile_49": "5cbb3f87649a532db1c71150cb7f117afdcfb5c9274f48ca6e9f2c0cc512309d",
+		"gz_tile_50": "21c8cfb384c34ca012b5ccf68e28e679959eeac9f58660d3eb05b6d1102ea137",
+		"gz_tile_51": "28f59f4c3a333e14f388d566f09787f943a1a2b15b1b272122db007b4e118fdb",
+		"scenery_tilesets_beach_zone_3_objects_2_stones_1": "495ae0baf0d35bc76cec6b9805520277296db798d745a70260cf9a8838c15f4a",
+		"scenery_tilesets_beach_zone_3_objects_2_stones_4": "fb6a473448d4abeb2d3ef98530240ed88b4c6fca0baaa53c7b57aef85bc6af73",
+		"scenery_tilesets_beach_zone_3_objects_2_stones_5": "4f6ff1535fc04c51350f9429781b9639bcd6b8d982b73c73c98a57c30e78067b",
+		"scenery_tilesets_beach_zone_3_objects_2_stones_6": "940d5d611254bacb8154e689b4f957b4c155e48b36610b61af3f904a4514c044",
+		"scenery_tilesets_beach_zone_3_objects_2_stones_7": "edc69ac334b29edf5a0c9e41a813275a81e34c62148defec11c34b0f63520986",
+		"scenery_tilesets_beach_zone_3_objects_2_stones_8": "7db8f8007fbce455440f9ab6df9d738bb0a0d6bdec0c834b2cfc5be147e7383f",
+		"scenery_tilesets_beach_zone_3_objects_3_other_11": "a5d1666bcad031bc3f4b3143790df5c1891e56ed085539b8bd064fdce8ad512a",
+		"scenery_tilesets_seaport_zone_3_objects_1_cargos_19": "d20d266037e3bac34af515bcc64eb87ef33d5d83bff8334f4f39a204f993d1c2",
 		"skater_enemy": "2ad7f1789cf5e8f85b1581ccb4e616efedd24a6f3144562dc482e31853c63b73",
-		"supply_chest": "8de96d259198f82ff23fc21080b56b0be62eceff7fd0d44b25c3b3af337ab0c4"
+		"stone": "8af9194bda7a20e782c99f90fbd3d3d645b6c51ae6ca4d0316393b49e2295a67",
+		"supply_chest": "8de96d259198f82ff23fc21080b56b0be62eceff7fd0d44b25c3b3af337ab0c4",
+		"tree": "ef5f8e6fa0203e7907e95600fe965c6a344b13da9470bb2f37b2912edfdf5c4f"
 	},
 	"created": {
+		"object_05600bcf95508e108c41df58": {
+			"template": "gz_prop_bushes_19",
+			"values": {
+				"flip_h": false,
+				"x": 46.228439,
+				"y": 3.84
+			}
+		},
+		"object_0f219fa3145d03916d0b9d60": {
+			"template": "scenery_tilesets_beach_zone_3_objects_3_other_11",
+			"values": {
+				"decoration_layer": -2.0,
+				"flip_h": false,
+				"x": -4.926313,
+				"y": -0.673667
+			}
+		},
+		"object_1098d706b9071db5d8501779": {
+			"template": "gz_prop_leaf_5",
+			"values": {
+				"flip_h": false,
+				"x": 61.718869,
+				"y": 3.476331
+			}
+		},
+		"object_12e5c10f96fcdf5af0557c2d": {
+			"template": "scenery_tilesets_beach_zone_3_objects_2_stones_6",
+			"values": {
+				"decoration_layer": -2.0,
+				"flip_h": false,
+				"x": 3.986191,
+				"y": -0.253
+			}
+		},
+		"object_1c4d97d8d945639fe198c709": {
+			"template": "scenery_tilesets_beach_zone_3_objects_2_stones_4",
+			"values": {
+				"flip_h": false,
+				"x": 6.21494,
+				"y": -0.143124
+			}
+		},
+		"object_2d5e154659b359adabdf66b1": {
+			"template": "gz_prop_leaf_1",
+			"values": {
+				"flip_h": false,
+				"x": 194.361954,
+				"y": 3.860208
+			}
+		},
 		"object_3565f9a39bbee8b13e89594c": {
 			"template": "skater_enemy",
 			"values": {
@@ -13,6 +85,273 @@
 				"speed": 2.0,
 				"x": 126.079994,
 				"y": 1.02
+			}
+		},
+		"object_374b48bbd71f0aea3659b875": {
+			"template": "gz_tile_50",
+			"values": {
+				"flip_h": false,
+				"surface": "grass",
+				"x": 132.479995,
+				"y": 10.239999
+			}
+		},
+		"object_3f31846e1176ab61aaa6298f": {
+			"template": "gz_tile_50",
+			"values": {
+				"flip_h": false,
+				"surface": "grass",
+				"x": 129.919998,
+				"y": 10.239999
+			}
+		},
+		"object_4b256a06c4b3ccfb1d3a11eb": {
+			"template": "scenery_tilesets_seaport_zone_3_objects_1_cargos_19",
+			"values": {
+				"decoration_layer": -2.0,
+				"flip_h": false,
+				"x": 6.588543,
+				"y": -0.416354
+			}
+		},
+		"object_4f44576d5067a9b9c7d0b61a": {
+			"template": "scenery_tilesets_beach_zone_3_objects_2_stones_1",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 10.226856,
+				"y": -0.084334
+			}
+		},
+		"object_545de3b93e12aa3db5b779ee": {
+			"template": "scenery_tilesets_beach_zone_3_objects_2_stones_1",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 2.915398,
+				"y": -0.132584
+			}
+		},
+		"object_59ea9bf1931742a00312556f": {
+			"template": "gz_tile_49",
+			"values": {
+				"flip_h": false,
+				"surface": "grass",
+				"x": 128.639999,
+				"y": 10.239999
+			}
+		},
+		"object_5af7efb9b59ce403aa846038": {
+			"template": "gz_prop_leaf_1",
+			"values": {
+				"flip_h": false,
+				"x": 71.765022,
+				"y": 1.938097
+			}
+		},
+		"object_632921690d04578676d8106b": {
+			"template": "gz_prop_leaf_2",
+			"values": {
+				"flip_h": false,
+				"x": 24.352032,
+				"y": 2.400928
+			}
+		},
+		"object_65c27e006802eaaa370a57c7": {
+			"template": "stone",
+			"values": {
+				"flip_h": false,
+				"x": 131.639999,
+				"y": 10.88
+			}
+		},
+		"object_6808cf8e069d0e79d1753d93": {
+			"template": "gz_prop_leaf_6",
+			"values": {
+				"flip_h": false,
+				"x": 113.379028,
+				"y": 1.965321
+			}
+		},
+		"object_6d3debd0ef026f244233c4eb": {
+			"template": "scenery_tilesets_beach_zone_3_objects_2_stones_5",
+			"values": {
+				"decoration_layer": -2.0,
+				"flip_h": false,
+				"x": 4.718022,
+				"y": -0.164208
+			}
+		},
+		"object_6e8132995c876d145c1fd074": {
+			"template": "tree",
+			"values": {
+				"flip_h": false,
+				"x": 129.279999,
+				"y": 10.879999
+			}
+		},
+		"object_70e87d00adbe334c85fab772": {
+			"template": "gz_prop_leaf_3",
+			"values": {
+				"flip_h": false,
+				"x": 172.631775,
+				"y": 2.266979
+			}
+		},
+		"object_7781a5e4c20ca81db69e290d": {
+			"template": "scenery_tilesets_beach_zone_3_objects_2_stones_8",
+			"values": {
+				"decoration_layer": -2.0,
+				"flip_h": false,
+				"x": 5.187941,
+				"y": -0.158125
+			}
+		},
+		"object_7cbedb82cdb677780b74e1cb": {
+			"template": "gz_prop_leaf_6",
+			"values": {
+				"flip_h": false,
+				"x": 63.692711,
+				"y": 3.244915
+			}
+		},
+		"object_7f0ffac76264768d24dd7222": {
+			"template": "gz_tile_51",
+			"values": {
+				"flip_h": false,
+				"surface": "grass",
+				"x": 133.759994,
+				"y": 10.239999
+			}
+		},
+		"object_7f6a0c1664ec74c47bad117a": {
+			"template": "gz_prop_leaf_2",
+			"values": {
+				"flip_h": false,
+				"x": 129.660629,
+				"y": 12.14802
+			}
+		},
+		"object_8f23425a9690f6a8c998c852": {
+			"template": "scenery_tilesets_beach_zone_3_objects_2_stones_4",
+			"values": {
+				"decoration_layer": -2.0,
+				"flip_h": false,
+				"x": 13.326108,
+				"y": -0.147583
+			}
+		},
+		"object_97383262d123743e69a10850": {
+			"template": "supply_chest",
+			"values": {
+				"basic_heal": 1.0,
+				"flip_h": true,
+				"handgun_ammo": 0.0,
+				"large_heal_test": 0.0,
+				"loot_pool": "level",
+				"medical_bag": 0.0,
+				"x": 128.639999,
+				"y": 10.879999
+			}
+		},
+		"object_a301761eae1e1dc10e289f64": {
+			"template": "stone",
+			"values": {
+				"flip_h": false,
+				"x": 48.678722,
+				"y": 3.84
+			}
+		},
+		"object_abcabf699475259d90931736": {
+			"template": "gz_tile_50",
+			"values": {
+				"flip_h": false,
+				"surface": "grass",
+				"x": 131.199997,
+				"y": 10.239999
+			}
+		},
+		"object_af3af7c3ccce4a2c7163bff8": {
+			"template": "scenery_tilesets_beach_zone_3_objects_2_stones_7",
+			"values": {
+				"decoration_layer": -2.0,
+				"flip_h": false,
+				"x": 12.177066,
+				"y": -0.18975
+			}
+		},
+		"object_c4ae66eea424090774e116e0": {
+			"template": "gz_prop_leaf_4",
+			"values": {
+				"flip_h": false,
+				"x": 22.582382,
+				"y": 2.087836
+			}
+		},
+		"object_c4fcaf06da88cc30bb8a9e6f": {
+			"template": "gz_prop_leaf_6",
+			"values": {
+				"flip_h": false,
+				"x": 129.943954,
+				"y": 12.351668
+			}
+		},
+		"object_c6955cfa372a659b3beb442e": {
+			"template": "gz_prop_leaf_1",
+			"values": {
+				"flip_h": false,
+				"x": 129.919998,
+				"y": 10.88
+			}
+		},
+		"object_caa02bfb459b09ec0e286292": {
+			"template": "gz_prop_leaf_3",
+			"values": {
+				"flip_h": false,
+				"x": 128.580108,
+				"y": 12.639166
+			}
+		},
+		"object_cb1a1a4c6df90439e4e36237": {
+			"template": "gz_prop_bushes_13",
+			"values": {
+				"flip_h": false,
+				"x": 130.559998,
+				"y": 10.879999
+			}
+		},
+		"object_ce36baaa5ddc0bdd5597b164": {
+			"template": "gz_prop_bushes_18",
+			"values": {
+				"decoration_layer": -1.0,
+				"flip_h": false,
+				"x": 47.467193,
+				"y": 3.84
+			}
+		},
+		"object_d25667beff4108db510cff23": {
+			"template": "scenery_tilesets_beach_zone_3_objects_2_stones_5",
+			"values": {
+				"decoration_layer": -2.0,
+				"flip_h": false,
+				"x": 1.129398,
+				"y": -0.189751
+			}
+		},
+		"object_e992f35f8fb80e3eee0c3475": {
+			"template": "gz_prop_leaf_5",
+			"values": {
+				"flip_h": false,
+				"x": 112.031372,
+				"y": 2.400927
+			}
+		},
+		"object_ed2bb56de6db5d2e2d552ed3": {
+			"template": "gz_prop_leaf_2",
+			"values": {
+				"flip_h": false,
+				"x": 197.308838,
+				"y": 4.171667
 			}
 		},
 		"object_shoreline_supply": {
@@ -28,12 +367,12 @@
 			}
 		}
 	},
-	"fingerprint": "e8793dfca897cf8d81bd7ec0e57658b5edeef7c9964745866d471b4b0a10729c",
+	"fingerprint": "cbc1db73deaa0a23dc26cc6a71d84cbc7256106a646884bacfc5617d31669a25",
 	"overrides": {
 
 	},
 	"removed": [],
-	"revision": 3,
+	"revision": 9,
 	"schema": 3,
 	"section": "arrival_shoreline"
 }

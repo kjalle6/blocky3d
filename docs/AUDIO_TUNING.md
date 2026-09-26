@@ -127,12 +127,39 @@ Ambience, Interface, and Music. The existing surface controls still work as
 before. Ambience also gives direct access to the existing Cave and Underground
 recording/reverb controls; these edit the same settings shown alongside footsteps.
 
-The expansion introduced 50 empty event banks, including dash, wall movement,
-combat, pickups, lift/skater/flyer sounds, outdoor ambience, menu sounds, and
-music. Seven combat entries are now connected as described above; the
-other new events remain **preview-only**. Their pages identify whether they
-are connected. Adding and saving a recording to an unconnected entry prepares
-it for later integration. Existing Cave/Underground ambience stays connected.
+All named catalog entries have gameplay connections, including the two
+existing room ambience entries. Empty slots are silent. Add a recording and
+enable/select it to hear it at the corresponding moment in the game; save the
+mix to retain it for future launches. The event page describes its trigger and
+shows whether the current selection is ready to play or silent.
+
+- Abilities play on the actual jump/dash, with a wall-slide loop and dash-ready
+  cue. Unlock sounds play on collection, separate from performing the ability.
+- Combat covers firing, impacts, melee, healing, enemy attacks/noticing/defeat,
+  weapon changes and separate **Player hit**, **Player death** and respawn
+  slots. Surviving damage plays the hit cue. Fatal damage and lethal hazards
+  play the death cue once, without layering the hit cue.
+- Handgun collection plays only on collecting the physical dropped weapon.
+  Its settling sound is separate. Lab grants and save restoration do not play
+  the collect sound. Autosave points sound on activation; completion sounds
+  cover both goals and exit transitions.
+- Nearby world actors own patrol footsteps, rolling wheels, flyer hover/spark
+  and lift start/motor/stop sounds. Lift deck contacts use the actual support
+  collider. Cave slide audio stops on completion or skipping; the exit contact
+  plays only on natural completion. Cave water death has a splash slot.
+- **World objects → Chest · open** plays once when a supply chest opens,
+  including designer-placed chests and chests with several rewards. It does not
+  play for loose pickups, repeat contact, or loading an already opened chest.
+  The slot starts empty so you can choose its recording in the audio tool.
+- Outdoor ambience has separate **Level 1 · beach surf**, **Level 1 · forest**
+  and **Level 2 · forest** slots. Level 1 switches at its shoreline boundary;
+  Level 2 uses its own forest slot outdoors. Both yield to existing
+  Cave/Underground room ambience indoors. Music follows the menu or level,
+  with a separate completion phrase. Interface sounds work while paused.
+
+Continuous sounds stop with their action, on death or level exit as appropriate.
+Opening developer tools silences gameplay audio for auditioning. No recordings
+are automatically chosen for empty slots.
 
 For a new event:
 
@@ -147,6 +174,8 @@ For a new event:
 4. Choose **Play once** or **Loop until stopped**. **Play event** follows the
    current selection rules. A loop repeats the same recording in the audio mixer;
    pressing Play event again picks a new recording according to the pool.
+   This controls auditioning. In game, action cues play once and continuous
+   sounds loop for their actual lifetime, as described on the event page.
 5. **Repeat** previews one-shots at the selected interval, waiting if a recording
    is still playing. It never layers the same event over its own tail. **Stop**
    ends the preview immediately. Loops continue until stopped, without timer
@@ -168,20 +197,38 @@ A `gameplay` description identifies a connected event in the panel.
 pitch, repeat, enable, loop, and reverb settings. The mix resource stores them in
 `event_banks`, separate from the established surface banks. Older saved mixes
 load the current fallback defaults for new events and retain all existing choices.
+Mixes from before the forest split retain the old forest bank for Level 1 and
+copy its settings into Level 2 on loading. The banks can then be edited and
+saved independently; an existing Level 2 choice, including silence, is preserved.
+The former shared player hit/death bank is likewise copied into separate hit
+and death settings when loading an older mix. Subsequent choices are independent.
 
-`sound_event_voice.gd` provides explicit play/stop playback for previews and
-future gameplay owners. It duplicates stream settings before enabling/disabling
-WAV/OGG/MP3 looping, preserving the original asset. It does not subscribe to any
-gameplay signals. Future integration must deliberately connect a gameplay owner
-and decide event lifetime, positional playback, and voice limits as appropriate.
+`sound_event_voice.gd` provides preview playback and copies stream settings
+before changing WAV/OGG/MP3 looping, preserving the original asset.
+`level_event_audio.gd` connects level/player/actor events, using the existing
+bounded positional one-shot pool and up to 16 active continuous actor voices.
+`app_event_audio.gd` owns paused-menu cues and music/outdoor/slide context.
+`gameplay_event_loop.gd` applies the selected recording, mute, volume, pitch and
+room routing to continuous sounds. A future catalog entry still needs an actual
+owner before its `gameplay` description can claim a connection; unconnected
+entries are explicitly marked **PREVIEW ONLY** in the picker.
 
 `tools/validate_sound_event_tuning.gd` checks empty defaults, legacy mix loading,
 selection, pitch limits, isolated A/B, file replacement and failure handling,
 asset promotion, actual panel controls, paused looping and one-shot playback,
-room routing, cleanup, and absence of ability-audio subscriptions. Generated
+room routing, cleanup, and installed gameplay connections. Generated
 test tones and saved test mixes stay under `build/sound_event_tuning_test`.
 The validator hashes the production mix before/after. Extended graphical
 captures are under `build/previews/audio_tuning`.
+
+`tools/validate_gameplay_event_audio.gd` checks empty/assigned banks through
+gameplay owners, dynamic actor discovery, continuous-sound cleanup, paused UI,
+music/ambience contexts and cave-slide completion/skipping.
+`tools/validate_chest_loot.gd` checks chest contact with an audio-tool recording,
+bundle timing, empty/muted slots, restored chests and silent designer previews.
+`tools/validate_green_zone_handgun_drop.gd` verifies collection with recordings
+added through the audio tool, selection/volume/pitch, mute, duplicate collection
+and reset behavior. Both preserve the production mix byte-for-byte.
 
 The user accepted the saved movement and environment mix on 2026-09-06.
 All Grass, Sand, Cave, and Underground footstep/takeoff/landing banks are now
@@ -233,6 +280,41 @@ depending on the external source folder or waiting for an editor import. WAV
 PCM is preserved; OGG/MP3 streams retain their encoded audio. Original files
 are never modified, and the full source pack is not added to the project.
 Source-pack permissions still apply to any recordings selected for release.
+
+### Firearm audition set
+
+The local folder `D:/GodotProjects/blocky3dassets/audio/Prepared_Firearms`
+contains 24 prepared candidates: **13 handgun shots**, **five empty clicks**,
+and **six other isolated shots**. Use **Combat → choose an event → Add
+recordings…** and open the matching folder. **Player handgun · out of ammo**
+uses the selected bank in gameplay: one cue per new trigger press when the
+magazine is empty, including when reserve ammunition remains. Shots and empty
+clicks share the handgun's 0.20-second cooldown. Early presses are ignored;
+holding the trigger does not repeat or queue them. Reloads and blocked attacks remain
+silent. Recording selection, volume, pitch, mute, and room reverb follow the
+audio tool's current mix; **Save defaults** retains them for the next launch.
+The audition preparation does not replace the accepted mix or reload.
+
+Start comparisons with Snake's isolated 9mm, Free Firearm's Walther PPQ
+`X_39P`, and 1911 `A_42P`; for empty clicks, try Snake's 9mm dry fire and
+Mixkit's handgun click. This shortlist is based on filenames and waveform
+inspection; listening decides suitability.
+
+The original packs remain under `blocky3dassets/audio/Sounds`. The prepared
+set extracts the first report from twelve handgun sequences and trims
+single-event recordings from Snake's two packs and the loose downloads.
+Four longer handgun variants reach the 3.2-second tail window and fade there;
+shorter variants and the isolated Snake recordings offer tighter comparisons.
+No denoising, pitch change, compression, or reverb was applied. Clips use
+PCM16 WAV at their original sample rate, brief edge fades, and attenuation
+only where needed for headroom. `source_manifest.json` beside them records
+exact cuts, processing, original hashes, and source permissions. Loose files
+without a verified download page remain audition candidates pending provenance.
+
+`tools/prepare_firearm_auditions.py` reproduces this curated set using Python,
+NumPy, and SoundFile. Pass `--sources` pointing at `Sounds` and `--output`
+pointing at a **new sibling folder**. It refuses to overwrite an earlier set.
+It is not a general burst splitter and does not convert the entire library.
 
 ## Cave reverb
 

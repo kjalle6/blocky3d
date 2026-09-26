@@ -233,6 +233,14 @@ func can_fire() -> bool:
 	return definition != null and not is_recovering() and not is_reloading() and loaded_rounds > 0
 
 
+func try_empty_trigger() -> bool:
+	if definition == null or loaded_rounds != 0 or is_reloading() or is_recovering():
+		return false
+	# An empty pull has the same cadence as a shot, even if its audio is muted.
+	_cooldown_remaining = definition.fire_interval
+	return true
+
+
 func reserve_rounds() -> int:
 	var player := get_parent() as PlayerCharacter
 	return player.inventory.count(AMMO_ID) if player != null else 0

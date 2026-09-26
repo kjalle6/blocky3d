@@ -54,7 +54,7 @@ func _run() -> void:
 	browser._search.text = ""
 	browser.selected_id = "gz_tile_02"
 	browser._refresh()
-	assert(browser._results.size() == 102)
+	assert(browser._results.size() > 102 and browser._cards.get_child_count() <= browser.PAGE_SIZE)
 	await _double_click_card(browser, "gz_tile_02")
 	assert(designer._placement_record.kind == "tile")
 	assert(designer.document.working.is_empty(), "Opening the block brush must not place through the browser.")

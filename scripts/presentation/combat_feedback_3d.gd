@@ -35,6 +35,8 @@ func bind_player(player: PlayerCharacter) -> void:
 	var projectile_callback := _on_handgun_projectile_fired
 	if not player.projectile_fired.is_connected(projectile_callback):
 		player.projectile_fired.connect(projectile_callback)
+	if not player.handgun_empty_triggered.is_connected(_on_handgun_empty_triggered):
+		player.handgun_empty_triggered.connect(_on_handgun_empty_triggered)
 	if not player.melee_swung.is_connected(_on_melee_swung):
 		player.melee_swung.connect(_on_melee_swung)
 	if not player.attack_connected.is_connected(_on_melee_connected):
@@ -120,6 +122,10 @@ func _on_handgun_projectile_fired(projectile: HandgunProjectile3D) -> void:
 		projectile.impacted.connect(callback)
 	if projectile.is_player_owned():
 		combat_audio.play_event("combat/player_gunshot", projectile.global_position)
+
+
+func _on_handgun_empty_triggered(world_position: Vector3) -> void:
+	combat_audio.play_event("combat/out_of_ammo", world_position)
 
 
 func _on_enemy_dual_shot(world_position: Vector3) -> void:

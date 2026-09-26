@@ -6,6 +6,7 @@
 [resource]
 script = ExtResource("1_definition")
 projectile_scene = ExtResource("2_projectile")
+fire_interval = 0.2
 projectile_speed = 28.0
 upward_direction = Vector2(0.707107, 0.707107)
 horizontal_muzzle_offset = Vector2(0.83125, 0.71875)

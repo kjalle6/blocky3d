@@ -1,0 +1,161 @@
+{
+  "note": "Unchanged production images matched by SHA-256 to the source catalog. Cave background archive provenance remains in background/SOURCE.txt where applicable. See docs/ASSET_CREDITS.md for the family index.",
+  "files": [
+    {
+      "runtime": "assets/art/interiors/rock_underworks/effects/slide_dust.png",
+      "source": "assets/library/vfx/effects/1 Smoke/12.png",
+      "sha256": "4b55a2f1e4e77ad51ce7a3e91a501222dc489cea62ca0fe76091d73f0e88efaa",
+      "license_file": "assets/library/vfx/effects/license.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/props/cave_rock1.png",
+      "source": "assets/library/environment/rocks/PNG/cave_rocks/cave_rock1.png",
+      "sha256": "4d2fcf5053215cdad665a8e2f10336a9fef6abe075158ee7063a7901a1f42e12",
+      "license_file": "assets/library/environment/rocks/License.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/props/cave_rock4.png",
+      "source": "assets/library/environment/rocks/PNG/cave_rocks/cave_rock4.png",
+      "sha256": "d820b8da8954d5d235ed25fb5fbe1a3c8b440991b542b83894ac32103034aca7",
+      "license_file": "assets/library/environment/rocks/License.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/terrain/bottom.png",
+      "source": "assets/library/tilesets/dumb_zone/1 Tiles/Tile_18.png",
+      "sha256": "c6c1f52ee5ef672af8dd465dcec024886e7c0ccecb628d23bb0fca812798f259",
+      "license_file": "assets/library/tilesets/dumb_zone/License.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/terrain/bottom_left.png",
+      "source": "assets/library/tilesets/dumb_zone/1 Tiles/Tile_17.png",
+      "sha256": "9a522638e913a1434a65270755d3a41670efb2e475538025abcacc0e9e4b0ee6",
+      "license_file": "assets/library/tilesets/dumb_zone/License.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/terrain/bottom_right.png",
+      "source": "assets/library/tilesets/dumb_zone/1 Tiles/Tile_20.png",
+      "sha256": "28aa7011a6de498e47ced858c8b71be63ddcccd45d108d4a55a7633c01393f1c",
+      "license_file": "assets/library/tilesets/dumb_zone/License.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/terrain/bottom_variant.png",
+      "source": "assets/library/tilesets/dumb_zone/1 Tiles/Tile_19.png",
+      "sha256": "3cf5314ef89cadabc761a277d21072c87a5979280cabf9ff5440b7947e859999",
+      "license_file": "assets/library/tilesets/dumb_zone/License.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/terrain/fill.png",
+      "source": "assets/library/tilesets/dumb_zone/1 Tiles/Tile_10.png",
+      "sha256": "d99c80923f8233a53931117c231970089b04c2fc4dd82315adeec5f778a0d95e",
+      "license_file": "assets/library/tilesets/dumb_zone/License.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/terrain/fill_detail.png",
+      "source": "assets/library/tilesets/dumb_zone/1 Tiles/Tile_11.png",
+      "sha256": "941545cc38e90c5248e46037e294ef98505da6c73d0119511dfcce1d73d5b8b2",
+      "license_file": "assets/library/tilesets/dumb_zone/License.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/terrain/inner_bottom_left.png",
+      "source": "assets/library/tilesets/dumb_zone/1 Tiles/Tile_33.png",
+      "sha256": "c79bc6388af55dac360385c78009f37eb29e0ddaebee914bba6670d7b2cbb56b",
+      "license_file": "assets/library/tilesets/dumb_zone/License.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/terrain/inner_bottom_right.png",
+      "source": "assets/library/tilesets/dumb_zone/1 Tiles/Tile_34.png",
+      "sha256": "941be4f4b024f4ad89a9fc3fe171c0411960a3ba57280d55c07600a27a1530f0",
+      "license_file": "assets/library/tilesets/dumb_zone/License.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/terrain/inner_top_left.png",
+      "source": "assets/library/tilesets/dumb_zone/1 Tiles/Tile_25.png",
+      "sha256": "2fedea486a1b91c770d23f475142a6fd65d46d906d0d1d4f3114dbd4fd13783e",
+      "license_file": "assets/library/tilesets/dumb_zone/License.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/terrain/inner_top_right.png",
+      "source": "assets/library/tilesets/dumb_zone/1 Tiles/Tile_26.png",
+      "sha256": "9004f1f2d2e76e7838e1fb963292c5464d48e478da167c40a455aa4522eead26",
+      "license_file": "assets/library/tilesets/dumb_zone/License.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/terrain/left.png",
+      "source": "assets/library/tilesets/dumb_zone/1 Tiles/Tile_09.png",
+      "sha256": "4b3529de7edb65ac2ba8520d4ed94f82d952b9b3e9250eae2bdb977aded86701",
+      "license_file": "assets/library/tilesets/dumb_zone/License.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/terrain/right.png",
+      "source": "assets/library/tilesets/dumb_zone/1 Tiles/Tile_12.png",
+      "sha256": "47d92b65211ac97f9c3ce6852db3eca9f6fe7372697c09d6326a1c1e6f89a829",
+      "license_file": "assets/library/tilesets/dumb_zone/License.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/terrain/top.png",
+      "source": "assets/library/tilesets/dumb_zone/1 Tiles/Tile_02.png",
+      "sha256": "c761257cc09f641de997076139708f18b28a65a1890473eacee3902e46368d7b",
+      "license_file": "assets/library/tilesets/dumb_zone/License.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/terrain/top_left.png",
+      "source": "assets/library/tilesets/dumb_zone/1 Tiles/Tile_01.png",
+      "sha256": "750b2b5d225c46e70e4819521ea18f57078537e4debbce68eaa8956aa43c6247",
+      "license_file": "assets/library/tilesets/dumb_zone/License.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/terrain/top_right.png",
+      "source": "assets/library/tilesets/dumb_zone/1 Tiles/Tile_04.png",
+      "sha256": "258851eed6511b85aa9104315be0cc824513c1c13e1db7329e294479ab33b0f2",
+      "license_file": "assets/library/tilesets/dumb_zone/License.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/terrain/top_variant.png",
+      "source": "assets/library/tilesets/dumb_zone/1 Tiles/Tile_03.png",
+      "sha256": "6e28494a574b869ae4c55519b753eb4649f443929a7405935188eedc8d715fbc",
+      "license_file": "assets/library/tilesets/dumb_zone/License.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/props/cave_lift/guard_left.png",
+      "source": "assets/library/tilesets/industrial_zone/3 Objects/Fence1.png",
+      "sha256": "1d6cba23c313b7ab6f98044cd36e01691c26cdb798fbd73298fb32453aaccb8a",
+      "license_file": "assets/library/tilesets/industrial_zone/license.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/props/cave_lift/guard_right.png",
+      "source": "assets/library/tilesets/industrial_zone/3 Objects/Fence3.png",
+      "sha256": "df72079b7900ebff5c0163220141c98f6a2b045d5c331e33d21dbd394998b791",
+      "license_file": "assets/library/tilesets/industrial_zone/license.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/props/cave_lift/hoist.png",
+      "source": "assets/library/environment/structures/doors_and_portals/4 Other/Rope_base1.png",
+      "sha256": "8291b194ea4a17f256f36cc8ff90600c9ed4923239021ade146fc908814d3cc2",
+      "license_file": "assets/library/environment/structures/doors_and_portals/License.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/props/cave_lift/platform.png",
+      "source": "assets/library/tilesets/industrial_zone/4 Animated objects/Platform.png",
+      "sha256": "aa22c3a00a2ac63de9b672dbc42543536ea1a1ee478acbe7cf14e8fbac073a38",
+      "license_file": "assets/library/tilesets/industrial_zone/license.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/props/cave_lift/tower_base.png",
+      "source": "assets/library/tilesets/piratebay_zone/3 Objects/2 Tower/9.png",
+      "sha256": "57c98c92e6dc69b60b8b78533dc98eaf9e33dbf52e985e1f863db1ecc900d6ab",
+      "license_file": "assets/library/tilesets/piratebay_zone/license.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/props/cave_lift/tower_middle.png",
+      "source": "assets/library/tilesets/piratebay_zone/3 Objects/2 Tower/8.png",
+      "sha256": "54e6b2a3df4e81e1d3dde8ff71c52cbcc380c1c13997f4f1687fd636c5588f53",
+      "license_file": "assets/library/tilesets/piratebay_zone/license.txt"
+    },
+    {
+      "runtime": "assets/art/interiors/rock_underworks/props/cave_lift/tower_top.png",
+      "source": "assets/library/tilesets/piratebay_zone/3 Objects/2 Tower/7.png",
+      "sha256": "4d8fc56bdad005fce993ddfd580e6e529381ab1c39b307ab985b5798f29b5a83",
+      "license_file": "assets/library/tilesets/piratebay_zone/license.txt"
+    }
+  ]
+}

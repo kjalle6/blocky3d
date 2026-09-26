@@ -1,4 +1,4 @@
-[gd_scene load_steps=57 format=3]
+[gd_scene load_steps=62 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="2_platform"]
@@ -49,6 +49,7 @@
 [ext_resource type="Resource" path="res://resources/campaign/level_02.tres" id="58_level_02"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/pixel_skater_enemy.tscn" id="59_skater"]
 [ext_resource type="AudioStream" path="res://assets/audio/water/heavy-water-splash.mp3" id="60_water_audio"]
+[ext_resource type="Resource" path="res://resources/presentation/platform_styles/green_zone_stone.tres" id="61_pit_stone"]
 
 [sub_resource type="BoxShape3D" id="Shape_kill_plane"]
 size = Vector3(230.4, 1, 8)
@@ -64,6 +65,18 @@ size = Vector3(11.52, 3.84, 2)
 
 [sub_resource type="BoxShape3D" id="Shape_level_2_transition"]
 size = Vector3(1, 2.8, 1.2)
+
+[sub_resource type="BoxShape3D" id="Shape_thorn_basin_fill"]
+size = Vector3(7.84, 10.6, 8)
+
+[sub_resource type="BoxShape3D" id="Shape_thorn_pocket_fill"]
+size = Vector3(5.28, 10.6, 8)
+
+[sub_resource type="BoxShape3D" id="Shape_aerial_basin_fill"]
+size = Vector3(32.16, 10.6, 8)
+
+[sub_resource type="BoxShape3D" id="Shape_garden_exit_pit_fill"]
+size = Vector3(4.64, 10.6, 8)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_clean_gate"]
 atlas = ExtResource("47_gate")
@@ -132,24 +145,38 @@ script = ExtResource("2_platform")
 size = Vector3(5.12, 1.28, 2)
 
 [node name="ThresholdLanding" type="StaticBody3D" parent="Platforms" index="5"]
-position = Vector3(59.52, -0.64, 0)
+position = Vector3(59.52, -5.76, 0)
 script = ExtResource("2_platform")
-size = Vector3(10.24, 3.84, 2)
+size = Vector3(10.24, 14.08, 2)
+cap_bottom_edge = false
 
 [node name="ThornGardenEntry" type="StaticBody3D" parent="Platforms" index="6"]
-position = Vector3(73.6, -1.28, 0)
+position = Vector3(73.6, -5.76, 0)
 script = ExtResource("2_platform")
-size = Vector3(10.24, 3.84, 2)
+size = Vector3(10.24, 12.8, 2)
+cap_bottom_edge = false
+
+[node name="ThornBasinA" type="StaticBody3D" parent="Platforms" index="7"]
+position = Vector3(82.56, -7.52, 0)
+script = ExtResource("2_platform")
+size = Vector3(7.68, 10.24, 2)
+style = ExtResource("61_pit_stone")
+cap_left_edge = false
+cap_right_edge = false
+cap_bottom_edge = false
+metadata/layout_locked = "Enclosed spike-pit floor. Keep its walls, spikes and lethal fill aligned."
 
 [node name="ThornTerrace" type="StaticBody3D" parent="Platforms" index="8"]
-position = Vector3(90.24, 0, 0)
+position = Vector3(90.24, -5.12, 0)
 script = ExtResource("2_platform")
-size = Vector3(7.68, 3.84, 2)
+size = Vector3(7.68, 14.08, 2)
+cap_bottom_edge = false
 
 [node name="ThornWall" type="StaticBody3D" parent="Platforms" index="10"]
-position = Vector3(103.04, 1.28, 0)
+position = Vector3(103.04, -4.48, 0)
 script = ExtResource("2_platform")
-size = Vector3(7.68, 3.84, 2)
+size = Vector3(7.68, 15.36, 2)
+cap_bottom_edge = false
 
 [node name="ThornGardenExit" type="StaticBody3D" parent="Platforms" index="11"]
 position = Vector3(119.04, -1.28, 0)
@@ -180,6 +207,37 @@ size = Vector3(3.84, 1.28, 2)
 position = Vector3(181.76, -1.28, 0)
 script = ExtResource("2_platform")
 size = Vector3(46.08, 3.84, 2)
+
+[node name="ThornPocket" type="StaticBody3D" parent="Platforms"]
+position = Vector3(96.64, -7.52, 0)
+script = ExtResource("2_platform")
+size = Vector3(5.12, 10.24, 2)
+style = ExtResource("61_pit_stone")
+cap_left_edge = false
+cap_right_edge = false
+cap_bottom_edge = false
+metadata/layout_locked = "Pit floor beneath the existing spikes. Keep the spike height and surrounding route fixed."
+
+[node name="AerialBasin" type="StaticBody3D" parent="Platforms"]
+position = Vector3(142.72, -7.52, 0)
+script = ExtResource("2_platform")
+size = Vector3(32, 10.24, 2)
+style = ExtResource("61_pit_stone")
+cap_left_edge = false
+cap_right_edge = false
+cap_bottom_edge = false
+metadata/layout_locked = "Pit floor beneath the existing spikes. Preserve the floating platforms above."
+
+[node name="GardenExitPit" type="StaticBody3D" parent="Platforms"]
+position = Vector3(109.12, -7.52, 0)
+script = ExtResource("2_platform")
+size = Vector3(5.12, 10.24, 2)
+face_depth = 1.0
+style = ExtResource("61_pit_stone")
+cap_left_edge = false
+cap_right_edge = false
+cap_bottom_edge = false
+metadata/layout_locked = "Recessed spike-pit floor. Keep the spikes and lethal fill aligned with the gap."
 
 [node name="TransitionTalus" type="Node3D" parent="Props" index="0"]
 
@@ -697,19 +755,63 @@ row_width = 1.8
 
 [node name="ThornBasinASpikes" parent="Hazards" index="3" instance=ExtResource("39_spikes")]
 position = Vector3(82.56, -2.4, 0)
-row_width = 6.2
+row_width = 7.68
+collision_end_inset = 0.0
+
+[node name="ThornBasinFill" type="Area3D" parent="Hazards"]
+position = Vector3(82.56, -7.34, 0)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("20_hazard")
+
+[node name="Collision" type="CollisionShape3D" parent="Hazards/ThornBasinFill"]
+shape = SubResource("Shape_thorn_basin_fill")
 
 [node name="ThornPocketSpikes" parent="Hazards" index="4" instance=ExtResource("39_spikes")]
 position = Vector3(96.64, -2.4, 0)
-row_width = 4.0
+row_width = 5.12
+collision_end_inset = 0.0
 
 [node name="AerialBasinSpikes" parent="Hazards" index="5" instance=ExtResource("39_spikes")]
 position = Vector3(142.72, -2.4, 0)
 row_width = 32.0
+collision_end_inset = 0.0
 
 [node name="BlindLandingSpikes" parent="Hazards" index="6" instance=ExtResource("39_spikes")]
 position = Vector3(163.28, 0.64, 0)
 row_width = 8.272
+
+[node name="ThornPocketFill" type="Area3D" parent="Hazards"]
+position = Vector3(96.64, -7.34, 0)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("20_hazard")
+
+[node name="Collision" type="CollisionShape3D" parent="Hazards/ThornPocketFill"]
+shape = SubResource("Shape_thorn_pocket_fill")
+
+[node name="AerialBasinFill" type="Area3D" parent="Hazards"]
+position = Vector3(142.72, -7.34, 0)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("20_hazard")
+
+[node name="Collision" type="CollisionShape3D" parent="Hazards/AerialBasinFill"]
+shape = SubResource("Shape_aerial_basin_fill")
+
+[node name="GardenExitPitSpikes" parent="Hazards" instance=ExtResource("39_spikes")]
+position = Vector3(109.12, -2.4, 0)
+row_width = 4.48
+collision_end_inset = 0.0
+
+[node name="GardenExitPitFill" type="Area3D" parent="Hazards"]
+position = Vector3(109.12, -7.34, 0)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("20_hazard")
+
+[node name="Collision" type="CollisionShape3D" parent="Hazards/GardenExitPitFill"]
+shape = SubResource("Shape_garden_exit_pit_fill")
 
 [node name="PickupCheckpoint" parent="Checkpoints" index="0" instance=ExtResource("7_checkpoint")]
 position = Vector3(36.2, 0.64, 0)

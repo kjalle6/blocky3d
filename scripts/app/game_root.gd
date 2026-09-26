@@ -27,6 +27,7 @@ var _developer_measurement_grid_enabled := false
 var _developer_collision_overlay_enabled := false
 var audio_tuning_panel: CanvasLayer
 var cave_ambience: AudioStreamPlayer
+var event_audio: Node
 var _audio_tools_button: Button
 var _designer_tools_button: Button
 var _restart_tools_button: Button
@@ -80,6 +81,9 @@ func _ready() -> void:
 	get_node("Interface").add_child(health_inventory_hud)
 	loot_receipt = preload("res://scripts/ui/loot_receipt.gd").new()
 	get_node("Interface").add_child(loot_receipt)
+	event_audio = preload("res://scripts/audio/app_event_audio.gd").new()
+	event_audio.name = "EventAudio"
+	add_child(event_audio)
 	level_designer = preload("res://scripts/developer/level_designer.gd").new()
 	level_designer.name = "LevelDesigner"
 	add_child(level_designer)
@@ -703,6 +707,7 @@ func start_campaign() -> bool:
 
 
 func load_snapshot(snapshot: Dictionary, ordinary_retry := false) -> String:
+	var returning_from_death := is_instance_valid(current_level) and current_level.player.is_dead()
 	var error := SaveSnapshot.validation_error(snapshot)
 	if not error.is_empty():
 		return error
@@ -734,6 +739,8 @@ func load_snapshot(snapshot: Dictionary, ordinary_retry := false) -> String:
 		store.save_progress()
 		return "The saved section could not be loaded."
 	current_level.save_state.apply_state(snapshot, true)
+	if returning_from_death:
+		current_level.get_node("EventAudio").play("combat/player_respawn", current_level.player)
 	return ""
 
 
@@ -825,6 +832,9 @@ func _on_transition_requested(
 	var source_definition := current_level_definition
 	var source_world := current_world_definition
 	if completes_source_level:
+		if current_level.has_node("EventAudio"):
+			current_level.get_node("EventAudio").play("pickups/level_complete", current_level.player)
+		event_audio.level_completed()
 		_mark_campaign_level_completed(source_definition, source_world)
 	_transition_serial += 1
 	var transition_serial := _transition_serial

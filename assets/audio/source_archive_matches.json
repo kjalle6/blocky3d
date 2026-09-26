@@ -1,0 +1,230 @@
+{
+  "note": "Exact SHA-256 matches between unchanged project audio and decompressed entries in the original local Craftpix ZIPs. Archive hashes identify the audited downloads. Pack license.txt files contain only the supplied license URL, retained verbatim below; this is provenance evidence, not a release license review.",
+  "source_directory": "D:/GodotProjects/blocky3dassets/audio",
+  "archives": [
+    {
+      "archive": "craftpix-net-444477-free-cyberpunk-music-and-sound-effects-pack-6.zip",
+      "sha256": "15f3c37afe8bc548e1e3f5bbc40fb16044ae392251a71e986db0e8e8363167d3",
+      "licenses": [
+        {
+          "entry": "license.txt",
+          "text": "https://craftpix.net/file-licenses/"
+        }
+      ]
+    },
+    {
+      "archive": "craftpix-net-566158-free-futuristic-audio-pack-7-for-retro-and-pixel-games.zip",
+      "sha256": "46f418126a23b1995c40fdbe9df7d2338199722127fb585b41c75942a393e09f",
+      "licenses": [
+        {
+          "entry": "license.txt",
+          "text": "https://craftpix.net/file-licenses/"
+        }
+      ]
+    },
+    {
+      "archive": "craftpix-net-648698-free-music-and-sounds-for-cyberpunk-game-pack-1.zip",
+      "sha256": "220a900b873e7bee9f6692a7e5c9ab48133a2483138328015772d41585421c21",
+      "licenses": [
+        {
+          "entry": "license.txt",
+          "text": "https://craftpix.net/file-licenses/"
+        }
+      ]
+    },
+    {
+      "archive": "craftpix-net-682092-free-retro-futuristic-audio-pack-5-for-cyberpunk-games.zip",
+      "sha256": "f25b805695865fae1a5f3489d78d7f1317068edff86dbca4d17361ef67d2835f",
+      "licenses": [
+        {
+          "entry": "license.txt",
+          "text": "https://craftpix.net/file-licenses/"
+        }
+      ]
+    },
+    {
+      "archive": "craftpix-net-892183-free-cyberpunk-audio-pack-4-for-pixel-games.zip",
+      "sha256": "97b06c7e69212ad0bdc950c911f80b6784ba989a60f7425e65659b8f35d103cc",
+      "licenses": [
+        {
+          "entry": "license.txt",
+          "text": "https://craftpix.net/file-licenses/"
+        }
+      ]
+    },
+    {
+      "archive": "craftpix-net-936590-free-futuristic-game-music-and-sound-effects-pack-3.zip",
+      "sha256": "bed5c1ee9d72cd5597c779ee48f16d1aec0b5ba2606fb907acc1fea41a48035b",
+      "licenses": [
+        {
+          "entry": "license.txt",
+          "text": "https://craftpix.net/file-licenses/"
+        }
+      ]
+    }
+  ],
+  "files": {
+    "assets/audio/combat/blaster.wav": {
+      "sha256": "4e673763c4974e19cdf224cc1faebb44734ee8012f149203545efa416fd63357",
+      "matches": [
+        {
+          "archive": "craftpix-net-682092-free-retro-futuristic-audio-pack-5-for-cyberpunk-games.zip",
+          "entry": "Sounds/Blaster.wav"
+        }
+      ]
+    },
+    "assets/audio/combat/blood_1.wav": {
+      "sha256": "cac3edb405a59254dca8aa8ac8627f0b3520a21526ba212843edf35622df3f11",
+      "matches": [
+        {
+          "archive": "craftpix-net-566158-free-futuristic-audio-pack-7-for-retro-and-pixel-games.zip",
+          "entry": "Sounds/Blood_1.wav"
+        }
+      ]
+    },
+    "assets/audio/combat/blood_2.wav": {
+      "sha256": "091be4df776328d497a585902b3061489a1448ca7438ecbf791f9659d0726666",
+      "matches": [
+        {
+          "archive": "craftpix-net-566158-free-futuristic-audio-pack-7-for-retro-and-pixel-games.zip",
+          "entry": "Sounds/Blood_2.wav"
+        }
+      ]
+    },
+    "assets/audio/combat/blood_3.wav": {
+      "sha256": "b3d50a456b9b0cf164c4471715453513f4669b9e4729050265f61af4c83b734e",
+      "matches": [
+        {
+          "archive": "craftpix-net-566158-free-futuristic-audio-pack-7-for-retro-and-pixel-games.zip",
+          "entry": "Sounds/Blood_3.wav"
+        }
+      ]
+    },
+    "assets/audio/combat/bump.wav": {
+      "sha256": "fefbdc3361718991264367aebceebace0597926575d1f4e39119cbb7f805e72f",
+      "matches": [
+        {
+          "archive": "craftpix-net-648698-free-music-and-sounds-for-cyberpunk-game-pack-1.zip",
+          "entry": "Sounds/Bump.wav"
+        }
+      ]
+    },
+    "assets/audio/combat/hammer_1.wav": {
+      "sha256": "2298389cb37c1d0c372d63dcdb86c235beee843ba2a5f6513bde3bdf8e9b6868",
+      "matches": [
+        {
+          "archive": "craftpix-net-936590-free-futuristic-game-music-and-sound-effects-pack-3.zip",
+          "entry": "Sounds/Hammer_1.wav"
+        }
+      ]
+    },
+    "assets/audio/combat/kick.wav": {
+      "sha256": "137b77841269c6dfe6033a2648428e150f0d788ee4510c53b0eca4274b7970e2",
+      "matches": [
+        {
+          "archive": "craftpix-net-566158-free-futuristic-audio-pack-7-for-retro-and-pixel-games.zip",
+          "entry": "Sounds/Kick.wav"
+        }
+      ]
+    },
+    "assets/audio/combat/knife_throwing.wav": {
+      "sha256": "3232ef81be172927bbb48f7a76006f9524eaa7fb49b77fbbfd1ffecbf35bd879",
+      "matches": [
+        {
+          "archive": "craftpix-net-566158-free-futuristic-audio-pack-7-for-retro-and-pixel-games.zip",
+          "entry": "Sounds/Knife_throwing.wav"
+        }
+      ]
+    },
+    "assets/audio/combat/punch_1.wav": {
+      "sha256": "8922b768b5ee4545c90523ff717baa1b1b2bbe4530b5acbab38a69189a4b5de6",
+      "matches": [
+        {
+          "archive": "craftpix-net-892183-free-cyberpunk-audio-pack-4-for-pixel-games.zip",
+          "entry": "Sounds/Punch_1.wav"
+        }
+      ]
+    },
+    "assets/audio/combat/punch_2.wav": {
+      "sha256": "3931ce59611e8414cff8946a82afead963bad7df6ee1186a1251b2fe68118d08",
+      "matches": [
+        {
+          "archive": "craftpix-net-892183-free-cyberpunk-audio-pack-4-for-pixel-games.zip",
+          "entry": "Sounds/Punch_2.wav"
+        }
+      ]
+    },
+    "assets/audio/combat/shot_1.wav": {
+      "sha256": "09927c8f70d629b3a65b5a5f53b2323a7d0c4b8b59951b300f3dea5f2148f2a4",
+      "matches": [
+        {
+          "archive": "craftpix-net-892183-free-cyberpunk-audio-pack-4-for-pixel-games.zip",
+          "entry": "Sounds/Shot_1.wav"
+        }
+      ]
+    },
+    "assets/audio/combat/shot_2.wav": {
+      "sha256": "67fc73042dff12398ec730a02c826cd7c6243b0501f9c46e2c95f58f8bf85810",
+      "matches": [
+        {
+          "archive": "craftpix-net-892183-free-cyberpunk-audio-pack-4-for-pixel-games.zip",
+          "entry": "Sounds/Shot_2.wav"
+        }
+      ]
+    },
+    "assets/audio/combat/shot_3.wav": {
+      "sha256": "2dabca42c2f873deace6a91f91b6b88dbaa5303eb4a1878c24bc5f92753a9668",
+      "matches": [
+        {
+          "archive": "craftpix-net-892183-free-cyberpunk-audio-pack-4-for-pixel-games.zip",
+          "entry": "Sounds/Shot_3.wav"
+        }
+      ]
+    },
+    "assets/audio/combat/shot_4.wav": {
+      "sha256": "5bbb8fe161da9d5be47882953abcd859c8c9eae3fafa99cf5168861915a17b9e",
+      "matches": [
+        {
+          "archive": "craftpix-net-892183-free-cyberpunk-audio-pack-4-for-pixel-games.zip",
+          "entry": "Sounds/Shot_4.wav"
+        }
+      ]
+    },
+    "assets/audio/combat/throw.wav": {
+      "sha256": "eeb1aea749c448f04419aec40dc80f5d564baf82df368c488f6f1ad69cbc9c7d",
+      "matches": [
+        {
+          "archive": "craftpix-net-892183-free-cyberpunk-audio-pack-4-for-pixel-games.zip",
+          "entry": "Sounds/Throw.wav"
+        }
+      ]
+    },
+    "assets/audio/footsteps/grass_alt_4.wav": {
+      "sha256": "7b5396a7d47896afb75cb27543bf113666f45d7c7def53c12ce050f7bdb9960d",
+      "matches": [
+        {
+          "archive": "craftpix-net-566158-free-futuristic-audio-pack-7-for-retro-and-pixel-games.zip",
+          "entry": "Sounds/Footstep_alt_4.wav"
+        }
+      ]
+    },
+    "assets/audio/items/heal_click.wav": {
+      "sha256": "e116b9c7ddd0dd09ef55f8a26195fda595d15da74ae4cdc377f660c4c791d542",
+      "matches": [
+        {
+          "archive": "craftpix-net-444477-free-cyberpunk-music-and-sound-effects-pack-6.zip",
+          "entry": "Sounds/Click_digital_1.wav"
+        }
+      ]
+    },
+    "assets/audio/weapons/handgun_reload.wav": {
+      "sha256": "21bd0c87afa467291203cef162efc7b39ad083a43fb945f3506b4dc669c86895",
+      "matches": [
+        {
+          "archive": "craftpix-net-892183-free-cyberpunk-audio-pack-4-for-pixel-games.zip",
+          "entry": "Sounds/Reloading_weapons.wav"
+        }
+      ]
+    }
+  }
+}

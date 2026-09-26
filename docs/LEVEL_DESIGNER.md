@@ -39,6 +39,7 @@ from the saved layout; it does not resume an old fight.
 | Repeat props/enemies | Shift-click while their preview is following the mouse |
 | Select | Click an object or choose it under the side panel's **In level** tab |
 | Object actions | Right-click an object in the level |
+| Flip horizontally | Right-click → **Flip horizontally**, or use the object's **Settings** toggle |
 | Select a group | Shift-click objects |
 | Select something underneath | Click again to cycle overlapping objects |
 | Move | Drag a selected object or its coloured axis handle |
@@ -55,7 +56,10 @@ from the saved layout; it does not resume an old fight.
 The **Side panel** button collapses the panel. Its **Add** tab offers the same
 catalog with search, a zone dropdown, and categories; one click begins placement.
 It starts with Green Zone blocks. **Build** brings this panel back even if it was
-collapsed. The full-browser button carries over the current filters.
+collapsed. The full-browser button carries over the current filters. Use the
+page arrows above the pictures for larger collections: 24 entries per sidebar
+page, 48 per full-browser page. Search filters the entire collection, including
+entries on other pages; the counter shows the total matching objects.
 **Settings** opens when you select an
 object in the level. **In level** keeps the existing placed-object list and
 protected-object toggle, and stays open while selecting a group from the list.
@@ -70,7 +74,7 @@ Selecting an existing object does not move or snap it.
 The camera used for editing is independent of the gameplay camera. Panning,
 zooming, selection, and undo history are not saved into the level.
 
-Right-click an object for **Edit settings**, **Frame selection**, **Duplicate**,
+Right-click an object for **Edit settings**, **Frame selection**, **Flip horizontally**, **Duplicate**,
 **Revert to last save**, and **Remove**, plus Undo/Redo/Test/Save shortcuts.
 Right-clicking a member of your selected group keeps the group selected.
 Right-clicking empty space offers **Add objects**, **Build with blocks**, and general level actions.
@@ -81,6 +85,25 @@ leaving other edits intact, and can be undone. It is disabled for objects that
 have never been saved; remove those or undo their creation instead. The toolbar's
 **Revert** still restores the whole layout. Unavailable actions stay greyed out;
 the menu does not bypass protected objects.
+
+**Flip horizontally** works for supply chests, decorations, blocks and enemy
+starting direction. A group flips each supported object in place without
+changing its spacing. Unsupported selections keep the action disabled. Chest
+opening animations face the same way as the closed chest; its pickup area and
+contents stay the same. Flips support Undo/Redo, Test and Save.
+
+**Decoration layers** control overlap between props, including animated scenery.
+In **Add** or the full browser, set **New decoration layer** before placing:
+higher numbers appear in front of lower numbers. For example, leave a fence on
+layer **0** and place bushes or crates on layer **1** in front of it; **-1** puts
+them behind it. The setting stays active for subsequent placements in the
+current session, and updates the placement preview immediately.
+
+For existing props, use **Settings → Decoration layer**, **Layer back / forward**,
+or the right-click layer actions. A group can share one layer or move its layers
+together. These changes support Undo/Redo, Test and Save. Existing decorations
+start at layer 0 and keep their previous order within that layer. Layers affect
+scenery overlap only; they do not move collision or change the player's visibility.
 
 ## The object browser
 
@@ -101,16 +124,33 @@ protected unless explicitly registered for editing.
 
 Use **Zone → Green Zone** in either browser to browse that collection. Zones
 organize the assets, not where you may use them: Green Zone pieces are available
-in any supported level. Future packs will get their own zone choices. This pass
-includes the complete terrain and prop collection, with background selection
-left for later.
+in any supported level. The zone dropdown also contains every other installed
+terrain pack: Beach, Desert, Dumb, Exclusion, Factory, Industrial, Piratebay,
+Powerstation and Seaport. Dedicated collections include **Nature**, **Trees**,
+**Rocks**, **Clouds**, **Bridges**, **Cave entrances**, **Doors and portals**,
+**Signs and billboards**, **Graffiti**, **Trucks** and decorative **Drones**.
+
+The expanded collection adds **2,129 templates**, including 72 animations.
+Use **All zones** to search across packs. Static props and animated scenery work
+with the decoration-layer controls. Water, background silhouettes, bridge
+assembly pieces and other scenery blocks have no collision. Solid terrain is
+labelled **Solid** and uses the same block brush. Decorative vehicles, doors,
+machines and portals have no gameplay interaction; door packs also offer still
+variants. Character combat sheets, GUI/icons, full-screen lighting/VFX and
+parallax backgrounds belong to their separate systems.
+
+The **Leaves 1–6** decorations drift down and sway during play when placed in
+the air. Their placed position is the top of the fall; they fade near the ground
+and repeat at varied timings. Leaves placed on the ground remain still. Editing
+keeps the original positions visible, and the effect does not add collisions.
 
 ### Building with blocks
 
 There is one building workflow. The **Blocks** category puts the zone's pieces
 together: Green Zone has 72 solid blocks and 24 clearly labelled scenery blocks.
-Beach has six existing sand pieces: left/middle/right tops and sides/fill.
-Sand blocks use the sand footstep surface automatically.
+Beach includes the six existing sand pieces (left/middle/right tops and
+sides/fill) alongside its additional native tiles. Solid sand blocks use the
+sand footstep surface automatically.
 
 Click a block, then click or drag in the level to paint on the 32-pixel grid.
 A drag fills the cells along your stroke using that selected piece. The brush
@@ -251,6 +291,13 @@ audio panel's unsaved mix is preserved when changing tools.
   into `assets/art/green_zone/catalog`, writes their source/hash manifest, and
   generates `resources/level_catalogs/green_zone.json`. It needs Pillow. The
   source catalog remains excluded from exports. See `resources/level_catalogs/README.md`.
+- `tools/prepare_world_scenery_catalog.py` adds the remaining world-building
+  packs through `world_scenery.json`, preserving original image bytes and
+  supplied licenses under `assets/art/world_scenery`. Its manifest records every
+  promoted source, hash and omitted duplicate atlas. Native tile collision ranges
+  and animation frame widths are explicit in the generator. Existing template IDs
+  and saved layouts remain unchanged. `validate_world_scenery_catalog.gd` checks
+  every new entry and also runs from an isolated exported pack.
 - Object IDs/kinds/removal permissions are metadata on placed scene instances.
   Keep IDs stable; do not reuse IDs for unrelated objects or put them on prefabs.
 - `level_layout_objects.gd` owns supported properties, bounds, validation, and
@@ -277,12 +324,14 @@ powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Headless -S
 
 Read `build/level_layouts_resolved.json` before changing a registered section.
 Focused contracts are `validate_level_layout.gd`, `validate_level_designer.gd`,
-`validate_green_zone_catalog.gd`, and `validate_level_object_browser.gd` (typed placement/save/reload, real
+`validate_green_zone_catalog.gd`, `validate_world_scenery_catalog.gd`, and
+`validate_level_object_browser.gd` (typed placement/save/reload, real
 combat/checkpoints/hazards, and frozen previews in every registered section).
 Use `capture_level_designer.gd` with `-Visual` for the real interface at 1080p
 and 720p. `capture_green_zone_catalog.gd` captures the zone browsers and a
-temporary tile-building example, leaving the sandbox empty. The regular
-validation suite includes all four contracts. `validate_enemy_friendly_fire.gd` separately covers
+temporary tile-building example; `capture_world_scenery_catalog.gd` covers the
+expanded collections, paging and window resizing. Both leave the sandbox empty.
+The regular validation suite includes these contracts. `validate_enemy_friendly_fire.gd` separately covers
 placed-enemy firing discipline, damage, live bullets after defeat, and reset.
 
 The `LayoutSmoke` export preset includes layout JSON and curated production

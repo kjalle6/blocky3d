@@ -3128,7 +3128,7 @@
     "kind": "decoration",
     "image": "res://assets/art/green_zone/catalog/props/leaf/1.png",
     "anchor": "air",
-    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+    "description": "Place in the air for gently falling leaves. Leaves on the ground stay still. Scenery only; players and bullets pass through."
   },
   "gz_prop_leaf_2": {
     "name": "Leaves 2",
@@ -3137,7 +3137,7 @@
     "kind": "decoration",
     "image": "res://assets/art/green_zone/catalog/props/leaf/2.png",
     "anchor": "air",
-    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+    "description": "Place in the air for gently falling leaves. Leaves on the ground stay still. Scenery only; players and bullets pass through."
   },
   "gz_prop_leaf_3": {
     "name": "Leaves 3",
@@ -3146,7 +3146,7 @@
     "kind": "decoration",
     "image": "res://assets/art/green_zone/catalog/props/leaf/3.png",
     "anchor": "air",
-    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+    "description": "Place in the air for gently falling leaves. Leaves on the ground stay still. Scenery only; players and bullets pass through."
   },
   "gz_prop_leaf_4": {
     "name": "Leaves 4",
@@ -3155,7 +3155,7 @@
     "kind": "decoration",
     "image": "res://assets/art/green_zone/catalog/props/leaf/4.png",
     "anchor": "air",
-    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+    "description": "Place in the air for gently falling leaves. Leaves on the ground stay still. Scenery only; players and bullets pass through."
   },
   "gz_prop_leaf_5": {
     "name": "Leaves 5",
@@ -3164,7 +3164,7 @@
     "kind": "decoration",
     "image": "res://assets/art/green_zone/catalog/props/leaf/5.png",
     "anchor": "air",
-    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+    "description": "Place in the air for gently falling leaves. Leaves on the ground stay still. Scenery only; players and bullets pass through."
   },
   "gz_prop_leaf_6": {
     "name": "Leaves 6",
@@ -3173,7 +3173,7 @@
     "kind": "decoration",
     "image": "res://assets/art/green_zone/catalog/props/leaf/6.png",
     "anchor": "air",
-    "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+    "description": "Place in the air for gently falling leaves. Leaves on the ground stay still. Scenery only; players and bullets pass through."
   },
   "gz_prop_other_box": {
     "name": "Box",

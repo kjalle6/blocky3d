@@ -74,7 +74,7 @@ for source in sorted((SOURCE / "3 Objects").rglob("*.png")):
         "name": label, "zone": "Green Zone", "category": "Decorations", "kind": "decoration",
         "image": promote(source.relative_to(SOURCE), f"props/{group.lower()}/{source.name}"),
         "anchor": "air" if group == "Leaf" else "ground",
-        "description": "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
+        "description": "Place in the air for gently falling leaves. Leaves on the ground stay still. Scenery only; players and bullets pass through." if group == "Leaf" else "Scenery only. Players and bullets pass through it; it has no climbing, ramp, pickup, or other interaction."
     }
 
 ANIMATIONS = {"Card": (8, 8, True), "Money": (6, 8, True), "Skateboard": (9, 10, True), "Fountain": (4, 8, True), "Chest_open": (7, 8, False)}

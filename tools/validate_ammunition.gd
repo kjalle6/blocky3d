@@ -20,6 +20,7 @@ func _run() -> void:
 	var gun := player.player_handgun
 	player.set_physics_process(false)
 	gun.set_physics_process(false)
+	_check_trigger_cadence(player, gun)
 	_check_active_reload(player, gun, app.weapon_status_hud)
 	assert(gun.loaded_rounds == 12 and gun.reserve_rounds() == 30)
 	assert(not gun.start_reload(), "A full magazine must not spend ammo or play a reload.")
@@ -126,6 +127,30 @@ func _run() -> void:
 	app.free()
 	print("Ammunition passed: active timing/input/one-attempt/pause/interruption, empty/full/partial magazines, conservation, knife HUD, chest claims, exact saves and migration.")
 	quit()
+
+
+func _check_trigger_cadence(player: PlayerCharacter, gun: PlayerHandgun3D) -> void:
+	assert(is_equal_approx(gun.definition.fire_interval, 0.20))
+	assert(not gun.try_empty_trigger(), "A loaded gun cannot accept an empty trigger pull.")
+	gun.set_loaded_rounds(1)
+	assert(gun.fire(1.0, false, player) != null)
+	assert(is_equal_approx(gun.cooldown_remaining(), 0.20))
+	assert(not gun.try_empty_trigger(), "The last live round must delay the first empty click.")
+	gun._physics_process(0.19)
+	assert(not gun.try_empty_trigger())
+	gun._physics_process(0.011)
+	assert(gun.try_empty_trigger())
+	assert(is_equal_approx(gun.cooldown_remaining(), 0.20))
+	gun._physics_process(0.19)
+	assert(not gun.try_empty_trigger(), "Empty clicks must obey the same interval as shots.")
+	gun._physics_process(0.011)
+	assert(gun.try_empty_trigger())
+	assert(gun.loaded_rounds == 0 and gun.reserve_rounds() == 30)
+	gun.set_loaded_rounds(12)
+	assert(not gun.can_fire(), "Ammunition changes must not erase trigger recovery.")
+	gun._physics_process(0.20)
+	assert(gun.can_fire())
+	gun.reset_run()
 
 
 func _check_active_reload(player: PlayerCharacter, gun: PlayerHandgun3D, hud: WeaponStatusHUD) -> void:

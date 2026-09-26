@@ -3,6 +3,8 @@ extends CharacterBody3D
 ## Core 2D side-scrolling controller. Optional movement abilities are gated
 ## by the active level's declared ability policy and share typed tuning.
 
+## Half the authored 1.1 m body height; shared by feet and swept stomp contact.
+const FEET_OFFSET_Y := 0.55
 const DOUBLE_JUMP_VISUAL_DURATION := 0.43
 const DEATH_KIND_GENERIC: StringName = &"generic"
 const DEATH_KIND_WATER: StringName = &"water"
@@ -19,6 +21,7 @@ signal healing_used(item_id: StringName, amount: int)
 signal ability_performed(ability_id: StringName)
 signal weapon_equipped(weapon_id: StringName)
 signal projectile_fired(projectile: HandgunProjectile3D)
+signal handgun_empty_triggered(world_position: Vector3)
 signal ground_jump_started
 signal landed(impact_speed: float)
 signal movement_reset
@@ -81,14 +84,19 @@ var _normal_collision_mask := 0
 var _normal_hazard_contact_layer := 0
 
 @onready var pixel_visual: PixelPlayerVisual3D = get_node_or_null("PixelVisual") as PixelPlayerVisual3D
-@onready var hazard_contact: Area3D = get_node("HazardContact") as Area3D
-@onready var player_handgun: PlayerHandgun3D = %PlayerHandgun
+@onready var hazard_contact: Area3D = get_node_or_null("HazardContact") as Area3D
+@onready var player_handgun: PlayerHandgun3D = get_node_or_null("%PlayerHandgun") as PlayerHandgun3D
 
 
 func _ready() -> void:
+	assert(combat != null, "PlayerCharacter requires a CombatProfile in combat.")
+	assert(movement != null, "PlayerCharacter requires a PlayerMovementConfig.")
+	assert(knife_attack != null, "PlayerCharacter requires an AttackDefinition in knife_attack.")
+	assert(stomp_attack != null, "PlayerCharacter requires an AttackDefinition in stomp_attack.")
+	assert(hazard_contact != null, "PlayerCharacter requires an Area3D child named HazardContact.")
+	assert(player_handgun != null, "PlayerCharacter requires a unique PlayerHandgun node with PlayerHandgun3D.")
 	health.changed.connect(func(current: int, maximum: int) -> void: health_changed.emit(current, maximum))
 	health.reset(combat.maximum_hp)
-	assert(movement != null, "PlayerCharacter requires a PlayerMovementConfig.")
 	add_to_group("player_character")
 	floor_snap_length = movement.floor_snap_length
 	floor_max_angle = deg_to_rad(movement.maximum_floor_angle_degrees)
@@ -404,7 +412,7 @@ func is_dash_airborne() -> bool:
 
 
 func feet_world_y() -> float:
-	return global_position.y - 0.55
+	return global_position.y - FEET_OFFSET_Y
 
 
 func is_attacking() -> bool:
@@ -490,11 +498,9 @@ func developer_melee_bounds() -> Rect2:
 	)
 
 
-func receive_enemy_hit(source_position: Vector3, hit: CombatHit = null) -> bool:
+func receive_enemy_hit(source_position: Vector3, hit: CombatHit) -> bool:
 	if _dead or _developer_inspection_enabled or is_transition_running():
 		return false
-	if hit == null:
-		hit = CombatHit.new(25, &"enemy", source_position)
 	if not health.damage(hit):
 		return false
 	_cancel_active_attack(true)
@@ -708,8 +714,12 @@ func _fire_handgun_from_input() -> void:
 	if (
 		_dead or is_dashing() or is_attacking() or _attack_lock_remaining > 0.0
 		or _equipped_weapon_id != PlayerWeapon.HANDGUN
-		or not Input.is_action_just_pressed("attack") or not player_handgun.can_fire()
+		or not Input.is_action_just_pressed("attack")
 	):
+		return
+	if not player_handgun.can_fire():
+		if player_handgun.try_empty_trigger():
+			handgun_empty_triggered.emit(global_position)
 		return
 	_active_attack_weapon_id = PlayerWeapon.HANDGUN
 	_active_attack_aim_up = Input.is_action_pressed("aim_up")
@@ -764,7 +774,7 @@ func _perform_melee_hit() -> void:
 func _resolve_stomp(previous_position: Vector3) -> void:
 	if not _descending_before_slide or _dead:
 		return
-	var start := Vector2(previous_position.x, previous_position.y - 0.55)
+	var start := Vector2(previous_position.x, previous_position.y - FEET_OFFSET_Y)
 	var end := Vector2(global_position.x, feet_world_y())
 	var target: Node3D
 	var first_contact := 2.0
@@ -779,7 +789,7 @@ func _resolve_stomp(previous_position: Vector3) -> void:
 			first_contact = contact
 			head_y = bounds.end.y
 	if target != null:
-		global_position.y = head_y + 0.55
+		global_position.y = head_y + FEET_OFFSET_Y
 		target.receive_stomp(self)
 		return
 	# The solid body is lower than the drawn head and has a different centre.

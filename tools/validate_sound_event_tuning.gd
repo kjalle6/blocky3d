@@ -13,6 +13,37 @@ func _run() -> void:
 	MIX.initialize()
 	var existing_grass := MIX.copy_banks(MIX.saved)
 	assert(not MIX.has_changes(), "Loading an older mix must not create unsaved edits.")
+	# Split older shared forest choices without sharing mutable settings, and
+	# never repopulate an explicitly empty Level 2 bank in a newer mix.
+	var old_forest: Resource = EVENTS.default_banks()["ambience/forest"]
+	old_forest.clips.append(AudioStreamWAV.new())
+	old_forest.labels.append("Existing forest")
+	old_forest.volume_db = -27.0
+	old_forest.selection_mode = 1
+	old_forest.fixed_index = 0
+	var migrated := MIX.copy_saved_events({"ambience/forest": old_forest})
+	assert(migrated["ambience/level_2_forest"].volume_db == -27.0)
+	assert(migrated["ambience/level_2_forest"].fixed_index == 0)
+	migrated["ambience/level_2_forest"].clips.clear()
+	migrated["ambience/level_2_forest"].volume_db = -40.0
+	assert(migrated["ambience/forest"].clips.size() == 1 and old_forest.clips.size() == 1)
+	assert(migrated["ambience/forest"].volume_db == -27.0)
+	var reloaded := MIX.copy_saved_events(migrated)
+	assert(reloaded["ambience/level_2_forest"].clips.is_empty())
+	assert(reloaded["ambience/level_2_forest"].volume_db == -40.0)
+	var old_player_cue: Resource = EVENTS.default_banks()["combat/player_death"]
+	old_player_cue.clips.append(AudioStreamWAV.new())
+	old_player_cue.volume_db = -21.0
+	var player_cues := MIX.copy_saved_events({"combat/player_death": old_player_cue})
+	assert(player_cues["combat/player_hit"].clips.size() == 1)
+	assert(player_cues["combat/player_hit"].volume_db == -21.0)
+	player_cues["combat/player_hit"].clips.clear()
+	player_cues["combat/player_hit"].volume_db = -35.0
+	assert(player_cues["combat/player_death"].clips.size() == 1 and old_player_cue.clips.size() == 1)
+	assert(player_cues["combat/player_death"].volume_db == -21.0)
+	var reloaded_cues := MIX.copy_saved_events(player_cues)
+	assert(reloaded_cues["combat/player_hit"].clips.is_empty())
+	assert(reloaded_cues["combat/player_hit"].volume_db == -35.0)
 	# User-saved event choices must not turn this fixture test into a failure
 	# later. Reset only its in-memory event banks, preserving actual surfaces.
 	MIX.saved_events = EVENTS.default_banks()
@@ -200,11 +231,12 @@ func _run() -> void:
 	panel.close_panel()
 	assert(paused)
 	paused = false
-	# The new tool must not silently attach any of its experimental banks.
+	# Connections exist even for empty banks; adding a recording is sufficient.
 	var player: PlayerCharacter = game.current_level.player
-	assert(player.ability_performed.get_connections().is_empty())
+	assert(not player.ability_performed.get_connections().is_empty())
+	assert(game.current_level.has_node("EventAudio"))
 	MIX.revert()
 	game.free()
 	assert(FileAccess.get_sha256(MIX.SAVE_PATH) == original_hash, "Validation must preserve the user's mix byte-for-byte.")
-	print("Sound event tuning passed: empty catalog, legacy mix, selection, A/B, persistence, promotion, controls, loops, routing and cleanup; no gameplay events connected.")
+	print("Sound event tuning passed: empty catalog, legacy mix, selection, A/B, persistence, promotion, controls, loops, routing, gameplay connections and cleanup.")
 	quit()

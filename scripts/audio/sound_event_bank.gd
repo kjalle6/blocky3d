@@ -19,3 +19,11 @@ func choose_clip(random: RandomNumberGenerator, previous := -1, foot := "") -> i
 
 func choose_pitch(random: RandomNumberGenerator) -> float:
 	return clampf(pitch_scale + random.randf_range(-pitch_variation, pitch_variation), 0.5, 2.0)
+
+func has_playable_recording() -> bool:
+	if not enabled: return false
+	if selection_mode == 1:
+		return fixed_index >= 0 and fixed_index < clips.size() and clips[fixed_index] != null and not fixed_index in disabled_indices
+	for index in clips.size():
+		if clips[index] != null and not index in disabled_indices: return true
+	return false

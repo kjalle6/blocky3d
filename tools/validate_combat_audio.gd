@@ -65,6 +65,8 @@ func _run() -> void:
 	assert(player.pixel_visual.current_state() == "double_jump")
 	assert(_count("combat/player_gunshot") == 1)
 
+	await _check_empty_trigger_audio(game, player, sound)
+
 	# Three live paired beats produce six bullets, but three balanced cues.
 	player.reset_at(Transform3D(Basis.IDENTITY, Vector3(18.5, 0.7, 0.0)))
 	_events.clear()
@@ -126,19 +128,97 @@ func _run() -> void:
 	assert(sound.active_voice_count() == 0)
 	MIX.revert()
 
-	# Connected entries advertise in-game use; unrelated slots remain previews.
+	# Both established combat and newly connected ability entries advertise use.
 	game.audio_tuning_panel.open_panel()
 	game.audio_tuning_panel.select_event("combat/player_gunshot")
 	assert(game.audio_tuning_panel._body.find_child("EventConnectionStatus", true, false).text.begins_with("Connected"))
 	game.audio_tuning_panel.select_event("abilities/double_jump")
-	assert(game.audio_tuning_panel._body.find_child("EventConnectionStatus", true, false).text.begins_with("Preview only"))
+	assert(game.audio_tuning_panel._body.find_child("EventConnectionStatus", true, false).text.begins_with("Connected"))
 	game.audio_tuning_panel.close_panel()
 	game.show_level_select()
 	assert(not is_instance_valid(sound), "Changing levels must free every combat voice.")
 	assert(FileAccess.get_sha256(MIX.SAVE_PATH) == original_hash)
 	_finished = true
-	print("Combat audio passed: live shots/impacts, double jump, paired beats, overlapping tails, mix controls, room routing, and cleanup.")
+	print("Combat audio passed: live shots/impacts, empty-trigger audio-tool imports/settings/gates, double jump, paired beats, overlapping tails, mix controls, room routing, and cleanup.")
 	quit(0)
+
+
+func _check_empty_trigger_audio(game: Node, player: PlayerCharacter, sound: Node3D) -> void:
+	player.reset_at(Transform3D(Basis.IDENTITY, Vector3(18.5, 0.7, 0.0)))
+	var gun := player.player_handgun
+	gun.reset_run()
+	gun.set_loaded_rounds(0)
+	player.inventory.add(&"handgun_ammo", 12)
+	for tick in 8:
+		await physics_frame
+	var panel: CanvasLayer = game.audio_tuning_panel
+	panel.open_panel()
+	panel.select_event("combat/out_of_ammo")
+	assert(panel._body.find_child("EventConnectionStatus", true, false).text.begins_with("Connected"))
+	# Use real import entry points with stable fixture recordings. No mix is saved.
+	panel._add_files(PackedStringArray(["res://assets/audio/combat/shot_1.wav", "res://assets/audio/combat/shot_2.wav"]))
+	var bank: Resource = panel._bank()
+	assert(bank.clips.size() == 2)
+	bank.selection_mode = 1
+	bank.fixed_index = 1
+	bank.volume_db = -27.0
+	bank.pitch_scale = 0.9
+	bank.use_room_reverb = false
+	panel.close_panel()
+	_events.clear()
+	var rounds_before := get_nodes_in_group("player_projectile").size()
+	var reserve_before := gun.reserve_rounds()
+	await _shoot()
+	assert(_count("combat/out_of_ammo") == 1)
+	assert(sound.last_event.clip_index == 1 and sound.last_event.volume_db == -27.0)
+	assert(is_equal_approx(sound.last_event.pitch, 0.9) and sound.last_event.bus == &"Master")
+	assert(get_nodes_in_group("player_projectile").size() == rounds_before)
+	assert(gun.loaded_rounds == 0 and gun.reserve_rounds() == reserve_before)
+	assert(not player.is_attacking() and _count("combat/player_gunshot") == 0)
+	await physics_frame
+	Input.action_press("attack")
+	for tick in 25:
+		await physics_frame
+	Input.action_release("attack")
+	assert(_count("combat/out_of_ammo") == 1, "An early empty press must be ignored, even when held past recovery.")
+	await physics_frame
+	bank.fixed_index = 0
+	await _shoot()
+	assert(_count("combat/out_of_ammo") == 2 and sound.last_event.clip_index == 0)
+	while gun.is_recovering():
+		await physics_frame
+	await physics_frame
+	bank.enabled = false
+	await _shoot()
+	assert(_count("combat/out_of_ammo") == 2, "The tool's mute applies to empty-trigger input.")
+	assert(gun.is_recovering(), "Muting the cue must not bypass the trigger cooldown.")
+	bank.enabled = true
+	while gun.is_recovering():
+		await physics_frame
+	await physics_frame
+	assert(gun.start_reload())
+	await _shoot()
+	assert(_count("combat/out_of_ammo") == 2, "Reloading must not produce empty clicks.")
+	gun.cancel_reload()
+	await physics_frame
+	gun._cooldown_remaining = 0.5
+	await _shoot()
+	assert(_count("combat/out_of_ammo") == 2, "Shot recovery must not produce empty clicks.")
+	gun.reset_run()
+	await physics_frame
+	player._attack_lock_remaining = 0.5
+	await _shoot()
+	assert(_count("combat/out_of_ammo") == 2, "Healing/impact attack locks must suppress empty clicks.")
+	player._attack_lock_remaining = 0.0
+	assert(player.request_weapon(PlayerWeapon.KNIFE))
+	await physics_frame
+	await _shoot()
+	assert(_count("combat/out_of_ammo") == 2, "A knife swing must not trigger the handgun's empty cue.")
+	# Restore the fixture for subsequent live enemy checks.
+	player.reset_at(Transform3D(Basis.IDENTITY, Vector3(18.5, 0.7, 0.0)))
+	assert(player.request_weapon(PlayerWeapon.HANDGUN))
+	gun.set_loaded_rounds(12)
+	gun.reset_run()
 
 
 func _shoot() -> void:

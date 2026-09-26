@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="PixelPlatformStyle" load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://scripts/presentation/pixel_platform_style.gd" id="1_style"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/catalog/tiles/tile_09.png" id="2_top_left"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/catalog/tiles/tile_10.png" id="3_top"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/catalog/tiles/tile_11.png" id="4_top_right"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/tiles/body_left.png" id="5_body_left"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/tiles/body.png" id="6_body"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/tiles/body_right.png" id="7_body_right"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/tiles/deep_left.png" id="8_deep_left"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/tiles/deep.png" id="9_deep"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/tiles/deep_right.png" id="10_deep_right"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/tiles/bottom_left.png" id="11_bottom_left"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/tiles/bottom.png" id="12_bottom"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/tiles/bottom_right.png" id="13_bottom_right"]
+
+[resource]
+script = ExtResource("1_style")
+top_left = ExtResource("2_top_left")
+top = ExtResource("3_top")
+top_right = ExtResource("4_top_right")
+body_left = ExtResource("5_body_left")
+body = ExtResource("6_body")
+body_right = ExtResource("7_body_right")
+deep_left = ExtResource("8_deep_left")
+deep = ExtResource("9_deep")
+deep_right = ExtResource("10_deep_right")
+bottom_left = ExtResource("11_bottom_left")
+bottom = ExtResource("12_bottom")
+bottom_right = ExtResource("13_bottom_right")
+crop_top_pixels = 1
