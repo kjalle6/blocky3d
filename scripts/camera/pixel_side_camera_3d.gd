@@ -171,6 +171,11 @@ func snap_to_target() -> void:
 	_process(0.0)
 
 
+## Cutscene return framing may differ from the temporary cinematic look-ahead.
+func gameplay_look_ahead() -> float:
+	return look_ahead
+
+
 func world_units_per_screen_pixel() -> float:
 	var viewport_height := get_viewport().get_visible_rect().size.y
 	if viewport_height <= 0.0:

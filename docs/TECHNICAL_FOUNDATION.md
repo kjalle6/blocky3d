@@ -190,32 +190,25 @@ not a release configuration.
 
 ## Camera and background
 
-The Level 3 gun-encounter section trials Phantom Camera with a visually authored
-`Path3D` rail. Phantom owns following and damping; a small adapter preserves
-pixel snapping, inspection and cinematic ownership. See
-[Phantom Camera](PHANTOM_CAMERA.md) for editing, validation and addon limitations.
-The region-based camera described below remains active in the other sections.
+Every playable campaign section uses Phantom Camera with scene-authored
+`Path3D` rails. Phantom owns follow positions and damping; the adapter quantizes
+only the rendered output and retains the camera API used by inspection, saves,
+and cinematics. The host updates before backgrounds, at process priority -100.
+The orthographic size remains 12.9375 and the camera stays flat, so equal world
+Y projects to equal screen Y at every gameplay and background depth.
 
-`PixelSideCamera3D` keeps a continuous follow position and quantizes its
-rendered transform to the current output-pixel grid. The default side camera is
-flat (`camera_height == target_height`), so equal world Y projects to equal
-screen Y at every gameplay and background depth. Levels may override framing,
-bounds, and opt-in vertical follow. Camera pitch is an authored exception and
-requires projection and visual regression checks.
+Rails describe flat stretches, sustained rises and fixed shaft centres. Branch
+rails handle overlapping routes in the cave and Level 3 underground section.
+They share a Phantom instance, preserving its damping state during a switch;
+small exit margins prevent boundary oscillation. Spawn/load clears velocity
+and resolves the current composition immediately. The tank climb additionally
+uses Simple follow for exploration above its ordinary exit.
 
-Scene-authored vertical framing regions are available rather than enabling
-vertical follow for an entire mixed horizontal/vertical level.
-A region declares when vertical tracking becomes active and the permitted
-offset range; leaving or restarting restores deterministic framing. This keeps
-ordinary jumps in the approved shoreline, threshold, and garden sections from
-moving the camera while allowing sustained later climbs to reframe naturally.
-
-Entering, leaving, or switching framing regions blends the camera's target
-composition over 0.65 seconds with an eased start and finish, before ordinary
-follow smoothing. Horizontal and vertical handovers are independent; changing
-shaft focus does not delay vertical tracking. Turning back across a boundary
-starts from the in-progress framing. Ordinary follow response is unchanged,
-and explicit spawn/load/inspection snaps clear the handover immediately.
+The base `PixelSideCamera3D` remains the shared API and provides the legacy
+camera for labs and the scripted cave-slide cinematic. Its framing regions
+remain available to those fixtures, but are no longer attached to campaign
+level scenes. See [Phantom Camera](PHANTOM_CAMERA.md) for scene settings,
+editing, validation and addon limitations.
 
 `PixelBackgroundRig3D` owns presentation behind the route. It consumes a typed
 `PixelBackgroundProfile` made of ordered `PixelBackgroundLayerProfile` tracks.
@@ -284,20 +277,11 @@ the native texture height; it never re-snaps rows independently. This supplies
 coverage for tall spaces without coupling art to camera Y or introducing fake
 depth layers.
 
-Camera regions select vertical framing and horizontal focus independently. A
-narrow focus can therefore hold one shaft composition on X while a broader
-region continues to track its climb on Y; neither policy has to replace the
-other. The Level 2 interior uses that split for its Wall Jump shaft and its
-28.0 m upper-floor camera offset. The vertical region clamps there so an
-ordinary jump cannot move the whole upper cave shell. A second fixed region
-holds the lift-exit composition while the deck rises. Normal horizontal
-look-ahead resumes through the camera's smoothing when the player exits the
-Wall Jump shaft. Level 3 WIP reuses the same independent policies: ordinary
-forward look-ahead reveals the deceptive far ledge during the committed jump,
-a broader vertical region waits until the player falls below the surface lip
-before following the 25.6 m descent, a fixed bottom hold prevents the short
-combat beat from bobbing with ordinary jumps, and a narrow horizontal focus
-holds the 5.12 m return shaft while vertical tracking follows the climb. The
+The cave rail holds X 58.88 during wall jumps and its upper branch holds Y
+30.7 through ordinary jumps, lethal machine-pit falls and the lift departure.
+Level 3 keeps a flat surface rail until the player falls below the deceptive
+lip; bounded Phantom Simple follow covers the broad descent and underground floor,
+then a vertical branch rail centres the return shaft. The
 separate height-window extension remains dormant until an approved composition
 needs fixed-scale depth, parallax, deliberate viewport cropping, and camera-height
 fades; runtime scaling of scenery remains excluded because it reads as zooming

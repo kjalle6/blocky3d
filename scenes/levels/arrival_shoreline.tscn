@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=3]
+[gd_scene load_steps=67 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="2_platform"]
@@ -38,7 +38,6 @@
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/hedge_mid_left.png" id="45_hedge_mid_left"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/hedge_mid_right.png" id="46_hedge_mid_right"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/garden_gate_open.png" id="47_gate"]
-[ext_resource type="Script" path="res://scripts/camera/vertical_camera_region_3d.gd" id="48_camera_region"]
 [ext_resource type="Script" path="res://scripts/dressing/dressing_zone_3d.gd" id="49_dressing_zone"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/bush_wild_left.png" id="50_bush_wild_left"]
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/bush_wild_right.png" id="51_bush_wild_right"]
@@ -50,6 +49,24 @@
 [ext_resource type="PackedScene" path="res://scenes/enemies/pixel_skater_enemy.tscn" id="59_skater"]
 [ext_resource type="AudioStream" path="res://assets/audio/water/heavy-water-splash.mp3" id="60_water_audio"]
 [ext_resource type="Resource" path="res://resources/presentation/platform_styles/green_zone_stone.tres" id="61_pit_stone"]
+
+[ext_resource type="Script" path="res://scripts/camera/phantom_pixel_camera_3d.gd" id="pc_adapter"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="pc_host"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="pc_camera"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/resources/camera_3d_resource.gd" id="pc_resource"]
+
+[sub_resource type="Resource" id="Camera3DResource_pixel"]
+script = ExtResource("pc_resource")
+projection = 1
+size = 12.9375
+
+[sub_resource type="Curve3D" id="Curve3D_route"]
+bake_interval = 0.04
+_data = {
+"points": PackedVector3Array(0, 0, 0, 12, 0, 0, 6.47, 3.98, 24, -12, 0, 0, 6, 0, 0, 120, 3.98, 24, -6, 0, 0, 5, 0, 0, 141, 8.6, 24, -5, 0, 0, 2, 0, 0, 159, 10.3, 24, -2, 0, 0, 0, -2, 0, 167, 10.3, 24, -5, 0, 0, 3, 0, 0, 177, 3.98, 24, -3, 0, 0, 0, 0, 0, 186.88, 3.98, 24),
+"tilts": PackedFloat32Array(0, 0, 0, 0, 0, 0, 0)
+}
+point_count = 7
 
 [sub_resource type="BoxShape3D" id="Shape_kill_plane"]
 size = Vector3(230.4, 1, 8)
@@ -827,10 +844,17 @@ position = Vector3(1.8, 0.7, 0)
 [node name="Player" parent="." index="9"]
 position = Vector3(1.8, 0.7, 0)
 
-[node name="GameplayCamera" parent="." index="10"]
+[node name="GameplayCamera" parent="." index="10" node_paths=PackedStringArray("phantom_camera")]
+script = ExtResource("pc_adapter")
+phantom_camera = NodePath("../CameraDirection/RouteCamera")
 camera_height = 3.98
 target_height = 3.98
 maximum_center_x = 186.88
+
+[node name="PhantomCameraHost" type="Node" parent="GameplayCamera"]
+script = ExtResource("pc_host")
+host_layers = 2
+interpolation_mode = 1
 
 [node name="KillPlane" parent="." index="11"]
 position = Vector3(90.56, -4.34, 0)
@@ -914,13 +938,21 @@ crest_offsets_x = PackedFloat32Array(2, 4, 5.7)
 crest_delays = PackedFloat32Array(0, 2.1, 4)
 crest_submerged_depths = PackedFloat32Array(0.4, 0.35, 0.3)
 
-[node name="DoubleJumpRiseCameraRegion" type="Node3D" parent="." index="28"]
-position = Vector3(151.04, 0, 0)
-script = ExtResource("48_camera_region")
-size = Vector2(70.4, 32)
-vertical_anchor_y = 1.19
-minimum_vertical_offset = 0.0
-maximum_vertical_offset = 7.04
-priority = 10
+[node name="CameraDirection" type="Node3D" parent="."]
 
-[editable path="Player"]
+[node name="CameraRail" type="Path3D" parent="CameraDirection"]
+curve = SubResource("Curve3D_route")
+
+[node name="RouteCamera" type="Node3D" parent="CameraDirection" node_paths=PackedStringArray("follow_target", "follow_path")]
+position = Vector3(6.47, 3.98, 24)
+script = ExtResource("pc_camera")
+priority = 10
+follow_mode = 4
+follow_target = NodePath("../../Player")
+follow_path = NodePath("../CameraRail")
+follow_offset = Vector3(2.6, 2.79, 24)
+follow_damping = true
+follow_damping_value = Vector3(0.25, 0.28, 0.1)
+tween_on_load = false
+host_layers = 2
+camera_3d_resource = SubResource("Camera3DResource_pixel")

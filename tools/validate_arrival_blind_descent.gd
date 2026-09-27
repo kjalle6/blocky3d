@@ -47,8 +47,8 @@ func _run() -> void:
 	for frame in 3:
 		await process_frame
 
-	if camera.active_vertical_region() == null:
-		_fail("The peak did not activate its authored vertical camera region.")
+	if camera.get_script().resource_path != "res://scripts/camera/phantom_pixel_camera_3d.gd":
+		_fail("The peak must use the authored Phantom rail.")
 		return
 	var spike_tip_world := Vector3(
 		spikes.global_position.x,

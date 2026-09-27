@@ -291,19 +291,10 @@ func _validate_geometry(level: LevelSession3D) -> void:
 		"An ordinary forward drop beyond the final high platform must meet the concealed spikes."
 	)
 
-	var camera_region := level.get_node(
-		"DoubleJumpRiseCameraRegion"
-	) as VerticalCameraRegion3D
-	assert(camera_region != null)
-	assert(camera_region.validation_errors().is_empty())
-	assert(camera_region.contains_world_position(Vector3(120.0, 1.19, 0.0)))
-	assert(camera_region.contains_world_position(Vector3(160.0, 8.23, 0.0)))
-	assert(is_equal_approx(camera_region.maximum_vertical_offset, 7.04))
-	var peak_camera_bottom: float = (
-		level.camera.camera_height
-		+ camera_region.maximum_vertical_offset
-		- level.camera.size * 0.5
-	)
+	assert(level.camera.get_script().resource_path == "res://scripts/camera/phantom_pixel_camera_3d.gd")
+	var camera_rail := level.get_node("CameraDirection/CameraRail") as Path3D
+	var peak_frame := camera_rail.curve.get_closest_point(Vector3(162.6, 11.02, 24))
+	var peak_camera_bottom: float = peak_frame.y - level.camera.size * 0.5
 	var blind_spike_tip: float = (
 		blind_landing.global_position.y + blind_landing.spike_height
 	)

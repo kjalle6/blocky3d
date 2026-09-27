@@ -47,14 +47,12 @@ func _run() -> void:
 	var player := level.player as PlayerCharacter
 	var camera := level.camera as PixelSideCamera3D
 	var background := level.background as PixelBackgroundRig3D
-	var focus_region := level.get_node(
-		"WallJumpCameraFocus"
-	) as VerticalCameraRegion3D
+	var focus_region := Rect2(56.32, 13, 5.12, 13)
 	var ceiling_sprite := level.get_node(
 		"UpperCaveCeiling/CaveCeiling"
 	) as Sprite3D
 	assert(player != null and camera != null and background != null)
-	assert(focus_region != null and ceiling_sprite != null)
+	assert(ceiling_sprite != null)
 
 	for frame in 90:
 		if not player.is_transition_running():
@@ -190,10 +188,10 @@ func _rendered_physics_frame() -> void:
 func _record_visible_sample(
 	player: PlayerCharacter,
 	camera: PixelSideCamera3D,
-	focus_region: VerticalCameraRegion3D,
+	focus_region: Rect2,
 	ceiling_sprite: Sprite3D
 ) -> void:
-	if not focus_region.contains_world_position(player.global_position):
+	if not focus_region.has_point(Vector2(player.global_position.x, player.global_position.y)):
 		return
 	if ceiling_sprite.modulate.a < 0.05:
 		return

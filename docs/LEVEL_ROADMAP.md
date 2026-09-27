@@ -2,8 +2,8 @@
 
 World 1, the Green Zone, teaches the movement kit across three substantial
 levels. Arrival / Shoreline and Overgrown Coastal Ascent are complete. Green
-Zone Finale is playable in development through its first handgun encounter;
-its remaining combat sequence and boss are the next campaign work.
+Zone Finale is playable in development through the handgun introduction, tank
+fight and wall-jump escape; the later gunners and boss are the next campaign work.
 
 ## Current campaign
 
@@ -11,11 +11,16 @@ its remaining combat sequence and boss are the next campaign work.
 | --- | --- | --- |
 | Arrival / Shoreline | Beach arrival, early combat and hazards, Double Jump, forest clearing | Complete |
 | Overgrown Coastal Ascent | Dusk approach, cave entry, Wall Jump and Dash, machine chambers, lift departure | Complete |
-| Green Zone Finale | Night ravine, underworks descent and return, first handgun, shooting practice, boss | Traversal and handgun encounter implemented; practice and boss remain |
+| Green Zone Finale | Night ravine, underworks descent and return, first handgun, tank fight and escape, later gunners, boss | Traversal, handgun and tank implemented; later gunners and boss remain |
 
 Campaign play can continue into the unfinished finale. The production level
 selector lists the first two levels; developer entries provide direct access to
 the finale and its gun encounter.
+
+Phantom Camera is now accepted across all five playable sections, including
+the cave and the earlier Level 3 route. The handgun cutscene returns smoothly
+to gameplay framing; terrain and authored object placements are preserved.
+See [camera authoring](PHANTOM_CAMERA.md).
 
 ### Level 1: Arrival / Shoreline
 

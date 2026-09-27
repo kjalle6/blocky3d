@@ -36,7 +36,9 @@ func _run() -> void:
 	browser.open()
 	browser.category = "Enemies"
 	browser._refresh()
-	assert(browser._results.size() == 3)
+	var enemy_count: int = browser._results.size()
+	for enemy_id in ["patrol_enemy", "skater_enemy", "gunner_enemy", "tank_enemy"]:
+		assert(enemy_id in browser._results, "Enemy browser is missing " + enemy_id)
 	browser._search.text = "skater"
 	browser._refresh()
 	assert(browser._results == ["skater_enemy"])
@@ -65,7 +67,7 @@ func _run() -> void:
 	var palette: Control = panel._palette
 	palette._category.select(LIBRARY.CATEGORIES.find("Enemies"))
 	palette._category.item_selected.emit(LIBRARY.CATEGORIES.find("Enemies"))
-	assert(palette._cards.get_child_count() == 3)
+	assert(palette._cards.get_child_count() == enemy_count)
 	palette._search.text = "skater"
 	palette._search.text_changed.emit("skater")
 	for frame in 3: await process_frame

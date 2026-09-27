@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3]
+[gd_scene load_steps=33 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
 [ext_resource type="Resource" path="res://resources/presentation/backgrounds/green_zone_dusk.tres" id="10_dusk"]
@@ -24,6 +24,24 @@
 [ext_resource type="Texture2D" path="res://assets/art/green_zone/props/tree_small_grounded.png" id="22_tree_small"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/pixel_patrol_enemy.tscn" id="23_enemy"]
 [ext_resource type="PackedScene" path="res://scenes/cutscenes/level_2_cave_slide_intro.tscn" id="24_slide_intro"]
+
+[ext_resource type="Script" path="res://scripts/camera/phantom_pixel_camera_3d.gd" id="pc_adapter"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="pc_host"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="pc_camera"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/resources/camera_3d_resource.gd" id="pc_resource"]
+
+[sub_resource type="Resource" id="Camera3DResource_pixel"]
+script = ExtResource("pc_resource")
+projection = 1
+size = 12.9375
+
+[sub_resource type="Curve3D" id="Curve3D_route"]
+bake_interval = 0.04
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 11.52, 2.7, 24, 0, 0, 0, 0, 0, 0, 26.88, 2.7, 24),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
 
 [sub_resource type="BoxShape3D" id="Shape_kill_plane"]
 size = Vector3(64, 1, 8)
@@ -398,10 +416,17 @@ position = Vector3(3.2, 0.06, 0)
 [node name="Player" parent="." index="9"]
 position = Vector3(3.2, 0.06, 0)
 
-[node name="GameplayCamera" parent="." index="10"]
+[node name="GameplayCamera" parent="." index="10" node_paths=PackedStringArray("phantom_camera")]
+script = ExtResource("pc_adapter")
+phantom_camera = NodePath("../CameraDirection/RouteCamera")
 look_ahead = 2.0
 minimum_center_x = 11.52
 maximum_center_x = 26.88
+
+[node name="PhantomCameraHost" type="Node" parent="GameplayCamera"]
+script = ExtResource("pc_host")
+host_layers = 2
+interpolation_mode = 1
 
 [node name="KillPlane" parent="." index="11"]
 position = Vector3(19.2, -17.28, 0)
@@ -423,3 +448,22 @@ patrol_right_distance = 8.0
 starts_moving_right = false
 
 [editable path="Player"]
+
+[node name="CameraDirection" type="Node3D" parent="."]
+
+[node name="CameraRail" type="Path3D" parent="CameraDirection"]
+curve = SubResource("Curve3D_route")
+
+[node name="RouteCamera" type="Node3D" parent="CameraDirection" node_paths=PackedStringArray("follow_target", "follow_path")]
+position = Vector3(11.52, 2.7, 24)
+script = ExtResource("pc_camera")
+priority = 10
+follow_mode = 4
+follow_target = NodePath("../../Player")
+follow_path = NodePath("../CameraRail")
+follow_offset = Vector3(2, 2, 24)
+follow_damping = true
+follow_damping_value = Vector3(0.25, 0.28, 0.1)
+tween_on_load = false
+host_layers = 2
+camera_3d_resource = SubResource("Camera3DResource_pixel")

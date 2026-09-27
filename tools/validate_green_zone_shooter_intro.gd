@@ -256,7 +256,7 @@ func _run() -> void:
 	assert(level.player.is_physics_processing())
 	assert(level.camera.target == level.player)
 	assert(is_equal_approx(level.camera.size, 12.9375))
-	assert(is_equal_approx(level.camera.look_ahead, 5.76))
+	assert(is_equal_approx(level.camera.look_ahead, level.camera.gameplay_look_ahead()))
 	assert(shooter.last_completed_volley_shot_count() == 6)
 	assert(shooter.completed_volleys_total() == 1)
 

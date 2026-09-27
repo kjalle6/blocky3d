@@ -447,44 +447,9 @@ func _run() -> void:
 	assert(is_equal_approx(shooter_area_transition.run_speed, 8.0))
 	assert(is_equal_approx(shooter_area_transition.run_duration, 0.9))
 
-	var deep_camera_region := level.get_node(
-		"DeepRouteCameraRegion"
-	) as VerticalCameraRegion3D
-	assert(deep_camera_region != null)
-	assert(deep_camera_region.validation_errors().is_empty())
-	assert(deep_camera_region.position.is_equal_approx(Vector3(139.52, -14.72, 0)))
-	assert(deep_camera_region.size.is_equal_approx(Vector2(64.0, 29.44)))
-	assert(is_equal_approx(deep_camera_region.vertical_anchor_world_y(), 0.7))
-	assert(is_equal_approx(deep_camera_region.minimum_vertical_offset, -25.6))
-	assert(is_equal_approx(deep_camera_region.maximum_vertical_offset, 0.0))
-	assert(not deep_camera_region.contains_world_position(Vector3(110.0, 0.7, 0)))
-	assert(deep_camera_region.contains_world_position(Vector3(120.0, -0.1, 0)))
-	assert(deep_camera_region.contains_world_position(Vector3(132.48, -24.9, 0)))
-	var wall_focus := level.get_node("WallJumpCameraFocus") as VerticalCameraRegion3D
-	assert(wall_focus != null)
-	assert(wall_focus.validation_errors().is_empty())
-	assert(not wall_focus.vertical_framing_enabled)
-	assert(wall_focus.horizontal_focus_enabled)
-	assert(wall_focus.priority > deep_camera_region.priority)
-	assert(wall_focus.position.is_equal_approx(Vector3(157.44, -12.8, 0)))
-	assert(wall_focus.size.is_equal_approx(Vector2(5.12, 25.6)))
-	assert(is_equal_approx(wall_focus.horizontal_focus_world_x(), 157.44))
-	assert(wall_focus.contains_world_position(Vector3(155.2, -24.9, 0)))
-	assert(wall_focus.contains_world_position(Vector3(159.6, -0.1, 0)))
-	assert(not wall_focus.contains_world_position(Vector3(153.6, -12.8, 0)))
-	var bottom_hold := level.get_node("BottomCameraHold") as VerticalCameraRegion3D
-	assert(bottom_hold != null)
-	assert(bottom_hold.validation_errors().is_empty())
-	assert(bottom_hold.vertical_framing_enabled)
-	assert(not bottom_hold.horizontal_focus_enabled)
-	assert(bottom_hold.priority > deep_camera_region.priority)
-	assert(bottom_hold.position.is_equal_approx(Vector3(143.36, -23.68, 0)))
-	assert(bottom_hold.size.is_equal_approx(Vector2(23.04, 3.84)))
-	assert(is_equal_approx(bottom_hold.minimum_vertical_offset, -25.6))
-	assert(is_equal_approx(bottom_hold.maximum_vertical_offset, -25.6))
-	assert(bottom_hold.contains_world_position(Vector3(132.48, -24.9, 0)))
-	assert(bottom_hold.contains_world_position(Vector3(154.8, -24.9, 0)))
-	assert(not bottom_hold.contains_world_position(Vector3(143.36, -20.0, 0)))
+	assert(level.camera.get_script().resource_path == "res://scripts/camera/phantom_pixel_camera_3d.gd")
+	assert(level.get_node("CameraDirection/CameraRail") is Path3D)
+	assert(level.get_node("CameraDirection/BranchRail") is Path3D)
 
 	var surface_region := level.get_node(
 		"SurfaceBackgroundRegion"

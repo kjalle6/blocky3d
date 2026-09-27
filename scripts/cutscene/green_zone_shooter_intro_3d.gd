@@ -86,6 +86,7 @@ var _trigger_enabled := false
 var _camera_override_active := false
 var _previous_camera_target: Node3D
 var _previous_camera_look_ahead := 0.0
+var _gameplay_camera_look_ahead := 0.0
 var _previous_camera_follow_response := 0.0
 var _previous_camera_size := 0.0
 var _camera_driver_authored_position := Vector3.ZERO
@@ -490,6 +491,7 @@ func _activate_camera_override() -> void:
 	camera.cinematic_override_enabled = true
 	_previous_camera_target = camera.target
 	_previous_camera_look_ahead = camera.look_ahead
+	_gameplay_camera_look_ahead = camera.gameplay_look_ahead()
 	_previous_camera_follow_response = camera.follow_response
 	_previous_camera_size = camera.size
 	_camera_focus_start_x = camera.global_position.x
@@ -563,7 +565,7 @@ func _tick_evade_camera(delta: float) -> void:
 		)
 		camera.look_ahead = lerpf(
 			0.0,
-			_previous_camera_look_ahead,
+			_gameplay_camera_look_ahead,
 			_smooth_progress(look_progress)
 		)
 	if _camera_whip_elapsed >= camera_zoom_out_duration:

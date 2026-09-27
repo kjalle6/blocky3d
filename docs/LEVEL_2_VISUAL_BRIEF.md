@@ -15,7 +15,7 @@ Level 2 identity without a separate developer selector entry.
 ## Editing the level
 
 Both Level 2 sections now support prepared additions through the in-game
-designer. Their original connected terrain, camera regions, and scripted
+designer. Their original connected terrain, camera rails, and scripted
 sequence assemblies remain protected; this does not reopen the accepted route
 or add cave-painting tools. Inspect resolved layout data before further scene
 work. The cave entrance texture was promoted unchanged from the source catalog
@@ -46,7 +46,7 @@ LOWER CAVE
 ```
 
 The accepted route and human-tested timing own this shape. Coordinates, tile
-counts, and camera regions serve it; they do not reinterpret it.
+counts, and camera rails serve it; they do not reinterpret it.
 
 ## Approach, threshold, and arrival
 
@@ -106,7 +106,7 @@ during rapid left-right kicks. Normal look-ahead resumes smoothly after the
 upper-left exit. The upper floor clamps at a 28.0 m vertical offset, so ordinary
 jumps do not move the whole cave shell.
 
-The lift owns a still tighter fixed region. The camera remains motionless while
+The upper Phantom rail ends at the lift framing. The camera remains motionless while
 the deck rises, letting the machinery, not the background, sell departure.
 
 ## Visual contracts

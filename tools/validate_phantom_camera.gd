@@ -24,6 +24,7 @@ func _run() -> void:
 	level.process_mode = Node.PROCESS_MODE_DISABLED
 	var player := level.player
 	var camera = level.camera
+	var authored_look_ahead: float = camera.look_ahead
 	var host: PhantomCameraHost = camera.phantom_host
 	var pcam: PhantomCamera3D = camera.phantom_camera
 	assert(host.get_active_pcam() == pcam)
@@ -150,6 +151,8 @@ func _run() -> void:
 	await process_frame
 	await process_frame
 	assert(camera.position == before)
+	camera.look_ahead = authored_look_ahead
+	_check_intro_camera_return(camera, player)
 	level.queue_free()
 	await process_frame
 	# New sessions must bind their own camera after the previous one is freed.
@@ -162,5 +165,36 @@ func _run() -> void:
 	level.queue_free()
 	await process_frame
 	FileAccess.open("res://build/phantom_camera_validation.json", FileAccess.WRITE).store_string(JSON.stringify(report, "\t"))
-	print("Phantom camera passed: 30/60/144 FPS rail and optional upper climb, pixel grid, visibility, boundary crossing, settling, roof/ground respawn, inspection, cinematic ownership, disabled processing, and reload.")
+	print("Phantom camera passed: 30/60/144 FPS rail and optional upper climb, pixel grid, visibility, boundary crossing, settling, roof/ground respawn, inspection, cinematic ownership, intro return without overshoot, disabled processing, and reload.")
 	quit(0)
+
+
+func _check_intro_camera_return(camera: PixelSideCamera3D, player: PlayerCharacter) -> void:
+	var intro := level.get_node("ShooterEncounterStaging/ShooterIntro") as GreenZoneShooterIntro3D
+	# Exercise the actual cutscene camera choreography against a fixed cover
+	# run, including both early and late arrival. Combat timing is tested by
+	# validate_green_zone_shooter_intro; no platforming input runner is needed.
+	for fps in [30, 60, 144]:
+		for run_duration in [0.25, 1.0]:
+			player.position = Vector3(9.6, 0.55, 0)
+			camera.snap_to_target()
+			intro.preview_reveal_composition()
+			camera.snap_to_target()
+			intro._begin_enemy_aim()
+			intro._on_shot_fired(null)
+			var peak_x := -INF
+			var completion_time: float = maxf(0.6, run_duration)
+			for frame in range(1, 3 * fps + 1):
+				var time := frame / float(fps)
+				player.position.x = lerpf(9.6, 13.6, minf(time / run_duration, 1.0))
+				if not intro.has_completed():
+					intro._tick_evade_camera(1.0 / fps)
+					if time >= completion_time:
+						intro._complete_intro()
+				camera._process(1.0 / fps)
+				if time >= intro.camera_zoom_out_duration:
+					peak_x = maxf(peak_x, camera.global_position.x)
+			var correction := peak_x - camera.global_position.x
+			print("Intro return %s FPS, run %.2fs: backward correction %.4f" % [fps, run_duration, correction])
+			report["intro_return_%s_%s" % [fps, run_duration]] = correction
+			assert(correction <= camera.world_units_per_screen_pixel() * 2, "Cutscene overshoots gameplay framing then pulls back")

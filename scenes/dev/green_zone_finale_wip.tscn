@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3]
+[gd_scene load_steps=32 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/level/pixel_level_base.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_platform_3d.gd" id="2_platform"]
@@ -13,13 +13,38 @@
 [ext_resource type="PackedScene" path="res://scenes/level/level_checkpoint.tscn" id="11_checkpoint"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_interior_terrain_3d.gd" id="12_terrain"]
 [ext_resource type="Resource" path="res://resources/presentation/interior_styles/rock_underworks.tres" id="13_rock_style"]
-[ext_resource type="Script" path="res://scripts/camera/vertical_camera_region_3d.gd" id="14_camera_region"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_background_region_3d.gd" id="15_background_region"]
 [ext_resource type="Script" path="res://scripts/presentation/pixel_region_grade_3d.gd" id="16_region_grade"]
 [ext_resource type="Script" path="res://scripts/hazards/hazard_3d.gd" id="17_hazard"]
 [ext_resource type="Script" path="res://scripts/level/level_transition_3d.gd" id="18_transition"]
 [ext_resource type="PackedScene" path="res://scenes/dev/green_zone_finale_shooter_area_wip.tscn" id="19_shooter_area"]
 [ext_resource type="Script" path="res://scripts/audio/audio_environment_region_3d.gd" id="20_audio_region"]
+
+[ext_resource type="Script" path="res://scripts/camera/phantom_pixel_camera_3d.gd" id="pc_adapter"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="pc_host"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="pc_camera"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/resources/camera_3d_resource.gd" id="pc_resource"]
+
+[sub_resource type="Resource" id="Camera3DResource_pixel"]
+script = ExtResource("pc_resource")
+projection = 1
+size = 12.9375
+
+[sub_resource type="Curve3D" id="Curve3D_route"]
+bake_interval = 0.04
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 11.52, 2.7, 24, 0, 0, 0, 0, 0, 0, 160, 2.7, 24),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
+
+[sub_resource type="Curve3D" id="Curve3D_branch"]
+bake_interval = 0.04
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 157.44, -22.9, 24, 0, 0, 0, 0, 0, 0, 157.44, 2.7, 24),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
 
 [sub_resource type="Environment" id="Environment_night"]
 background_mode = 1
@@ -203,10 +228,23 @@ position = Vector3(4.0, 0.7, 0)
 position = Vector3(4.0, 0.7, 0)
 fall_limit_y = -31.0
 
-[node name="GameplayCamera" parent="." index="10"]
+[node name="GameplayCamera" parent="." index="10" node_paths=PackedStringArray("phantom_camera", "branch_rail", "branch_free_target")]
+script = ExtResource("pc_adapter")
+phantom_camera = NodePath("../CameraDirection/RouteCamera")
+branch_rail = NodePath("../CameraDirection/BranchRail")
+branch_follow_offset = Vector3(2.6, 2, 24)
+branch_free_target = NodePath("../CameraDirection/DropFollowTarget")
+branch_free_region = Rect2(106, -33, 48.88, 34)
+branch_free_bounds = Rect2(117.5, -22.9, 39.94, 25.6)
+branch_regions = Array[Rect2]([Rect2(106, -32, 70, 31.5)])
 look_ahead = 4.48
 minimum_center_x = 11.52
 maximum_center_x = 160.0
+
+[node name="PhantomCameraHost" type="Node" parent="GameplayCamera"]
+script = ExtResource("pc_host")
+host_layers = 2
+interpolation_mode = 1
 
 [node name="KillPlane" parent="." index="11"]
 position = Vector3(85.76, -32, 0)
@@ -250,32 +288,6 @@ position = Vector3(137.6, -25.18, 0)
 patrol_speed = 2.0
 patrol_left_distance = 3.2
 patrol_right_distance = 3.2
-
-[node name="DeepRouteCameraRegion" type="Node3D" parent="." index="17"]
-position = Vector3(139.52, -14.72, 0)
-script = ExtResource("14_camera_region")
-size = Vector2(64, 29.44)
-vertical_anchor_y = 15.42
-minimum_vertical_offset = -25.6
-maximum_vertical_offset = 0.0
-priority = 10
-
-[node name="WallJumpCameraFocus" type="Node3D" parent="." index="18"]
-position = Vector3(157.44, -12.8, 0)
-script = ExtResource("14_camera_region")
-size = Vector2(5.12, 25.6)
-vertical_framing_enabled = false
-priority = 20
-horizontal_focus_enabled = true
-
-[node name="BottomCameraHold" type="Node3D" parent="." index="19"]
-position = Vector3(143.36, -23.68, 0)
-script = ExtResource("14_camera_region")
-size = Vector2(23.04, 3.84)
-vertical_anchor_y = 0.7
-minimum_vertical_offset = -25.6
-maximum_vertical_offset = -25.6
-priority = 20
 
 [node name="SurfaceBackgroundRegion" type="Node3D" parent="." index="20"]
 position = Vector3(85.76, 2.7, 0)
@@ -341,3 +353,27 @@ size = Vector2(64, 28.16)
 
 [editable path="Player"]
 [editable path="Props/LevelStartLift"]
+
+[node name="CameraDirection" type="Node3D" parent="."]
+
+[node name="CameraRail" type="Path3D" parent="CameraDirection"]
+curve = SubResource("Curve3D_route")
+
+[node name="BranchRail" type="Path3D" parent="CameraDirection"]
+curve = SubResource("Curve3D_branch")
+
+[node name="RouteCamera" type="Node3D" parent="CameraDirection" node_paths=PackedStringArray("follow_target", "follow_path")]
+position = Vector3(11.52, 2.7, 24)
+script = ExtResource("pc_camera")
+priority = 10
+follow_mode = 4
+follow_target = NodePath("../../Player")
+follow_path = NodePath("../CameraRail")
+follow_offset = Vector3(4.48, 2, 24)
+follow_damping = true
+follow_damping_value = Vector3(0.25, 0.12, 0.1)
+tween_on_load = false
+host_layers = 2
+camera_3d_resource = SubResource("Camera3DResource_pixel")
+
+[node name="DropFollowTarget" type="Marker3D" parent="CameraDirection"]

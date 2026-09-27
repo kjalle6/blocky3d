@@ -9,7 +9,7 @@
 			"values": {
 				"height": 2.2,
 				"width": 2.4,
-				"x": 46.079998,
+				"x": 46.0,
 				"y": 0.0
 			}
 		},
@@ -31,7 +31,7 @@
 
 	},
 	"removed": [],
-	"revision": 3,
+	"revision": 4,
 	"schema": 3,
 	"section": "green_zone_shooter_area"
 }

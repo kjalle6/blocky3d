@@ -754,61 +754,9 @@ func _run() -> void:
 		"The landing patrol must leave a clean final approach to the lift."
 	)
 	assert(level.get_node_or_null("FinaleCameraRegion") == null)
-	var lift_camera_region := level.get_node(
-		"LiftExitCameraRegion"
-	) as VerticalCameraRegion3D
-	assert(lift_camera_region != null)
-	assert(lift_camera_region.validation_errors().is_empty())
-	assert(lift_camera_region.position.is_equal_approx(Vector3(172.16, 35.2, 0.0)))
-	assert(lift_camera_region.size.is_equal_approx(Vector2(3.84, 17.92)))
-	assert(is_equal_approx(lift_camera_region.minimum_vertical_offset, 28.0))
-	assert(is_equal_approx(lift_camera_region.maximum_vertical_offset, 28.0))
-	assert(lift_camera_region.priority == 30)
-	assert(lift_camera_region.contains_world_position(
-		EXIT_LIFT_ORIGIN + Vector3(-0.56, 0.7, 0.0)
-	))
-	assert(lift_camera_region.contains_world_position(
-		EXIT_LIFT_ORIGIN + Vector3(-0.56, 13.5, 0.0)
-	))
-
-	var camera_region := level.get_node(
-		"ShaftCameraRegion"
-	) as VerticalCameraRegion3D
-	assert(camera_region != null)
-	assert(camera_region.validation_errors().is_empty())
-	assert(camera_region.position.is_equal_approx(Vector3(107.52, 0.0, 0.0)))
-	assert(camera_region.size.is_equal_approx(Vector2(133.12, 72.0)))
-	assert(camera_region.contains_world_position(Vector3(58.88, 18.0, 0)))
-	assert(camera_region.contains_world_position(Vector3(80.0, 28.86, 0)))
-	assert(camera_region.contains_world_position(Vector3(120.96, 28.86, 0)))
-	assert(camera_region.contains_world_position(Vector3(169.0, 28.86, 0)))
-	assert(camera_region.contains_world_position(EXIT_LIFT_ORIGIN + Vector3.UP * 0.7))
-	assert(
-		is_equal_approx(camera_region.maximum_vertical_offset, 28.0),
-		(
-			"The shaft camera must clamp to the upper floor. Extra travel above "
-			+ "28.0 m makes the entire cave shell follow an ordinary jump."
-		)
-	)
-	var wall_jump_camera_focus := level.get_node(
-		"WallJumpCameraFocus"
-	) as VerticalCameraRegion3D
-	assert(wall_jump_camera_focus != null)
-	assert(wall_jump_camera_focus.validation_errors().is_empty())
-	assert(not wall_jump_camera_focus.vertical_framing_enabled)
-	assert(wall_jump_camera_focus.horizontal_focus_enabled)
-	assert(wall_jump_camera_focus.priority > camera_region.priority)
-	assert(wall_jump_camera_focus.position.is_equal_approx(
-		Vector3(58.88, 17.28, 0.0)
-	))
-	assert(wall_jump_camera_focus.size.is_equal_approx(Vector2(5.12, 29.44)))
-	assert(is_equal_approx(
-		wall_jump_camera_focus.horizontal_focus_world_x(),
-		58.88
-	))
-	assert(wall_jump_camera_focus.contains_world_position(Vector3(56.72, 18.0, 0.0)))
-	assert(wall_jump_camera_focus.contains_world_position(Vector3(61.04, 18.0, 0.0)))
-	assert(not wall_jump_camera_focus.contains_world_position(Vector3(62.0, 18.0, 0.0)))
+	assert(level.camera.get_script().resource_path == "res://scripts/camera/phantom_pixel_camera_3d.gd")
+	assert(level.get_node("CameraDirection/CameraRail") is Path3D)
+	assert(level.get_node("CameraDirection/BranchRail") is Path3D)
 
 	# Contact probes make sure the authored art and collision agree at each beat.
 	assert(_blocked(level.player, Vector3(4.48, 0.7, 0), Vector3.DOWN))
@@ -838,12 +786,8 @@ func _run() -> void:
 		not _blocked(level.player, Vector3(120.96, 28.86, 0), Vector3.DOWN),
 		"The dual-machine shaft must be a real hole."
 	)
-	await _validate_wall_jump_camera_focus(
-		level,
-		wall_jump_camera_focus,
-		camera_region
-	)
-	await _validate_vertical_background_behavior(level, background, camera_region)
+	await _validate_wall_jump_camera_focus(level)
+	await _validate_vertical_background_behavior(level, background)
 
 	# The broad area only notices a possible rider. Even fully on the left half,
 	# the player remains in control until standing still for one authored second;
@@ -1030,35 +974,19 @@ func _validate_water_vista(
 		assert(layer.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF)
 
 
-func _validate_wall_jump_camera_focus(
-	level: LevelSession3D,
-	focus_region: VerticalCameraRegion3D,
-	vertical_region: VerticalCameraRegion3D
-) -> void:
+func _validate_wall_jump_camera_focus(level: LevelSession3D) -> void:
 	var camera := level.camera as PixelSideCamera3D
-	assert(camera != null)
 	var original_player_position := level.player.global_position
 	var player_was_processing := level.player.is_physics_processing()
 	level.player.set_physics_process(false)
-	var expected_camera_x := camera.snap_world_x(
-		focus_region.horizontal_focus_world_x()
-	)
-	var expected_vertical_offset := clampf(
-		18.0 - vertical_region.vertical_anchor_world_y(),
-		vertical_region.minimum_vertical_offset,
-		vertical_region.maximum_vertical_offset
-	)
-	var expected_camera_y := (
-		camera.camera_height + camera.snap_world_y(expected_vertical_offset)
-	)
+	var expected_camera_x := camera.snap_world_x(58.88)
+	var expected_camera_y := camera.camera_height + camera.snap_world_y(20.0 - camera.camera_height)
 	var minimum_measured_camera_x := INF
 	var maximum_measured_camera_x := -INF
 	for player_x in [56.72, 58.88, 61.04]:
 		level.player.global_position = Vector3(player_x, 18.0, 0.0)
 		camera.snap_to_target()
 		await process_frame
-		assert(camera.active_vertical_region() == vertical_region)
-		assert(camera.active_horizontal_focus_region() == focus_region)
 		minimum_measured_camera_x = minf(
 			minimum_measured_camera_x,
 			camera.global_position.x
@@ -1090,8 +1018,7 @@ func _validate_wall_jump_camera_focus(
 
 func _validate_vertical_background_behavior(
 	level: LevelSession3D,
-	background: PixelBackgroundRig3D,
-	camera_region: VerticalCameraRegion3D
+	background: PixelBackgroundRig3D
 ) -> void:
 	var camera := level.camera as PixelSideCamera3D
 	assert(camera != null)
@@ -1143,9 +1070,8 @@ func _validate_vertical_background_behavior(
 
 	level.player.set_physics_process(false)
 	level.player.global_position = Vector3(
-		camera_region.global_position.x,
-		camera_region.vertical_anchor_world_y()
-			+ camera_region.maximum_vertical_offset,
+		107.52,
+		28.7,
 		0.0
 	)
 	camera.snap_to_target()

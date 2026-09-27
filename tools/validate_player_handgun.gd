@@ -306,6 +306,14 @@ func _validate_firing_timing(level: LevelSession3D) -> void:
 
 
 func _validate_fast_projectile_cover(level: LevelSession3D) -> void:
+	# Keep this isolated collision fixture visible: player rounds now stop at
+	# the viewing boundary, so firing at Y=100 through the level camera is invalid.
+	var fixture_camera := Camera3D.new()
+	fixture_camera.projection = Camera3D.PROJECTION_ORTHOGONAL
+	fixture_camera.size = 12.9375
+	fixture_camera.position = Vector3(1, 100, 24)
+	level.add_child(fixture_camera)
+	fixture_camera.make_current()
 	var cover := StaticBody3D.new()
 	var collision := CollisionShape3D.new()
 	var shape := BoxShape3D.new()
@@ -347,6 +355,8 @@ func _validate_fast_projectile_cover(level: LevelSession3D) -> void:
 			assert(directional_round.visual.basis.x.normalized().is_equal_approx(direction))
 			assert(not directional_round.visual.flip_h and not directional_round.visual.flip_v)
 		directional_round.queue_free()
+	fixture_camera.queue_free()
+	level.camera.make_current()
 	await physics_frame
 
 
