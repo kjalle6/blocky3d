@@ -126,7 +126,8 @@ The next stretch uses only gun enemies, in this order:
 3. **Stationary elevated gunner with cover.** Introduce firing angles and
    choosing when to leave cover, while the gunner holds its elevated position.
 
-The moving dual-gun and elevated gunner encounters remain to be implemented.
+The moving dual-gun and elevated gunner encounters remain to be implemented;
+the [next-build layout below](#next-build-upper-gunner-route) defines their first pass.
 The tank uses Green Zone enemy 6's idle, walk, attack, death and projectile art,
 plus the pack's tank shot and movement recordings. Tank and crate cover are
 available in the level designer. [Combat balance](COMBAT_BALANCE.md) records
@@ -203,6 +204,121 @@ camera-based disengagement, reward
 claims, save restoration and designer placement. The fullscreen MCP view has
 been inspected. Hands-on testing still owns the climb rhythm and final visual
 acceptance; no automated traversal runner is used for this section.
+
+#### Next build: upper gunner route
+
+**Proposed layout; not built yet.** Continue right from the existing upper ground
+after the tank climb. The next lesson is changing position against ordinary gun
+enemies, then shooting upward or closing the distance to an elevated enemy.
+Start with one of each, encountered separately. Keep the accepted tank clearing,
+shaft, scaffold roof reward and opening gun cutscene as they are.
+
+![Upper gunner route concept, revised for player mobility](concepts/green_zone_upper_gunners_v2.png)
+
+The mockup shows the intended composition, not measured geometry or finished
+assets. Its [generation prompt](concepts/green_zone_upper_gunners_v2.prompt.txt)
+records the visual brief. Suggested coordinates below are for the first layout
+pass and may move to achieve the right framing and combat spacing.
+
+**Scale the layout to the player's actual movement.** The first image compressed
+the height changes too far: a 3.84 m perch with a 1.92 m step is easily cleared
+with this level's full ability kit. Future mockups should retain a consistent
+player size and show meaningful jump heights and horizontal travel before
+adding scenery. A composition that looks tall is not enough.
+
+The current [movement resource](../resources/player/default_movement.tres) uses
+14 m/s jumps, 38 m/s² gravity, 8 m/s running and a 22 m/s, 0.25-second dash.
+Ideal figures, before input release, discrete physics and collision margins:
+
+- Full single-jump rise: about **2.58 m**; apex-timed double-jump rise: **5.16 m**.
+- Dash alone travels **5.5 m**, suspends falling and resets vertical velocity;
+  it does not grant extra jump height. Spending it during ascent sacrifices the
+  remaining rise unless the player still has an aerial jump.
+- A wall kick rises about **3.58 m** from contact; an unused aerial jump can
+  add another **2.58 m**. Include the approach jump when assessing a shortcut:
+  ideal ground jump, one wall kick and aerial jump can total about **8.74 m**.
+  Alternating wall contacts offer further climbing routes.
+- Same-height ideal horizontal reach is about **11.8 m** with two jumps or
+  **17.3 m** with two jumps and dash. Maximum horizontal reach and maximum rise
+  require different input timing; do not combine them into one jump envelope.
+
+The revised first pass puts the firing shelf **9.6 m above the approach**,
+with useful landings at **+3.2 m and +6.4 m**, spread about **6–8 m apart**
+horizontally. This gives a real approach under fire rather than a decorative
+step. Those are layout targets, not a guarantee against every shortcut. Skilled
+wall-jump/dash routes are welcome; do not shrink the player's abilities or add
+invisible barriers just to force one solution. Allow generous landing margins.
+
+| Beat | Initial layout | Player decision |
+| --- | --- | --- |
+| Recovery after the climb | Use the existing upper shelf, roughly X 84–104.96 at Y 25.6. A quiet stretch after the shaft leaves view; retain the existing exit crate pile. | Reload, heal if carrying medicine, and see the next threat before engagement. |
+| Moving gunner | Extend solid grass-topped ground from X 104.96 to roughly 128. Start one gunner near X 118, patrolling approximately X 112–123. Put a rock/ground shoulder near the entrance, with an open fighting lane beyond. | Shoot from range, jump over and turn back, or close for knife/stomp attacks. |
+| Elevated gunner | A rock shoulder separates the first fight from a broad ascent around X 130–160. The gunner's solid shelf is +9.6 m above the approach (world Y 35.2), with staggered, supported landings at +3.2 m and +6.4 m. | Shoot diagonally upward, cross between landings during firing windows, or use the walls and aerial kit to reach the gunner for melee. |
+| Recovery and continuation | Continue the raised shelf toward roughly X 173. Place one modest supply chest beyond the elevated position and leave space for the later boss approach. | Collect supplies and prepare; the boss entrance and save placement remain a later layout decision. |
+
+Keep a continuous lower floor beneath the ascent so a missed landing returns
+the player to the approach. Use broad staggered outcrops and a supported service
+bracket, with at least one sheltered place to reassess between exposed moves.
+This is an open ascent, not another narrow scaffold shaft. The preceding climb
+already supplies the lethal platforming pressure. Ground masses extend downward
+into darkness; supported steps, rock faces, broken fences and small maintenance
+fixtures make the space read as an overgrown service route. Crates should sit
+where supplies could reasonably be stored, rather than forming another tidy
+wall of boxes. Continue the blue night forest with restrained utility lights.
+
+**Moving gunner behavior.** Add an optional mobile mode to the existing dual-gun
+enemy; the original acquisition encounter and elevated placement remain
+stationary. The source pack already has the matching
+`enemies/green_zone_enemies/2/Walk.png`; promote that animation when implementing
+movement. The current production visual has no walk state yet.
+
+As an initial tuning proposal, walk at about 2.6 m/s and seek a firing distance
+of roughly 4–6 m. Stop to telegraph and fire, then reposition after recovery.
+Retain the existing visible windup, three paired firing beats and normal hit
+interruptions. Jumping over it makes it turn and pursue after its current
+attack/recovery, not fire instantly backward. Pursuit stops at unsafe ground,
+blocking terrain or the authored encounter boundary; patrol endpoints alone
+must not make it forget an engaged player. Only acquire a player while visible.
+
+**Elevated gunner behavior.** Hold position behind a low rock/metal lip that
+blocks low shots while leaving its guns and upper hurt region exposed. Match
+real bullet paths to the art: the lip must not absorb its own downward volley
+or every return shot. It uses the existing downward aim art and a locked aim
+for each firing beat. Increase this placement's vertical engagement tolerance
+to cover the full approach and jump arcs; the current 3 m default and 8 m
+inspector range are too small for this height. Check detection and projectile
+range together, retaining visible, unobstructed acquisition. The two landings
+and usable wall faces give an ammo-free approach and stomp route.
+
+Separate the activation areas and sightlines so the elevated gunner cannot
+start its introduction during the moving gunner's first volley. A player may
+choose to rush ahead with the first enemy alive, but pursuit ends before it
+follows onto the elevated emplacement. No mandatory kill gate or tank-style
+interruption immunity is proposed for either gunner.
+
+Keep the provisional **50 HP and 25 damage** baseline: two accurate handgun or
+knife hits, or one stomp. Each simultaneous bullet pair remains one damage
+opportunity. Start with a proposed **6 reserve rounds per defeated gunner**,
+editable per placement and saved with its defeat, to reward fighting without
+matching the tank's larger payout. The exit chest uses the existing variable
+gun-encounter pool. Reward amounts need testing across the whole route; no free
+healing or automatic magazine refill is added. Existing autosave/manual-save
+rules still restore saved health and supplies exactly.
+
+Build the moving gunner and its flat encounter first, then the elevated
+emplacement. Extend the existing Phantom rail continuously along the new ground
+and upward toward the raised shelf. Reveal the gunner before its first shot;
+then keep the player and next landing visible through the larger jumps. Do not
+zoom out or shrink the character to fit the entire ascent at once. Keep enough
+headroom for jumping over the moving enemy; do not
+introduce camera-priority cuts. Integrate these placements with the level
+designer, and preserve authored layouts when extending the scene.
+
+Check stop/fire/recover/turn behavior, normal interruptions, ledge protection,
+paired damage, camera visibility, muzzle clearance, melee access, and saved
+defeat/rewards with focused checks and an MCP playtest. Hands-on testing owns
+encounter rhythm and cover placement. There is no need for another automated
+route or pit traversal runner.
 
 Most ordinary fights can be bypassed. Their rewards make fighting worthwhile;
 the tank's ammo and safe climb are the first concrete example. Boss melee

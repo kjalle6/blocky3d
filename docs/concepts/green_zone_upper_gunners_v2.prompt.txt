@@ -1,0 +1,32 @@
+Tool: built-in image_gen (two edit passes)
+Purpose: revise the proposed route around the verified player movement values.
+Edit target: green_zone_upper_gunners.png
+
+Edit this level-layout concept into a second, MOBILITY-SCALED proposal. The attached concept is the edit target. Preserve its exact game aesthetic: crisp side-on pixel art, deep blue midnight forest, purple-black soil, green grass edges, broken fences, small industrial maintenance supports, same magenta-shirt player and same two purple dual-pistol enemies. Preserve the encounter order: safe recovery on the left, one moving ground gunner in the middle-left, one stationary elevated gunner on the right, chest and continuation on the far right. Exactly one player and two enemies. No tank, no boss, no new weapons. This is a targeted terrain-scale revision, not a new biome or art style.
+
+CRITICAL CHANGE: the original drawing made the upper gunner shelf only 1–2 character-heights tall. It must now be unmistakably about SIX CHARACTER HEIGHTS above the bottom fighting floor. Keep all three character sprites the same pixel size as each other, about 1.5 m tall relative to terrain. The upper gunner platform is 9.6 m above the lower ground. Compose a landscape board with MORE VERTICAL SPACE, roughly 2048x1280. In the main picture lower ground near y=980 and final upper platform near y=550 (relative sketch guidance only): about 430 pixels of vertical rise with characters around 60–70 px tall. Recompose header/footer to accommodate the height. Do not merely scale the whole previous image uniformly.
+
+Make the right-side ascent broad and staggered horizontally, with TWO intermediate landings: first at +3.2 m (two character heights), second at +6.4 m (four character heights), and the stationary gunner at +9.6 m (six character heights). Give each landing enough width to stand, aim and jump, roughly 3–4 character widths. Spread successive landing edges broadly across the right half with 6–8 m of horizontal travel between usable landing centers, not a tiny close-set staircase. Use a mixture of one chunky solid-earth outcrop and one steel service bracket anchored into a solid rock face. All structures are visibly supported. The continuous lower floor beneath catches a missed jump; no spike pit or lethal void and no floating unsupported soil. Do not add a second tall scaffold or narrow wall-jump shaft.
+
+The main ground fight at left/middle stays spacious and flat, with enough open headroom for large jump arcs. Keep the modest patrol arrow below its moving enemy. A substantial natural rock shoulder nearer the climb provides a staging place; the rest is exposed as the player goes upward. Position the elevated gunner near the front of the highest shelf. Its low stone cover protects its legs while BOTH pistols project clearly over the lip. Show a short downward-left firing line with an unobstructed visible path toward the approach. The upper gunner must remain visually readable at small scale and must not be hidden in rock.
+
+Draw thin cyan route arcs between the intermediate landings and the high shelf, making the substantial climb legible. Add a clean vertical dimension bracket beside the ascent labeled exactly "+9.6 m". Near an unobtrusive open area show a thinner dotted comparison bracket from base ground up to just above the first landing labeled exactly "Double-jump rise ~5.2 m". This comparison marker should be shorter than the emplacement height, never shown as a reachable path to the gunner. Label the two real intermediate landing heights "+3.2 m" and "+6.4 m" in small cyan text. Keep text out of character silhouettes.
+
+Header exactly: "GREEN ZONE — MOBILITY-SCALED PASS"
+Subtitle: "Higher firing position, wider movement choices"
+Left entrance arrow: "FROM TANK CLIMB"
+Right continuation arrow: "LATER: BOSS APPROACH"
+Keep a small chest and amber utility light after the elevated gunner on the high exit shelf.
+Footer with three modest sections:
+"1  RECOVER & RELOAD"
+"2  MOVING GUNNER"
+"3  CLIMB UNDER FIRE"
+Small bottom note: "Proposed scale — exact placement needs in-game review."
+
+Beautiful, restrained, production-minded pixel-art concept. Terrain proportions are the main priority. No dramatic perspective, no photorealism, no glowing neon everywhere, no decorative HUD. Keep the height and character scale relationship visibly honest rather than compressing it to make a flatter composition.
+
+Final cleanup pass: the first generated height comparison was drawn incorrectly.
+The final image intentionally omits numerical annotations; the roadmap owns the
+proposed dimensions, and the illustration shows the qualitative arrangement.
+
+Edit this concept with ONE tightly controlled cleanup. Preserve the entire terrain, all three character sprites, the blue night forest, relative height of the large right-hand ascent, two intermediate platforms, cover, chest, title, subtitle, footer, and cyan curved route arrows EXACTLY as they are. Remove all terrain measurement annotations: delete the label '+3.2 m', delete '+6.4 m', delete '+9.6 m' and its tall vertical double arrow, and delete 'Double-jump rise ~5.2 m' and its short dotted vertical bracket. Restore the uninterrupted appropriate forest/soil behind those removed annotations. Do not replace them with anything. The incorrect marker should not remain as a ghost or decorative line. Keep both curved cyan jump-route arrows, all other existing text, and all gameplay scenery unchanged. Keep the same image dimensions. This is a qualitative level-layout concept; precise numerical layout targets live in the written plan.

@@ -1,0 +1,24 @@
+Tool: built-in image_gen
+Purpose: proposed upper gunner route mockup; no game scenes changed.
+References: current upper plateau and existing gun-encounter gameplay captures.
+
+Create a polished pixel-art LEVEL LAYOUT MOCKUP by extending the upper grassy plateau in reference image 1 into the next section of the game. Reference image 1 is the edit/composition starting point: a side-view player on a tall grassy earth shelf. Reference image 2 supplies the exact game's forest palette, humanoid dual-pistol enemy design, ground texture, scale and restrained art style. This is a proposed continuation, not a claim it is already implemented.
+
+Format: one wide landscape concept board about 2:1. Large panoramic side-on orthographic gameplay illustration filling the central 75%, with a slim clean title header and a small three-part explanatory footer. Pixel art with visible crisp square pixels, purple-black earth fading into darkness, turquoise/green grassy edges and blue-grey stone, deep navy midnight forest with modest blue silhouette tree layers. Sparse overgrown industrial details: broken chain-link fence, pipes, a modest steel maintenance bracket, a few wooden supply boxes and a subtle cyan utility light. Keep the actual game's simple 2D shapes and readable silhouettes; no glossy painterly 3D, no isometric camera, no huge neon city. Good contrast without changing night to daytime.
+
+Title exactly: "GREEN ZONE — NEXT GUNNER ENCOUNTERS". Small subtitle: "Proposed continuation after the tank climb". Show a single continuous left-to-right route at the current upper plateau elevation, with solid supporting soil beneath it right down to the bottom edge, never thin floating earth strips.
+
+At the FAR LEFT, a continuation arrow from off-canvas says "FROM TANK CLIMB". Do not redraw the entire tank encounter, no new tall scaffolding and no tank on this plateau. Begin with a short sheltered grass stretch and one existing loose supply box. One playable character in a magenta top and dark trousers, pistol in hand, moves right.
+
+MIDDLE LEFT: a broad open flat combat area with one and only one mobile dual-pistol gunner, the humanoid from reference 2. Put a thin two-headed amber ground arrow underneath it to indicate a modest patrol range. Place a small broken fence behind, one rough grey rock at the left edge to interrupt distant sightlines, generous empty room to jump over the gunner and land on either side. Enemy faces left. No spikes, no pits, no second enemy in this area.
+
+MIDDLE RIGHT: after a low natural rise/stone shoulder separating the encounters, show a second and only other enemy: a stationary dual-pistol gunner on a grassy raised solid-earth shelf approximately two character-heights above the approach floor. A low blue-grey stone lip protects its lower legs, but both pistols and muzzle clearance must be ABOVE the lip and visible, pointing diagonally down-left into the open approach. Show a sparse dashed amber firing-direction line. On the left approach to the elevated shelf put ONE intermediate supported step/steel maintenance bracket, so the player can jump up to knife or stomp this enemy; a thin cyan curved route arrow shows that movement. Ground underneath remains continuous solid terrain. No lethal gap, no tower, no tall wall-jump shaft, no opaque chest-high wall covering the enemy's guns.
+
+FAR RIGHT: the raised shelf continues to a quiet grassy exit nook with one small closed supply chest and a warm utility lamp, then an arrow right "LATER: BOSS APPROACH". The chest should be small and correctly scaled, around half character height. No boss pictured. Keep the moving enemy and elevated enemy visually separated enough to read as successive fights, not an immediate crossfire arena.
+
+Three small cyan numbered markers connect areas to footer captions, with only this text:
+"1  RECOVER & RELOAD" / "Leave the climb safely."
+"2  MOVING GUNNER" / "Jump past, turn, fight."
+"3  ELEVATED GUNNER" / "Aim up or close the distance."
+Small footer note: "Layout concept — spacing and art are provisional."
+No game HUD, no duplicate character poses, no additional enemies, no invented new weapons. This is a beautiful but buildable game-layout proposal, not a diagram pretending to be a screenshot.
