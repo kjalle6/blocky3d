@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/bush_small.png" id="1_iwp22"]
+
+[node name="AuthoredScenery" type="Sprite3D" unique_id=1455557821]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.96)
+pixel_size = 0.04
+texture_filter = 0
+texture = ExtResource("1_iwp22")
+metadata/dressing_asset_id = &"bush_small"
+metadata/support_y = 7.68
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"AerialPeak"

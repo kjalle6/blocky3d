@@ -1,0 +1,107 @@
+{
+  "scaffold_art_upright": {
+    "name": "Scaffold - Upright",
+    "zone": "Bridges",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/world_scenery/environment/structures/bridges/1 Tiles/Bridge_tile_133.png",
+    "frame_region": [
+      0,
+      0,
+      7,
+      32
+    ],
+    "anchor": "ground",
+    "description": "The original Bridge Constructor art crop used by the wall-jump scaffold. Scenery only; no collision. Use the complete Wall-jump scaffold for a solid climbing frame."
+  },
+  "scaffold_art_brace_up": {
+    "name": "Scaffold - Brace rising right",
+    "zone": "Bridges",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/world_scenery/environment/structures/bridges/1 Tiles/Bridge_tile_111.png",
+    "frame_region": [
+      0,
+      0,
+      32,
+      32
+    ],
+    "anchor": "ground",
+    "description": "The original Bridge Constructor art crop used by the wall-jump scaffold. Scenery only; no collision. Use the complete Wall-jump scaffold for a solid climbing frame."
+  },
+  "scaffold_art_brace_down": {
+    "name": "Scaffold - Brace falling right",
+    "zone": "Bridges",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/world_scenery/environment/structures/bridges/1 Tiles/Bridge_tile_112.png",
+    "frame_region": [
+      0,
+      0,
+      32,
+      32
+    ],
+    "anchor": "ground",
+    "description": "The original Bridge Constructor art crop used by the wall-jump scaffold. Scenery only; no collision. Use the complete Wall-jump scaffold for a solid climbing frame."
+  },
+  "scaffold_art_deck_left": {
+    "name": "Scaffold - Deck left end",
+    "zone": "Bridges",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/world_scenery/environment/structures/bridges/1 Tiles/Bridge_tile_145.png",
+    "frame_region": [
+      0,
+      0,
+      32,
+      11
+    ],
+    "anchor": "ground",
+    "description": "The original Bridge Constructor art crop used by the wall-jump scaffold. Scenery only; no collision. Use the complete Wall-jump scaffold for a solid climbing frame."
+  },
+  "scaffold_art_deck_middle": {
+    "name": "Scaffold - Deck middle",
+    "zone": "Bridges",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/world_scenery/environment/structures/bridges/1 Tiles/Bridge_tile_146.png",
+    "frame_region": [
+      0,
+      0,
+      32,
+      11
+    ],
+    "anchor": "ground",
+    "description": "The original Bridge Constructor art crop used by the wall-jump scaffold. Scenery only; no collision. Use the complete Wall-jump scaffold for a solid climbing frame."
+  },
+  "scaffold_art_deck_right": {
+    "name": "Scaffold - Deck right end",
+    "zone": "Bridges",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/world_scenery/environment/structures/bridges/1 Tiles/Bridge_tile_147.png",
+    "frame_region": [
+      0,
+      0,
+      32,
+      11
+    ],
+    "anchor": "ground",
+    "description": "The original Bridge Constructor art crop used by the wall-jump scaffold. Scenery only; no collision. Use the complete Wall-jump scaffold for a solid climbing frame."
+  },
+  "scaffold_art_rivet_splice": {
+    "name": "Scaffold - Rivet splice",
+    "zone": "Bridges",
+    "category": "Decorations",
+    "kind": "decoration",
+    "image": "res://assets/art/world_scenery/environment/structures/bridges/1 Tiles/Bridge_tile_133.png",
+    "frame_region": [
+      1,
+      1,
+      5,
+      6
+    ],
+    "anchor": "ground",
+    "description": "The original Bridge Constructor art crop used by the wall-jump scaffold. Scenery only; no collision. Use the complete Wall-jump scaffold for a solid climbing frame."
+  }
+}

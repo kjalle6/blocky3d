@@ -195,6 +195,7 @@ func _build_properties() -> void:
 			_numeric("Width", "width", values.width)
 			_numeric("Height", "height", values.height)
 			_numeric("Open passage height", "underpass", values.underpass)
+			_numeric("Service ledge height (0 = none)", "ledge_height", values.get("ledge_height", 0.0))
 			_paragraph(_properties, "The bright uprights and top/bottom girders are solid. Dark rear bracing leaves the gaps open.")
 		"tank":
 			_numeric("Ammo on defeat", "ammo_reward", values.get("ammo_reward", 30))
@@ -228,7 +229,15 @@ func _build_properties() -> void:
 		"spikes": _numeric("Row width (m)", "width", values.width)
 		"gunner":
 			_toggle("Start facing right", "facing_right", values.facing_right)
-			_paragraph(_properties, "Uses the existing gunner behaviour. Test to check its firing range and nearby cover.")
+			if values.has("mobile"):
+				_toggle("Walk and pursue", "mobile", values.mobile)
+				_numeric("Patrol speed (m/s)", "speed", values.speed)
+				_patrol_side("Left", "left", values.left)
+				_patrol_side("Right", "right", values.right)
+				_numeric("Ammo on defeat", "ammo_reward", values.ammo_reward)
+				_paragraph(_properties, "Stops to aim and holds direction during each burst. Turns after recovery. Defeat and its ammo reward are saved.")
+			else:
+				_paragraph(_properties, "Uses the existing gunner behaviour. Test to check its firing range and nearby cover.")
 		"flyer": _paragraph(_properties, "Uses the existing vertical bob and electrical discharge. Place it in the air and test the space around it.")
 		"decoration":
 			_toggle("Flip horizontally", "flip_h", values.flip_h)

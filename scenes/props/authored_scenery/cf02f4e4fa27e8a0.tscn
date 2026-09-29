@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/interiors/rock_underworks/props/cave_rock1.png" id="1_2gv04"]
+
+[node name="AuthoredScenery" type="Sprite3D" unique_id=565619219]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.11)
+cast_shadow = 0
+pixel_size = 0.04
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("1_2gv04")

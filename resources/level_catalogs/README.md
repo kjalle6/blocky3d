@@ -14,6 +14,10 @@ campaign scenes. Stable template IDs are stored in layout saves.
 category. The underlying category names in JSON remain compatible; browser
 organization does not change saved runtime definitions. Legacy rectangular
 platform templates remain loadable/editable but are hidden from new placement.
+`authored_scenery.json` likewise keeps exact original scenery appearances for
+editing and duplication, without repeating their scale/depth variants in Add.
+`resources/level_scenery.json` registers those original Sprite3D nodes by stable
+section/path. The export preset includes this registration map explicitly.
 Beach exposes the six existing production sand top/side/fill images through
 `tools/prepare_beach_block_catalog.py`. Its `surface: sand` field supplies the
 new-placement default, which is then saved in the block's validated properties.

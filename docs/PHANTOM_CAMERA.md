@@ -41,6 +41,13 @@ ordinary exit. The already-engaged tank keeps firing from below while any of
 the shaft or scaffold is visible, even from the upper ground or chest roof.
 The tank itself does not need to remain on screen.
 
+Past the scaffold, the rail rises through the compact upper gunner route:
+the shoulder at Y 29.44, bridge ledge at Y 32.0, and high ground at Y 35.84.
+Its final centre is (111.36, 37.54), framing the chest and temporary right edge.
+Three upper forest layers fade in around `UpperRoute/BackgroundStart` at X 92
+and stay vertically aligned with the view as the route rises. The lower tank
+and climb background layers retain their original placement.
+
 ## Earlier routes
 
 | Scene | Composition |

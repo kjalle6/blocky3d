@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/cave_entrance_green_zone_native.png" id="1_bkmk3"]
+
+[node name="AuthoredScenery" type="Sprite3D" unique_id=1215042030]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.92)
+pixel_size = 0.04
+texture_filter = 0
+render_priority = -3
+texture = ExtResource("1_bkmk3")
+metadata/source_native_scale = 1
+metadata/support_y = -0.64
+metadata/bury_logical_pixels = 16

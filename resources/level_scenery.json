@@ -1,0 +1,416 @@
+{
+	"animation_lab": {
+
+	},
+	"arrival_shoreline": {
+		"Props/AerialCrownBush": {
+			"id": "scenery_285264078aa7e5cd499a",
+			"template": "authored_scenery_b9965ba9dc53c98f"
+		},
+		"Props/AerialCrownGrass": {
+			"id": "scenery_efd6c212da518dc93b73",
+			"template": "authored_scenery_c4fd03e56cf6014a"
+		},
+		"Props/AerialDipBush": {
+			"id": "scenery_b7d56915e34f8695fc41",
+			"template": "authored_scenery_f515def79d4099ac"
+		},
+		"Props/AerialDipGrass": {
+			"id": "scenery_39e393504037f489c0e5",
+			"template": "authored_scenery_87d67e1167902aa0"
+		},
+		"Props/AerialExitApproachGrass": {
+			"id": "scenery_1ad1332c9fbe6cd88216",
+			"template": "authored_scenery_f31b7a97340159e7"
+		},
+		"Props/AerialExitApproachStone": {
+			"id": "scenery_7f7bce0d12832e4f210a",
+			"template": "authored_scenery_be6f2568e414f308"
+		},
+		"Props/AerialExitTireSwingTree": {
+			"id": "scenery_0f81307355eac053e9d2",
+			"template": "authored_scenery_a737fb0bfa0e8876"
+		},
+		"Props/AerialExitTrailBush": {
+			"id": "scenery_7b70dc06e23cabd8cb9f",
+			"template": "authored_scenery_d92fac1c241a1eb1"
+		},
+		"Props/AerialExitTrailGrass": {
+			"id": "scenery_5d68aa4f85a86137260f",
+			"template": "authored_scenery_051c8dd091e0c190"
+		},
+		"Props/AerialLandingBush": {
+			"id": "scenery_8d891ee6fe5988486235",
+			"template": "authored_scenery_e30f16613c9e87d8"
+		},
+		"Props/AerialLandingGrass": {
+			"id": "scenery_bba1bb67a3696625dd9d",
+			"template": "authored_scenery_cda8ba5621c2b88e"
+		},
+		"Props/AerialLandingStone": {
+			"id": "scenery_680e1c5a51b228f9d99a",
+			"template": "authored_scenery_3a7c618b2a6cb347"
+		},
+		"Props/AerialLandingTree": {
+			"id": "scenery_2bb413192f6830af9fe3",
+			"template": "authored_scenery_d2731039b38b953a"
+		},
+		"Props/AerialPeakBush": {
+			"id": "scenery_707300fda6957f3a2681",
+			"template": "authored_scenery_2c8b2f986bbf9a72"
+		},
+		"Props/AerialPeakGrass": {
+			"id": "scenery_ac4847f38e2af9e757ce",
+			"template": "authored_scenery_21f81767856d37de"
+		},
+		"Props/AerialRiseBush": {
+			"id": "scenery_daf2af981dd763d5b47e",
+			"template": "authored_scenery_92ff3b3caf061d60"
+		},
+		"Props/AerialRiseGrass": {
+			"id": "scenery_554ef26e6d0a129961ad",
+			"template": "authored_scenery_2f38a853274ae651"
+		},
+		"Props/ApproachGrass": {
+			"id": "scenery_b2383940f44f46bd0d07",
+			"template": "authored_scenery_cf0e09f52190f6f8"
+		},
+		"Props/ApproachTree": {
+			"id": "scenery_7107d8719750d64c5cd0",
+			"template": "authored_scenery_cdee0aec16d09008"
+		},
+		"Props/ApproachTreeBush": {
+			"id": "scenery_46fc2011ca5030df1305",
+			"template": "authored_scenery_9558d8878314dda0"
+		},
+		"Props/GardenEntryBush": {
+			"id": "scenery_4786c32bb41410891f5d",
+			"template": "authored_scenery_95e1fd6677587185"
+		},
+		"Props/GardenEntryTree": {
+			"id": "scenery_36ba411de848e4c2bd6b",
+			"template": "authored_scenery_c0ec2ec970d6b5d0"
+		},
+		"Props/GardenExitBench": {
+			"id": "scenery_a25e5857687854aabf1c",
+			"template": "authored_scenery_5bc53f1699bf00da"
+		},
+		"Props/GardenExitGrass": {
+			"id": "scenery_93dd1841cb4009b0ecc8",
+			"template": "authored_scenery_4ab5986cf5f744cf"
+		},
+		"Props/GardenExitSkateRamp": {
+			"id": "scenery_8b817105f9233c68172c",
+			"template": "authored_scenery_0cedfc668c273980"
+		},
+		"Props/GardenExitSkateRampLeft": {
+			"id": "scenery_68211a8e39892185b076",
+			"template": "authored_scenery_cfbaee1bc2312d9b"
+		},
+		"Props/GardenExitTree": {
+			"id": "scenery_cf43b48ed6a10c4cd562",
+			"template": "authored_scenery_d531e572d4096f03"
+		},
+		"Props/ThornEdgeStone": {
+			"id": "scenery_a89f15f1606a8f74c947",
+			"template": "authored_scenery_94738103a576f690"
+		},
+		"Props/ThornTerraceGate": {
+			"id": "scenery_1f90dd872bd611f5c464",
+			"template": "authored_scenery_052e279334053985"
+		},
+		"Props/ThornTerraceGrass": {
+			"id": "scenery_68294004b88cfbee07c4",
+			"template": "authored_scenery_737d798d30375c28"
+		},
+		"Props/ThornTerraceHedgeLeftCap": {
+			"id": "scenery_09eb5e5f458ae90a8a1c",
+			"template": "authored_scenery_e31cf7dc395e5fa3"
+		},
+		"Props/ThornTerraceHedgeLeftEnd": {
+			"id": "scenery_0f3e5640c85925b42eda",
+			"template": "authored_scenery_e9c8c0b003b8b477"
+		},
+		"Props/ThornTerraceHedgeRightCap": {
+			"id": "scenery_37fab171024687371015",
+			"template": "authored_scenery_a7ee8000d8f1a460"
+		},
+		"Props/ThornTerraceHedgeRightEnd": {
+			"id": "scenery_2491907034dd741d2fde",
+			"template": "authored_scenery_f128d8d650701f40"
+		},
+		"Props/ThornWallGate": {
+			"id": "scenery_677b547daa7eb53d813d",
+			"template": "authored_scenery_c814aca578797d62"
+		},
+		"Props/ThornWallGrass": {
+			"id": "scenery_83f5f1126052f34b3453",
+			"template": "authored_scenery_0550983c7a84cccd"
+		},
+		"Props/ThornWallHedgeLeftCap": {
+			"id": "scenery_0b7231ad8804e165a996",
+			"template": "authored_scenery_1eae8024f9fbe89f"
+		},
+		"Props/ThornWallHedgeLeftEnd": {
+			"id": "scenery_9c88bef27b7f06bb0a3c",
+			"template": "authored_scenery_136e5707b3ae89d3"
+		},
+		"Props/ThornWallHedgeRightCap": {
+			"id": "scenery_4cc128073f21d56b7d7c",
+			"template": "authored_scenery_a85080812e98bfa1"
+		},
+		"Props/ThornWallHedgeRightEnd": {
+			"id": "scenery_804d7d581f0589bb6f78",
+			"template": "authored_scenery_f1b3226aa52c6437"
+		},
+		"Props/ThresholdBush": {
+			"id": "scenery_a5e5c52d2e0fd1c9b103",
+			"template": "authored_scenery_163e70fca8c34981"
+		},
+		"Props/ThresholdGrass": {
+			"id": "scenery_8aba15820d2eee32923e",
+			"template": "authored_scenery_ddd99f4b2c56169c"
+		},
+		"Props/ThresholdLandingBush": {
+			"id": "scenery_22f6fbbdb07b7d607d54",
+			"template": "authored_scenery_3190c3b312c07619"
+		},
+		"Props/ThresholdLandingStone": {
+			"id": "scenery_b6dc19d9272b7ff2c906",
+			"template": "authored_scenery_aae2e6a658c8001c"
+		},
+		"Props/ThresholdLandingTree": {
+			"id": "scenery_6de565169e0b155670bd",
+			"template": "authored_scenery_806998dbd704c140"
+		},
+		"Props/TransitionBush": {
+			"id": "scenery_5b2dad71fa23059fdbbc",
+			"template": "authored_scenery_e49abfa0faaef67c"
+		},
+		"Props/TransitionTalus/TransitionBuriedBase": {
+			"id": "scenery_0f4f9efa4bc68d3453ad",
+			"template": "authored_scenery_0c362d776fb736ff"
+		},
+		"Props/TransitionTalus/TransitionOutcrop": {
+			"id": "scenery_a5d56945b0b40b7e282b",
+			"template": "authored_scenery_290b21cae778f2dc"
+		},
+		"Props/TransitionTalus/TransitionPebble": {
+			"id": "scenery_d20fac132f8f43301c80",
+			"template": "authored_scenery_5dc5fe46386e6c36"
+		},
+		"Props/TransitionTalus/TransitionRockMedium": {
+			"id": "scenery_fbbe9037db1ca1020e8e",
+			"template": "authored_scenery_59fbe5ace519d045"
+		},
+		"Props/TransitionTalus/TransitionRockSmall": {
+			"id": "scenery_23884b4c84c146afa48d",
+			"template": "authored_scenery_3ca74e2c725de704"
+		},
+		"Props/TransitionTalus/TransitionShoulderBroad": {
+			"id": "scenery_a6ebd092d593e3f3f397",
+			"template": "authored_scenery_38aa78362ce6ee16"
+		}
+	},
+	"designer_fixture": {
+
+	},
+	"green_zone_finale_outdoors": {
+		"Props/ContinuationBush": {
+			"id": "scenery_0c3a2fdc0146a4822b64",
+			"template": "authored_scenery_72cab98120585260"
+		},
+		"Props/ContinuationTree": {
+			"id": "scenery_a5edc87c56ecbec90d8f",
+			"template": "authored_scenery_526592215ae3cd35"
+		}
+	},
+	"green_zone_shooter_area": {
+		"TankEncounter/Climb/ExitGrass": {
+			"id": "scenery_0e1e9e0a6bf1e2a2bbcf",
+			"template": "authored_scenery_bd8ac6019a4da533"
+		},
+		"TankEncounter/Climb/UpperBush": {
+			"id": "scenery_c7efe29a3f9c1fbc6358",
+			"template": "authored_scenery_a91465ae13609871"
+		}
+	},
+	"level_design_lab": {
+
+	},
+	"overgrown_coastal_ascent": {
+		"Props/ApproachTreeFar": {
+			"id": "scenery_1851b76a7a0904a03256",
+			"template": "authored_scenery_5cc683a78f3d4522"
+		},
+		"Props/BushFarA": {
+			"id": "scenery_d31df9b698dd09060fee",
+			"template": "authored_scenery_a718ae1c3e1d7c18"
+		},
+		"Props/BushFarB": {
+			"id": "scenery_e5a37f3bb64bc41278a5",
+			"template": "authored_scenery_8731248d08c112fa"
+		},
+		"Props/BushMidA": {
+			"id": "scenery_b1ecad9308170979e809",
+			"template": "authored_scenery_60da97eae035ddad"
+		},
+		"Props/BushMidB": {
+			"id": "scenery_12a2dd0962c91a7a3e3b",
+			"template": "authored_scenery_911b013629d4ef5b"
+		},
+		"Props/BushMouth": {
+			"id": "scenery_9393c46cf858e408b1bf",
+			"template": "authored_scenery_134c8ff1d2465900"
+		},
+		"Props/BushNearA": {
+			"id": "scenery_7d3ca66cadd693d19f27",
+			"template": "authored_scenery_aa545f6a815ba539"
+		},
+		"Props/BushNearB": {
+			"id": "scenery_e52cd8e0df9e73e86d05",
+			"template": "authored_scenery_67f993237480e787"
+		},
+		"Props/CaveEntrance": {
+			"id": "scenery_459928a6a7aa90f25606",
+			"template": "authored_scenery_59b90582744e89c7"
+		},
+		"Props/FirstStone": {
+			"id": "scenery_8a64c70737f0865e2da5",
+			"template": "authored_scenery_383ad6b21ce78839"
+		},
+		"Props/GrassFarA": {
+			"id": "scenery_d3fb4c95782a4ac18d0a",
+			"template": "authored_scenery_f78e1a3e5d6c1a88"
+		},
+		"Props/GrassFarB": {
+			"id": "scenery_9f14321d970a1780d547",
+			"template": "authored_scenery_3da71bc497070f4c"
+		},
+		"Props/GrassFarC": {
+			"id": "scenery_53c47f505f89b013809b",
+			"template": "authored_scenery_a728e91079015ff8"
+		},
+		"Props/GrassFarD": {
+			"id": "scenery_aa2f9add36647ce8e214",
+			"template": "authored_scenery_d2bb990c4412209d"
+		},
+		"Props/GrassFarE": {
+			"id": "scenery_d4901daca8b87d52a3a6",
+			"template": "authored_scenery_8ded7f10cc7496b3"
+		},
+		"Props/GrassMidA": {
+			"id": "scenery_e5daafb0a340c660371e",
+			"template": "authored_scenery_383a298a07b26a22"
+		},
+		"Props/GrassMidB": {
+			"id": "scenery_28118d5c6f0394b40174",
+			"template": "authored_scenery_346c8ac32409f969"
+		},
+		"Props/GrassMidC": {
+			"id": "scenery_1a5a7b738f075e597d48",
+			"template": "authored_scenery_a32f23e1eade052a"
+		},
+		"Props/GrassMidD": {
+			"id": "scenery_15be9fb189b8b62e4934",
+			"template": "authored_scenery_e5f8b7318147f964"
+		},
+		"Props/GrassMidE": {
+			"id": "scenery_de1f8f4e4e7b02fb33fe",
+			"template": "authored_scenery_bbc85bf133fa1797"
+		},
+		"Props/GrassMouthA": {
+			"id": "scenery_3a0c473c7a2aed6c5699",
+			"template": "authored_scenery_a48e98df0337b0e0"
+		},
+		"Props/GrassMouthB": {
+			"id": "scenery_51fd7846d9ab0868f48c",
+			"template": "authored_scenery_5debd6c457d42930"
+		},
+		"Props/GrassNearA": {
+			"id": "scenery_0e011bb7efcab2504416",
+			"template": "authored_scenery_b7bd56343af0aeba"
+		},
+		"Props/GrassNearB": {
+			"id": "scenery_b26ad24421e820ef18d2",
+			"template": "authored_scenery_03ff2a3b99f9a03a"
+		},
+		"Props/GrassNearC": {
+			"id": "scenery_6deadc25b4a3f091dbf7",
+			"template": "authored_scenery_925d264a2c1dcee3"
+		},
+		"Props/GrassNearD": {
+			"id": "scenery_c8e113c1900cbd01e803",
+			"template": "authored_scenery_53904a6d726ad414"
+		},
+		"Props/ScreeFarA": {
+			"id": "scenery_3620fadf7a24f052dd8d",
+			"template": "authored_scenery_62d6e43bdd8a010d"
+		},
+		"Props/ScreeFarB": {
+			"id": "scenery_5a2a9c87168a1097cf13",
+			"template": "authored_scenery_1c8cfc85319937b2"
+		},
+		"Props/ScreeFarC": {
+			"id": "scenery_defb95678dbbdd366985",
+			"template": "authored_scenery_4506fd951f7e9aa8"
+		},
+		"Props/ScreeFarD": {
+			"id": "scenery_a6b11c7eb056429fee29",
+			"template": "authored_scenery_6e2415cee4eebfde"
+		},
+		"Props/ScreeMidA": {
+			"id": "scenery_334b761dfb05a07322bf",
+			"template": "authored_scenery_3f9c93e3638707dc"
+		},
+		"Props/ScreeMidB": {
+			"id": "scenery_3e18163148217cba141a",
+			"template": "authored_scenery_44d57f05ac6c639d"
+		},
+		"Props/ScreeMidC": {
+			"id": "scenery_bdaf4adfa2f3f2b8a1f9",
+			"template": "authored_scenery_d779c9150dc65387"
+		},
+		"Props/ScreeMidD": {
+			"id": "scenery_d760f3cc74260697f38b",
+			"template": "authored_scenery_5795b51de19d70df"
+		},
+		"Props/ScreeMouthA": {
+			"id": "scenery_5153a29ab536c5798d79",
+			"template": "authored_scenery_5c0da68271b47f3c"
+		},
+		"Props/ScreeMouthB": {
+			"id": "scenery_0c29c2818e1aecf08d23",
+			"template": "authored_scenery_96f2970d34f571b2"
+		},
+		"Props/ScreeNearD": {
+			"id": "scenery_53513bcae02521752c9e",
+			"template": "authored_scenery_c2400ac32348ba00"
+		},
+		"Props/ScreeNearFlat": {
+			"id": "scenery_28d346bd1d4cccb56af2",
+			"template": "authored_scenery_a6133684b59e5553"
+		},
+		"Props/ScreeNearMedium": {
+			"id": "scenery_ee7538fc526a9cb43b01",
+			"template": "authored_scenery_ff975afec3ac95d0"
+		},
+		"Props/SecondStone": {
+			"id": "scenery_f9727b5c3f245505fb4d",
+			"template": "authored_scenery_67aad80f21a09a55"
+		}
+	},
+	"overgrown_coastal_ascent_interior": {
+		"Props/SlideArrival/ChuteEndRock": {
+			"id": "scenery_15e2e5edc94049369b25",
+			"template": "authored_scenery_2d3035affa2fcc0f"
+		},
+		"Props/SlideArrival/RockBank": {
+			"id": "scenery_e4f2fe1b65fd7d294663",
+			"template": "authored_scenery_cf02f4e4fa27e8a0"
+		}
+	},
+	"sandbox": {
+
+	}
+}

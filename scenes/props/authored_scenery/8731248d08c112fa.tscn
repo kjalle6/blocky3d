@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/bush_low.png" id="1_y3dw7"]
+
+[node name="AuthoredScenery" type="Sprite3D" unique_id=1902548117]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.88)
+pixel_size = 0.04
+texture_filter = 0
+render_priority = -54
+texture = ExtResource("1_y3dw7")

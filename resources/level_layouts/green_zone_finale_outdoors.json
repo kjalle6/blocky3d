@@ -926,12 +926,12 @@
 			}
 		}
 	},
-	"fingerprint": "463da8e393315d29b90c9922d74c676b2bd14b253c75635125c152c1ac94306a",
+	"fingerprint": "1632a157705a89e35b6b0b0fb1a2d38115232fb255d25f9ff2d13c3e79da8aae",
 	"overrides": {
 
 	},
 	"removed": [],
-	"revision": 17,
+	"revision": 21,
 	"schema": 3,
 	"section": "green_zone_finale_outdoors"
 }

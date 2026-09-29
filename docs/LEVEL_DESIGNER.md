@@ -30,6 +30,13 @@ from the saved layout; it does not resume an old fight.
 
 ## Controls
 
+**Patrolling dual-gun enemy** is available under Enemies. Its settings include
+walking on/off, patrol speed, left/right limits and reserve ammo on defeat.
+The original **Dual-gun enemy** keeps its stationary behavior. Level 3's compact
+upper route uses one moving and one stationary placement, both editable.
+**Wall-jump scaffold** uses the Bridge Constructor
+pack art, with its existing width, height and underpass controls.
+
 | Action | Control |
 | --- | --- |
 | Quick add | Click a picture card in the side panel's **Add** tab |
@@ -109,8 +116,11 @@ scenery overlap only; they do not move collision or change the player's visibili
 
 The same browser is available in the sandbox, Levels 1 and 2 (including the
 cave), both Level 3 sections, and the existing developer labs. Each section has
-its own saved additions. Original scenery and scripted assemblies remain
-protected unless explicitly registered for editing.
+its own saved additions. Scenery is editable, including the original bushes,
+grass, trees, rocks and decorative gates. You can move, flip, duplicate or remove
+individual pieces. Original scale, color and layering stay as authored until
+you change them. Protection is reserved for connected gameplay structures,
+scripted assemblies and transitions.
 
 | Category | Prepared objects |
 | --- | --- |
@@ -138,6 +148,12 @@ labelled **Solid** and uses the same block brush. Decorative vehicles, doors,
 machines and portals have no gameplay interaction; door packs also offer still
 variants. Character combat sheets, GUI/icons, full-screen lighting/VFX and
 parallax backgrounds belong to their separate systems.
+
+**Bridge deck — solid** left/middle/right tiles are separate solid variants under
+Bridges → Blocks. Their collision follows the shallow visible deck; the empty
+space below remains open. **Low rock lip (scenery)** under Green Zone → Decorations
+is a small exposed rock for the top of solid ground. It has no collision; the
+terrain underneath provides cover. Ordinary bridge decorations remain scenery.
 
 The **Leaves 1–6** decorations drift down and sway during play when placed in
 the air. Their placed position is the top of the fall; they fade near the ground
@@ -300,6 +316,14 @@ audio panel's unsaved mix is preserved when changing tools.
   every new entry and also runs from an isolated exported pack.
 - Object IDs/kinds/removal permissions are metadata on placed scene instances.
   Keep IDs stable; do not reuse IDs for unrelated objects or put them on prefabs.
+- Original passive Sprite3D scenery is registered by stable scene paths in
+  `resources/level_scenery.json`. Exact reusable appearances live in the
+  `authored_scenery` catalog and prop scenes, preserving crops, scales and depth.
+  New set dressing should use editable catalog objects. If adding original-style
+  scene sprites, run `tools/prepare_authored_scenery.gd` deliberately and audit
+  existing layouts before updating their structural identity. Do not leave
+  scenery protected. `validate_authored_scenery.gd` checks appearance preservation,
+  duplication, flipping, removal and saved-layout reloads.
 - `level_layout_objects.gd` owns supported properties, bounds, validation, and
   application. Shared styles stay immutable; surface choices use object metadata.
 - `level_layout_document.gd` stores values and produces versioned diffs with
@@ -317,8 +341,13 @@ audio panel's unsaved mix is preserved when changing tools.
   painting a different template replaces that tile instance while keeping its ID.
 
 **Wall-jump scaffold** is under Platforms. Width, height and open passage height
-control its frame. Bright uprights and horizontal girders are solid; dark rear
-legs and diagonal braces stay open. The existing decorative props remain scenery.
+control its frame; **Service ledge height** moves its small side platform (0 removes
+it). The Level 3 climb scaffold is now selectable, movable, resizable, duplicable
+and removable. Its rooftop chest remains a separate object.
+Bright uprights and horizontal girders are solid; dark rear legs and diagonal
+braces stay open. Under **Bridges → Decorations**, search **scaffold** for the
+seven exact art pieces: upright, both braces, three deck ends/sections, and rivet
+splice. These individual pieces are scenery and use the decoration-layer controls.
 
 **Green Zone tank** is available under Enemies, with patrol speed, facing,
 left/right idle patrol limits and ammo on defeat (30 rounds by default). Combat

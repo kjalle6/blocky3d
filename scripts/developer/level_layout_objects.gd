@@ -2,18 +2,20 @@ extends RefCounted
 ## The whole-object contracts shared by the resolver and the designer.
 const REGISTRY := preload("res://scripts/developer/level_layout_registry.gd")
 const CATALOG := preload("res://scripts/developer/level_object_catalog.gd")
+const SCENERY_PATH := "res://resources/level_scenery.json"
+static var authored_scenery: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SCENERY_PATH))
 const TILE := 1.28
 const MIN_DECORATION_LAYER := -100
 const MAX_DECORATION_LAYER := 100
 const FIELDS := {
-	"scaffold": ["x", "y", "width", "height", "underpass"],
+	"scaffold": ["x", "y", "width", "height", "underpass", "ledge_height"],
 	"tank": ["x", "y", "speed", "left", "right", "facing_right", "ammo_reward"],
 	"crate": ["x", "y"],
 	"platform": ["x", "y", "width", "height", "style", "surface", "left_cap", "right_cap", "bottom_cap"],
 	"enemy": ["x", "y", "speed", "left", "right", "facing_right"],
 	"spikes": ["x", "y", "width"],
 	"checkpoint": ["x", "y", "width", "height"],
-	"gunner": ["x", "y", "facing_right"],
+	"gunner": ["x", "y", "facing_right", "mobile", "speed", "left", "right", "ammo_reward"],
 	"flyer": ["x", "y"],
 	"decoration": ["x", "y", "flip_h", "decoration_layer"],
 	"tile": ["x", "y", "flip_h", "surface"],
@@ -21,6 +23,7 @@ const FIELDS := {
 }
 
 static func inspect(level: Node) -> Dictionary:
+	_register_authored_scenery(level)
 	var records := {}
 	var nodes := {}
 	var error := ""
@@ -43,16 +46,41 @@ static func inspect(level: Node) -> Dictionary:
 				break
 			offset += Vector2(parent.position.x, parent.position.y)
 			parent = parent.get_parent() as Node3D
-		if not node.basis.is_equal_approx(Basis.IDENTITY):
+		if not node.basis.is_equal_approx(Basis.IDENTITY) and not _is_authored_sprite(node):
 			error = "Rotated/scaled objects remain locked: " + id
 		if not error.is_empty():
 			break
 		var values := read_values(node, kind)
 		records[id] = {"kind": kind, "values": values, "name": str(node.name).capitalize(),
 			"path": str(level.get_path_to(node)), "offset": offset,
-			"removable": bool(node.get_meta("layout_removable", false)), "created": false}
+			"removable": kind == "decoration" or bool(node.get_meta("layout_removable", false)), "created": false}
+		# Authored scenery needs the same catalog identity as placed scenery for
+		# selection bounds, icons and duplication in the designer.
+		if node.has_meta("layout_template"):
+			var template := str(node.get_meta("layout_template"))
+			if not CATALOG.ENTRIES.has(template):
+				error = "Unknown authored object template: " + template
+				break
+			records[id].template = template
 		nodes[id] = node
 	return {"records": records, "nodes": nodes, "error": error}
+
+static func _register_authored_scenery(level: Node) -> void:
+	var section := str(level.get_meta("layout_section", ""))
+	for path in authored_scenery.get(section, {}):
+		var node := level.get_node_or_null(NodePath(path)) as Sprite3D
+		if node == null or node.has_meta("layout_id"): continue
+		var entry: Dictionary = authored_scenery[section][path]
+		node.set_meta("layout_id", entry.id)
+		node.set_meta("layout_kind", "decoration")
+		node.set_meta("layout_template", entry.template)
+		node.set_meta("layout_removable", true)
+
+static func _is_authored_sprite(node: Node) -> bool:
+	return node is Sprite3D and CATALOG.ENTRIES.get(str(node.get_meta("layout_template", "")), {}).get("authored_sprite", false)
+
+static func decoration_visual(node: Node3D) -> Sprite3D:
+	return node as Sprite3D if _is_authored_sprite(node) else node.get_node("Visual") as Sprite3D
 
 static func _matches(node: Node, kind: String) -> bool:
 	match kind:
@@ -73,7 +101,10 @@ static func _matches(node: Node, kind: String) -> bool:
 static func read_values(node: Node3D, kind: String) -> Dictionary:
 	var values := {"x": node.position.x, "y": node.position.y}
 	match kind:
-		"scaffold": values.merge({"width": node.width, "height": node.height, "underpass": node.underpass_height})
+		"scaffold":
+			values.merge({"width": node.width, "height": node.height, "underpass": node.underpass_height})
+			# Zero stays implicit so existing scaffold saves retain their values.
+			if node.maintenance_ledge_y > 0.0: values.ledge_height = node.maintenance_ledge_y
 		"tank":
 			values.merge({"speed": node.patrol_speed, "left": node.patrol_left_distance,
 			"right": node.patrol_right_distance, "facing_right": node.starts_facing_right})
@@ -96,9 +127,12 @@ static func read_values(node: Node3D, kind: String) -> Dictionary:
 			for id in ["basic_heal", "large_heal_test", "medical_bag", "handgun_ammo"]:
 				values[id] = int(node.additional_items.get(StringName(id), 0)) + (node.quantity if node.item_id == StringName(id) else 0)
 		"spikes": values.width = node.row_width
-		"gunner": values.facing_right = node.starts_facing_right
+		"gunner":
+			values.facing_right = node.starts_facing_right
+			if node.has_method("is_route_gunner"):
+				values.merge({"mobile": node.mobile, "speed": node.patrol_speed, "left": node.patrol_left_distance, "right": node.patrol_right_distance, "ammo_reward": node.ammo_reward})
 		"decoration":
-			values.flip_h = node.get_node("Visual").flip_h
+			values.flip_h = decoration_visual(node).flip_h
 			# Layer zero is implicit so existing layouts retain their original values.
 			var layer: int = node.get_meta("layout_decoration_layer", 0)
 			if layer != 0: values.decoration_layer = layer
@@ -112,6 +146,8 @@ static func read_values(node: Node3D, kind: String) -> Dictionary:
 static func validate(kind: String, values: Dictionary) -> String:
 	if not FIELDS.has(kind): return "Incomplete or unsupported object properties."
 	var expected_count: int = FIELDS[kind].size()
+	if kind == "gunner" and not values.has("mobile"): expected_count -= 5
+	if kind == "scaffold" and not values.has("ledge_height"): expected_count -= 1
 	if kind == "tank" and not values.has("ammo_reward"): expected_count -= 1
 	if kind == "chest" and not values.has("flip_h"): expected_count -= 1
 	if kind == "decoration" and not values.has("decoration_layer"): expected_count -= 1
@@ -122,7 +158,7 @@ static func validate(kind: String, values: Dictionary) -> String:
 		var value: Variant = values[key]
 		if key in ["style", "surface", "loot_pool"]:
 			if not value is String: return "Invalid style/surface."
-		elif key in ["left_cap", "right_cap", "bottom_cap", "facing_right", "flip_h"]:
+		elif key in ["left_cap", "right_cap", "bottom_cap", "facing_right", "flip_h", "mobile"]:
 			if not value is bool: return "Expected an on/off value."
 		elif (not value is float and not value is int) or not is_finite(float(value)):
 			return "Expected a finite number for " + str(key)
@@ -151,11 +187,14 @@ static func validate(kind: String, values: Dictionary) -> String:
 			return "Scaffold width must be 2.56–20.48 m and height 2.56–51.2 m."
 		if values.underpass < 0 or values.underpass > values.height - 1.28:
 			return "Leave at least 1.28 m of frame above the underpass."
-	if kind in ["enemy", "tank"]:
+		var ledge: float = values.get("ledge_height", 0.0)
+		if ledge < 0.0 or (ledge > 0.0 and (ledge <= values.underpass or ledge >= values.height)):
+			return "Set the service ledge above the underpass and below the top, or 0 to remove it."
+	if kind in ["enemy", "tank"] or (kind == "gunner" and values.has("mobile")):
 		if values.speed < 0.1 or values.speed > 10.0: return "Patrol speed must be 0.1–10 m/s."
 		if values.left < 0.0 or values.left > 50.0 or values.right < 0.0 or values.right > 50.0:
 			return "Patrol limits must be automatic (0) or up to 50 m from the spawn."
-	if kind == "tank" and not SaveSnapshot.whole(values.get("ammo_reward", 30), 0, 999):
+	if (kind == "tank" or kind == "gunner") and not SaveSnapshot.whole(values.get("ammo_reward", 30), 0, 999):
 		return "Ammo reward must be a whole number from 0 to 999."
 	if kind == "spikes" and values.width < 0.6: return "A spike row must be at least 0.6 m wide."
 	if kind == "tile" and values.surface not in ["grass", "sand", "cave", "silent"]: return "Choose an approved footstep surface."
@@ -169,6 +208,7 @@ static func apply(node: Node3D, kind: String, values: Dictionary, rebuild := fal
 			node.width = values.width
 			node.height = values.height
 			node.underpass_height = values.underpass
+			node.maintenance_ledge_y = values.get("ledge_height", 0.0)
 			if rebuild: node.rebuild_geometry()
 		"tank":
 			node.ammo_reward = int(values.get("ammo_reward", 30))
@@ -197,6 +237,12 @@ static func apply(node: Node3D, kind: String, values: Dictionary, rebuild := fal
 			if rebuild: node.rebuild_geometry()
 		"gunner":
 			node.starts_facing_right = values.facing_right
+			if node.has_method("is_route_gunner") and values.has("mobile"):
+				node.mobile = values.mobile
+				node.patrol_speed = values.speed
+				node.patrol_left_distance = values.left
+				node.patrol_right_distance = values.right
+				node.ammo_reward = int(values.ammo_reward)
 			if rebuild and node.pixel_visual != null: node.pixel_visual.tick(0.0, &"idle", values.facing_right)
 		"chest":
 			node.set_meta("layout_flip_h", values.get("flip_h", false))
@@ -211,7 +257,7 @@ static func apply(node: Node3D, kind: String, values: Dictionary, rebuild := fal
 			for id in ["large_heal_test", "medical_bag", "handgun_ammo"]:
 				if values[id] > 0: node.additional_items[StringName(id)] = int(values[id])
 		"decoration":
-			node.get_node("Visual").flip_h = values.flip_h
+			decoration_visual(node).flip_h = values.flip_h
 			node.set_meta("layout_decoration_layer", int(values.get("decoration_layer", 0)))
 		"tile":
 			node.set_horizontal_flip(values.flip_h)
@@ -244,6 +290,10 @@ static func bounds(record: Dictionary) -> Rect2:
 		"chest": return Rect2(center - Vector2(0.64, 0), Vector2(1.28, 0.88))
 		"flyer": return Rect2(center - Vector2(0.55, 0.92), Vector2(1.1, 1.6))
 		"decoration":
+			var entry: Dictionary = CATALOG.ENTRIES[record.template]
+			if entry.has("bounds"):
+				var rect: Array = entry.bounds
+				return Rect2(center + Vector2(rect[0],rect[1]),Vector2(rect[2],rect[3]))
 			var extent: Vector2 = CATALOG.icon(record.template).get_size() * 0.04
 			return Rect2(center - Vector2(extent.x * 0.5, 0), extent)
 		"spikes": return Rect2(center - Vector2(v.width * 0.5, 0.0), Vector2(v.width, 0.76))
@@ -269,6 +319,12 @@ static func instantiate_record(record: Dictionary) -> Node3D:
 		node = preload("res://scripts/developer/level_catalog_tile_3d.gd").new()
 		node.configure(entry)
 	elif entry.kind == "decoration":
+		if entry.has("scene"):
+			# Prepared props retain their authored sprite placement and layering.
+			node = (load(entry.scene) as PackedScene).instantiate()
+			node.set_meta("layout_template", record.template)
+			apply(node, entry.kind, record.values)
+			return node
 		node = Node3D.new()
 		var visual: Sprite3D
 		if entry.has("fps"):
@@ -315,8 +371,20 @@ static func order_decorations(nodes: Dictionary) -> void:
 	for id in ids:
 		var node: Node = nodes[id]
 		if node.get_meta("layout_kind", "") == "decoration":
+			var visual := decoration_visual(node)
+			if _is_authored_sprite(node):
+				# Registration must not rearrange existing scenery. Keep its authored
+				# depth/priority until the user explicitly chooses another layer.
+				if not node.has_meta("layout_original_depth"):
+					node.set_meta("layout_original_depth", visual.position.z)
+					node.set_meta("layout_original_priority", visual.render_priority)
+				if node.get_meta("layout_decoration_layer", 0) == 0:
+					visual.position.z = node.get_meta("layout_original_depth")
+					visual.render_priority = node.get_meta("layout_original_priority")
+					continue
+				visual.render_priority = -1
 			# Stable separate depths avoid ties between overlapping translucent props.
-			node.get_node("Visual").position.z = 1.0 + rank * 0.0001
+			visual.position.z = 1.0 + rank * 0.0001
 			rank += 1
 
 static func nearby_floor(level: Node, point: Vector2, tolerance: float, ignore: Node = null) -> float:

@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/shoreline/props/transition_outcrop_tall.png" id="1_fs1mc"]
+
+[node name="AuthoredScenery" type="Sprite3D" unique_id=1099680840]
+transform = Transform3D(0.36, 0, 0, 0, 0.36, 0, 0, 0, 1, 0, 0, 1.055)
+pixel_size = 0.04
+texture_filter = 0
+render_priority = 1
+texture = ExtResource("1_fs1mc")

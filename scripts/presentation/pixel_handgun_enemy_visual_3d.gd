@@ -4,6 +4,7 @@ extends Sprite3D
 signal shot_frame_reached
 
 const TEXTURES := {
+	&"walk": preload("res://assets/art/green_zone/enemies/handgun_walk.png"),
 	&"idle": preload("res://assets/art/green_zone/enemies/handgun_idle.png"),
 	&"panic": preload("res://assets/art/green_zone/enemies/handgun_idle.png"),
 	# Each three-frame group contains aim, flash, and recoil for one direction.
@@ -12,6 +13,7 @@ const TEXTURES := {
 	&"death": preload("res://assets/art/green_zone/enemies/handgun_death.png"),
 }
 const SHEET_COLUMNS := {
+	&"walk": 6,
 	&"idle": 4,
 	&"panic": 4,
 	&"telegraph": 9,
@@ -19,6 +21,7 @@ const SHEET_COLUMNS := {
 	&"death": 6,
 }
 const FRAME_COUNTS := {
+	&"walk": 6,
 	&"idle": 4,
 	&"panic": 4,
 	&"telegraph": 1,
@@ -26,6 +29,7 @@ const FRAME_COUNTS := {
 	&"death": 6,
 }
 const FRAME_RATES := {
+	&"walk": 9.0,
 	&"idle": 6.0,
 	&"panic": 10.0,
 	&"telegraph": 8.0,

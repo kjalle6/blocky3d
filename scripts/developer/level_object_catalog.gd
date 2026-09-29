@@ -1,6 +1,7 @@
 extends RefCounted
 ## Prepared gameplay objects only. Saves refer to these IDs, never asset paths.
 const CORE_ENTRIES := {
+	"route_gunner": {"name": "Patrolling dual-gun enemy", "category": "Enemies", "kind": "gunner", "scene": "res://scenes/enemies/route_gunner.tscn", "image": "res://assets/art/green_zone/enemies/handgun_idle.png", "frames": 4, "description": "Walks, pursues on screen, stops to aim, then fires a committed burst. Can also guard a fixed position. Defeat awards ammo and is saved.", "anchor": "ground", "feet": 0.55},
 	"wall_jump_scaffold": {"name": "Wall-jump scaffold", "category": "Platforms", "kind": "scaffold", "scene": "res://scenes/props/wall_jump_scaffold.tscn", "description": "Solid steel uprights for wall jumping, with open space between them. Set an underpass for tanks and players.", "anchor": "ground", "feet": 0.0},
 	"tank_enemy": {"name": "Green Zone tank", "category": "Enemies", "kind": "tank", "scene": "res://scenes/enemies/green_zone_tank.tscn", "image": "res://assets/art/green_zone/enemies/tank/Idle.png", "frames": 4, "description": "Moving tank: eight handgun hits, uninterrupted slow fire, shells break crate cover.", "anchor": "ground", "feet": 0.45},
 	"breakable_crates": {"name": "Breakable wooden crate", "category": "Supplies", "kind": "crate", "scene": "res://scenes/props/breakable_crate.tscn", "image": "res://assets/art/green_zone/catalog/props/other/Box.png", "description": "One solid wooden box. One tank shell or two ordinary hits break it; unsupported boxes fall. No loot yet.", "anchor": "ground", "feet": 0.48},
@@ -74,7 +75,9 @@ static func defaults(id: String) -> Dictionary:
 		"tank": values.merge({"speed": 1.25, "left": 5.76, "right": 5.76, "facing_right": false})
 		"platform": values.merge({"width": 5.12, "height": 1.28, "style": entry.style, "surface": entry.style, "left_cap": true, "right_cap": true, "bottom_cap": true})
 		"enemy": values.merge({"speed": 2.0, "left": 2.56, "right": 2.56, "facing_right": false})
-		"gunner": values.facing_right = false
+		"gunner":
+			values.facing_right = false
+			if id == "route_gunner": values.merge({"mobile": true, "speed": 2.6, "left": 5.12, "right": 5.12, "ammo_reward": 6})
 		"spikes": values.width = 2.56
 		"checkpoint": values.merge({"width": 2.4, "height": 2.2})
 		"chest": values.merge({"loot_pool": "level", "basic_heal": 1, "large_heal_test": 0, "medical_bag": 0, "handgun_ammo": 0})

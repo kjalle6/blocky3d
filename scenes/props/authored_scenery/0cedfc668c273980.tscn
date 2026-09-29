@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/skate_ramp_right.png" id="1_ltg5q"]
+
+[node name="AuthoredScenery" type="Sprite3D" unique_id=1629014767]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.92)
+pixel_size = 0.04
+texture_filter = 0
+texture = ExtResource("1_ltg5q")
+metadata/dressing_asset_id = &"skate_ramp_right"
+metadata/support_y = 0.64
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"ThornGardenExit"

@@ -185,6 +185,8 @@ func safety_error(manual := true) -> String:
 			continue
 		if enemy is TankEnemy3D and enemy.is_pursuing():
 			return "Lose pursuing enemies before saving."
+		if enemy.has_method("is_route_gunner") and enemy.is_pursuing():
+			return "Lose pursuing enemies before saving."
 		if enemy is StompableEnemy3D and not enemy.is_defeated() and enemy.is_pursuing():
 			return "Lose pursuing enemies before saving."
 		var radius := float(enemy.detection_range) + 1.0 if enemy is HandgunEnemy3D else 5.0

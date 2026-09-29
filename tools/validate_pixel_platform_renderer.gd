@@ -48,6 +48,20 @@ func _run() -> void:
 	uncapped.queue_free()
 	await process_frame
 
+	var joined := await _platform(enhanced, 5)
+	joined.collision_enabled = true
+	joined.omitted_face_tiles = [Rect2i(1, 0, 2, 2)]
+	joined.rebuild_geometry()
+	assert(joined.get_child_count() == 12) # 11 visible tiles and the original-size collision.
+	for row in 2:
+		for column in range(1, 3):
+			assert(not joined.has_node("Tile_%02d_%02d" % [row, column]))
+	_assert_tile(joined, 0, 0, enhanced.top_left)
+	_assert_tile(joined, 2, 2, enhanced.deep_right)
+	assert(joined.get_node("Collision").shape.size == joined.size)
+	joined.queue_free()
+	await process_frame
+
 	var partial := _style(false)
 	partial.deep_left = _texture(Color.RED)
 	assert(

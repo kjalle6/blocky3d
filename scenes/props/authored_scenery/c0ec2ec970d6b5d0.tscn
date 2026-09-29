@@ -1,0 +1,9 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/tree_small_grounded.png" id="1_iyt5i"]
+
+[node name="AuthoredScenery" type="Sprite3D" unique_id=333503483]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.92)
+pixel_size = 0.04
+texture_filter = 0
+texture = ExtResource("1_iyt5i")

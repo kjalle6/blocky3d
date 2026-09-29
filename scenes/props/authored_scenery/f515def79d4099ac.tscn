@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/bush_low.png" id="1_wbq7y"]
+
+[node name="AuthoredScenery" type="Sprite3D" unique_id=1920146250]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.96)
+pixel_size = 0.04
+texture_filter = 0
+texture = ExtResource("1_wbq7y")
+metadata/dressing_asset_id = &"bush_low"
+metadata/support_y = 4.48
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"AerialDip"

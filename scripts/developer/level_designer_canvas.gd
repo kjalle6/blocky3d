@@ -187,7 +187,7 @@ func _resize(current: Vector2) -> void:
 	var record: Dictionary = _preview[designer.selection[0]]
 	var bounds := OBJECTS.bounds(record)
 	var step: float = TILE if record.kind == "platform" else designer.snap
-	var minimum: float = TILE if record.kind == "platform" else 0.6 if record.kind == "spikes" else 0.1
+	var minimum: float = TILE if record.kind == "platform" else 2.56 if record.kind == "scaffold" else 0.6 if record.kind == "spikes" else 0.1
 	var left := bounds.position.x
 	var right := bounds.end.x
 	var bottom := bounds.position.y
@@ -337,7 +337,7 @@ func _draw_grid() -> void:
 		draw_line(screen_at(Vector2(a.x, 0)), screen_at(Vector2(b.x, 0)), Color(0.5, 1.0, 0.8, 0.55), 2.0)
 
 func _draw_handles(record: Dictionary, rect: Rect2) -> void:
-	if record.kind in ["platform", "spikes", "checkpoint"]:
+	if record.kind in ["platform", "scaffold", "spikes", "checkpoint"]:
 		_handles.left = Vector2(rect.position.x, rect.get_center().y)
 		_handles.right = Vector2(rect.end.x, rect.get_center().y)
 		if record.kind != "spikes":
@@ -347,7 +347,7 @@ func _draw_handles(record: Dictionary, rect: Rect2) -> void:
 			var box := Rect2(_handles[key] - Vector2.ONE * 5, Vector2.ONE * 10)
 			draw_rect(box, Color("102938"))
 			draw_rect(box, Color("65ffd0"), false, 2.0)
-	if record.kind == "enemy":
+	if record.kind == "enemy" or (record.kind == "gunner" and record.values.has("mobile")):
 		var center: Vector2 = Vector2(record.values.x, record.values.y + 1.8) + record.offset
 		for side in ["left", "right"]:
 			var automatic: bool = is_zero_approx(record.values[side])

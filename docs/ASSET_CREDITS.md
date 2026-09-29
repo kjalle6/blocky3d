@@ -86,8 +86,11 @@ The tank's five promoted enemy-6 sheets have their own
 [source and hash record](../assets/art/green_zone/enemies/tank/source_manifest.json),
 using the existing Green Zone enemies license record. The upward firing pose
 reuses a cropped barrel from the idle sheet and masks the horizontal barrel at
-runtime; the source images remain unchanged. The wall-jump scaffold uses
-project-authored procedural steel beams and collision shapes.
+runtime; the source images remain unchanged. The wall-jump scaffold assembles
+the Bridge Constructor pack's `Bridge_tile_111`, `112`, `133`, `145`, `146`,
+and `147` as native-size sprites. Posts, splice plates and deck edges use atlas
+crops; the PNGs stay unchanged. Their paths, hashes and supplied license are in
+the world scenery manifest above. Collision shapes remain project-authored.
 
 1. Keep the original download, editable source, and supplied license in
    `blocky3dassets`. Record its publisher/creator, source page when known, and

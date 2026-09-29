@@ -1,0 +1,38 @@
+{
+  "bridge_walkable_left": {
+    "name": "Bridge deck - solid left end",
+    "zone": "Bridges",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/world_scenery/environment/structures/bridges/1 Tiles/Bridge_tile_145.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [[0, 0], [32, 0], [32, 11], [0, 11]],
+    "description": "Walkable native bridge deck. Solid only along the visible beam; combine with the separate decorative braces."
+  },
+  "bridge_walkable_middle": {
+    "name": "Bridge deck - solid middle",
+    "zone": "Bridges",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/world_scenery/environment/structures/bridges/1 Tiles/Bridge_tile_146.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [[0, 0], [32, 0], [32, 11], [0, 11]],
+    "description": "Walkable native bridge deck. Solid only along the visible beam; combine with the separate decorative braces."
+  },
+  "bridge_walkable_right": {
+    "name": "Bridge deck - solid right end",
+    "zone": "Bridges",
+    "category": "Terrain tiles",
+    "kind": "tile",
+    "image": "res://assets/art/world_scenery/environment/structures/bridges/1 Tiles/Bridge_tile_147.png",
+    "anchor": "grid",
+    "crop": false,
+    "solid": true,
+    "polygon": [[0, 0], [32, 0], [32, 11], [0, 11]],
+    "description": "Walkable native bridge deck. Solid only along the visible beam; combine with the separate decorative braces."
+  }
+}

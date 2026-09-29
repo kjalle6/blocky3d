@@ -1,0 +1,13 @@
+{
+  "low_stone_cover": {
+    "name": "Low rock lip (scenery)",
+    "zone": "Green Zone",
+    "category": "Decorations",
+    "kind": "decoration",
+    "scene": "res://scenes/props/low_stone_cover.tscn",
+    "image": "res://assets/art/green_zone/props/stone_cover.png",
+    "frame_region": [8, 0, 32, 8],
+    "anchor": "ground",
+    "description": "A small exposed rock at a terrain edge. Scenery only: place over solid ground, which provides the actual cover."
+  }
+}

@@ -18,6 +18,9 @@ const DEFAULT_STYLE: PixelPlatformStyle = preload(
 @export var cap_left_edge := true
 @export var cap_right_edge := true
 @export var cap_bottom_edge := true
+## Tile rectangles already supplied by adjoining terrain; measured from the
+## top-left of this face. Omitted artwork does not change the collision box.
+@export var omitted_face_tiles: Array[Rect2i] = []
 var _generated_children: Array[Node] = []
 
 
@@ -63,6 +66,8 @@ func _build_face() -> void:
 	var rows := roundi(size.y / TILE_WORLD_SIZE)
 	for row in rows:
 		for column in columns:
+			if _face_tile_is_omitted(column, row):
+				continue
 			var texture := _tile_for(row, column, rows, columns)
 			var sprite := Sprite3D.new()
 			sprite.name = "Tile_%02d_%02d" % [row, column]
@@ -83,6 +88,13 @@ func _build_face() -> void:
 			)
 			add_child(sprite)
 			_generated_children.append(sprite)
+
+
+func _face_tile_is_omitted(column: int, row: int) -> bool:
+	for region in omitted_face_tiles:
+		if region.has_point(Vector2i(column, row)):
+			return true
+	return false
 
 
 func _cropped_top(texture: Texture2D) -> Texture2D:

@@ -89,10 +89,16 @@ WIP without promoting that level into the production selector.
 
 All loads restore the selected current HP, inventory quantities, quick assignments,
 equipped weapon, section and saved position. Ordinary enemies reset to full health
-and projectiles disappear. Tanks are an exception: their saved defeat persists
-with their ammo reward, so loading after a kill keeps them absent. Loading before
-the kill restores the tank and earlier inventory. Scene transitions carry current
-HP/items/loadout.
+and projectiles disappear. Tanks and the upper-route gunners are exceptions:
+their saved defeats persist with their ammo rewards, so loading a snapshot made
+after a kill keeps them absent. Loading a snapshot from before the kill restores
+the enemy and earlier inventory. Scene transitions carry current HP/items/loadout.
+
+Development-level deaths deliberately keep those defeated tanks and route
+gunners absent for easier traversal while testing. They retain the live session
+state instead of loading a campaign snapshot. The F1 restart action starts a
+fresh run and restores them. This convenience does not preserve unsaved kills
+when loading a campaign save.
 
 An explicitly selected save rolls back all progression to that snapshot. Manual
 saves also do this through Continue: unlocks earned before the save are present;

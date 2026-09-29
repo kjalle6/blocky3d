@@ -1,4 +1,8 @@
 ﻿{
+    "enemies/handgun_walk.png": {
+        "source": "enemies/green_zone_enemies/2/Walk.png",
+        "sha256": "cb1b989369a461c5bc693e630deb66f077051cb0b8532704c69fc0fe679e31a4"
+    },
     "characters/player_idle.png":  {
                                        "source":  "weapons/beginner weapons/1 Characters/1 Biker/Idle.png",
                                        "sha256":  "d649ed013895400fdff82673e98e2c2668d8570e86431a0085623777f4ce04e4"

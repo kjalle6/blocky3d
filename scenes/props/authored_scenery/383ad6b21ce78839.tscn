@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/stone_small.png" id="1_7ru68"]
+
+[node name="AuthoredScenery" type="Sprite3D" unique_id=418793618]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.9)
+pixel_size = 0.04
+texture_filter = 0
+render_priority = -12
+texture = ExtResource("1_7ru68")

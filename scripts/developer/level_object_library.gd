@@ -10,6 +10,9 @@ static func matches(entry: Dictionary, zone: String, group: String, query: Strin
 	# Existing rectangular platforms still load and remain editable. New building
 	# uses blocks; do not offer a second platform creation workflow in the browser.
 	if entry.kind == "platform": return false
+	# Exact legacy appearances support duplication without filling Add with
+	# repeated scale/depth variants of the same bush, grass or rock.
+	if entry.get("authored_sprite", false): return false
 	return (zone == "All zones" or entry.zone == zone) and (group == "All objects" or category(entry) == group) and (query.strip_edges().is_empty() or (str(entry.name) + " " + str(entry.zone) + " " + str(entry.description)).to_lower().contains(query.strip_edges().to_lower().replace("block", "tile")))
 
 static func title(id: String) -> String:

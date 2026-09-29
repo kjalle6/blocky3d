@@ -34,12 +34,12 @@
 			}
 		}
 	},
-	"fingerprint": "3f262c93e09f5acae58080e849bd33c6707025170d4c94d615c931e2b88ec39e",
+	"fingerprint": "89e0d12ad045e802d853623ede6d22459e2fde31c4978a317950bd355f6c2f1d",
 	"overrides": {
 
 	},
 	"removed": [],
-	"revision": 3,
+	"revision": 7,
 	"schema": 3,
 	"section": "overgrown_coastal_ascent"
 }

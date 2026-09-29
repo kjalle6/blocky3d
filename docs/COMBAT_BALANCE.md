@@ -71,10 +71,17 @@ The tank's defeat should provide a clear opportunity and cue to reload before
 the next encounter; it does not guarantee an empty magazine. Normal reloads
 remain sufficient, and the timed second press is an optional faster finish.
 
-The following encounter uses a moving variant of the existing dual-gun enemy;
-an elevated gunner behind cover stays stationary. Those later variants are not
-built yet. Judge the tank's cadence by the time available to recognise breaking
-crate cover and move before the next shot. The tank's interruption immunity does not imply
+The reusable moving dual-gun variant has 50 HP and deals 25 damage per paired
+beat. It walks at 2.6 m/s, closes to six metres, stops for its 0.55-second tell,
+commits to a three-beat burst, then recovers for 0.85 seconds. It turns after
+recovery when jumped over. It requires camera visibility to engage, takes
+normal hit interruption, and awards six reserve rounds once. Defeat and reward
+are restored together by saves. Walking can be disabled for a stationary guard.
+The prototype campaign placements were removed; later encounter positions and
+any elevated-guard timing changes will be decided with the rebuilt layout.
+
+Judge the tank's cadence by the time available to recognise breaking crate
+cover and move before the next shot. Its interruption immunity does not imply
 damage reduction; the other enemies retain their existing interruption rules.
 
 Player bullets stop just outside the current camera view, with an edge allowance

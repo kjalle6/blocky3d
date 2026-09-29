@@ -19,7 +19,7 @@ third in progress:
 | --- | --- | --- |
 | Arrival / Shoreline | Beach and forest paths, early combat, and the Double Jump introduction | Complete |
 | Overgrown Coastal Ascent | A dusk approach and connected cave route that teaches Wall Jump and Dash | Complete |
-| Green Zone Finale | Nighttime traversal, the first handgun encounter, destructible cover and a tank fight leading into a wall-jump escape | In progress; later gunners and the boss remain |
+| Green Zone Finale | Nighttime traversal, the handgun introduction, destructible cover, a tank fight and wall-jump escape, an optional scaffold-roof reward, and an upper gunner route | In progress; encounter tuning and boss remain |
 
 Current systems include player and enemy health, carried healing items, a paused
 inventory with two quick-use slots, ammunition and active reloads, supply chests,

@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/props/grass_tuft_small.png" id="1_6mucm"]
+
+[node name="AuthoredScenery" type="Sprite3D" unique_id=990068650]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.96)
+pixel_size = 0.04
+texture_filter = 0
+texture = ExtResource("1_6mucm")
+metadata/dressing_asset_id = &"grass_small"
+metadata/support_y = 6.4
+metadata/contact_anchor = &"bottom"
+metadata/support_platform = &"AerialCrown"

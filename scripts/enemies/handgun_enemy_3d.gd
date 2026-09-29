@@ -27,7 +27,7 @@ const BLOCKED_SHOT_RECHECK := 0.08
 @export var fire_pattern := FirePattern.TRIPLE
 @export var projectile_scene: PackedScene
 @export_range(2.0, 30.0, 0.5) var detection_range := 18.0
-@export_range(0.5, 8.0, 0.1) var vertical_tolerance := 3.0
+@export_range(0.5, 24.0, 0.1) var vertical_tolerance := 3.0
 @export_range(0.1, 1.5, 0.05) var telegraph_duration := 0.55
 @export_range(0.1, 1.0, 0.01) var twin_shot_interval := 0.55
 @export_range(0.05, 0.6, 0.01) var triple_shot_interval := 0.18
@@ -99,7 +99,7 @@ func _physics_process(delta: float) -> void:
 	var player := get_tree().get_first_node_in_group("player_character") as PlayerCharacter
 	match _state:
 		CombatState.IDLE:
-			pixel_visual.tick(delta, &"idle", _facing_sign > 0.0)
+			pixel_visual.tick(delta, _idle_visual_state(), _facing_sign > 0.0)
 			if _can_engage(player):
 				_face_player(player)
 				_state = CombatState.TELEGRAPH
@@ -317,6 +317,10 @@ func reset_run() -> void:
 	set_physics_process(true)
 	_engagement_enabled = starts_enabled
 	reset_combat_cycle(false)
+
+
+func _idle_visual_state() -> StringName:
+	return &"idle"
 
 
 func _settle_velocity(delta: float) -> void:

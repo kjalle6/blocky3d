@@ -292,7 +292,7 @@ func can_duplicate_selected() -> bool:
 	if selection.is_empty(): return false
 	for id in selection:
 		var record: Dictionary = document.working[id]
-		if not record.removable or (not record.created and record.kind != "platform"): return false
+		if not record.removable or (not record.created and record.kind not in ["platform", "scaffold", "decoration"]): return false
 	return true
 
 func can_remove_selected() -> bool:
@@ -317,7 +317,7 @@ func revert_selected() -> void:
 
 func duplicate_selected() -> void:
 	if not can_duplicate_selected():
-		set_status("Added objects and approved independent platforms can be duplicated.")
+		set_status("Select editable scenery or an independent object to duplicate.")
 		return
 	var records: Dictionary = document.working.duplicate(true)
 	var duplicates: Array[String] = []
@@ -325,9 +325,9 @@ func duplicate_selected() -> void:
 		var record: Dictionary = records[id]
 		var new_id := "object_" + Crypto.new().generate_random_bytes(12).hex_encode()
 		var values: Dictionary = record.values.duplicate(true)
-		values.x += OBJECTS.TILE
-		values.y += OBJECTS.TILE
-		records[new_id] = OBJECTS.new_record(record.template, values) if record.created else DOCUMENT.new_platform_record(values)
+		values.x += record.get("offset", Vector2.ZERO).x + OBJECTS.TILE
+		values.y += record.get("offset", Vector2.ZERO).y + OBJECTS.TILE
+		records[new_id] = OBJECTS.new_record(record.template, values) if record.has("template") else DOCUMENT.new_platform_record(values)
 		duplicates.append(new_id)
 	if commit_records("Duplicate selection", records):
 		selection = duplicates
@@ -597,7 +597,7 @@ func _collect_locked(level: Node) -> void:
 			if node is PixelPlatform3D:
 				bounds = Rect2(Vector2(node.global_position.x - node.size.x * 0.5, node.global_position.y - node.size.y * 0.5), Vector2(node.size.x, node.size.y))
 			locked[str(level.get_path_to(node))] = {"name": str(node.name).capitalize(), "bounds": bounds,
-				"reason": str(node.get_meta("layout_locked", "Protected scenery or scripted assembly — adjust with Codex."))}
+				"reason": str(node.get_meta("layout_locked", "Part of a connected gameplay structure or scripted sequence."))}
 
 func begin_placement(template: String, values: Dictionary) -> void:
 	if mode != Mode.EDITING or not CATALOG.ENTRIES.has(template): return
