@@ -185,7 +185,7 @@ func receive_melee_hit(source_position: Vector3, hit: CombatHit = null) -> bool:
 	if hit == null:
 		hit = CombatHit.new(preload("res://resources/combat/knife.tres").damage, &"knife", source_position)
 	if hit.kind == &"stomp": return false
-	if not health.damage(hit): return false
+	if not health.damage(hit, combat): return false
 	if health.current == 0:
 		_sequence_shots_remaining = 0
 		_defeat(source_position, null)

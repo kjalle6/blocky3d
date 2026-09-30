@@ -1,0 +1,21 @@
+Character animation sheets from the drone pack
+
+These sheets are additional copies for discovery alongside the character animations.
+The original drone-pack files remain unchanged under vehicles/drones.
+
+1 = Biker; 2 = Punk; 3 = Cyborg.
+Catalog filename: Drone_interaction.png
+
+characters/animations/1/Drone_interaction.png
+Source: vehicles/drones/2 Character animations/1.png
+SHA256: 44a5d89be35e5c0e63aa360a5fe56d9d6490fb1faf8cf7492e88a22eab31362e
+
+characters/animations/2/Drone_interaction.png
+Source: vehicles/drones/2 Character animations/2.png
+SHA256: 0de5a4c842dbaa1c269ff793c07a510b1e1816f253408cbc373a67df7236078f
+
+characters/animations/3/Drone_interaction.png
+Source: vehicles/drones/2 Character animations/3.png
+SHA256: daa3f67ebb3c1381fda0f450c58d0cdea1088e2827b92190583bdabeebec6251
+
+Supplied license note: Drone_pack_license.txt (copied unchanged from vehicles/drones/license.txt).

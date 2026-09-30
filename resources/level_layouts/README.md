@@ -73,3 +73,11 @@ x=6.360001/19.159999 and y=0.55 facing left, validated unchanged against the new
 base. Only its fingerprint was updated. The original is preserved as
 `sandbox.before-ground-combat.20260921T001106945.review.json`; the review and
 original source snapshots are under ignored `build/ground_combat_review`.
+
+The boss/asset checkpoint review on 2026-09-30 reconciled the two Level 3
+project saves after the machine-armor change and equivalent gunner-scene
+serialization. Their old structural identities were reproduced from the
+previous source. All 109 resolved outdoor objects and 388 shooter-area objects,
+including overrides and saved revisions, compared unchanged before updating
+only those two fingerprints. Original layouts and comparison evidence remain
+under ignored `build/checkpoint_layout_review`; local review copies were not changed.

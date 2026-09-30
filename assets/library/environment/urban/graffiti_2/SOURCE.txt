@@ -1,0 +1,9 @@
+craftpix-net-613851-graffiti-constructor-pixel-art-pack-2.zip
+Archive SHA256: 2a63f76e922e6911d77bdcb84602ba1f5690e4d0f11a9641e9739cde63ccf105
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

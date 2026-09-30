@@ -1,0 +1,9 @@
+craftpix-net-507212-homeless-character-pixel-art-pack.zip
+Archive SHA256: ba1c6a5e1d0c02d14909201f415ca6bcac7459da5335a23d3fbf421ddf043abc
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

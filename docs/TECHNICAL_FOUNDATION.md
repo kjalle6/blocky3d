@@ -622,7 +622,9 @@ reward needs additional persisted state.
 ## Asset pipeline
 
 Source manifests, license records, and the short promotion workflow are indexed
-in [Asset sources and credits](ASSET_CREDITS.md).
+in [Asset sources and credits](ASSET_CREDITS.md). Start asset searches with the
+[asset guide](../assets/ASSET_GUIDE.md) and its character, weapon and VFX indexes;
+supporting animation/effect sheets are often bundled in other source packs.
 
 The complete downloaded packs and editable source documents remain outside the
 repository at `D:\GodotProjects\blocky3dassets`. Runtime-ready visual files are
@@ -631,6 +633,14 @@ collection is searchable in Godot and by filesystem tooling during level
 authoring. Approved or transformed production assets remain curated beneath
 `assets/art`; the library is an audition catalog, not permission to reference
 every downloaded pack from runtime scenes.
+
+Visual synchronization preserves catalog files that only exist in the project
+and marks their manifest records `source_status: library_only`. This covers
+project-authored catalog art and older folder names. In particular, the older
+`weapons/guns` folder mixes two source packs; new lookups should use
+`guns_pack_1` and `guns_pack_2`, while existing references remain stable.
+Do not run broad catalog-preparation tools merely to organize the library:
+those tools can promote assets and change level-designer registrations.
 
 - Record source-relative paths, hashes, and supplied licenses.
 - Keep original archives, PSD files, coupons, audio, and unsupported source

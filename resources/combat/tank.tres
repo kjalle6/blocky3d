@@ -1,9 +1,10 @@
-[gd_resource type="Resource" script_class="CombatProfile" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="CombatProfile" format=3 uid="uid://cmava6qfycgsy"]
 
-[ext_resource type="Script" path="res://scripts/combat/combat_profile.gd" id="1"]
+[ext_resource type="Script" uid="uid://dpah462y5nnk6" path="res://scripts/combat/combat_profile.gd" id="1"]
+
 [resource]
 script = ExtResource("1")
 maximum_hp = 200
-attack_damage = 25
 hurt_duration = 0.0
+knife_damage_multiplier = 0.5
 provisional = true

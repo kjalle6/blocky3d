@@ -31,6 +31,14 @@ profile. It is not needed for each playtest; MCP uses the editor's game lifecycl
 Use `tools/run_godot_tool.ps1` for validators, imports, export/pack probes,
 repeatable capture scripts, and standalone `-Game` runs when editor playtesting
 is not the right test. Use `tools/run_validation_suite.ps1` for a broad sweep.
+After a batch of asset additions or changes, refresh the open editor and wait
+for its filesystem scan/imports to finish before launching checks. Read fresh
+editor errors after the refresh; an old import error is not evidence that a
+file is still missing.
+
+For an interrupted suite or a focused rerun, pass validator basenames with
+`-Name`, for example `-Name validate_level_layout,validate_project`. Unknown
+names fail before launching Godot. Omitting `-Name` still runs every validator.
 
 For an enemy behavior adjustment, run the relevant combat checks and a short
 MCP playtest. The Level 2 escape stress test is an opt-in

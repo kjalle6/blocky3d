@@ -1,0 +1,53 @@
+Standalone combat effects
+
+All image files are unchanged copies of their original ZIP members.
+Identical explosion sheets shared by multiple packs use one catalog file.
+Character/projectile animation and animated scenery remain with their source packs.
+
+vfx/shared_combat/Explosion.png
+Archive: enemies/chinese_street_enemies/craftpix-net-255422-enemies-chinese-street-pixel-art.zip
+Member: 4/Boom.png
+SHA256: 31ebfd3efd9f5a016acd57e5065306b2c9bae5edbfff092ff70e3c827fab6570
+Supplied license: enemies/chinese_street_enemies/License.txt
+
+vfx/shared_combat/Explosion.png
+Archive: enemies/chinese_street_bosses/craftpix-net-355913-bosses-chinese-street-pixel-art.zip
+Member: 1/Boom.png
+SHA256: 31ebfd3efd9f5a016acd57e5065306b2c9bae5edbfff092ff70e3c827fab6570
+Supplied license: enemies/chinese_street_bosses/License.txt
+
+vfx/shared_combat/Explosion.png
+Archive: enemies/bar_street_bosses/craftpix-net-384116-bar-street-bosses-pixel-art.zip
+Member: 2/BOOM_death.png
+SHA256: 31ebfd3efd9f5a016acd57e5065306b2c9bae5edbfff092ff70e3c827fab6570
+Supplied license: enemies/bar_street_bosses/license.txt
+
+vfx/shared_combat/Explosion.png
+Archive: enemies/bar_street_bosses/craftpix-net-384116-bar-street-bosses-pixel-art.zip
+Member: 3/BOOM_bomb.png
+SHA256: 31ebfd3efd9f5a016acd57e5065306b2c9bae5edbfff092ff70e3c827fab6570
+Supplied license: enemies/bar_street_bosses/license.txt
+
+vfx/shared_combat/Explosion.png
+Archive: enemies/cyberpunk_enemies/craftpix-net-527764-pixel-art-enemy-character-pack.zip
+Member: 4/Boom.png
+SHA256: 31ebfd3efd9f5a016acd57e5065306b2c9bae5edbfff092ff70e3c827fab6570
+Supplied license: enemies/cyberpunk_enemies/License.txt
+
+vfx/shared_combat/Explosion.png
+Archive: enemies/lab_bosses/craftpix-net-541373-lab-bosses-pixel-art.zip
+Member: 3/BOOM_death.png
+SHA256: 31ebfd3efd9f5a016acd57e5065306b2c9bae5edbfff092ff70e3c827fab6570
+Supplied license: enemies/lab_bosses/license.txt
+
+vfx/shared_combat/Explosion.png
+Archive: vehicles/police_transport/craftpix-net-687978-police-transport-pixel-art-assets.zip
+Member: 4 Police_tank/BOOM_death.png
+SHA256: 31ebfd3efd9f5a016acd57e5065306b2c9bae5edbfff092ff70e3c827fab6570
+Supplied license: vehicles/police_transport/license.txt
+
+vfx/shared_combat/Electric_attack.png
+Archive: enemies/various_bosses/craftpix-net-713504-various-bosses-pixel-art-pack.zip
+Member: 1/Attack2_effect.png
+SHA256: 7dd78f7b99ea9fb8b06d3d10cb3ab488d79cc3d25f75ecba6539dc0b77815882
+Supplied license: enemies/various_bosses/License.txt

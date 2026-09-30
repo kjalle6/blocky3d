@@ -47,9 +47,14 @@ var inventory := PlayerInventory.new()
 var healing_remaining := 0.0
 var last_healing_amount := 0
 var _attack_lock_remaining := 0.0
+var _hurt_visual_remaining := 0.0
 var _psychic_freeze_remaining := 0.0
+var _ground_hold_source: Node3D
+var _ground_hold_remaining := 0.0
 var _melee_hit: CombatHit
 var horizontal_speed := 0.0
+var _knockback_speed := 0.0
+var _knockback_deceleration := 24.0
 var _coyote_remaining := 0.0
 var _jump_buffer_remaining := 0.0
 var _dead := false
@@ -119,6 +124,10 @@ func _physics_process(delta: float) -> void:
 
 	healing_remaining = maxf(0.0, healing_remaining - delta)
 	_attack_lock_remaining = maxf(0.0, _attack_lock_remaining - delta)
+	_hurt_visual_remaining = maxf(0.0, _hurt_visual_remaining - delta)
+	if _ground_hold_remaining > 0.0:
+		_update_ground_hold(delta)
+		return
 	if is_psychically_frozen():
 		_psychic_freeze_remaining = maxf(0.0, _psychic_freeze_remaining - delta)
 		velocity = Vector3.ZERO
@@ -208,12 +217,21 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_released("jump") and velocity.y > 0.0:
 		velocity.y *= movement.released_jump_multiplier
 
-	velocity.x = horizontal_speed
+	var controlled_speed := horizontal_speed
+	if controlled_speed * _knockback_speed < 0.0:
+		# A held run cannot erase the impact immediately. Countersteering
+		# returns smoothly as the shove falls below ordinary running speed.
+		# Jump stays live; dash and wall jump explicitly cancel the impulse.
+		controlled_speed *= 1.0 - clampf(absf(_knockback_speed) / movement.maximum_speed, 0.0, 1.0)
+	velocity.x = controlled_speed + _knockback_speed
+	_knockback_speed = move_toward(_knockback_speed, 0.0, _knockback_deceleration * delta)
 	velocity.z = 0.0
 	_descending_before_slide = velocity.y < -0.5
 	var vertical_speed_before_slide := velocity.y
 	var position_before_slide := global_position
 	move_and_slide()
+	if is_on_wall():
+		_knockback_speed = 0.0
 	# Resolve player damage before enemy attacks, using this tick's movement.
 	if is_melee_contact_active():
 		_perform_melee_hit()
@@ -256,6 +274,9 @@ func kill(kind: StringName = DEATH_KIND_GENERIC) -> void:
 		return
 	_dead = true
 	_clear_psychic_freeze()
+	_hurt_visual_remaining = 0.0
+	_knockback_speed = 0.0
+	release_ground_hold()
 	if health.current > 0:
 		health.reset(health.maximum, 0)
 	_death_kind = kind
@@ -288,6 +309,8 @@ func was_descending_before_slide() -> bool:
 
 
 func stop_for_completion() -> void:
+	_hurt_visual_remaining = 0.0
+	_knockback_speed = 0.0
 	_transition_run_remaining = 0.0
 	_transition_run_speed = 0.0
 	_dash_remaining = 0.0
@@ -308,6 +331,9 @@ func disappear_for_transition() -> void:
 
 func reset_at(spawn_transform: Transform3D) -> void:
 	_clear_psychic_freeze()
+	_hurt_visual_remaining = 0.0
+	_knockback_speed = 0.0
+	release_ground_hold()
 	health.reset(combat.maximum_hp)
 	_attack_lock_remaining = 0.0
 	healing_remaining = 0.0
@@ -349,7 +375,7 @@ func reset_at(spawn_transform: Transform3D) -> void:
 
 
 func can_save_state(stationary := true) -> bool:
-	return not _dead and not is_psychically_frozen() and not is_transition_running() and not _developer_inspection_enabled and not is_attacking() and not player_handgun.is_reloading() and healing_remaining <= 0.0 and _attack_lock_remaining <= 0.0 and (not stationary or absf(velocity.x) < 0.1) and absf(velocity.y) < 0.1
+	return not _dead and not is_control_locked() and not is_transition_running() and not _developer_inspection_enabled and not is_attacking() and not player_handgun.is_reloading() and healing_remaining <= 0.0 and _attack_lock_remaining <= 0.0 and (not stationary or absf(velocity.x) < 0.1) and absf(velocity.y) < 0.1
 
 
 func is_dead() -> bool:
@@ -488,6 +514,7 @@ func configure_weapon_ownership(
 
 
 func request_weapon(weapon_id: StringName) -> bool:
+	if is_control_locked(): return false
 	if not PlayerWeapon.is_known(weapon_id) or weapon_id not in _owned_weapon_ids:
 		return false
 	if is_attacking():
@@ -508,6 +535,69 @@ func developer_melee_bounds() -> Rect2:
 	)
 
 
+func is_ground_held() -> bool:
+	return _ground_hold_remaining > 0.0 and is_instance_valid(_ground_hold_source) and _ground_hold_source.is_inside_tree()
+
+
+func is_control_locked() -> bool:
+	return is_ground_held() or is_psychically_frozen()
+
+
+func begin_ground_hold(source: Node3D, maximum_duration: float) -> bool:
+	if _dead or _developer_inspection_enabled or is_transition_running() or is_ground_held():
+		return false
+	if not is_instance_valid(source) or maximum_duration <= 0.0:
+		return false
+	_knockback_speed = 0.0
+	_hurt_visual_remaining = 0.0
+	_ground_hold_source = source
+	_ground_hold_remaining = maximum_duration
+	_cancel_active_attack(false)
+	_pending_weapon_id = &""
+	_dash_remaining = 0.0
+	_double_jump_visual_remaining = 0.0
+	_wall_sliding = false
+	_wall_jump_control_lock_remaining = 0.0
+	_wall_contact_direction = 0.0
+	_wall_coyote_remaining = 0.0
+	_jump_buffer_remaining = 0.0
+	_coyote_remaining = 0.0
+	_descending_before_slide = false
+	velocity = Vector3(0, minf(velocity.y, 0.0), 0)
+	horizontal_speed = 0.0
+	floor_snap_length = movement.floor_snap_length
+	player_handgun.cancel_reload()
+	if pixel_visual != null:
+		pixel_visual.set_state("hurt", true)
+		pixel_visual.tick_authored_state(0.0, "hurt", _facing_sign > 0.0)
+	movement_reset.emit()
+	return true
+
+
+func release_ground_hold(source: Node3D = null) -> void:
+	if source != null and _ground_hold_source != source:
+		return
+	_ground_hold_source = null
+	_ground_hold_remaining = 0.0
+	_jump_buffer_remaining = 0.0
+
+
+func _update_ground_hold(delta: float) -> void:
+	_ground_hold_remaining = maxf(0.0, _ground_hold_remaining - delta)
+	if not is_ground_held():
+		release_ground_hold()
+		return
+	# Input is blocked, but gravity and terrain collision still ground the player.
+	horizontal_speed = 0.0
+	velocity = Vector3(0, maxf(velocity.y - movement.gravity * 2.0 * delta,
+		-movement.maximum_fall_speed), 0)
+	move_and_slide()
+	if global_position.y < fall_limit_y:
+		kill()
+	if pixel_visual != null and not _dead:
+		pixel_visual.tick_authored_state(0.0, "hurt", _facing_sign > 0.0)
+
+
 func is_psychically_frozen() -> bool:
 	return _psychic_freeze_remaining > 0.0
 
@@ -520,6 +610,8 @@ func receive_psychic_hit(source_position: Vector3, hit: CombatHit, duration: flo
 		_psychic_freeze_remaining = previous_freeze
 		return false
 	if _dead: return true
+	_hurt_visual_remaining = 0.0
+	_knockback_speed = 0.0
 	_dash_remaining = 0.0
 	_double_jump_visual_remaining = 0.0
 	_wall_sliding = false
@@ -550,14 +642,38 @@ func receive_enemy_hit(source_position: Vector3, hit: CombatHit) -> bool:
 		return false
 	_cancel_active_attack(true)
 	_attack_lock_remaining = maxf(_attack_lock_remaining, combat.hurt_duration)
+	# Present the authored reaction immediately, before feedback pauses the frame.
+	# Movement remains live; the existing hurt attack lock owns recovery timing.
+	if health.current > 0 and not is_control_locked():
+		_hurt_visual_remaining = combat.hurt_duration
+		if pixel_visual != null:
+			pixel_visual.set_state("hurt", true)
+			pixel_visual.tick_authored_state(0.0, "hurt", _facing_sign > 0.0)
 	damage_received.emit(source_position)
 	if health.current == 0:
 		kill()
 	return true
 
 
+func receive_knockback_hit(source_position: Vector3, hit: CombatHit, impulse: float,
+		deceleration := 24.0) -> bool:
+	# Damage deduplication also owns the impulse: repeated contact cannot shove again.
+	if not receive_enemy_hit(source_position, hit):
+		return false
+	if _dead or is_control_locked(): return true
+	_dash_remaining = 0.0
+	horizontal_speed = 0.0
+	_knockback_speed = impulse
+	_knockback_deceleration = maxf(1.0, deceleration)
+	velocity.x = impulse
+	velocity.y = maxf(velocity.y, 3.0)
+	floor_snap_length = 0.0
+	player_handgun.cancel_reload()
+	return true
+
+
 func use_quick_item(slot: int) -> bool:
-	if _dead or is_psychically_frozen() or is_transition_running() or _developer_inspection_enabled or healing_remaining > 0.0:
+	if _dead or is_control_locked() or is_transition_running() or _developer_inspection_enabled or healing_remaining > 0.0:
 		return false
 	if slot < 0 or slot >= inventory.quick_slots.size():
 		return false
@@ -591,6 +707,9 @@ func capture_state() -> Dictionary:
 
 func restore_state(data: Dictionary) -> void:
 	_clear_psychic_freeze()
+	_hurt_visual_remaining = 0.0
+	_knockback_speed = 0.0
+	release_ground_hold()
 	health.reset(int(data.health.maximum), int(data.health.current))
 	inventory.restore(data.inventory)
 	var weapons: Array[StringName] = []
@@ -614,6 +733,9 @@ func set_developer_inspection_enabled(enabled: bool) -> void:
 		return
 	_developer_inspection_enabled = enabled
 	_clear_psychic_freeze()
+	_hurt_visual_remaining = 0.0
+	_knockback_speed = 0.0
+	release_ground_hold()
 	velocity = Vector3.ZERO
 	horizontal_speed = 0.0
 	_dash_remaining = 0.0
@@ -726,7 +848,7 @@ func play_damage_flash() -> void:
 
 
 func _update_attack(delta: float) -> void:
-	if is_dashing() or _attack_lock_remaining > 0.0:
+	if is_dashing() or is_control_locked() or _attack_lock_remaining > 0.0:
 		_cancel_active_attack(true)
 		return
 	# Gun recovery follows the weapon's cooldown. Knife contact and swing
@@ -759,7 +881,7 @@ func _fire_handgun_from_input() -> void:
 	# Movement, animation frame, and mouse aim resolve first, within this same
 	# physics tick. Jump + fire therefore uses the new pose's real barrel.
 	if (
-		_dead or is_dashing() or is_attacking() or _attack_lock_remaining > 0.0
+		_dead or is_control_locked() or is_dashing() or is_attacking() or _attack_lock_remaining > 0.0
 		or _equipped_weapon_id != PlayerWeapon.HANDGUN
 		or not Input.is_action_just_pressed("attack")
 	):
@@ -819,7 +941,7 @@ func _perform_melee_hit() -> void:
 
 
 func _resolve_stomp(previous_position: Vector3) -> void:
-	if not _descending_before_slide or _dead:
+	if not _descending_before_slide or _dead or is_ground_held():
 		return
 	var start := Vector2(previous_position.x, previous_position.y - FEET_OFFSET_Y)
 	var end := Vector2(global_position.x, feet_world_y())
@@ -881,6 +1003,7 @@ func _can_wall_jump() -> bool:
 func _perform_wall_jump() -> void:
 	if is_dashing():
 		_finish_dash()
+	_knockback_speed = 0.0
 	var source_wall_direction := _last_wall_contact_direction
 	var jump_direction := -source_wall_direction
 	velocity.y = movement.wall_jump_vertical_speed
@@ -930,6 +1053,7 @@ func _try_start_dash(input_axis: float) -> bool:
 		or is_dashing()
 	):
 		return false
+	_knockback_speed = 0.0
 	_dash_direction = signf(input_axis) if not is_zero_approx(input_axis) else _facing_sign
 	_facing_sign = _dash_direction
 	_dash_remaining = movement.dash_duration
@@ -984,9 +1108,12 @@ func _update_wall_contact() -> void:
 func _update_pixel_visual(delta: float) -> void:
 	if pixel_visual == null:
 		return
-	if is_psychically_frozen():
+	if is_control_locked():
 		return
 	_update_weapon_presentation()
+	if not _dead and _hurt_visual_remaining > 0.0:
+		pixel_visual.tick_authored_state(delta, "hurt", _facing_sign > 0.0)
+		return
 	pixel_visual.tick(
 		delta,
 		is_on_floor(),

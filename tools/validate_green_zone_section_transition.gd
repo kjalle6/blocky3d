@@ -77,7 +77,8 @@ func _run() -> void:
 	assert(game_root.current_level_definition == definition)
 	assert(game_root.current_world_definition == null)
 	assert(shooter_area.route_extent.route_start_x == 0.0)
-	assert(is_equal_approx(shooter_area.route_extent.route_end_x, 104.96))
+	# The upper gunner route extends the original shooter section.
+	assert(is_equal_approx(shooter_area.route_extent.route_end_x, 122.88))
 	for ability_id in PlayerAbility.IMPLEMENTED:
 		assert(shooter_area.player.has_ability(ability_id))
 	assert(shooter_area.player.is_transition_running())

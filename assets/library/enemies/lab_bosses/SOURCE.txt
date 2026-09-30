@@ -1,0 +1,11 @@
+craftpix-net-541373-lab-bosses-pixel-art.zip
+Archive SHA256: 11ade4f93fbab4b8f768032c15fc420f1bad0c3172eb7963654823eb89bef713
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+3/BOOM_death.png -> vfx/shared_combat/Explosion.png
+SHA256: 31ebfd3efd9f5a016acd57e5065306b2c9bae5edbfff092ff70e3c827fab6570
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

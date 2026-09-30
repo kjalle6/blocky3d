@@ -1,0 +1,9 @@
+craftpix-net-386974-bar-street-enemies-pixel-art.zip
+Archive SHA256: 55ccb10a8cbc769d173197630799e1171a7ba82d1cc69e17f4773c0447a06f96
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

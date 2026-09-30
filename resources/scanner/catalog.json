@@ -1,0 +1,1469 @@
+{
+  "schema_version": 1,
+  "numeric_discovery": "TBD",
+  "name_unlock": "TBD",
+  "knowledge_scope": "TBD",
+  "save_policy": "TBD",
+  "fact_sets": {
+    "ordinary_weapons": [
+      {
+        "id": "knife_effective",
+        "label": "Knife",
+        "value": "Effective",
+        "discovery_status": "experience",
+        "evidence": {
+          "event": "weapon_result",
+          "weapon": "knife",
+          "outcome": "effective"
+        }
+      },
+      {
+        "id": "bullet_effective",
+        "label": "Handgun",
+        "value": "Effective",
+        "discovery_status": "experience",
+        "evidence": {
+          "event": "weapon_result",
+          "weapon": "handgun",
+          "outcome": "effective"
+        }
+      },
+      {
+        "id": "stomp_effective",
+        "label": "Stomp",
+        "value": "Effective",
+        "discovery_status": "experience",
+        "evidence": {
+          "event": "weapon_result",
+          "weapon": "stomp",
+          "outcome": "effective"
+        }
+      },
+      {
+        "id": "attack_interrupted",
+        "label": "Hit reaction",
+        "value": "Attack interrupted",
+        "discovery_status": "experience",
+        "evidence": {
+          "event": "attack_interrupted_by_hit"
+        }
+      }
+    ],
+    "machine_weapons": [
+      {
+        "id": "knife_reduced",
+        "label": "Knife",
+        "value": "Reduced damage",
+        "discovery_status": "experience",
+        "evidence": {
+          "event": "weapon_result",
+          "weapon": "knife",
+          "outcome": "reduced"
+        }
+      },
+      {
+        "id": "bullet_effective",
+        "label": "Handgun",
+        "value": "Effective",
+        "discovery_status": "experience",
+        "evidence": {
+          "event": "weapon_result",
+          "weapon": "handgun",
+          "outcome": "effective"
+        }
+      },
+      {
+        "id": "stomp_ineffective",
+        "label": "Stomp",
+        "value": "No damage",
+        "discovery_status": "experience",
+        "evidence": {
+          "event": "weapon_result",
+          "weapon": "stomp",
+          "outcome": "ineffective"
+        }
+      },
+      {
+        "id": "attack_continues",
+        "label": "Hit reaction",
+        "value": "Attack continues",
+        "discovery_status": "experience",
+        "evidence": {
+          "event": "attack_continued_after_hit"
+        }
+      }
+    ]
+  },
+  "entries": [
+    {
+      "id": "bat_patrol",
+      "game_name": "Bat patrol",
+      "kind": "enemy",
+      "status": "implemented",
+      "actor_script": "res://scripts/enemies/stompable_enemy_3d.gd",
+      "default_source": {
+        "scene": "res://scenes/enemies/pixel_patrol_enemy.tscn",
+        "node": "."
+      },
+      "fact_sets": [
+        "ordinary_weapons"
+      ],
+      "facts": [
+        {
+          "id": "melee_attack",
+          "label": "Attack",
+          "value": "Melee damage",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "attack_received",
+            "attack": "melee"
+          }
+        }
+      ],
+      "stats": {
+        "maximum_hp": {
+          "source": "actor",
+          "property": "combat.maximum_hp",
+          "unit": "HP"
+        },
+        "attack_damage": {
+          "source": "actor",
+          "property": "combat.attack_damage",
+          "unit": "HP"
+        },
+        "knife_multiplier": {
+          "source": "actor",
+          "property": "combat.knife_damage_multiplier",
+          "unit": "multiplier"
+        },
+        "walk_speed": {
+          "source": "actor",
+          "property": "patrol_speed",
+          "unit": "m/s"
+        },
+        "detection_x": {
+          "source": "actor",
+          "property": "engagement_distance",
+          "unit": "m"
+        },
+        "detection_y": {
+          "source": "actor",
+          "property": "engagement_height",
+          "unit": "m"
+        },
+        "hurt_duration": {
+          "source": "actor",
+          "property": "combat.hurt_duration",
+          "unit": "s"
+        },
+        "attack_duration": {
+          "source": "actor",
+          "property": "attack_duration",
+          "unit": "s"
+        },
+        "impact_time": {
+          "source": "actor",
+          "property": "attack_impact_time",
+          "unit": "s"
+        },
+        "attack_recovery": {
+          "source": "actor",
+          "property": "attack_cooldown",
+          "unit": "s"
+        },
+        "damage_reach": {
+          "source": "actor",
+          "property": "attack_damage_distance",
+          "unit": "m"
+        },
+        "damage_height": {
+          "source": "actor",
+          "property": "attack_vertical_tolerance",
+          "unit": "m"
+        },
+        "attack_move_speed": {
+          "source": "actor",
+          "property": "attack_move_speed",
+          "unit": "m/s"
+        },
+        "stomp_bounce": {
+          "source": "actor",
+          "property": "stomp_bounce_speed",
+          "unit": "m/s"
+        }
+      }
+    },
+    {
+      "id": "skater",
+      "game_name": "Skater",
+      "kind": "enemy",
+      "status": "implemented",
+      "actor_script": "res://scripts/enemies/stompable_enemy_3d.gd",
+      "default_source": {
+        "scene": "res://scenes/enemies/pixel_skater_enemy.tscn",
+        "node": "."
+      },
+      "fact_sets": [
+        "ordinary_weapons"
+      ],
+      "facts": [
+        {
+          "id": "melee_attack",
+          "label": "Attack",
+          "value": "Melee damage",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "attack_received",
+            "attack": "melee"
+          }
+        }
+      ],
+      "stats": {
+        "maximum_hp": {
+          "source": "actor",
+          "property": "combat.maximum_hp",
+          "unit": "HP"
+        },
+        "attack_damage": {
+          "source": "actor",
+          "property": "combat.attack_damage",
+          "unit": "HP"
+        },
+        "knife_multiplier": {
+          "source": "actor",
+          "property": "combat.knife_damage_multiplier",
+          "unit": "multiplier"
+        },
+        "walk_speed": {
+          "source": "actor",
+          "property": "patrol_speed",
+          "unit": "m/s"
+        },
+        "detection_x": {
+          "source": "actor",
+          "property": "engagement_distance",
+          "unit": "m"
+        },
+        "detection_y": {
+          "source": "actor",
+          "property": "engagement_height",
+          "unit": "m"
+        },
+        "hurt_duration": {
+          "source": "actor",
+          "property": "combat.hurt_duration",
+          "unit": "s"
+        },
+        "attack_duration": {
+          "source": "actor",
+          "property": "attack_duration",
+          "unit": "s"
+        },
+        "impact_time": {
+          "source": "actor",
+          "property": "attack_impact_time",
+          "unit": "s"
+        },
+        "attack_recovery": {
+          "source": "actor",
+          "property": "attack_cooldown",
+          "unit": "s"
+        },
+        "damage_reach": {
+          "source": "actor",
+          "property": "attack_damage_distance",
+          "unit": "m"
+        },
+        "damage_height": {
+          "source": "actor",
+          "property": "attack_vertical_tolerance",
+          "unit": "m"
+        },
+        "attack_move_speed": {
+          "source": "actor",
+          "property": "attack_move_speed",
+          "unit": "m/s"
+        },
+        "stomp_bounce": {
+          "source": "actor",
+          "property": "stomp_bounce_speed",
+          "unit": "m/s"
+        }
+      }
+    },
+    {
+      "id": "gunner_stationary",
+      "game_name": "Dual-gun enemy",
+      "kind": "enemy",
+      "status": "implemented",
+      "actor_script": "res://scripts/enemies/handgun_enemy_3d.gd",
+      "default_source": {
+        "scene": "res://scenes/enemies/handgun_enemy.tscn",
+        "node": "."
+      },
+      "fact_sets": [
+        "ordinary_weapons"
+      ],
+      "facts": [
+        {
+          "id": "gunfire",
+          "label": "Attack",
+          "value": "Gunfire damage",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "attack_received",
+            "attack": "gunfire"
+          }
+        },
+        {
+          "id": "paired_beat",
+          "label": "Gunfire",
+          "value": "Paired bullets share one hit",
+          "discovery_status": "pending_policy",
+          "evidence": {
+            "event": "paired_beat_confirmed",
+            "attack": "gunfire"
+          }
+        }
+      ],
+      "stats": {
+        "maximum_hp": {
+          "source": "actor",
+          "property": "combat.maximum_hp",
+          "unit": "HP"
+        },
+        "attack_damage": {
+          "source": "actor",
+          "property": "combat.attack_damage",
+          "unit": "HP"
+        },
+        "knife_multiplier": {
+          "source": "actor",
+          "property": "combat.knife_damage_multiplier",
+          "unit": "multiplier"
+        },
+        "detection_x": {
+          "source": "actor",
+          "property": "detection_range",
+          "unit": "m"
+        },
+        "detection_y": {
+          "source": "actor",
+          "property": "vertical_tolerance",
+          "unit": "m"
+        },
+        "tell": {
+          "source": "actor",
+          "property": "telegraph_duration",
+          "unit": "s"
+        },
+        "recovery": {
+          "source": "actor",
+          "property": "recovery_duration",
+          "unit": "s"
+        },
+        "twin_interval": {
+          "source": "actor",
+          "property": "twin_shot_interval",
+          "unit": "s"
+        },
+        "triple_interval": {
+          "source": "actor",
+          "property": "triple_shot_interval",
+          "unit": "s"
+        },
+        "projectile_speed": {
+          "source": "actor",
+          "property": "projectile_speed",
+          "unit": "m/s"
+        },
+        "projectile_range": {
+          "source": "actor",
+          "property": "projectile_distance",
+          "unit": "m"
+        },
+        "stomp_bounce": {
+          "source": "actor",
+          "property": "stomp_bounce_speed",
+          "unit": "m/s"
+        }
+      }
+    },
+    {
+      "id": "gunner_route",
+      "game_name": "Moving route gunner",
+      "kind": "enemy",
+      "status": "implemented",
+      "actor_script": "res://scripts/enemies/route_gunner_3d.gd",
+      "default_source": {
+        "scene": "res://scenes/enemies/route_gunner.tscn",
+        "node": "."
+      },
+      "fact_sets": [
+        "ordinary_weapons"
+      ],
+      "facts": [
+        {
+          "id": "gunfire",
+          "label": "Attack",
+          "value": "Gunfire damage",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "attack_received",
+            "attack": "gunfire"
+          }
+        },
+        {
+          "id": "paired_beat",
+          "label": "Gunfire",
+          "value": "Paired bullets share one hit",
+          "discovery_status": "pending_policy",
+          "evidence": {
+            "event": "paired_beat_confirmed",
+            "attack": "gunfire"
+          }
+        }
+      ],
+      "stats": {
+        "maximum_hp": {
+          "source": "actor",
+          "property": "combat.maximum_hp",
+          "unit": "HP"
+        },
+        "attack_damage": {
+          "source": "actor",
+          "property": "combat.attack_damage",
+          "unit": "HP"
+        },
+        "knife_multiplier": {
+          "source": "actor",
+          "property": "combat.knife_damage_multiplier",
+          "unit": "multiplier"
+        },
+        "detection_x": {
+          "source": "actor",
+          "property": "detection_range",
+          "unit": "m"
+        },
+        "detection_y": {
+          "source": "actor",
+          "property": "vertical_tolerance",
+          "unit": "m"
+        },
+        "tell": {
+          "source": "actor",
+          "property": "telegraph_duration",
+          "unit": "s"
+        },
+        "recovery": {
+          "source": "actor",
+          "property": "recovery_duration",
+          "unit": "s"
+        },
+        "twin_interval": {
+          "source": "actor",
+          "property": "twin_shot_interval",
+          "unit": "s"
+        },
+        "triple_interval": {
+          "source": "actor",
+          "property": "triple_shot_interval",
+          "unit": "s"
+        },
+        "projectile_speed": {
+          "source": "actor",
+          "property": "projectile_speed",
+          "unit": "m/s"
+        },
+        "projectile_range": {
+          "source": "actor",
+          "property": "projectile_distance",
+          "unit": "m"
+        },
+        "stomp_bounce": {
+          "source": "actor",
+          "property": "stomp_bounce_speed",
+          "unit": "m/s"
+        },
+        "mobile": {
+          "source": "actor",
+          "property": "mobile",
+          "unit": "boolean"
+        },
+        "walk_speed": {
+          "source": "actor",
+          "property": "patrol_speed",
+          "unit": "m/s"
+        },
+        "firing_distance": {
+          "source": "actor",
+          "property": "preferred_firing_distance",
+          "unit": "m"
+        },
+        "ammo_reward": {
+          "source": "actor",
+          "property": "ammo_reward",
+          "unit": "rounds"
+        }
+      }
+    },
+    {
+      "id": "gunner_guard",
+      "game_name": "Elevated guard",
+      "kind": "enemy",
+      "status": "implemented",
+      "actor_script": "res://scripts/enemies/route_gunner_3d.gd",
+      "default_source": {
+        "scene": "res://scenes/dev/green_zone_finale_shooter_area_wip.tscn",
+        "node": "UpperRoute/UpperGunner"
+      },
+      "fact_sets": [
+        "ordinary_weapons"
+      ],
+      "facts": [
+        {
+          "id": "gunfire",
+          "label": "Attack",
+          "value": "Gunfire damage",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "attack_received",
+            "attack": "gunfire"
+          }
+        },
+        {
+          "id": "paired_beat",
+          "label": "Gunfire",
+          "value": "Paired bullets share one hit",
+          "discovery_status": "pending_policy",
+          "evidence": {
+            "event": "paired_beat_confirmed",
+            "attack": "gunfire"
+          }
+        }
+      ],
+      "stats": {
+        "maximum_hp": {
+          "source": "actor",
+          "property": "combat.maximum_hp",
+          "unit": "HP"
+        },
+        "attack_damage": {
+          "source": "actor",
+          "property": "combat.attack_damage",
+          "unit": "HP"
+        },
+        "knife_multiplier": {
+          "source": "actor",
+          "property": "combat.knife_damage_multiplier",
+          "unit": "multiplier"
+        },
+        "detection_x": {
+          "source": "actor",
+          "property": "detection_range",
+          "unit": "m"
+        },
+        "detection_y": {
+          "source": "actor",
+          "property": "vertical_tolerance",
+          "unit": "m"
+        },
+        "tell": {
+          "source": "actor",
+          "property": "telegraph_duration",
+          "unit": "s"
+        },
+        "recovery": {
+          "source": "actor",
+          "property": "recovery_duration",
+          "unit": "s"
+        },
+        "twin_interval": {
+          "source": "actor",
+          "property": "twin_shot_interval",
+          "unit": "s"
+        },
+        "triple_interval": {
+          "source": "actor",
+          "property": "triple_shot_interval",
+          "unit": "s"
+        },
+        "projectile_speed": {
+          "source": "actor",
+          "property": "projectile_speed",
+          "unit": "m/s"
+        },
+        "projectile_range": {
+          "source": "actor",
+          "property": "projectile_distance",
+          "unit": "m"
+        },
+        "stomp_bounce": {
+          "source": "actor",
+          "property": "stomp_bounce_speed",
+          "unit": "m/s"
+        },
+        "mobile": {
+          "source": "actor",
+          "property": "mobile",
+          "unit": "boolean"
+        },
+        "walk_speed": {
+          "source": "actor",
+          "property": "patrol_speed",
+          "unit": "m/s"
+        },
+        "firing_distance": {
+          "source": "actor",
+          "property": "preferred_firing_distance",
+          "unit": "m"
+        },
+        "ammo_reward": {
+          "source": "actor",
+          "property": "ammo_reward",
+          "unit": "rounds"
+        }
+      }
+    },
+    {
+      "id": "green_zone_tank",
+      "game_name": "Green Zone tank",
+      "kind": "enemy",
+      "status": "implemented",
+      "actor_script": "res://scripts/enemies/tank_enemy_3d.gd",
+      "default_source": {
+        "scene": "res://scenes/enemies/green_zone_tank.tscn",
+        "node": "."
+      },
+      "fact_sets": [
+        "machine_weapons"
+      ],
+      "facts": [
+        {
+          "id": "shell",
+          "label": "Attack",
+          "value": "Shell damage",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "attack_received",
+            "attack": "shell"
+          }
+        },
+        {
+          "id": "psychic_damage",
+          "label": "Head retaliation",
+          "value": "Psychic damage",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "attack_received",
+            "attack": "psychic_pulse"
+          }
+        },
+        {
+          "id": "psychic_freeze",
+          "label": "Head retaliation",
+          "value": "Player frozen",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "effect_experienced",
+            "attack": "psychic_pulse",
+            "effect": "psychic_freeze"
+          }
+        },
+        {
+          "id": "retreat",
+          "label": "Head retaliation",
+          "value": "Tank retreats",
+          "discovery_status": "pending_policy",
+          "evidence": {
+            "event": "behavior_confirmed",
+            "attack": "psychic_pulse",
+            "behavior": "retreat"
+          }
+        }
+      ],
+      "stats": {
+        "maximum_hp": {
+          "source": "actor",
+          "property": "combat.maximum_hp",
+          "unit": "HP"
+        },
+        "attack_damage": {
+          "source": "actor",
+          "property": "combat.attack_damage",
+          "unit": "HP"
+        },
+        "knife_multiplier": {
+          "source": "actor",
+          "property": "combat.knife_damage_multiplier",
+          "unit": "multiplier"
+        },
+        "walk_speed": {
+          "source": "actor",
+          "property": "patrol_speed",
+          "unit": "m/s"
+        },
+        "detection_x": {
+          "source": "actor",
+          "property": "detection_range",
+          "unit": "m"
+        },
+        "detection_y": {
+          "source": "actor",
+          "property": "vertical_tolerance",
+          "unit": "m"
+        },
+        "firing_distance": {
+          "source": "actor",
+          "property": "fighting_distance",
+          "unit": "m"
+        },
+        "tell": {
+          "source": "actor",
+          "property": "telegraph_duration",
+          "unit": "s"
+        },
+        "recovery": {
+          "source": "actor",
+          "property": "recovery_duration",
+          "unit": "s"
+        },
+        "shell_speed": {
+          "source": "actor",
+          "property": "projectile_speed",
+          "unit": "m/s"
+        },
+        "shell_range": {
+          "source": "actor",
+          "property": "projectile_distance",
+          "unit": "m"
+        },
+        "psychic_damage": {
+          "source": "actor",
+          "property": "psychic_damage",
+          "unit": "HP"
+        },
+        "psychic_freeze": {
+          "source": "actor",
+          "property": "psychic_freeze_duration",
+          "unit": "s"
+        },
+        "psychic_retreat_speed": {
+          "source": "actor",
+          "property": "psychic_retreat_speed",
+          "unit": "m/s"
+        },
+        "ammo_reward": {
+          "source": "actor",
+          "property": "ammo_reward",
+          "unit": "rounds"
+        }
+      }
+    },
+    {
+      "id": "green_zone_launcher",
+      "game_name": "Green Zone launcher",
+      "kind": "boss",
+      "status": "implemented",
+      "actor_script": "res://scripts/enemies/green_zone_boss_3d.gd",
+      "default_source": {
+        "scene": "res://scenes/enemies/green_zone_boss.tscn",
+        "node": "."
+      },
+      "fact_sets": [
+        "machine_weapons"
+      ],
+      "facts": [
+        {
+          "id": "missile",
+          "label": "Attack",
+          "value": "Missile damage",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "attack_received",
+            "attack": "missile"
+          }
+        },
+        {
+          "id": "landing",
+          "label": "Attack",
+          "value": "Landing area damage",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "attack_received",
+            "attack": "landing"
+          }
+        },
+        {
+          "id": "charge",
+          "label": "Attack",
+          "value": "Charge and push",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "attack_received",
+            "attack": "charge"
+          }
+        },
+        {
+          "id": "firing_shove",
+          "label": "Attack",
+          "value": "Firing shove",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "attack_received",
+            "attack": "firing_shove"
+          }
+        },
+        {
+          "id": "smoke_hold",
+          "label": "Head retaliation",
+          "value": "Smoke and grounded hold",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "effect_experienced",
+            "attack": "smoke_escape",
+            "effect": "ground_hold"
+          }
+        },
+        {
+          "id": "smoke_retreat",
+          "label": "Head retaliation",
+          "value": "Boss retreats",
+          "discovery_status": "pending_policy",
+          "evidence": {
+            "event": "behavior_confirmed",
+            "attack": "smoke_escape",
+            "behavior": "retreat"
+          }
+        },
+        {
+          "id": "counterattack",
+          "label": "Head retaliation",
+          "value": "Counterattack after retreat",
+          "discovery_status": "pending_policy",
+          "evidence": {
+            "event": "behavior_confirmed",
+            "attack": "smoke_escape",
+            "behavior": "counterattack"
+          }
+        }
+      ],
+      "stats": {
+        "maximum_hp": {
+          "source": "actor",
+          "property": "combat.maximum_hp",
+          "unit": "HP",
+          "balance_status": "TBD",
+          "target_value": null,
+          "current_role": "inadequate_lab_placeholder"
+        },
+        "attack_damage": {
+          "source": "actor",
+          "property": "combat.attack_damage",
+          "unit": "HP"
+        },
+        "knife_multiplier": {
+          "source": "actor",
+          "property": "combat.knife_damage_multiplier",
+          "unit": "multiplier"
+        },
+        "walk_speed": {
+          "source": "actor",
+          "property": "walk_speed",
+          "unit": "m/s"
+        },
+        "walk_acceleration": {
+          "source": "actor",
+          "property": "walk_acceleration",
+          "unit": "m/s²"
+        },
+        "preferred_distance": {
+          "source": "actor",
+          "property": "preferred_distance",
+          "unit": "m"
+        },
+        "reposition_duration": {
+          "source": "actor",
+          "property": "reposition_duration",
+          "unit": "s"
+        },
+        "missile_cooldown": {
+          "source": "actor",
+          "property": "missile_cooldown",
+          "unit": "s"
+        },
+        "jump_cooldown": {
+          "source": "actor",
+          "property": "jump_cooldown",
+          "unit": "s"
+        },
+        "recovery_duration": {
+          "source": "actor",
+          "property": "recovery_duration",
+          "unit": "s"
+        },
+        "jump_duration": {
+          "source": "actor",
+          "property": "jump_duration",
+          "unit": "s"
+        },
+        "gravity": {
+          "source": "actor",
+          "property": "gravity",
+          "unit": "m/s²"
+        },
+        "maximum_jump_distance": {
+          "source": "actor",
+          "property": "maximum_jump_distance",
+          "unit": "m"
+        },
+        "missile_attack_range": {
+          "source": "actor",
+          "property": "missile_attack_range",
+          "unit": "m"
+        },
+        "landing_radius": {
+          "source": "actor",
+          "property": "landing_radius",
+          "unit": "m"
+        },
+        "landing_height": {
+          "source": "actor",
+          "property": "landing_height",
+          "unit": "m"
+        },
+        "landing_active_time": {
+          "source": "actor",
+          "property": "landing_active_time",
+          "unit": "s"
+        },
+        "missile_speed": {
+          "source": "actor",
+          "property": "missile_speed",
+          "unit": "m/s"
+        },
+        "missile_interval": {
+          "source": "actor",
+          "property": "missile_interval",
+          "unit": "s"
+        },
+        "launcher_aim_duration": {
+          "source": "actor",
+          "property": "launcher_aim_duration",
+          "unit": "s"
+        },
+        "smoke_escape_speed": {
+          "source": "actor",
+          "property": "smoke_escape_speed",
+          "unit": "m/s"
+        },
+        "smoke_escape_clearance": {
+          "source": "actor",
+          "property": "smoke_escape_clearance",
+          "unit": "m"
+        },
+        "smoke_escape_timeout": {
+          "source": "actor",
+          "property": "smoke_escape_timeout",
+          "unit": "s"
+        },
+        "smoke_punishment_duration": {
+          "source": "actor",
+          "property": "smoke_punishment_duration",
+          "unit": "s"
+        },
+        "smoke_fade_tail": {
+          "source": "actor",
+          "property": "smoke_fade_tail",
+          "unit": "s"
+        },
+        "charge_trigger_distance": {
+          "source": "actor",
+          "property": "charge_trigger_distance",
+          "unit": "m"
+        },
+        "charge_windup": {
+          "source": "actor",
+          "property": "charge_windup",
+          "unit": "s"
+        },
+        "charge_speed": {
+          "source": "actor",
+          "property": "charge_speed",
+          "unit": "m/s"
+        },
+        "charge_distance": {
+          "source": "actor",
+          "property": "charge_distance",
+          "unit": "m"
+        },
+        "charge_cooldown": {
+          "source": "actor",
+          "property": "charge_cooldown",
+          "unit": "s"
+        },
+        "charge_recovery": {
+          "source": "actor",
+          "property": "charge_recovery",
+          "unit": "s"
+        },
+        "charge_knockback": {
+          "source": "actor",
+          "property": "charge_knockback",
+          "unit": "m/s"
+        },
+        "charge_knockback_deceleration": {
+          "source": "actor",
+          "property": "charge_knockback_deceleration",
+          "unit": "m/s²"
+        },
+        "salvo_shove_distance": {
+          "source": "actor",
+          "property": "salvo_shove_distance",
+          "unit": "m"
+        },
+        "salvo_shove_cooldown": {
+          "source": "actor",
+          "property": "salvo_shove_cooldown",
+          "unit": "s"
+        },
+        "missiles_per_salvo": {
+          "source": "script_constant",
+          "path": "res://scripts/enemies/green_zone_boss_3d.gd",
+          "constant": "SALVO_TUBES",
+          "transform": "count",
+          "unit": "rockets"
+        },
+        "hurt_duration": {
+          "source": "script_constant",
+          "path": "res://scripts/enemies/green_zone_boss_3d.gd",
+          "constant": "HURT_DURATION",
+          "transform": "identity",
+          "unit": "s"
+        },
+        "rocket_launch_duration": {
+          "source": "scene",
+          "path": "res://scenes/projectiles/boss_missile.tscn",
+          "node": ".",
+          "property": "launch_duration",
+          "unit": "s"
+        },
+        "rocket_launch_speed": {
+          "source": "scene",
+          "path": "res://scenes/projectiles/boss_missile.tscn",
+          "node": ".",
+          "property": "launch_speed",
+          "unit": "m/s"
+        },
+        "rocket_acceleration": {
+          "source": "scene",
+          "path": "res://scenes/projectiles/boss_missile.tscn",
+          "node": ".",
+          "property": "acceleration",
+          "unit": "m/s²"
+        },
+        "rocket_turn_rate": {
+          "source": "scene",
+          "path": "res://scenes/projectiles/boss_missile.tscn",
+          "node": ".",
+          "property": "turn_rate",
+          "unit": "rad/s"
+        }
+      }
+    },
+    {
+      "id": "flyer_vertical",
+      "game_name": "Flying machine",
+      "kind": "hazard",
+      "status": "implemented",
+      "actor_script": "res://scripts/enemies/hovering_hazard_3d.gd",
+      "fact_sets": [],
+      "facts": [
+        {
+          "id": "body_lethal",
+          "label": "Body contact",
+          "value": "Instant death",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "lethal_contact",
+            "attack": "body"
+          }
+        },
+        {
+          "id": "spark_lethal",
+          "label": "Electrical discharge",
+          "value": "Instant death while active",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "lethal_contact",
+            "attack": "spark"
+          }
+        },
+        {
+          "id": "knife_ineffective",
+          "label": "Knife",
+          "value": "No damage",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "weapon_result",
+            "weapon": "knife",
+            "outcome": "ineffective"
+          }
+        },
+        {
+          "id": "handgun_ineffective",
+          "label": "Handgun",
+          "value": "No damage",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "weapon_result",
+            "weapon": "handgun",
+            "outcome": "ineffective"
+          }
+        },
+        {
+          "id": "stomp_ineffective",
+          "label": "Stomp",
+          "value": "No damage",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "weapon_result",
+            "weapon": "stomp",
+            "outcome": "ineffective"
+          }
+        }
+      ],
+      "stats": {
+        "bob_amplitude": {
+          "source": "actor",
+          "property": "bob_amplitude",
+          "unit": "m"
+        },
+        "bob_period": {
+          "source": "actor",
+          "property": "bob_period",
+          "unit": "s"
+        },
+        "bob_phase": {
+          "source": "actor",
+          "property": "bob_phase",
+          "unit": "cycle"
+        },
+        "horizontal_amplitude": {
+          "source": "actor",
+          "property": "horizontal_amplitude",
+          "unit": "m"
+        },
+        "horizontal_speed": {
+          "source": "actor",
+          "property": "horizontal_speed",
+          "unit": "m/s"
+        },
+        "horizontal_phase": {
+          "source": "actor",
+          "property": "horizontal_phase",
+          "unit": "cycle"
+        },
+        "spark_period": {
+          "source": "actor",
+          "property": "spark_period",
+          "unit": "s"
+        },
+        "spark_active": {
+          "source": "actor",
+          "property": "spark_active",
+          "unit": "s"
+        }
+      },
+      "default_source": {
+        "scene": "res://scenes/enemies/green_zone_flyer.tscn",
+        "node": "."
+      }
+    },
+    {
+      "id": "flyer_patrol",
+      "game_name": "Patrolling flying machine",
+      "kind": "hazard",
+      "status": "implemented",
+      "actor_script": "res://scripts/enemies/hovering_hazard_3d.gd",
+      "fact_sets": [],
+      "facts": [
+        {
+          "id": "body_lethal",
+          "label": "Body contact",
+          "value": "Instant death",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "lethal_contact",
+            "attack": "body"
+          }
+        },
+        {
+          "id": "spark_lethal",
+          "label": "Electrical discharge",
+          "value": "Instant death while active",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "lethal_contact",
+            "attack": "spark"
+          }
+        },
+        {
+          "id": "knife_ineffective",
+          "label": "Knife",
+          "value": "No damage",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "weapon_result",
+            "weapon": "knife",
+            "outcome": "ineffective"
+          }
+        },
+        {
+          "id": "handgun_ineffective",
+          "label": "Handgun",
+          "value": "No damage",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "weapon_result",
+            "weapon": "handgun",
+            "outcome": "ineffective"
+          }
+        },
+        {
+          "id": "stomp_ineffective",
+          "label": "Stomp",
+          "value": "No damage",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "weapon_result",
+            "weapon": "stomp",
+            "outcome": "ineffective"
+          }
+        }
+      ],
+      "stats": {
+        "bob_amplitude": {
+          "source": "actor",
+          "property": "bob_amplitude",
+          "unit": "m"
+        },
+        "bob_period": {
+          "source": "actor",
+          "property": "bob_period",
+          "unit": "s"
+        },
+        "bob_phase": {
+          "source": "actor",
+          "property": "bob_phase",
+          "unit": "cycle"
+        },
+        "horizontal_amplitude": {
+          "source": "actor",
+          "property": "horizontal_amplitude",
+          "unit": "m"
+        },
+        "horizontal_speed": {
+          "source": "actor",
+          "property": "horizontal_speed",
+          "unit": "m/s"
+        },
+        "horizontal_phase": {
+          "source": "actor",
+          "property": "horizontal_phase",
+          "unit": "cycle"
+        },
+        "spark_period": {
+          "source": "actor",
+          "property": "spark_period",
+          "unit": "s"
+        },
+        "spark_active": {
+          "source": "actor",
+          "property": "spark_active",
+          "unit": "s"
+        }
+      },
+      "default_source": {
+        "scene": "res://scenes/dev/green_zone_finale_wip.tscn",
+        "node": "RunupFlyer"
+      }
+    },
+    {
+      "id": "spikes_ground",
+      "game_name": "Ground spikes",
+      "kind": "hazard",
+      "status": "implemented",
+      "actor_script": "res://scripts/hazards/pixel_spike_row_3d.gd",
+      "fact_sets": [],
+      "facts": [
+        {
+          "id": "contact_lethal",
+          "label": "Contact",
+          "value": "Instant death",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "lethal_contact",
+            "attack": "contact"
+          }
+        }
+      ],
+      "stats": {
+        "row_width": {
+          "source": "actor",
+          "property": "row_width",
+          "unit": "m"
+        },
+        "collision_end_inset": {
+          "source": "actor",
+          "property": "collision_end_inset",
+          "unit": "m"
+        },
+        "collision_height": {
+          "source": "actor",
+          "property": "collision_height",
+          "unit": "m"
+        }
+      },
+      "default_source": {
+        "scene": "res://scenes/hazards/pixel_spike_row.tscn",
+        "node": "."
+      }
+    },
+    {
+      "id": "spikes_wall",
+      "game_name": "Wall spikes",
+      "kind": "hazard",
+      "status": "implemented",
+      "actor_script": "res://scripts/hazards/pixel_spike_row_3d.gd",
+      "fact_sets": [],
+      "facts": [
+        {
+          "id": "contact_lethal",
+          "label": "Contact",
+          "value": "Instant death",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "lethal_contact",
+            "attack": "contact"
+          }
+        }
+      ],
+      "stats": {
+        "row_width": {
+          "source": "actor",
+          "property": "row_width",
+          "unit": "m"
+        },
+        "collision_end_inset": {
+          "source": "actor",
+          "property": "collision_end_inset",
+          "unit": "m"
+        },
+        "collision_height": {
+          "source": "actor",
+          "property": "collision_height",
+          "unit": "m"
+        }
+      },
+      "default_source": {
+        "scene": "res://scenes/hazards/pixel_spike_row.tscn",
+        "node": "."
+      }
+    },
+    {
+      "id": "spike_pit",
+      "game_name": "Spike pit",
+      "kind": "hazard",
+      "status": "implemented",
+      "actor_script": "res://scripts/hazards/hazard_3d.gd",
+      "fact_sets": [],
+      "facts": [
+        {
+          "id": "contact_lethal",
+          "label": "Contact",
+          "value": "Instant death",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "lethal_contact",
+            "attack": "contact"
+          }
+        }
+      ],
+      "stats": {}
+    },
+    {
+      "id": "shore_water",
+      "game_name": "Shore water",
+      "kind": "hazard",
+      "status": "implemented",
+      "actor_script": "res://scripts/hazards/hazard_3d.gd",
+      "fact_sets": [],
+      "facts": [
+        {
+          "id": "contact_lethal",
+          "label": "Contact",
+          "value": "Instant death",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "lethal_contact",
+            "attack": "water"
+          }
+        }
+      ],
+      "stats": {}
+    },
+    {
+      "id": "machine_pool",
+      "game_name": "Machine-pool water",
+      "kind": "hazard",
+      "status": "implemented",
+      "actor_script": "res://scripts/hazards/hazard_3d.gd",
+      "fact_sets": [],
+      "facts": [
+        {
+          "id": "contact_lethal",
+          "label": "Contact",
+          "value": "Instant death",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "lethal_contact",
+            "attack": "water"
+          }
+        }
+      ],
+      "stats": {}
+    },
+    {
+      "id": "pit_void",
+      "game_name": "Pit / void",
+      "kind": "hazard",
+      "status": "implemented",
+      "actor_script": "res://scripts/hazards/hazard_3d.gd",
+      "fact_sets": [],
+      "facts": [
+        {
+          "id": "contact_lethal",
+          "label": "Contact",
+          "value": "Instant death",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "lethal_contact",
+            "attack": "fall"
+          }
+        }
+      ],
+      "stats": {}
+    },
+    {
+      "id": "moving_saw",
+      "game_name": "Moving saw",
+      "kind": "hazard",
+      "status": "planned",
+      "fact_sets": [],
+      "facts": [],
+      "stats": {},
+      "balance_status": "TBD"
+    }
+  ]
+}

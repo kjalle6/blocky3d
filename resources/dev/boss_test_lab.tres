@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="LevelDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/campaign/level_definition.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/dev/boss_test_lab.tscn" id="2"]
+
+[resource]
+script = ExtResource("1")
+level_id = &"dev_boss_test_lab"
+title = "Boss Test Lab"
+lesson = "F1: fight reset, attack selection and no-ammo testing."
+scene = ExtResource("2")
+available_abilities = Array[StringName]([&"double_jump", &"wall_jump", &"dash"])
+assumed_owned_abilities = Array[StringName]([&"double_jump", &"wall_jump", &"dash"])

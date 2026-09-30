@@ -1,0 +1,9 @@
+craftpix-net-856137-headphones-and-glasses-pixel-icon-set.zip
+Archive SHA256: 4588edb38153bbc7c5bb5b3a5324cd974d9ae54c809e7d69bc6deaee6b9a2516
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

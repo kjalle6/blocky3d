@@ -2,10 +2,38 @@
 
 The aim is to make further game work easier and reduce specific sources of
 mistakes. Movement tuning, health, inventory, and handgun behavior already have
-separate owners, and the project has automated validators. The useful next step
-is a small cleanup pass, followed by improvements tied to actual feature work.
+separate owners, and the project has automated validators. The earlier cleanup
+pass is complete. **Finishing the Green Zone boss is now the first priority**;
+maintenance should support that work or resolve a concrete blocker. Follow the
+[boss completion checklist](LEVEL_ROADMAP.md#next-priority-finish-the-green-zone-boss).
 
-## Worth doing now
+## Open tank verification follow-up
+
+The 2026-09-30 checkpoint still has two failing focused checks:
+
+- `validate_tank_psychic`: the tank does not satisfy the expected retreat during
+  the player's psychic freeze.
+- `validate_tank_pursuit`: the tank does not satisfy the initial advance through
+  the cover route.
+
+Both checks load the current saved Level 3 layout. That layout places the tank
+at `(60.92, 3.61)`, while the structural scene starts it at `(63.36, 0.45)`;
+the tests still assume the older grounded setup. The exact cause remains
+unconfirmed. Inspect the resolved encounter in-game before deciding whether
+the behavior or the test setup needs changing. Preserve the authored placement
+and overrides. These open checks do not establish a defect in the new boss.
+Run both through the suite's `-Name` option when this follow-up is addressed.
+
+## Completed foundations
+
+The September 30 asset organization pass added the [asset guide](../assets/ASSET_GUIDE.md)
+and character/weapon/VFX indexes, refreshed missing source files, and retained
+older catalog paths. Existing art and audio were not moved or overwritten.
+The visual sync now keeps library-only files indexed. Scanner data and the
+numbers-only combat spreadsheet are also prepared; their gameplay integration
+does not take precedence over the boss.
+
+### September 21 cleanup
 
 Completed 2026-09-21. The [credits index](ASSET_CREDITS.md) links source evidence
 and the remaining bounded follow-ups. All 15 previously unattributed combat
@@ -14,7 +42,7 @@ ground-contact, save-lifecycle, and handgun checks, plus an MCP lab smoke test
 for movement, jumping, knife attacks, shooting, and reload. Gameplay tuning and
 the saved audio mix are unchanged.
 
-### 1. Asset credits and source gaps
+#### 1. Asset credits and source gaps
 
 - [x] Create a central asset/credits index for art, fonts, audio, and bundled
   third-party code used by the game or its tools. Link the existing manifests
@@ -33,7 +61,7 @@ list. If local evidence runs out, move on with that list rather than repeatedly
 searching or guessing. This first pass documents the sounds currently in use;
 any replacement would be a separate audio choice.
 
-### 2. Small player-code cleanup
+#### 2. Small player-code cleanup
 
 - [x] Give the repeated `0.55` feet offset in
   [player_character.gd](../scripts/player/player_character.gd) one named source,
@@ -54,8 +82,8 @@ the same. Use the existing ground-contact and health-combat validators, plus
 the relevant player-scene checks and an MCP smoke test. Add a regression case
 only for a concrete gap the existing checks do not cover.
 
-Complete these two bounded tasks, then return to the campaign roadmap. Asset
-questions that need more source information can remain listed for later follow-up.
+These two bounded tasks are complete. Remaining asset source questions stay in
+the credits index; they do not displace the active boss milestone.
 
 ## Alongside new features
 

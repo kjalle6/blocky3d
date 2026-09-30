@@ -1,0 +1,9 @@
+craftpix-net-805026-implants-for-cyberpunk-32x32-pixel-icons.zip
+Archive SHA256: 352606f524681773b249a963471c94c1ed8e0e29bf1159f695742f6b77012f0d
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

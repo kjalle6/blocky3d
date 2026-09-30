@@ -1,0 +1,9 @@
+craftpix-net-622073-business-center-tileset-pixel-art.zip
+Archive SHA256: b104de2252667d7e7afc30a3e2de1111b37615a706719b17eb357b4a62c26709
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

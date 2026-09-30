@@ -637,20 +637,29 @@ align_position_with_view = Callable()
 
 [node name="UpperRoute" type="Node3D" parent="." index="15" unique_id=1041911076]
 
-[node name="MovingGunner" type="CharacterBody3D" parent="UpperRoute" index="0" unique_id=2056919515 instance=ExtResource("7_handgun_enemy")]
+[node name="MovingGunner" parent="UpperRoute" index="0" unique_id=2056919515 instance=ExtResource("7_handgun_enemy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 94.12, 26.15, 0)
 script = ExtResource("26_k2tf7")
+mobile = true
+patrol_speed = 2.6
 patrol_left_distance = 4.48
 patrol_right_distance = 4.48
+ammo_reward = 6
+preferred_firing_distance = 6.0
 metadata/layout_id = "upper_route_moving_gunner"
 metadata/layout_kind = "gunner"
 metadata/layout_template = "route_gunner"
 metadata/layout_removable = true
 
-[node name="UpperGunner" type="CharacterBody3D" parent="UpperRoute" index="1" unique_id=1795782502 instance=ExtResource("7_handgun_enemy")]
+[node name="UpperGunner" parent="UpperRoute" index="1" unique_id=1795782502 instance=ExtResource("7_handgun_enemy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 110.36, 36.71, 0)
 script = ExtResource("26_k2tf7")
 mobile = false
+patrol_speed = 2.6
+patrol_left_distance = 5.12
+patrol_right_distance = 5.12
+ammo_reward = 6
+preferred_firing_distance = 6.0
 vertical_tolerance = 14.0
 metadata/layout_id = "upper_route_guard"
 metadata/layout_kind = "gunner"

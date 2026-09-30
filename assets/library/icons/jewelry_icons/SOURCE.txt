@@ -1,0 +1,9 @@
+craftpix-net-834374-jewelry-32x32-pixel-art-icons.zip
+Archive SHA256: 61319e97653ad80f8bc77b023d4383493e0dcdc076041930c1f1075edfb8e697
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

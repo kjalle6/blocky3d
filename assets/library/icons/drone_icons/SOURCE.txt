@@ -1,0 +1,9 @@
+craftpix-net-101350-drone-32x32-pixel-art-icons.zip
+Archive SHA256: 490df5fed2789bfc478a89ec7262c69014412a68450213576fc50ab4e19ee962
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

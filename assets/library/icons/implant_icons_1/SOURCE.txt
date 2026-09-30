@@ -1,0 +1,9 @@
+craftpix-net-615713-cyber-implant-32x32-icons-pixel-art.zip
+Archive SHA256: ffd55ab50db8861051fd61acd294af43471ee1ab699b71b5b605ea3ec906ebec
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

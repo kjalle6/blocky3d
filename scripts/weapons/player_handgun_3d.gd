@@ -146,7 +146,7 @@ func _physics_process(delta: float) -> void:
 
 func _reload_interrupted() -> bool:
 	var player := get_parent() as PlayerCharacter
-	return (player == null or player.is_dead() or player.is_transition_running()
+	return (player == null or player.is_dead() or player.is_control_locked() or player.is_transition_running()
 		or player.equipped_weapon_id() != PlayerWeapon.HANDGUN
 		or player.health.current < _reload_start_health or player.healing_remaining > 0.0)
 
@@ -155,7 +155,7 @@ func start_reload() -> bool:
 	var player := get_parent() as PlayerCharacter
 	if (definition == null or is_reloading() or is_recovering() or player == null or get_tree().paused
 		or loaded_rounds >= definition.magazine_capacity or reserve_rounds() <= 0
-		or player.is_dead() or player.is_transition_running() or player.is_attacking()
+		or player.is_dead() or player.is_control_locked() or player.is_transition_running() or player.is_attacking()
 		or player.equipped_weapon_id() != PlayerWeapon.HANDGUN
 		or player.healing_remaining > 0.0):
 		return false
@@ -230,7 +230,9 @@ func is_recovering() -> bool:
 
 
 func can_fire() -> bool:
-	return definition != null and not is_recovering() and not is_reloading() and loaded_rounds > 0
+	var player := get_parent() as PlayerCharacter
+	return definition != null and not is_recovering() and not is_reloading() and loaded_rounds > 0 \
+		and (player == null or not player.is_control_locked())
 
 
 func try_empty_trigger() -> bool:

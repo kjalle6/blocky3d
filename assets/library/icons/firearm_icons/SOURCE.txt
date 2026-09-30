@@ -1,0 +1,9 @@
+craftpix-net-588685-cyberpunk-firearm-pixel-art-32x32-icons.zip
+Archive SHA256: 7bf74cf3f0ca0edbb6bfe5d3c5730a1240e12b1d64ce99624cd1a9ec46be9e91
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

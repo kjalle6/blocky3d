@@ -1,0 +1,9 @@
+craftpix-net-360771-medicine-and-thematic-things-pixel-art-32x32-icon-pack.zip
+Archive SHA256: 578396ec511ee4efe4f5a21717050a23cb6aec1602895d83e7088152cc2cb699
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

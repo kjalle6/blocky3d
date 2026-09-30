@@ -11,11 +11,15 @@ that set and accounted for roughly 60% of a full run.
 
 Validators run through tools/run_godot_tool.ps1, which holds the exclusive
 automation lock, so they run one at a time by design.
+Use -Name with validator basenames to rerun failures or finish an interrupted
+suite without repeating checks that already passed. Omit it for the full suite.
 #>
 [CmdletBinding()]
 param(
     [ValidateSet('All')]
     [string]$Scope = 'All',
+
+    [string[]]$Name = @(),
 
     # Opt-in; see the note on -Headless in tools/run_godot_tool.ps1.
     [switch]$Headless
@@ -26,6 +30,13 @@ $runner = Join-Path $PSScriptRoot 'run_godot_tool.ps1'
 $all = Get-ChildItem -LiteralPath $PSScriptRoot -Filter 'validate_*.gd' |
     Sort-Object Name
 $selected = $all
+if ($Name.Count -gt 0) {
+    $unknown = @($Name | Where-Object { $_ -notin $all.BaseName })
+    if ($unknown.Count -gt 0) {
+        throw "Unknown validator name(s): $($unknown -join ', '). Use basenames without .gd."
+    }
+    $selected = @($all | Where-Object { $_.BaseName -in $Name })
+}
 
 if (@($selected).Count -eq 0) {
     throw "No validators matched scope '$Scope'."

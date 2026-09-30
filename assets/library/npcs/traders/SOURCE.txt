@@ -1,0 +1,9 @@
+craftpix-net-516420-trader-cyberpunk-pixel-art-pack.zip
+Archive SHA256: 1ab253561d95f55b82d123ff4ebfa14c281a5ba82cddeb48b150e41c9f969758
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

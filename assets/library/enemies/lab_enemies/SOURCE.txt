@@ -1,0 +1,9 @@
+craftpix-net-667785-lab-enemies-pixel-art.zip
+Archive SHA256: 40c86c95e91371ee645074235609d916ce306d66860b781f158292bbd461a988
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

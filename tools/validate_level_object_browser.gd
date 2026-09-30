@@ -25,7 +25,13 @@ func _run() -> void:
 	designer.open_panel()
 	var browser: Control = designer.object_browser
 	browser.open()
-	assert(browser.visible and browser._results.size() == CATALOG.ENTRIES.size() - 2)
+	# Legacy scenery stays editable/duplicable without filling Add with variants.
+	var legacy_scenery_count := 0
+	for id in CATALOG.ENTRIES:
+		if CATALOG.ENTRIES[id].get("authored_sprite", false):
+			legacy_scenery_count += 1
+			assert(id not in browser._results, "Legacy scenery must stay out of Add: " + id)
+	assert(browser.visible and browser._results.size() == CATALOG.ENTRIES.size() - 2 - legacy_scenery_count)
 	assert("grass_platform" not in browser._results and "sand_platform" not in browser._results)
 	browser.category = "Enemies"
 	browser._refresh()
@@ -206,7 +212,10 @@ func _double_click_card(browser: Control, id: String) -> void:
 	for candidate in browser._cards.get_children():
 		if candidate.get_meta("catalog_id", "") == id: card = candidate
 	assert(card != null)
+	browser._scroll.ensure_control_visible(card)
+	for frame in 2: await process_frame
 	var point := card.get_global_rect().get_center()
+	assert(browser._scroll.get_global_rect().has_point(point), "Scroll the target card into view before clicking it.")
 	_click(point)
 	await process_frame
 	assert(is_instance_valid(card) and card.is_inside_tree() and browser.selected_id == id)

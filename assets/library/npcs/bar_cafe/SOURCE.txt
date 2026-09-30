@@ -1,0 +1,19 @@
+craftpix-net-283889-cyberpunk-pixel-bar-cafe-npc-asset-pack.zip
+Archive SHA256: 03088cc3b47439e042212f4290eb9d5b519179113fe61cd38b02b1017f1c90bf
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+Source and license reference confirmed on 2026-09-30.
+The owner supplied the official download page:
+https://craftpix.net/product/cyberpunk-pixel-bar-cafe-npc-asset-pack/
+The page identifies this as a Craftpix premium pack for use in games.
+Publisher license reference (Premium and Paid Products):
+https://craftpix.net/file-licenses/
+The ZIP omitted a license text file; the official references above resolve
+the source follow-up. This is a project-maintained source note, not a file
+supplied inside the original ZIP.
+
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

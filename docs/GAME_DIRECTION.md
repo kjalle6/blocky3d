@@ -46,6 +46,10 @@ The current starting balance is:
 - Ground-enemy body contact is solid and harmless. Damage comes from the
   attack's visible impact, and ordinary enemies and the player can have attacks
   interrupted by hits. The tank keeps moving and firing through damage.
+- Machines (the tank and launcher boss) take 50% less knife damage. Bullets
+  retain full damage. Landing on the launcher boss triggers smoke and a short
+  grounded player hold through its retreat and counterattack; it takes no stomp
+  damage. The lingering smoke fades as that punishment wears off.
 - Ordinary damage uses attack recovery and interruptions without a general
   invulnerability period. Overlapping threats and repeated hits need playtesting.
 - Spikes, pits, and flying enemies are lethal hazards. Flyers are indestructible.
@@ -56,6 +60,25 @@ Bosses are intended to have a larger named bar and clearly readable openings.
 
 [Combat balance](COMBAT_BALANCE.md) records the tuning targets, provisional
 weapon values, and encounter questions still to test.
+
+## Enemy and hazard knowledge (planned)
+
+A cyberpunk scanner, presented as an eye implant, glasses or similar equipment,
+lets the player identify a target and build knowledge through encounters. Toggle
+its overlay quickly and hold left-click on an enemy or hazard for an initial
+scan. The world stays live and movement remains available; attacks are disabled
+in scan mode. The scan supplies a game name and activates subsequent learning.
+Strengths, weaknesses, damage and status effects become known through the
+player's experience, rather than arriving as a complete first-scan readout.
+
+Right-click inspection shows learned information and an optional personal name.
+Naming follows familiarity with the target; the initial scan does not force a
+nickname. This supports learning the game's dangers without adding advance
+warnings. Its [data catalog and reader](SCANNER_DATA.md) are implemented;
+gameplay, overlay, event recording and saves are not connected. That integration
+is queued behind finishing the Green Zone boss. [Combat balance](COMBAT_BALANCE.md#enemy-and-hazard-scanner-planned)
+owns the agreed interaction, discovery examples, source-of-truth rules and open
+questions, including naming scope, exact-stat discovery and persistence.
 
 ## Firearms
 
@@ -166,7 +189,8 @@ part of later presentation work.
 ## Still to decide
 
 - Final title, protagonist identity, and story.
-- The first boss's appearance, attacks, and vulnerability windows.
+- The first boss's final tuning and arena; Green Zone bosses character 2 now has
+  missile/jump attacks in the [Boss Test Lab](BOSS_TEST_LAB.md).
 - Worlds and level order after the Green Zone.
 - How permanent upgrades, additional weapons, and stronger supplies are earned.
 - Whether crafting, status effects, or a wider economy suit the game.

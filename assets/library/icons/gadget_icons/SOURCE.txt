@@ -1,0 +1,9 @@
+craftpix-net-477421-cyberpunk-gadgets-pixel-art-32x32-icon-pack.zip
+Archive SHA256: dc4349cd13c1edcb2f0c7c480ddb16d12fa8e2f6d9b3e98433979349747fabfc
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

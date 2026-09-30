@@ -1,0 +1,9 @@
+craftpix-net-446105-business-enemies-pixel-art.zip
+Archive SHA256: 5b9ab21029c34450d40895066b5b891a9ec7b815bc14ad9e06a7026c95c8376a
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

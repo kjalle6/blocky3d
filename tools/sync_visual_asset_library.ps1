@@ -84,9 +84,14 @@ New-Item -ItemType Directory -Path $outputRootPath -Force | Out-Null
 $copied = 0
 $updated = 0
 $unchanged = 0
+$retained = 0
 $manifestFiles = [System.Collections.Generic.List[object]]::new()
+$sourcePaths = [System.Collections.Generic.HashSet[string]]::new(
+    [System.StringComparer]::OrdinalIgnoreCase
+)
 
 foreach ($entry in $sourceFiles) {
+    [void]$sourcePaths.Add($entry.RelativePath)
     $sourceFile = $entry.Source
     $destinationPath = Join-Path $outputRootPath $entry.RelativePath
     $sourceHash = (
@@ -125,13 +130,39 @@ foreach ($entry in $sourceFiles) {
     })
 }
 
+# Renamed source folders and project-authored catalog art can leave useful
+# files only in the mirror. Preserve their paths and keep them discoverable
+# in the manifest instead of silently dropping their records on every sync.
+$outputRootPrefix = $outputRootPath.TrimEnd('\', '/') + `
+    [System.IO.Path]::DirectorySeparatorChar
+foreach ($file in Get-ChildItem -LiteralPath $outputRootPath -Recurse -File -Force) {
+    if ($allowedExtensions -notcontains $file.Extension.ToLowerInvariant()) {
+        continue
+    }
+    $relativePath = $file.FullName.Substring($outputRootPrefix.Length)
+    $segments = $relativePath.Split($pathSeparators)
+    if ($excludedTopLevel -contains $segments[0] -or
+        $segments -contains '__MACOSX' -or
+        $excludedFileNames -contains $file.Name -or
+        $sourcePaths.Contains($relativePath)) {
+        continue
+    }
+    $manifestFiles.Add([ordered]@{
+        path = $relativePath.Replace('\', '/')
+        bytes = $file.Length
+        sha256 = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+        source_status = 'library_only'
+    })
+    $retained += 1
+}
+
 $manifest = [ordered]@{
     schema_version = 1
     source_library = 'blocky3dassets'
     included_extensions = $allowedExtensions
     excluded_top_level = $excludedTopLevel
     file_count = $manifestFiles.Count
-    files = $manifestFiles
+    files = @($manifestFiles | Sort-Object { $_.path.Replace('/', '\') })
 }
 $manifestPath = Join-Path $outputRootPath 'library_manifest.json'
 $manifestJson = $manifest | ConvertTo-Json -Depth 5
@@ -142,10 +173,11 @@ $manifestJson = $manifest | ConvertTo-Json -Depth 5
 )
 
 Write-Host (
-    'Visual library synchronized: {0} files ({1} copied, {2} updated, {3} unchanged).' -f `
+    'Visual library synchronized: {0} files ({1} copied, {2} updated, {3} unchanged, {4} retained only in library).' -f `
         $manifestFiles.Count,
         $copied,
         $updated,
-        $unchanged
+        $unchanged,
+        $retained
 )
 Write-Host "Destination: $outputRootPath"

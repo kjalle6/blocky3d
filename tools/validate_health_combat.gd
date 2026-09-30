@@ -6,6 +6,10 @@ const ENEMIES := [
 	preload("res://scenes/enemies/pixel_skater_enemy.tscn"),
 	preload("res://scenes/enemies/handgun_enemy.tscn"),
 ]
+const MACHINES := [
+	preload("res://scenes/enemies/green_zone_tank.tscn"),
+	preload("res://scenes/enemies/green_zone_boss.tscn"),
+]
 
 
 func _init() -> void:
@@ -95,6 +99,78 @@ func _run() -> void:
 			assert(enemy.get("_sequence_shots_remaining") == 0)
 		assert(profile.maximum_hp == 50, "Shared authored values must remain unchanged.")
 		enemy.free()
+	_validate_machine_armor(world, player)
 	world.free()
 	print("Health combat checks passed.")
 	quit()
+
+
+func _validate_machine_armor(world: Node3D, player: PlayerCharacter) -> void:
+	for packed in MACHINES:
+		var machine: Node3D = packed.instantiate()
+		world.add_child(machine)
+		machine.set_physics_process(false)
+		var maximum: int = machine.combat.maximum_hp
+		assert(machine.combat.knife_damage_multiplier == 0.5)
+		var ordinary: Node3D = ENEMIES[2].instantiate()
+		world.add_child(ordinary)
+		ordinary.set_physics_process(false)
+		var shared := CombatHit.new(25, &"knife")
+		assert(machine.receive_melee_hit(Vector3.ZERO, shared))
+		assert(machine.health.current == maximum - 12)
+		assert(not machine.receive_melee_hit(Vector3.ZERO, shared))
+		assert(machine.health.current == maximum - 12, "Duplicates must not change fractional damage either.")
+		assert(ordinary.receive_melee_hit(Vector3.ZERO, shared))
+		assert(ordinary.health.current == 25 and shared.amount == 25,
+			"One swing can hit an armored machine and an unarmored enemy without sharing resistance.")
+		assert(machine.receive_projectile_hit(Vector3.ZERO, CombatHit.new(25, &"bullet")))
+		assert(machine.health.current == maximum - 37, "Bullets must retain full damage after an odd knife hit.")
+		assert(machine.receive_melee_hit(Vector3.ZERO, CombatHit.new(25, &"knife")))
+		assert(machine.health.current == maximum - 50, "Two knife hits total exactly 25 damage.")
+		machine.reset_run()
+		machine.set_physics_process(false)
+		# The optional legacy knife call must also pass through armor.
+		assert(machine.receive_melee_hit(Vector3.ZERO))
+		assert(machine.health.current == maximum - 12)
+		machine.reset_run()
+		machine.set_physics_process(false)
+		assert(machine.receive_melee_hit(Vector3.ZERO))
+		assert(machine.health.current == maximum - 12, "Reset clears the previous life's half-point.")
+		var before_stomp: int = machine.health.current
+		if machine is TankEnemy3D:
+			assert(not machine.receive_melee_hit(Vector3.ZERO, CombatHit.new(50, &"stomp")))
+			assert(machine.health.current == before_stomp)
+			machine._state = HandgunEnemy3D.CombatState.FIRING
+			machine._phase_remaining = 0.37
+			machine.velocity.x = 1.25
+			assert(machine.receive_melee_hit(Vector3.ZERO))
+			assert(machine._state == HandgunEnemy3D.CombatState.FIRING and machine._phase_remaining == 0.37
+				and machine.velocity.x == 1.25, "Knife armor must retain uninterrupted tank attacks and motion.")
+		else:
+			assert(not machine.receive_melee_hit(Vector3.ZERO, CombatHit.new(50, &"stomp")))
+			machine.receive_stomp(player)
+			assert(machine.health.current == before_stomp and not player.is_ground_held(),
+				"An unrelated stomp callback must neither damage the boss nor deploy smoke.")
+		machine.reset_run()
+		assert(not player.is_ground_held())
+		machine.set_physics_process(false)
+		var knife_hits := maximum * 2 / 25
+		for index in knife_hits:
+			assert(machine.receive_melee_hit(Vector3.ZERO, CombatHit.new(25, &"knife")))
+			assert(machine.health.current == maximum - floori((index + 1) * 12.5))
+			assert(machine.is_defeated() == (index == knife_hits - 1))
+		assert(not machine.receive_melee_hit(Vector3.ZERO, CombatHit.new(25, &"knife")))
+		ordinary.free()
+		machine.free()
+	var health := HealthState.new()
+	var defense: CombatProfile = preload("res://resources/combat/tank.tres")
+	health.reset(100)
+	health.damage(CombatHit.new(25, &"knife"), defense)
+	assert(health.heal(5))
+	health.damage(CombatHit.new(25, &"knife"), defense)
+	assert(health.current == 80, "Partial healing preserves fractional damage.")
+	health.damage(CombatHit.new(25, &"knife"), defense)
+	assert(health.heal(100))
+	health.damage(CombatHit.new(25, &"knife"), defense)
+	assert(health.current == 88, "A full heal clears fractional damage.")
+	print("Machine armor passed: exact half knife damage, mixed recipients, duplicates, bullets, stomp rules, reset, healing, uninterrupted tank fire and 16/24-hit knife defeats.")

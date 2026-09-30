@@ -1,0 +1,9 @@
+craftpix-net-716407-chinese-street-tileset-pixel-art.zip
+Archive SHA256: cbfc9f9b438e146ae4a68af17be9366cd9259b31dbb7a33cd5f0db66a4c6f93d
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

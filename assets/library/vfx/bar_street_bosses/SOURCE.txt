@@ -1,0 +1,35 @@
+Standalone combat effects
+
+All image files are unchanged copies of their original ZIP members.
+Identical explosion sheets shared by multiple packs use one catalog file.
+Character/projectile animation and animated scenery remain with their source packs.
+
+vfx/bar_street_bosses/2/Fire1.png
+Archive: enemies/bar_street_bosses/craftpix-net-384116-bar-street-bosses-pixel-art.zip
+Member: 2/Fire1.png
+SHA256: 134cd05aae944e3aef01e36af64edc7b2576bb9fdc88f0a73adc11a09ffaf99c
+Supplied license: enemies/bar_street_bosses/license.txt
+
+vfx/bar_street_bosses/2/Fire2.png
+Archive: enemies/bar_street_bosses/craftpix-net-384116-bar-street-bosses-pixel-art.zip
+Member: 2/Fire2.png
+SHA256: 586ceb224d7228740825f201609763a7e280b193b64c6b48eb2d81bb907cd11b
+Supplied license: enemies/bar_street_bosses/license.txt
+
+vfx/bar_street_bosses/2/Fire3.png
+Archive: enemies/bar_street_bosses/craftpix-net-384116-bar-street-bosses-pixel-art.zip
+Member: 2/Fire3.png
+SHA256: b0cf898d1e4e7f1fe8e8c80cac3f0331e06400f352c5086da03d273b2a1125de
+Supplied license: enemies/bar_street_bosses/license.txt
+
+vfx/bar_street_bosses/2/Fire_attack.png
+Archive: enemies/bar_street_bosses/craftpix-net-384116-bar-street-bosses-pixel-art.zip
+Member: 2/Fire_attack.png
+SHA256: ad17d86e9b3dbaa7f61e0c823879eb7b8d8a873fe578de4b33e7a256bec60317
+Supplied license: enemies/bar_street_bosses/license.txt
+
+vfx/bar_street_bosses/3/Dust.png
+Archive: enemies/bar_street_bosses/craftpix-net-384116-bar-street-bosses-pixel-art.zip
+Member: 3/Dust.png
+SHA256: 99d16533b2c2d7a1be8840e8863106d3a99fa7992b4cd07230e74d7d3a0b8c0d
+Supplied license: enemies/bar_street_bosses/license.txt

@@ -1,0 +1,9 @@
+craftpix-net-550902-police-cyberpunk-characters-pixel-art.zip
+Archive SHA256: e730fd5ae81b15d5083bdc504105569cbf0e3ec36007d9941ad104828a431b4a
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

@@ -5,6 +5,36 @@ contains no C#. Native access violations have occurred with both Mono and
 standard builds; their shared cause remains unproven. MCP does not establish
 that those crashes are fixed.
 
+## Visual QA agent
+
+Use one `visual_inspector` subagent for requested visual audits and for an
+independent check after substantial visible changes to terrain, cover, enemies,
+props, camera framing, or presentation. Scope it to the changed area and nearby
+approach/exit. Small or nonvisual changes do not need an agent run.
+
+- Agent definition: `.codex/agents/visual_inspector.toml`. Its procedure and
+  repeatable routes live in `docs/VISUAL_QA.md`; evidence must follow
+  `docs/VISUAL_RULES.md`. If the client cannot select a named custom agent,
+  delegate with those instructions explicitly; do not claim it loaded a role
+  configuration that was not actually selected.
+- Inspect, fix, and verify are separate stages. The inspector gathers evidence
+  and makes no project edits. The primary agent handles scoped fixes within the
+  user's authorization, then the inspector rechecks those findings in-game.
+  An audit request alone does not authorize fixes or redesign.
+- Hand Godot control explicitly to the inspector for its pass. While it owns
+  editor/playtest state, other agents must not use Godot, run imports/checks, or
+  edit game files. The primary may work on independent documentation or analysis.
+  Return control explicitly after releasing input and reporting editor/game state.
+- Give the inspector the route, changed files, applicable references, and review
+  stage. It must view actual captures at normal gameplay scale, investigate
+  suspicious nodes, and separate observed defects from unconfirmed explanations.
+  Report unvisited areas and blocked checks; never manufacture a clean bill of
+  health or visual acceptance from source inspection or validators.
+- Use one inspector at a time, with no nested agents. The primary remains
+  responsible for evaluating findings and communicating the result. User visual
+  acceptance remains separate. If delegation or live tools are unavailable,
+  report that limitation and use available evidence without calling it a live pass.
+
 ## Editor and playtests
 
 - Use Godot MCP for normal editor inspection, editing, game start/stop, input,
@@ -16,6 +46,9 @@ that those crashes are fixed.
   `tools/run_godot_tool.ps1 -Editor`. This retains real-process supervision and
   logging, uses the normal Windows profile, and does not hold the standalone
   automation lock. See `docs/GODOT_MCP.md` for connection details.
+- After batch asset changes, refresh the editor and wait for its filesystem
+  scan/imports to finish before playtests or validators. Check fresh editor
+  errors after the refresh rather than treating stale import errors as current.
 - Keep GUI launches visible to the user. In a restricted command environment,
   request desktop/GUI permission for the runner invocation. A zero
   `MainWindowHandle` does not prove that no window exists; user confirmation

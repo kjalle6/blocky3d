@@ -1,0 +1,11 @@
+craftpix-net-713504-various-bosses-pixel-art-pack.zip
+Archive SHA256: 85974ed24aec3729d755875703de69ff7f88a1d1aeef203c483ea77668ddae2c
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+1/Attack2_effect.png -> vfx/shared_combat/Electric_attack.png
+SHA256: 7dd78f7b99ea9fb8b06d3d10cb3ab488d79cc3d25f75ecba6539dc0b77815882
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

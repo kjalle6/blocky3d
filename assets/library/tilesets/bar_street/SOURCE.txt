@@ -1,0 +1,9 @@
+craftpix-net-278498-bar-street-tileset-pixel-art-pack.zip
+Archive SHA256: ee751253cd737e227b4a21b13e1ff8ae3fc9dc78c4ad24fb24b514784432c6f5
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

@@ -1,0 +1,9 @@
+craftpix-net-999713-cyberpunk-pixel-art-bosses-pack.zip
+Archive SHA256: 149c471d8a94407e2052a1f7dbf91f102816a6769a43c8b1648d5a1d92df7ace
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

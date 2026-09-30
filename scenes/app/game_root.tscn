@@ -8,6 +8,7 @@
 [ext_resource type="Resource" uid="uid://bej2xiyiu46ny" path="res://resources/dev/green_zone_finale_wip.tres" id="6_green_zone_finale_wip"]
 [ext_resource type="PackedScene" path="res://scenes/ui/weapon_status_hud.tscn" id="7_weapon_status_hud"]
 [ext_resource type="Resource" path="res://resources/dev/level_designer_sandbox.tres" id="8_designer_sandbox"]
+[ext_resource type="Resource" path="res://resources/dev/boss_test_lab.tres" id="9_boss_lab"]
 
 [sub_resource type="StyleBoxFlat" id="Style_button"]
 bg_color = Color(0.09, 0.2, 0.24, 1)
@@ -39,7 +40,7 @@ corner_radius_bottom_left = 12
 script = ExtResource("1_app")
 campaign = ExtResource("2_campaign")
 developer_room_definition = ExtResource("3_animation_lab")
-developer_level_definitions = Array[ExtResource("5_level_definition")]([ExtResource("3_animation_lab"), ExtResource("4_level_design_lab"), ExtResource("6_green_zone_finale_wip"), ExtResource("8_designer_sandbox")])
+developer_level_definitions = Array[ExtResource("5_level_definition")]([ExtResource("3_animation_lab"), ExtResource("4_level_design_lab"), ExtResource("6_green_zone_finale_wip"), ExtResource("8_designer_sandbox"), ExtResource("9_boss_lab")])
 level_button_style = SubResource("Style_button")
 
 [node name="World" type="Node3D" parent="." unique_id=265900711]

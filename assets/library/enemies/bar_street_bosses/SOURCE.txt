@@ -1,0 +1,23 @@
+craftpix-net-384116-bar-street-bosses-pixel-art.zip
+Archive SHA256: 8bdf0f3df1146f717e9938c46a5b9732a1c75852bde4e4ad1150b6cd24c3ee98
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+2/BOOM_death.png -> vfx/shared_combat/Explosion.png
+SHA256: 31ebfd3efd9f5a016acd57e5065306b2c9bae5edbfff092ff70e3c827fab6570
+2/Fire1.png -> vfx/bar_street_bosses/2/Fire1.png
+SHA256: 134cd05aae944e3aef01e36af64edc7b2576bb9fdc88f0a73adc11a09ffaf99c
+2/Fire2.png -> vfx/bar_street_bosses/2/Fire2.png
+SHA256: 586ceb224d7228740825f201609763a7e280b193b64c6b48eb2d81bb907cd11b
+2/Fire3.png -> vfx/bar_street_bosses/2/Fire3.png
+SHA256: b0cf898d1e4e7f1fe8e8c80cac3f0331e06400f352c5086da03d273b2a1125de
+2/Fire_attack.png -> vfx/bar_street_bosses/2/Fire_attack.png
+SHA256: ad17d86e9b3dbaa7f61e0c823879eb7b8d8a873fe578de4b33e7a256bec60317
+3/BOOM_bomb.png -> vfx/shared_combat/Explosion.png
+SHA256: 31ebfd3efd9f5a016acd57e5065306b2c9bae5edbfff092ff70e3c827fab6570
+3/Dust.png -> vfx/bar_street_bosses/3/Dust.png
+SHA256: 99d16533b2c2d7a1be8840e8863106d3a99fa7992b4cd07230e74d7d3a0b8c0d
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

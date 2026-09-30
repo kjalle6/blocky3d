@@ -10,6 +10,15 @@ Knife attacks and stomps keep combat close to the platforming, while a handgun
 adds ranged combat later in the opening world. The aim is demanding, readable
 challenges with room to learn and improve.
 
+## Current priority
+
+**Finish the Green Zone boss encounter.** The [Boss Test Lab](docs/BOSS_TEST_LAB.md)
+has the playable prototype; next come the final arena, attack/recovery and HP
+tuning, camera coverage, and the Level 3 ending. The current 300 HP is an
+inadequate placeholder. The [roadmap](docs/LEVEL_ROADMAP.md#next-priority-finish-the-green-zone-boss)
+defines the completion checks. Scanner gameplay/UI and further asset expansion
+remain queued behind this milestone; their data and asset preparation are in place.
+
 ## What's playable
 
 The project is in development. The opening world has two complete levels and a
@@ -26,7 +35,7 @@ inventory with two quick-use slots, ammunition and active reloads, supply chests
 manual saves, and autosaves. Spikes, pits, and flying hazards remain lethal.
 Combat values and supply amounts are still being balanced.
 
-The project also includes a Firearm Review Lab and an in-game level designer
+The project also includes a Firearm Review Lab, a [Boss Test Lab](docs/BOSS_TEST_LAB.md), and an in-game level designer
 for building terrain and placing enemies, hazards, props, autosave points, and
 supply chests.
 
@@ -82,16 +91,21 @@ and restart controls. **F7** shows hitboxes, **F10** shows the world grid, and
 | --- | --- |
 | [Game direction](docs/GAME_DIRECTION.md) | Movement, combat, setting, and intended player experience |
 | [Level roadmap](docs/LEVEL_ROADMAP.md) | Campaign progress and remaining work |
-| [Combat balance](docs/COMBAT_BALANCE.md) | Health, damage, healing, and tuning targets |
+| [Combat balance](docs/COMBAT_BALANCE.md) | Health, damage, effects, tuning targets, and planned enemy scanning |
+| [Combat stats spreadsheet](outputs/01a0ee28-cea0-7d82-b0a7-f548e4c665b0/Combat_Stats.xlsx) | Enemy, attack and hazard values in filterable Excel tables |
+| [Scanner data](docs/SCANNER_DATA.md) | Game-readable identities, stat bindings and discovery evidence |
+| [Boss Test Lab](docs/BOSS_TEST_LAB.md) | First boss prototype, fight controls, and provisional attack tuning |
 | [Inventory and saves](docs/SAVE_SYSTEM.md) | Current controls, save behavior, and recovery |
 | [Supply chests](docs/CHEST_LOOT.md) | Loot pools, fixed rewards, and chest authoring |
 | [Level designer](docs/LEVEL_DESIGNER.md) | Building, placement, testing, and saving layouts |
 | [Audio tuning](docs/AUDIO_TUNING.md) | Assigning and tuning sounds |
 | [Phantom Camera](docs/PHANTOM_CAMERA.md) | Editing campaign camera rails and checking transitions |
 | [Asset sources and credits](docs/ASSET_CREDITS.md) | Art, font, audio, tool licenses, and remaining source questions |
+| [Finding assets](assets/ASSET_GUIDE.md) | Collection map, mixed-pack animation/effect indexes, and stable source paths |
 | [Technical foundation](docs/TECHNICAL_FOUNDATION.md) | Runtime architecture, rendering, and asset workflow |
 | [Maintenance priorities](docs/MAINTENANCE_PLAN.md) | Small fixes now, improvements alongside features, and release preparation |
 | [Godot MCP](docs/GODOT_MCP.md) | Editor automation setup and live playtesting |
+| [Visual QA](docs/VISUAL_QA.md) | Visual inspector, evidence rules, and repeatable inspection routes |
 
 Standalone checks run through the project's PowerShell tools:
 

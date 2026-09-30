@@ -6,6 +6,17 @@ both selected sounds and comparison candidates; the saved
 [audio mix](../resources/audio/movement_mix.tres) records current assignments.
 The full `assets/library` is an authoring and audition catalog.
 
+The [September 30 catalog intake](../outputs/asset_intake_2026-09-30/report.md)
+records 29 added Craftpix packs, six duplicate downloads, and archive/member
+hash evidence. Original ZIPs and PSD files remain in `blocky3dassets`;
+per-pack `SOURCE.txt` files trace the organized copies and shared VFX.
+
+The bar/cafe NPC pack's ZIP omitted a license text file. Its source is confirmed
+by the [official product page](https://craftpix.net/product/cyberpunk-pixel-bar-cafe-npc-asset-pack/)
+provided by the owner, with the publisher's
+[premium/paid product terms](https://craftpix.net/file-licenses/) recorded in
+the [pack source note](../assets/library/npcs/bar_cafe/SOURCE.txt).
+
 The only current export preset, `LayoutSmoke`, excludes the catalog but includes
 other project resources. It is a validation preset, not a release asset list.
 Before distributing a build, check its actual dependencies and include the
@@ -17,6 +28,7 @@ required notices. Some source questions remain listed below.
 | --- | --- | --- |
 | Green Zone characters, enemies, weapons, projectiles, effects, terrain, scenery, backgrounds, and shoreline | Craftpix packs; [asset manifest](../assets/art/green_zone/asset_manifest.json), [catalog manifest](../assets/art/green_zone/catalog/manifest.json), and [layout promotions](../assets/art/green_zone/layout_export_promotions.json) record paths, hashes, and transformations | [Pack license files](../assets/art/green_zone/licenses) |
 | Cave terrain and rocks | Craftpix Dumb Zone tiles and Rocks collection; [source manifest](../assets/art/interiors/rock_underworks/source_manifest.json) records exact matches to the catalog | Each manifest entry links its pack license; [retained cave license reference](../assets/art/interiors/rock_underworks/licenses/source_license.txt) |
+| First boss, impact and smoke VFX | Craftpix Green Zone bosses character 2, Fire VFX explosions, and Effects smoke puffs 7/8/14; [source manifest](../assets/art/green_zone/bosses/launcher/source_manifest.json) records unmodified selected sheets and hashes | [Boss license](../assets/art/green_zone/bosses/launcher/boss_license.txt), [Fire VFX license](../assets/art/vfx/boss/vfx_fire_license.txt), [Effects license](../assets/art/vfx/boss/vfx_effects_license.txt) |
 | Expanded designer terrain and scenery | Remaining Craftpix terrain packs, nature/trees/rocks/clouds, bridges, doors, graffiti, signs and vehicles; [world scenery manifest](../assets/art/world_scenery/manifest.json) records unchanged images, source hashes and per-file supplied license paths | Supplied license files are copied beside the promoted packs; cave entrance source notes retain the separate Pixie Haus attribution |
 | Cave backgrounds | Craftpix Pixel Cave Game Parallax Backgrounds; [source archive and layer mapping](../assets/art/interiors/rock_underworks/background/SOURCE.txt) | License reference in the source record |
 | Cave lift and slide dust | Craftpix Piratebay Zone, Industrial Zone, Doors and Portals, and Pixel Effects; [lift sources](../assets/art/interiors/rock_underworks/props/cave_lift/SOURCE.txt), [dust source](../assets/art/interiors/rock_underworks/effects/SOURCE.txt), and the cave manifest above | Individual catalog license paths in the cave manifest |

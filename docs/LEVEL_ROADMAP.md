@@ -3,8 +3,38 @@
 World 1, the Green Zone, teaches the movement kit across three substantial
 levels. Arrival / Shoreline and Overgrown Coastal Ascent are complete. Green
 Zone Finale is playable in development through the handgun introduction, tank
-fight and wall-jump escape. The area after the scaffold is being rebuilt;
-later gunner encounters and the boss remain planned.
+fight, wall-jump escape and rebuilt upper gunner route. Upper-route encounter
+tuning remains in progress; the boss is playable in its separate test lab.
+
+## Next priority: finish the Green Zone boss
+
+**This is the first implementation priority.** Continue from the working
+[Boss Test Lab](BOSS_TEST_LAB.md), then finish the encounter in its actual Level 3
+arena. Scanner gameplay/UI, further asset expansion, and general polish follow
+this milestone unless a concrete blocker needs attention.
+
+1. Build and connect the final arena around the existing attack kit and the
+   player's full movement abilities. The enlarged lab is a test fixture, not
+   the arena size target. Settle floor/wall access, overhead room, approach,
+   retry position, and camera coverage together.
+2. Tune missiles, jump/landing AoE, recovery openings, close-range charge/shove,
+   and the head-landing smoke escape in that arena. Keep a no-ammo melee victory
+   viable, normal mobility intact, and the agreed lack of advance landing warnings.
+3. Choose and test boss durability with those openings. **HP remains TBD; 300
+   is too low and is only the current lab placeholder.** Keep the combat guide,
+   numbers-only spreadsheet, and scanner stat bindings aligned with final tuning.
+4. Finish defeat and Level 3 completion flow, including clearing missiles and
+   player holds, repeatable retries, and the existing campaign/save behavior.
+   Settle presentation/audio needed for this fight; additional phases are not
+   assumed requirements.
+5. Playtest full fights with and without ammo, both room edges, aerial/wall
+   evasion, close pressure and head contact. Verify camera/ground coverage and
+   use the visual inspector on the arena and approach. Focused checks support
+   this review; player acceptance of difficulty and presentation is still needed.
+
+After the boss, finish the remaining route/supply review and whole-level checks
+before marking the finale complete. The scanner data foundation and the asset
+organization detour are complete enough to leave parked while the boss is finished.
 
 ## Current campaign
 
@@ -12,7 +42,7 @@ later gunner encounters and the boss remain planned.
 | --- | --- | --- |
 | Arrival / Shoreline | Beach arrival, early combat and hazards, Double Jump, forest clearing | Complete |
 | Overgrown Coastal Ascent | Dusk approach, cave entry, Wall Jump and Dash, machine chambers, lift departure | Complete |
-| Green Zone Finale | Night ravine, underworks descent and return, first handgun, tank fight and escape, later gunners, boss | Traversal, handgun, tank and scaffold climb implemented; later gun encounters and boss remain |
+| Green Zone Finale | Night ravine, underworks descent and return, first handgun, tank fight and escape, later gunners, boss | Traversal, handgun, tank, scaffold climb and upper gunner route implemented; tuning, final boss arena and integration remain |
 
 Campaign play can continue into the unfinished finale. The production level
 selector lists the first two levels; developer entries provide direct access to
@@ -87,10 +117,10 @@ A nearby supply chest uses the gun-encounter loot pool.
 
 Remaining work in this section:
 
-1. Introduce firing and reloading through the gun-enemy sequence below.
-2. Develop encounters that combine shooting and movement, keeping melee viable.
-3. Design and build the first boss and the level's ending.
-4. Playtest the full sequence and add the finished finale to the production
+1. Finish the boss, its arena, and the level's ending using the priority above.
+2. Tune the existing gun-enemy sequence's firing/reload lesson and encounters
+   that combine shooting and movement, keeping melee viable.
+3. Playtest the full sequence and add the finished finale to the production
    selector.
 
 The route now extends beyond the first handgun chest through an enclosed
@@ -250,10 +280,92 @@ the tank's ammo and safe climb are the first concrete example. Boss melee
 openings remain necessary so these optional rewards do not become a hidden
 requirement to finish the level.
 
+#### First boss
+
+The selected boss is **Green Zone bosses, character 2**, currently in the
+authoring catalog at `assets/library/enemies/green_zone_bosses/2`. The inspected
+72-pixel sprite sheets show launcher sequences in `Attack1.png` through
+`Attack3.png`, plus thruster-assisted lift-off poses in `Attack4.png` and a
+separate `Bullet.png`. These support missile and jump/flight attack ideas;
+the files alone do not prescribe missile tracking, flight paths, damage values,
+or how the launcher sheets should be sequenced.
+
+**Required jump behavior:** when the boss lands from its jump, the impact deals
+area-of-effect damage around the landing point. The visual impact effect appears
+on landing, when the damage begins, and communicates the damaging footprint.
+Do not add advance landing warnings: no landing markers, danger circles,
+countdowns, UI prompts, warning audio, pre-impact warning effects, or a separate
+warning phase. The player learns the attack through the boss's ordinary movement,
+the landing effect, and its consequences. Keep timing and damage bounds consistent
+so that learned evasive movement works.
+
+The player landing on the boss is a separate defensive response: no stomp
+damage and no bounce. It deploys a dense smoke burst and holds the player on
+the ground while retreating 9 m, then counterattacks during another 1.5 seconds
+of hold. Smoke follows the player and gradually fades through the punishment,
+with a short tail after control returns. It may fully obscure the player during
+the stun. A blocked retreat still releases after 2.5 seconds. This does not add an advance
+warning to the boss's own landing blast. Knife and bullet hits use its Hurt
+sheet without interrupting attack logic.
+
+Close pressure when the boss wants to fire missiles can now trigger a short,
+committed body charge. A single hit pushes the player away to create firing
+space; it has its own cooldown and allows jumping/dashing out of its path.
+The existing head-landing smoke response remains separate. Tuning and visual
+acceptance of this close-range response remain part of boss-lab playtesting.
+
+Apply damage at most once per player per landing, including any overlapping
+body/impact hit regions belonging to that attack. Radius, vertical reach, damage,
+and active duration remain tuning decisions; whether it is a ground shockwave
+or a broader blast remains open. Preserve an opportunity to evade with the
+existing movement kit and a recovery opportunity for melee after the landing
+damage ends.
+
+Source the boss's explosions and other supporting effects from the existing
+`assets/library/vfx` catalog, especially `fire` and `effects`; original packs
+are under `D:\GodotProjects\blocky3dassets\vfx`. Audition those assets when
+choosing missile impacts, exhaust, landing dust, and defeat effects. Use the
+[VFX index](../assets/library/vfx/README.md); promote selected effects into
+`assets/art/vfx` with their source/license records.
+
+The selected art is now promoted and implemented in the isolated
+[Boss Test Lab](BOSS_TEST_LAB.md), available from the development selector.
+Its prototype alternates a committed six-rocket ripple with a targeted
+jump and landing blast, with independent cooldowns, stationary recovery, and
+walking between attacks. The lab now has three times its original interior
+width and height. Its encounter camera gives nearby combat a modest wider view
+and frames both actors, returning to ordinary player follow farther away. The
+finished arena need not use the lab's dimensions. It provides all movement
+abilities, reset/refill, attack selection, and a no-ammo mode. Selected effects
+are under `assets/art/vfx/boss`; source and license records accompany the assets.
+
 The boss should have clear attack patterns and meaningful vulnerability windows.
-Melee remains a viable way to win with no ammunition. The golf-cart/driver art
-is a candidate for a movement set piece and possible second form; the boss
-choice and behavior are still open. Moving saws are reserved for a later level.
+**Boss HP is TBD:** the current 300 HP is an inadequate lab placeholder, not an
+accepted fight-length target. Choose its replacement with the actual arena and
+attack openings; see [Combat balance](COMBAT_BALANCE.md).
+Melee remains a viable way to win with no ammunition. Attack tuning, recovery,
+the finished arena, and any phase changes still need playtesting. The boss has
+not been connected to the Level 3 route. Moving saws are reserved for a later level.
+
+Design and test the boss and arena around the player's full available movement
+kit: running, variable-height jumps, Double Jump, horizontal Dash, wall slides,
+and Wall Jump. Skilled use of those abilities should provide effective evasive
+options. Preserve the existing movement rules rather than weakening abilities
+to make the boss threatening.
+
+- Use the current movement tuning to test attack timing, arena width, overhead
+  clearance, wall access, landing space, and camera coverage together.
+- Respect ability availability during attack sequences: landing restores Dash;
+  Wall Jump does not restore Dash or Double Jump, and repeated jumps from the
+  same wall require an opposite-wall contact or landing. See the movement
+  contracts in [Technical foundation](TECHNICAL_FOUNDATION.md#wall-movement-contract).
+- Test the fight against airborne players, wall escapes, and players who have
+  already spent their aerial jump or Dash. Keep attack motion and targeting
+  consistent enough to learn and evade; do not add a warning phase to the landing
+  AoE or rely on unavoidable last-moment tracking.
+- Give walls and any platforms a useful movement role while checking whether
+  one stationary perch trivializes the entire fight. Legitimate skilled dodging
+  is not a defect. Recovery must allow the player to land, approach, and use melee.
 
 ## Combat and supplies
 
@@ -264,15 +376,30 @@ contents. These systems now need integrated balance testing.
 
 The next tuning questions are:
 
+- Boss durability, attack spacing and melee openings in the final arena.
 - How handgun damage and reload timing compare with knife attacks and stomps.
 - Gunner durability, overlapping attacks, recovery periods, and interruption loops.
 - How much healing and ammo accumulate across a level and between saves.
 - General enemy drop rates and where stronger healing items should appear.
-- Boss durability once its actual attack pattern and melee openings exist.
 
 [Combat balance](COMBAT_BALANCE.md) owns the targets and provisional values.
 [Supply chests](CHEST_LOOT.md) owns loot-pool tuning and authoring, and
 [inventory and saves](SAVE_SYSTEM.md) explains recovery behavior.
+
+## Enemy and hazard scanner (queued after the boss)
+
+The scanner concept is documented in [Combat balance](COMBAT_BALANCE.md#enemy-and-hazard-scanner-planned):
+quick live overlay, hold-left-click initial scan with full movement and no
+attacks, game-provided names, experience-based discovery, later optional
+renaming and right-click inspection. The [data catalog and reader](SCANNER_DATA.md)
+are implemented with current-stat bindings and separate evidence conditions.
+Gameplay/UI, event adapters and knowledge storage are not connected, and the
+acquisition point has not been assigned to a level. Resolve the open discovery,
+naming and save rules before those integrations; select overlay assets afterward.
+
+The data-preparation detour is complete. Leave scanner gameplay integration
+queued while finishing the boss; final arena construction, encounter tuning
+and Level 3 integration are the active priority.
 
 ## Interface and presentation
 

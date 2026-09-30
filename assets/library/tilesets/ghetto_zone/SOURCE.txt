@@ -1,0 +1,9 @@
+craftpix-net-995156-ghetto-tileset-pixel-art.zip
+Archive SHA256: c3923344db00b8d76e3e63668cb89f3faca806ab742af52f07fd232bef3e2711
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

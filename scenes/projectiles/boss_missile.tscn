@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/projectiles/boss_missile_3d.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/art/green_zone/bosses/launcher/Bullet.png" id="2"]
+
+[node name="BossMissile" type="Node3D"]
+script = ExtResource("1")
+speed = 11.0
+collision_mask = 7
+horizontal_texture = ExtResource("2")
+
+[node name="Visual" type="Sprite3D" parent="."]
+unique_name_in_owner = true
+position = Vector3(0, 0, 1.35)
+texture_filter = 0
+pixel_size = 0.06
+texture = ExtResource("2")
+shaded = false
+render_priority = 14

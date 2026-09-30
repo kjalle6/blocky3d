@@ -1,0 +1,11 @@
+craftpix-net-355913-bosses-chinese-street-pixel-art.zip
+Archive SHA256: a7045afb2b35b4230b6929c0a26a2dbae28249abc0b57b332f4742b0e338ed7c
+
+Original ZIP and editable sources are preserved in this folder.
+Pack files are unchanged; standalone effects are catalogued under vfx.
+Apple metadata stays in the ZIP and is not extracted.
+
+1/Boom.png -> vfx/shared_combat/Explosion.png
+SHA256: 31ebfd3efd9f5a016acd57e5065306b2c9bae5edbfff092ff70e3c827fab6570
+
+Archive member-to-catalog mappings are recorded in the asset intake report.

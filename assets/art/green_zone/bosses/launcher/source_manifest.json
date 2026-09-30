@@ -1,0 +1,87 @@
+{
+  "description": "Unmodified selected Green Zone boss 2 and VFX for the boss test lab.",
+  "licenses": [
+    "boss_license.txt",
+    "assets/art/vfx/boss/vfx_fire_license.txt"
+  ],
+  "files": [
+    {
+      "file": "assets/art/green_zone/bosses/launcher/Sneer.png",
+      "source": "assets/library/enemies/green_zone_bosses/2/Sneer.png",
+      "sha256": "5969349252b89a331a3222b4d86b992a5134ac77462143bda1aba0e702f8677a"
+    },
+    {
+      "file": "assets/art/green_zone/bosses/launcher/Idle.png",
+      "source": "assets/library/enemies/green_zone_bosses/2/Idle.png",
+      "sha256": "a3dcf70cf2689ca8a418648fd3a9d373d6abe600e239539d703140bc77195085"
+    },
+    {
+      "file": "assets/art/green_zone/bosses/launcher/Walk.png",
+      "source": "assets/library/enemies/green_zone_bosses/2/Walk.png",
+      "sha256": "80310866af94cb83ed874d3f1d8cb38c77efcbf191bd601386d3af3ad0210c6f"
+    },
+    {
+      "file": "assets/art/green_zone/bosses/launcher/Attack1.png",
+      "source": "assets/library/enemies/green_zone_bosses/2/Attack1.png",
+      "sha256": "c5b9c4616e8bddcc2bcb5a5e56c4ba75f3f3d5277551df6bd845ade3e2fca06a"
+    },
+    {
+      "file": "assets/art/green_zone/bosses/launcher/Attack2.png",
+      "source": "assets/library/enemies/green_zone_bosses/2/Attack2.png",
+      "sha256": "fec921b9f8415cd531267c43fd2b4a6ce39964fea4a8bca293203785ee891430"
+    },
+    {
+      "file": "assets/art/green_zone/bosses/launcher/Attack3.png",
+      "source": "assets/library/enemies/green_zone_bosses/2/Attack3.png",
+      "sha256": "fffe9696b0b3d1eb0e2f8db322fad8da10989a44c10c175d4d7990ab8aceee85"
+    },
+    {
+      "file": "assets/art/green_zone/bosses/launcher/Attack4.png",
+      "source": "assets/library/enemies/green_zone_bosses/2/Attack4.png",
+      "sha256": "18b30e24c16e07e78ad6afecbc6ea19f53a77c5033d9258a879006936ffbfbe9"
+    },
+    {
+      "file": "assets/art/green_zone/bosses/launcher/Hurt.png",
+      "source": "assets/library/enemies/green_zone_bosses/2/Hurt.png",
+      "sha256": "00f47af396cca1ea52ba8e00c575e6acdf5a220e5b38815433c56a55500a55a4"
+    },
+    {
+      "file": "assets/art/green_zone/bosses/launcher/Death.png",
+      "source": "assets/library/enemies/green_zone_bosses/2/Death.png",
+      "sha256": "37753a6049d3780f176616729dbc58aa8918edcc6b3fa1b648e628c7f1a69457"
+    },
+    {
+      "file": "assets/art/green_zone/bosses/launcher/Bullet.png",
+      "source": "assets/library/enemies/green_zone_bosses/2/Bullet.png",
+      "sha256": "d751ce648e8b89710a374f28efa6984898fef80848cb5145c41387192e5b8fd8"
+    },
+    {
+      "file": "assets/art/vfx/boss/landing_ring.png",
+      "source": "assets/library/vfx/fire/5 Explosions/3 Middle/1.png",
+      "sha256": "d74d10b30e9ef531ccee919b214a7358c8485bb295e4c71199488b94183153f6"
+    },
+    {
+      "file": "assets/art/vfx/boss/smoke_puff_a.png",
+      "source": "assets/library/vfx/effects/1 Smoke/7.png",
+      "sha256": "55eda5f5b6aa32234c6263fc77b3c6b9a566d6b5b7a7d71df48de75ef1e36b97",
+      "license": "assets/art/vfx/boss/vfx_effects_license.txt"
+    },
+    {
+      "file": "assets/art/vfx/boss/smoke_puff_b.png",
+      "source": "assets/library/vfx/effects/1 Smoke/8.png",
+      "sha256": "17822f6edb097929db970d1be436e2c402905a5aa81e05732f2ced85640d2145",
+      "license": "assets/art/vfx/boss/vfx_effects_license.txt"
+    },
+    {
+      "file": "assets/art/vfx/boss/smoke_puff_c.png",
+      "source": "assets/library/vfx/effects/1 Smoke/14.png",
+      "sha256": "10ad5ea14c0f8b514c4c589c5d78073e7ebd251856115e7315855ee5cc18b462",
+      "license": "assets/art/vfx/boss/vfx_effects_license.txt"
+    },
+    {
+      "file": "assets/art/vfx/boss/explosion.png",
+      "source": "assets/library/vfx/fire/5 Explosions/2 Low/2.png",
+      "sha256": "a09b1c4126c39837e42cc2a1153337b7710fe1015b9523ddd72ca631a9712c82"
+    }
+  ]
+}

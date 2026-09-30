@@ -22,7 +22,8 @@ func bind_session(session: LevelSession3D) -> void:
 	_targets.clear()
 	if is_instance_valid(session):
 		for target in get_tree().get_nodes_in_group("melee_target"):
-			if session.is_ancestor_of(target):
+			# Bosses use the dedicated encounter bar, including after damage.
+			if session.is_ancestor_of(target) and not target.is_in_group("boss_enemy"):
 				_targets.append(target)
 	queue_redraw()
 

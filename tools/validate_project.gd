@@ -37,6 +37,7 @@ func _validate() -> void:
 		"GreenZoneFinaleWipGunEncounterButton"
 	) as Button
 	var sandbox_button := world_list.get_node("LevelDesignerSandboxButton") as Button
+	var boss_lab_button := world_list.get_node("BossTestLabButton") as Button
 
 	assert(game_root.campaign is CampaignCatalog, "GameRoot requires typed campaign data.")
 	assert(game_root.campaign.validation_errors().is_empty(), "Campaign data must validate.")
@@ -64,6 +65,7 @@ func _validate() -> void:
 	assert(level_3_wip_button.text == "LEVEL 3 WIP")
 	assert(gun_encounter_button.text == "LEVEL 3 - GUN ENCOUNTER")
 	assert(sandbox_button.text == "LEVEL DESIGNER SANDBOX")
+	assert(boss_lab_button.text == "BOSS TEST LAB")
 	assert(game_root.campaign.find_by_id(&"dev_green_zone_finale_wip") == null)
 	assert(world_list.get_node_or_null("World01Level03Button") == null)
 	assert(world_list.get_node_or_null("EnclosedTerrainLabButton") == null)
@@ -83,7 +85,7 @@ func _validate() -> void:
 	menu_up.pressed = true
 	game_root._unhandled_input(menu_up)
 	assert(
-		sandbox_button.has_focus(),
+		boss_lab_button.has_focus(),
 		"W should wrap Level 1 to the final developer entry."
 	)
 	var menu_down := InputEventKey.new()
@@ -219,7 +221,7 @@ func _validate_gun_entry(game_root: Node, definition: LevelDefinition, entry: Le
 	assert(game_root.current_level_definition == definition)
 	assert(game_root.current_world_definition == null)
 	assert(level.scene_file_path == entry.scene.resource_path)
-	assert(is_equal_approx(level.route_extent.route_end_x, 104.96))
+	assert(is_equal_approx(level.route_extent.route_end_x, 122.88))
 	assert(is_equal_approx(level.player.global_position.x, level.spawn_point.global_position.x))
 	assert(level.active_checkpoint_index() == -1)
 	for ability_id in definition.assumed_owned_abilities:
