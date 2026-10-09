@@ -20,6 +20,12 @@ extends Camera3D
 ## Ease changes between authored compositions without slowing ordinary follow.
 @export_range(0.0, 2.0, 0.05) var region_transition_duration := 0.65
 @export var pixel_snap_enabled := true
+@export_category("Aim look")
+## While the handgun follows the mouse, raise the view by this fraction of the
+## cursor's height above the player. Below 1 the view settles instead of
+## chasing a still cursor; aiming level or down never moves it.
+@export_range(0.0, 0.9, 0.05) var aim_look_fraction := 0.25
+@export_range(0.0, 6.0, 0.1) var aim_look_maximum := 2.5
 
 var _initialized := false
 var _smoothed_x := 0.0
@@ -69,16 +75,18 @@ func _process(delta: float) -> void:
 				minimum_center_x,
 				maximum_center_x
 			)
+	# The aim lift stays inside the authored vertical limits.
+	var aim_lift := aim_look_offset()
 	if not _developer_inspection_enabled and _active_vertical_region != null:
 		desired_vertical_offset = clampf(
-			target.global_position.y
+			target.global_position.y + aim_lift
 			- _active_vertical_region.vertical_anchor_world_y(),
 			_active_vertical_region.minimum_vertical_offset,
 			_active_vertical_region.maximum_vertical_offset
 		)
 	elif not _developer_inspection_enabled and vertical_follow_enabled:
 		desired_vertical_offset = clampf(
-			target.global_position.y - vertical_anchor_y,
+			target.global_position.y + aim_lift - vertical_anchor_y,
 			minimum_vertical_offset,
 			maximum_vertical_offset
 		)
@@ -169,6 +177,18 @@ func is_developer_inspection_enabled() -> bool:
 func snap_to_target() -> void:
 	_initialized = false
 	_process(0.0)
+
+
+## Upward framing lift for a mouse-aimed handgun; zero in every other state.
+func aim_look_offset() -> float:
+	var player := target as PlayerCharacter
+	if player == null or _developer_inspection_enabled or cinematic_override_enabled:
+		return 0.0
+	var handgun := player.player_handgun
+	if handgun == null or not handgun.mouse_aim_active:
+		return 0.0
+	return clampf((handgun.crosshair_world.y - player.global_position.y) * aim_look_fraction,
+		0.0, aim_look_maximum)
 
 
 ## Cutscene return framing may differ from the temporary cinematic look-ahead.

@@ -115,7 +115,7 @@ func _run() -> void:
 	player.velocity.y = -5.0
 	await _until(func(): return player.is_ground_held(), 20, "Head landing lost its smoke response.")
 	assert(boss.state_name() == "SMOKE_ESCAPE" and boss.salvo_shoves == 0 and boss.smoke_escapes == 1)
-	assert(boss.health.current == 300 and player.health.current == 1000)
+	assert(boss.health.current == boss.combat.maximum_hp and player.health.current == 1000)
 	controls.reset_fight()
 	assert(boss.salvo_shoves == 0 and is_zero_approx(boss.salvo_shove_cooldown_remaining))
 	assert(not player.is_control_locked())

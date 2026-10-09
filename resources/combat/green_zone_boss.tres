@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1")
-maximum_hp = 300
+maximum_hp = 2000
 hurt_duration = 0.0
 knife_damage_multiplier = 0.5
 provisional = true

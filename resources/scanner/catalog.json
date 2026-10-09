@@ -855,7 +855,7 @@
           "unit": "HP",
           "balance_status": "TBD",
           "target_value": null,
-          "current_role": "inadequate_lab_placeholder"
+          "current_role": "provisional_playtest_value"
         },
         "attack_damage": {
           "source": "actor",
@@ -1287,6 +1287,120 @@
       "default_source": {
         "scene": "res://scenes/dev/green_zone_finale_wip.tscn",
         "node": "RunupFlyer"
+      }
+    },
+    {
+      "id": "flyer_shootable",
+      "game_name": "Shootable flying machine",
+      "kind": "hazard",
+      "status": "implemented",
+      "actor_script": "res://scripts/enemies/destructible_flyer_3d.gd",
+      "fact_sets": [],
+      "facts": [
+        {
+          "id": "body_lethal",
+          "label": "Body contact",
+          "value": "Instant death",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "lethal_contact",
+            "attack": "body"
+          }
+        },
+        {
+          "id": "spark_lethal",
+          "label": "Electrical discharge",
+          "value": "Instant death while active",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "lethal_contact",
+            "attack": "spark"
+          }
+        },
+        {
+          "id": "knife_ineffective",
+          "label": "Knife",
+          "value": "No damage",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "weapon_result",
+            "weapon": "knife",
+            "outcome": "ineffective"
+          }
+        },
+        {
+          "id": "handgun_effective",
+          "label": "Handgun",
+          "value": "Destroyed by bullets",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "weapon_result",
+            "weapon": "handgun",
+            "outcome": "effective"
+          }
+        },
+        {
+          "id": "stomp_ineffective",
+          "label": "Stomp",
+          "value": "No damage",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "weapon_result",
+            "weapon": "stomp",
+            "outcome": "ineffective"
+          }
+        }
+      ],
+      "stats": {
+        "maximum_hp": {
+          "source": "actor",
+          "property": "combat.maximum_hp",
+          "unit": "HP"
+        },
+        "bob_amplitude": {
+          "source": "actor",
+          "property": "bob_amplitude",
+          "unit": "m"
+        },
+        "bob_period": {
+          "source": "actor",
+          "property": "bob_period",
+          "unit": "s"
+        },
+        "bob_phase": {
+          "source": "actor",
+          "property": "bob_phase",
+          "unit": "cycle"
+        },
+        "horizontal_amplitude": {
+          "source": "actor",
+          "property": "horizontal_amplitude",
+          "unit": "m"
+        },
+        "horizontal_speed": {
+          "source": "actor",
+          "property": "horizontal_speed",
+          "unit": "m/s"
+        },
+        "horizontal_phase": {
+          "source": "actor",
+          "property": "horizontal_phase",
+          "unit": "cycle"
+        },
+        "spark_period": {
+          "source": "actor",
+          "property": "spark_period",
+          "unit": "s"
+        },
+        "spark_active": {
+          "source": "actor",
+          "property": "spark_active",
+          "unit": "s"
+        }
+      },
+      "default_source": {
+        "scene": "res://scenes/enemies/green_zone_flyer_shootable.tscn",
+        "node": "."
       }
     },
     {

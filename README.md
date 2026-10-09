@@ -14,8 +14,8 @@ challenges with room to learn and improve.
 
 **Finish the Green Zone boss encounter.** The [Boss Test Lab](docs/BOSS_TEST_LAB.md)
 has the playable prototype; next come the final arena, attack/recovery and HP
-tuning, camera coverage, and the Level 3 ending. The current 300 HP is an
-inadequate placeholder. The [roadmap](docs/LEVEL_ROADMAP.md#next-priority-finish-the-green-zone-boss)
+tuning, camera coverage, and the Level 3 ending. Boss HP is a provisional
+2000 for playtesting. The [roadmap](docs/LEVEL_ROADMAP.md#next-priority-finish-the-green-zone-boss)
 defines the completion checks. Scanner gameplay/UI and further asset expansion
 remain queued behind this milestone; their data and asset preparation are in place.
 

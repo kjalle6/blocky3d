@@ -39,7 +39,7 @@ func _run() -> void:
 		assert(_player.has_ability(ability), "All movement abilities start enabled.")
 	assert(_player.player_handgun.loaded_rounds == 12)
 	assert(_player.inventory.count(&"handgun_ammo") == 60)
-	assert(_boss.health.current == 300)
+	assert(_boss.health.current == _boss.combat.maximum_hp)
 	assert(_boss not in _game.health_inventory_hud.get("_targets"),
 		"Bosses use only their encounter bar, never a regular enemy overhead bar.")
 	_boss.landed.connect(func(point: Vector3): _landing_position = point)
@@ -70,7 +70,7 @@ func _run() -> void:
 	var rocket_damage: int = 1000 - _player.health.current
 	assert(rocket_damage >= 25 and rocket_damage <= 150 and rocket_damage % 25 == 0,
 		"The fixed-area ripple must threaten a stationary player with ordinary 25 HP hits.")
-	assert(_boss.health.current == 300, "The source's hurtbox must not intercept its missiles.")
+	assert(_boss.health.current == _boss.combat.maximum_hp, "The source's hurtbox must not intercept its missiles.")
 
 	# Close targets do not pull the nose straight down or make a missile loop.
 	_controls.reset_fight()
@@ -169,6 +169,9 @@ func _run() -> void:
 	_player.global_position = Vector3(13.3, 0.55, 0)
 	_player.set_physics_process(true)
 	_player.request_weapon(PlayerWeapon.KNIFE)
+	# A 300 HP fixture keeps this real-input check to 24 swings; the full-HP
+	# no-ammo fight is a playtest question, not this contract.
+	_boss.health.reset(300)
 	for attack_index in 24:
 		Input.action_press("attack")
 		await _frames(2)
@@ -188,7 +191,7 @@ func _run() -> void:
 	# Reset restores boss hurtboxes, health and selected loadout.
 	_controls.reset_fight()
 	await _frames(2)
-	assert(_boss.health.current == 300 and not _boss.is_defeated())
+	assert(_boss.health.current == _boss.combat.maximum_hp and not _boss.is_defeated())
 	assert(_boss.get_node("ProjectileHurtbox").collision_layer == 4)
 	assert(_player.health.current == 100)
 	assert(_player.player_handgun.loaded_rounds == 0)
@@ -202,14 +205,14 @@ func _run() -> void:
 	await _frames(2)
 	var shot := _player.player_handgun.fire(1.0, false, _player)
 	assert(shot != null)
-	await _until(func(): return _boss.health.current < 300, 160, "Player bullet did not damage boss.")
-	assert(_boss.health.current == 275, "Machine armor must not reduce handgun damage.")
+	await _until(func(): return _boss.health.current < _boss.combat.maximum_hp, 160, "Player bullet did not damage boss.")
+	assert(_boss.health.current == _boss.combat.maximum_hp - 25, "Machine armor must not reduce handgun damage.")
 	_controls.set_boss_active(true)
 	# This checks airborne defeat, so survive the now six-rocket opening first.
 	_player.health.reset(1000)
 	await _until(func(): return _boss.state_name() == "JUMP" and _boss.global_position.y > 2.0,
 		420, "Final jump did not reach the air after the mixed salvo/recovery.")
-	_boss.receive_melee_hit(_player.global_position, CombatHit.new(300, &"test_defeat"))
+	_boss.receive_melee_hit(_player.global_position, CombatHit.new(_boss.combat.maximum_hp, &"test_defeat"))
 	await _frames(120)
 	assert(_boss.is_defeated() and absf(_boss.global_position.y) < 0.05,
 		"An airborne defeat must settle to the floor without an impact attack.")

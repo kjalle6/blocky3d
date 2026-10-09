@@ -42,7 +42,7 @@ func _run() -> void:
 	assert(player.velocity.y > 0.0 and boss.smoke_escapes == 0 and not player.is_ground_held())
 
 	await _head_landing()
-	assert(boss.health.current == 300 and player.health.current == 100)
+	assert(boss.health.current == boss.combat.maximum_hp and player.health.current == 100)
 	assert(player.velocity.y <= 0.0, "Head contact must not bounce the player.")
 	assert(boss.smoke_escapes == 1 and boss.state_name() == "SMOKE_ESCAPE")
 	assert(get_nodes_in_group("boss_smoke").size() == 1)
@@ -61,7 +61,7 @@ func _run() -> void:
 	assert(absf(player.feet_world_y()) < 0.05, "Player must fall onto the actual floor.")
 	assert(not player.is_attacking() and not player.is_dashing())
 	assert(player.player_handgun.loaded_rounds == loaded and not player.player_handgun.is_reloading())
-	assert(boss.health.current == 300, "Locked attack input cannot damage the boss.")
+	assert(boss.health.current == boss.combat.maximum_hp, "Locked attack input cannot damage the boss.")
 	# Existing threats still hurt: this is a control hold, not invulnerability.
 	assert(player.receive_enemy_hit(Vector3.ZERO, CombatHit.new(25, &"test_bullet")))
 	assert(player.health.current == 75 and player.is_ground_held())
@@ -107,7 +107,7 @@ func _run() -> void:
 	assert(boss.state_name() == "SMOKE_ESCAPE" and boss.jump_cooldown_remaining > 0.0)
 	player.health.reset(1000)
 	await _until(func(): return not player.is_ground_held(), 240, "Airborne escape never released.")
-	assert(boss.landing_count == 0 and boss.health.current == 300, "Interrupted leap must not produce a landing blast.")
+	assert(boss.landing_count == 0 and boss.health.current == boss.combat.maximum_hp, "Interrupted leap must not produce a landing blast.")
 	assert(boss.missiles_fired == 6, "Escape should counterattack before releasing the player.")
 
 	await _counterattack_check(1)
@@ -120,7 +120,7 @@ func _run() -> void:
 		assert(player.is_ground_held())
 		match cleanup:
 			"reset": controls.reset_fight()
-			"defeat": boss.receive_melee_hit(player.global_position, CombatHit.new(300, &"test_defeat"))
+			"defeat": boss.receive_melee_hit(player.global_position, CombatHit.new(boss.combat.maximum_hp, &"test_defeat"))
 			"player_reset": player.reset_at(level.spawn_point.global_transform)
 			"inspection": player.set_developer_inspection_enabled(true)
 		await _frames(2)
@@ -135,7 +135,7 @@ func _run() -> void:
 	await _frames(2)
 	assert(get_nodes_in_group("boss_smoke").is_empty())
 	await _head_landing()
-	boss.receive_melee_hit(player.global_position, CombatHit.new(300, &"test_defeat"))
+	boss.receive_melee_hit(player.global_position, CombatHit.new(boss.combat.maximum_hp, &"test_defeat"))
 	assert(boss.is_defeated() and not player.is_ground_held())
 	await _head_landing()
 	player.kill()
@@ -175,10 +175,10 @@ func _run() -> void:
 	assert(boss.state_name() == "SALVO" and boss.phase_time > phase + 0.18)
 	assert(boss.missiles_fired >= 1, "Hurt presentation cannot cancel the pending missile.")
 	assert(not boss.visual.texture.resource_path.ends_with("/Hurt.png"))
-	assert(boss.health.current == 288)
+	assert(boss.health.current == boss.combat.maximum_hp - 12, "A knife swing deals 12.5; HP rounds up.")
 	assert(boss.smoke_escapes == 0 and not player.is_ground_held(), "Knife hits must not deploy smoke.")
 	boss.receive_projectile_hit(player.global_position, CombatHit.new(25, &"bullet"))
-	assert(boss.health.current == 263 and boss.smoke_escapes == 0 and not player.is_ground_held(),
+	assert(boss.health.current == boss.combat.maximum_hp - 37 and boss.smoke_escapes == 0 and not player.is_ground_held(),
 		"Bullets must not deploy smoke.")
 
 	# Normal tank suspension remains a separate unchanged status.

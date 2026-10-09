@@ -21,7 +21,9 @@ this milestone unless a concrete blocker needs attention.
    the agreed shape: a construction-scaffold complex of one-way decks (a main
    tower with alternating balconies, ceiling-hung platforms and stepped towers
    down to a long wall slide) that the boss chases the player through, framed
-   by a fit-both camera limited only by the arena's size.
+   by a fit-both camera limited only by the arena's size. A second phase at half
+   health adds shootable flying machines that kill on touch and teach that
+   machines can be destroyed with the handgun.
    Agreed integration: Level 3's upper-route plateau ends at an overhanging lip
    into the pit; entering triggers a camera beat to the boss noticing and aiming,
    returning to the player mid-slide, followed by an ordinary (non-healing)
@@ -29,13 +31,14 @@ this milestone unless a concrete blocker needs attention.
 2. Tune missiles, jump/landing AoE, recovery openings, close-range charge/shove,
    and the head-landing smoke escape in that arena. Keep a no-ammo melee victory
    viable, normal mobility intact, and the agreed lack of advance landing warnings.
-3. Choose and test boss durability with those openings. **HP remains TBD; 300
-   is too low and is only the current lab placeholder.** Keep the combat guide,
+3. Choose and test boss durability with those openings. **HP is a provisional
+   2000 for playtesting; the final value is TBD.** Keep the combat guide,
    numbers-only spreadsheet, and scanner stat bindings aligned with final tuning.
 4. Finish defeat and Level 3 completion flow, including clearing missiles and
    player holds, repeatable retries, and the existing campaign/save behavior.
-   Settle presentation/audio needed for this fight; additional phases are not
-   assumed requirements.
+   Settle presentation/audio needed for this fight. The agreed second phase
+   (shootable flying machines from half health) is built in the arena graybox;
+   further phases are not assumed requirements.
 5. Playtest full fights with and without ammo, both room edges, aerial/wall
    evasion, close pressure and head contact. Verify camera/ground coverage and
    use the visual inspector on the arena and approach. Focused checks support
@@ -349,8 +352,8 @@ abilities, reset/refill, attack selection, and a no-ammo mode. Selected effects
 are under `assets/art/vfx/boss`; source and license records accompany the assets.
 
 The boss should have clear attack patterns and meaningful vulnerability windows.
-**Boss HP is TBD:** the current 300 HP is an inadequate lab placeholder, not an
-accepted fight-length target. Choose its replacement with the actual arena and
+**Boss HP is a provisional 2000** for playtesting, not an accepted fight-length
+target. Choose its replacement with the actual arena and
 attack openings; see [Combat balance](COMBAT_BALANCE.md).
 Melee remains a viable way to win with no ammunition. Attack tuning, recovery,
 the finished arena, and any phase changes still need playtesting. The boss has

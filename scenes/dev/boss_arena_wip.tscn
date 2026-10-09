@@ -8,6 +8,8 @@
 [ext_resource type="Script" uid="uid://dix5kjp2eb4lv" path="res://scripts/camera/boss_arena_camera_3d.gd" id="6"]
 [ext_resource type="Script" path="res://scripts/props/scaffold_tower_3d.gd" id="7"]
 [ext_resource type="Script" uid="uid://bvrt0y52kksqt" path="res://scripts/pickups/item_reward_3d.gd" id="9"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/green_zone_flyer_shootable.tscn" id="10"]
+[ext_resource type="Script" path="res://scripts/level/boss_phase_flyers_3d.gd" id="11"]
 
 [sub_resource type="BoxShape3D" id="KillPlaneShape"]
 size = Vector3(56, 1, 8)
@@ -112,6 +114,28 @@ loot_pool = &"green_zone"
 presentation = 1
 metadata/layout_id = "boss_arena_short_tower_chest"
 
+[node name="FlyerCrossing" parent="Hazards" index="0" instance=ExtResource("10")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.2, 31.6, 0)
+bob_amplitude = 2.8
+bob_period = 3.2
+starts_active = false
+
+[node name="FlyerUnderHanging" parent="Hazards" index="1" instance=ExtResource("10")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.72, 23.04, 0)
+bob_amplitude = 0.5
+bob_period = 2.0
+horizontal_amplitude = 3.84
+horizontal_speed = 2.4
+spark_phase = 0.5
+starts_active = false
+
+[node name="FlyerSlide" parent="Hazards" index="2" instance=ExtResource("10")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47.84, 12.8, 0)
+bob_amplitude = 5.5
+bob_period = 4.4
+bob_phase = 0.25
+starts_active = false
+
 [node name="SpawnPoint" parent="." index="8"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.56, 0.7, 0)
 
@@ -148,3 +172,8 @@ maximum_chase_rise = 19.2
 
 [node name="BossLabController" type="Node" parent="." index="13"]
 script = ExtResource("5")
+
+[node name="BossPhaseFlyers" type="Node" parent="." index="14"]
+script = ExtResource("11")
+boss_path = NodePath("../GreenZoneBoss")
+flyer_paths = Array[NodePath]([NodePath("../Hazards/FlyerCrossing"), NodePath("../Hazards/FlyerUnderHanging"), NodePath("../Hazards/FlyerSlide")])

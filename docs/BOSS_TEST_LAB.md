@@ -4,12 +4,14 @@
 working prototype, and its improved presentation does not mark the encounter
 complete. Follow the [boss completion checklist](LEVEL_ROADMAP.md#next-priority-finish-the-green-zone-boss)
 for arena construction, full-fight tuning, final HP, campaign integration and
-acceptance. HP remains TBD; the current 300 is too low. Scanner integration and
+acceptance. HP is a provisional 2000 for playtesting; the final value is TBD. Scanner integration and
 further asset work are queued behind this encounter.
 
 Open **Development selector → Boss Test Lab** (shortcut **8**). This is a fresh,
 isolated test session with all movement abilities, a handgun, 12 loaded rounds,
-and 60 reserve rounds. It does not advance or save campaign progress. The boss
+and 60 reserve rounds. **Infinite ammo** is on by default in both boss labs: the
+reserve tops back up to 60, while reloads still happen; F1 toggles it, and the
+no-ammo test mode overrides it. It does not advance or save campaign progress. The boss
 has not been placed in Level 3 yet.
 
 **F1** opens the fight controls: reset/refill, mixed attacks, missiles only,
@@ -147,16 +149,16 @@ health bars even after taking damage.
 
 Initial tuning is deliberately provisional:
 
-**Boss HP is TBD.** The current 300 HP is too low and remains only a runtime
-lab placeholder. No replacement value or target number of hits/openings has
-been agreed. Tune durability with the attack pattern and actual arena, keeping
+**Boss HP is a provisional 2000** (raised from the 300 lab placeholder on
+2026-10-09 for playtesting): 80 handgun hits or 160 knife swings. The final
+value and target number of openings are not agreed. Tune durability with the attack pattern and actual arena, keeping
 a no-ammo melee win viable. The shared roster and combat rules are in
 [Combat balance](COMBAT_BALANCE.md).
 
 | Setting | Value |
 | --- | --- |
-| Boss health | TBD; 300 is the current lab placeholder, judged too low |
-| Machine knife armor | 50% reduction: 12.5 per swing; 24 hits at the current placeholder HP only |
+| Boss health | 2000, provisional (final TBD) |
+| Machine knife armor | 50% reduction: 12.5 per swing; 160 swings at 2000 HP |
 | Handgun / stomp damage to boss | 25 / 0 |
 | Smoke retreat speed / clearance | 6 m/s / 9 m |
 | Hold after retreat / final smoke tail | 1.5 s / 0.6 s |
@@ -183,7 +185,8 @@ a no-ammo melee win viable. The shared roster and combat rules are in
 
 The landing is a ground-level box across the 2D play plane. Its effect is an
 expanded ring from the VFX catalog, flattened to the blast height. Boss-specific
-audio and later phases are not part of this first prototype.
+audio is not part of this first prototype; the lab has no second phase (the
+arena's flying-machine phase is described above).
 
 ## Boss Arena WIP graybox
 
@@ -226,6 +229,19 @@ on and which bullets and rockets do not query, so shots cross decks. The
 scaffold script is `scripts/props/scaffold_tower_3d.gd`; the wall-jump scaffold
 prop is unchanged.
 
+**Phase two (arena).** When the boss first falls to half health (1000 of 2000
+HP), three dormant **shootable flying machines** arrive 0.5 s apart: one bobbing
+in the gap between the main tower's top balcony and the high hanging platform,
+one patrolling under the hanging platforms, and one riding the right-wall slide.
+Each blinks harmlessly for 1 s before arming, so none can appear on top of the
+player. Body contact and the discharge are lethal as usual, but three handgun
+hits destroy one (75 HP); knife and stomp cannot. This is where the player first
+meets machines with a gun in hand. Any still flying are destroyed with the boss;
+a death or reset returns them to dormant and the boss to phase one. The variant
+is `scenes/enemies/green_zone_flyer_shootable.tscn`; the indestructible machine
+and its script stay unchanged. Phase logic: the boss's `phase_changed` signal
+and `scripts/level/boss_phase_flyers_3d.gd`.
+
 **Pursuit (arena boss only).** The arena's boss walks at 4.5 m/s and has
 `chase_enabled`: when the player stands at least 2 m above it, it leaps onto that
 surface on its own 3-second cooldown, with a height-solved arc that peaks 1.5 m
@@ -242,7 +258,9 @@ blast. These settings default off, so the lab's tuning above is unchanged.
 Focused check: `tools/run_godot_tool.ps1 -Script res://tools/validate_boss_arena_wip.gd`.
 It covers the room limits, chest placement on decks, one-way decks, the chase
 onto a deck, the staged climb, the attack leap's return to its level, and the
-fit-both camera from close range to the arena's full view. Playtesting owns the feel, the camera
+fit-both camera from close range to the arena's full view, and phase two:
+dormant machines, harmless arming, lethal contact, three-hit destruction by
+bullets, reset and defeat cleanup. Playtesting owns the feel, the camera
 in the tall space, and HP.
 
 ## Assets and tuning locations

@@ -84,6 +84,15 @@ The host updates manually from the camera's -100 process priority, before the
 background's -90 update. The host remains in Idle mode in the editor so its
 viewfinder works.
 
+**Aim look.** While the handgun follows the mouse, every gameplay camera rises
+by a quarter of the cursor's height above the player, capped at 2.5 m
+(`aim_look_fraction`, `aim_look_maximum` on `PixelSideCamera3D`). Because the
+fraction is below 1 the view settles instead of chasing a still cursor; aiming
+level or down, cutscenes, inspection and gamepad/keyboard aim leave it alone.
+The Phantom adapter adds the smoothed lift after the host writes the rail
+framing, so it never accumulates; the plain side camera keeps it inside its
+authored vertical limits.
+
 Spawn/load uses Phantom's teleport function to clear damping velocity.
 Inspection can leave the rail and returns to it on exit. Pausing or disabling
 the camera does not leave an autonomous host moving it in the background.

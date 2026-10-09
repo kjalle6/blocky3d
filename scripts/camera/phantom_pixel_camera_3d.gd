@@ -33,6 +33,7 @@ extends PixelSideCamera3D
 var _branch_active := false
 var _upper_follow_active := false
 var _framing_mode: StringName = &"route"
+var _aim_lift := 0.0
 
 
 func _ready() -> void:
@@ -54,6 +55,10 @@ func _process(delta: float) -> void:
 		snap_to_target()
 	elif phantom_host.get_active_pcam() != null:
 		phantom_host.process(delta)
+		# The host rewrites the render transform each frame, so the aim lift is
+		# applied on top of the authored rail framing, never accumulated.
+		_aim_lift = lerpf(_aim_lift, aim_look_offset(), 1.0 - exp(-vertical_follow_response * delta))
+		global_position.y += _aim_lift
 		_snap_render_output()
 
 
@@ -64,6 +69,7 @@ func snap_to_target() -> void:
 		super.snap_to_target()
 		return
 	_upper_follow_active = false
+	_aim_lift = 0.0
 	_sync_phantom_follow(true)
 	phantom_camera.teleport_position()
 	# The host initializes one frame late. Spawn/save framing cannot wait for it.

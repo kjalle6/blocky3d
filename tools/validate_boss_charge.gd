@@ -155,7 +155,7 @@ func _run() -> void:
 	player.velocity.y = -5.0
 	await _until(func(): return player.is_ground_held(), 20, "Descending head contact lost its smoke response.")
 	assert(boss.state_name() == "SMOKE_ESCAPE" and boss.smoke_escapes == 1)
-	assert(boss.health.current == 300 and player.health.current == 100)
+	assert(boss.health.current == boss.combat.maximum_hp and player.health.current == 100)
 	assert(boss.charge_cooldown_remaining > 0.0 and is_zero_approx(player.get("_knockback_speed")))
 	controls.reset_fight()
 	assert(not player.is_control_locked() and boss.charges_started == 0)

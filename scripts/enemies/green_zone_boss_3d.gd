@@ -5,6 +5,8 @@ signal health_changed(current: int, maximum: int)
 signal landed(impact_position: Vector3)
 signal missile_fired(projectile: Node3D)
 signal attack_started(attack: StringName)
+## Emitted once per fight when health first falls to phase_two_health_fraction.
+signal phase_changed(new_phase: int)
 
 enum State { IDLE, SALVO, JUMP, RECOVERY, SMOKE_ESCAPE, SPACE_CHARGE, DEFEATED }
 enum Pattern { MIXED, MISSILES, JUMPS }
@@ -68,6 +70,8 @@ const SHEETS := {
 @export var charge_knockback_deceleration := 32.0
 @export var salvo_shove_distance := 2.2
 @export var salvo_shove_cooldown := 0.6
+## The fight's second phase starts when health first falls to this fraction.
+@export_range(0.0, 1.0, 0.05) var phase_two_health_fraction := 0.5
 @export_group("Pursuit")
 ## Arena-only leap onto the surface the player stands on. It is off by default
 ## so the flat Boss Test Lab keeps its accepted tuning.
@@ -93,6 +97,7 @@ var jump_cooldown_remaining := 0.0
 var charge_cooldown_remaining := 0.0
 var chase_cooldown_remaining := 0.0
 var chase_leaps := 0
+var phase := 1
 var charges_started := 0
 var salvo_shoves := 0
 var salvo_shove_cooldown_remaining := 0.0
@@ -612,6 +617,10 @@ func receive_melee_hit(source: Vector3, hit: CombatHit = null) -> bool:
 	if hit.kind == &"stomp": return false
 	if not health.damage(hit, combat): return false
 	_hurt_remaining = HURT_DURATION
+	if phase == 1 and health.current > 0 \
+			and health.current <= ceili(health.maximum * phase_two_health_fraction):
+		phase = 2
+		phase_changed.emit(phase)
 	if health.current == 0:
 		_release_escape_player()
 		_charge_hit = null
@@ -768,6 +777,7 @@ func reset_run() -> void:
 	charge_cooldown_remaining = 0.0
 	chase_cooldown_remaining = 0.0
 	chase_leaps = 0
+	phase = 1
 	_chase_jump = false
 	_jump_total_time = jump_duration
 	_end_pass_up()

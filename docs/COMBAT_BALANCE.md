@@ -28,9 +28,10 @@ characters are not implemented enemies.
 | Moving route gunner | 50 HP, 25 per firing beat | Mobile dual-gun variant; six reserve rounds on defeat |
 | Elevated stationary guard | 50 HP, 25 per firing beat | Route-gunner variant with walking disabled and increased vertical detection; six reserve rounds on defeat |
 | Green Zone tank | 200 HP, 25 attack damage | Eight handgun hits or sixteen knife hits; immune to stomps and nonlethal interruption |
-| Green Zone launcher boss | **HP TBD**; 25 per damaging attack | Runtime lab placeholder is 300 HP and is too low; stomp triggers smoke escape instead of damage |
+| Green Zone launcher boss | **2000 HP, provisional**; 25 per damaging attack | Raised from the 300 lab placeholder for playtesting; final HP TBD; stomp triggers smoke escape instead of damage |
 | Individual wooden crate | 50 HP | Two ordinary hits or one tank shell; the breaking shot is absorbed |
 | Flying machine, vertical or horizontal patrol | No HP; indestructible | Body always kills on contact; electrical discharge below it is lethal only while active |
+| Shootable flying machine | 75 HP, provisional | Three handgun hits destroy it; body and discharge stay lethal, and knife and stomp cannot hit it. First met in the Green Zone boss's second phase; the earlier, indestructible machines appear before the handgun |
 | Ground / wall spikes and spike-pit fill | No HP; instantly lethal | Contact kills irrespective of remaining HP |
 | Shore and machine-pool water contacts | No HP; instantly lethal | Entering an authored water hazard causes water death |
 | Pit / out-of-bounds kill regions | No HP; instantly lethal | Authored kill areas and the player's fall limit cause death |
@@ -39,10 +40,9 @@ The player, bat, skater, knife, and stomp values are the agreed starting balance
 Handgun and gunner values are test values. One stomp is the current choice for
 ordinary enemies; revisit it only if playtesting shows a need.
 
-**Boss maximum HP is unresolved.** The current 300 HP is a lab placeholder,
-explicitly judged too low, not an accepted encounter target. It currently takes
-12 handgun hits or 24 knife hits, but those counts must not set the final fight
-length. Choose the replacement after testing attack patterns, vulnerability
+**Boss maximum HP is provisional.** It is 2000 for playtesting, raised from the
+300 lab placeholder that was judged too low; it is not an accepted encounter
+target. It currently takes 80 handgun hits or 160 knife swings. Choose the replacement after testing attack patterns, vulnerability
 windows and the actual arena. There is no agreed final HP, hit count or number
 of openings. Melee must remain viable without arriving with ammunition.
 
@@ -149,8 +149,9 @@ under `assets/art/vfx/boss`. The lab guide owns art selection and camera details
 Bosses use only the large encounter health bar, never a small overhead enemy
 strip. Defeat stops attacks, removes this boss's remaining missiles and allows
 passage through its body. An airborne corpse falls without a landing blast.
-Reset restores health and collision. Boss-specific audio and later phases
-remain unimplemented.
+Reset restores health and collision. Boss-specific audio remains
+unimplemented. In the Boss Arena WIP, half health starts a second phase with
+shootable flying machines; see the [Boss Test Lab guide](BOSS_TEST_LAB.md).
 
 ### Level 3 tank and later gunner variants
 
@@ -341,9 +342,8 @@ collision or range limit, with no implied splash damage from impact artwork.
   full fight and connect its defeat/Level 3 ending before scanner integration
   or further asset expansion. The [roadmap checklist](LEVEL_ROADMAP.md#next-priority-finish-the-green-zone-boss)
   defines the milestone; the lab remains the behavior test fixture.
-- Launcher boss HP is **TBD**; 300 remains only the inadequate runtime lab
-  placeholder. Final arena size, encounter length, attack tuning, later phases
-  and boss-specific audio are not settled. The boss is not connected to Level 3.
+- Launcher boss HP is a provisional **2000**; the final value is TBD. Final arena size, encounter length, attack tuning, the second
+  phase's tuning and boss-specific audio are not settled. The boss is not connected to Level 3.
 - Moving saws are reserved for a later level, not implemented in the current
   roster. Their damage, speed, route and timing are TBD.
 - General enemy drops, additional status effects and unused enemy/hazard assets
@@ -574,7 +574,7 @@ powershell -ExecutionPolicy Bypass -File .\tools\run_godot_tool.ps1 -Script res:
 ```
 
 The output is `build/reports/combat_balance.md`. It reports current resource
-values, including the boss's 300-HP placeholder; it does not resolve the TBD or
+values, including the boss's provisional 2000 HP; it does not resolve the TBD or
 catalog every hazard and scripted status effect. Use it to compare damage and hit
 counts, then test actual encounters for practical firing opportunities, recovery,
 and difficulty. The Firearm Lab isolates those comparisons; campaign play reveals

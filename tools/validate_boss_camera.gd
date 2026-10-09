@@ -72,7 +72,7 @@ func _run() -> void:
 	assert(is_equal_approx(camera.size, 12.9375))
 	camera.set_developer_inspection_enabled(false)
 	_assert_bodies_visible()
-	boss.receive_melee_hit(player.global_position, CombatHit.new(300, &"camera_test"))
+	boss.receive_melee_hit(player.global_position, CombatHit.new(boss.combat.maximum_hp, &"camera_test"))
 	camera.snap_to_target()
 	assert(is_equal_approx(camera.size, 12.9375))
 	level.get_node("BossLabController").reset_fight()

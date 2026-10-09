@@ -46,6 +46,7 @@ the catalog and current actor values, never that report or the Excel file.
 | `green_zone_launcher` | Green Zone launcher | Boss |
 | `flyer_vertical` | Flying machine | Hazard |
 | `flyer_patrol` | Patrolling flying machine | Hazard |
+| `flyer_shootable` | Shootable flying machine | Hazard |
 | `spikes_ground` | Ground spikes | Hazard |
 | `spikes_wall` | Wall spikes | Hazard |
 | `spike_pit` | Spike pit | Hazard |
@@ -94,8 +95,8 @@ configuration values, not a measurement of current velocity. Separate projectile
 scene bindings are prototype defaults, not measurements of a fired projectile.
 
 Boss `maximum_hp` retains `balance_status: "TBD"`, `target_value: null` and
-`current_role: "inadequate_lab_placeholder"`. Its current value comes directly
-from the boss profile; no second 300-HP constant is stored here. Lethal hazards
+`current_role: "provisional_playtest_value"`. Its current value comes directly
+from the boss profile; no second HP constant is stored here. Lethal hazards
 have qualitative death facts and no invented HP/damage number. A planned saw
 has no runtime stats or unlockable entry.
 

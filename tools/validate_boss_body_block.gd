@@ -37,7 +37,7 @@ func _run() -> void:
 		await _frames(18)
 		Input.action_release(action)
 		assert((player.global_position.x - boss.global_position.x) * side > 1.65, "Ground dash cannot phase through the boss.")
-		assert(boss.health.current == 300 and player.health.current == 100)
+		assert(boss.health.current == boss.combat.maximum_hp and player.health.current == 100)
 
 	# Real double jump clears the boss, which is taller than one ordinary jump.
 	await _setup(-1.0)
@@ -116,11 +116,11 @@ func _run() -> void:
 	await _until(func(): return player.is_ground_held(), 30, "Head contact did not trigger smoke.")
 	await _frames(28)
 	assert(player.is_on_floor() and absf(player.feet_world_y()) < 0.05)
-	assert(boss.health.current == 300 and player.health.current == 100)
+	assert(boss.health.current == boss.combat.maximum_hp and player.health.current == 100)
 	controls.reset_fight()
 	await _frames(5)
 	assert(not boss.get_collision_exceptions().has(player))
-	boss.receive_melee_hit(player.global_position, CombatHit.new(300, &"test_defeat"))
+	boss.receive_melee_hit(player.global_position, CombatHit.new(boss.combat.maximum_hp, &"test_defeat"))
 	await _frames(4)
 	assert(boss.get_collision_exceptions().has(player))
 	controls.reset_fight()

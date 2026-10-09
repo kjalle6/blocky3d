@@ -1,6 +1,9 @@
 extends Node
 ## Local fight controls and loadout; this session never writes campaign progress.
+const RESERVE_ROUNDS := 60
 var no_ammo := false
+## Keeps the reserve topped up so a long fight never runs dry; reloads remain.
+var infinite_ammo := true
 var _bar: ProgressBar
 var _title: Label
 @onready var session := get_parent() as LevelSession3D
@@ -18,8 +21,18 @@ func _on_run_reset() -> void:
 	session.player.inventory.reset()
 	session.player.player_handgun.set_loaded_rounds(0 if no_ammo else 12)
 	if not no_ammo:
-		session.player.inventory.add(&"handgun_ammo", 60)
+		session.player.inventory.add(&"handgun_ammo", RESERVE_ROUNDS)
 	_update_health(boss.health.current, boss.health.maximum)
+
+func _physics_process(_delta: float) -> void:
+	if not infinite_ammo or no_ammo or session == null or session.player == null:
+		return
+	var reserve: int = session.player.inventory.count(&"handgun_ammo")
+	if reserve < RESERVE_ROUNDS:
+		session.player.inventory.add(&"handgun_ammo", RESERVE_ROUNDS - reserve)
+
+func set_infinite_ammo(value: bool) -> void:
+	infinite_ammo = value
 
 func reset_fight() -> void:
 	session._reset_run()
@@ -157,6 +170,13 @@ func _build_interface() -> void:
 	ammo.focus_mode = Control.FOCUS_NONE
 	ammo.toggled.connect(set_no_ammo)
 	rows.add_child(ammo)
+	var endless := CheckButton.new()
+	endless.name = "InfiniteAmmo"
+	endless.text = "Infinite ammo (reloads stay)"
+	endless.button_pressed = infinite_ammo
+	endless.focus_mode = Control.FOCUS_NONE
+	endless.toggled.connect(set_infinite_ammo)
+	rows.add_child(endless)
 	var active := CheckButton.new()
 	active.name = "BossActive"
 	active.text = "Boss active"

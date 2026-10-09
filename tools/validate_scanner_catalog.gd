@@ -12,7 +12,7 @@ func _run() -> void:
 	var player: Node = load("res://scenes/player/pixel_player_character.tscn").instantiate()
 	var catalog := CATALOG.new()
 	assert(catalog.validation_errors().is_empty(), str(catalog.validation_errors()))
-	assert(catalog.entry_ids().size() == 16)
+	assert(catalog.entry_ids().size() == 17)
 	var report := {"schema_version": 1, "numeric_discovery": "TBD", "entries": []}
 	for id in catalog.entry_ids():
 		var result: Dictionary = catalog.resolve_stats(id)
@@ -99,7 +99,7 @@ func _check_overrides(catalog: RefCounted) -> void:
 	var boss: Dictionary = catalog.resolve_stats("green_zone_launcher")
 	assert(boss.values.maximum_hp.balance_status == "TBD")
 	assert(boss.values.maximum_hp.target_value == null)
-	assert(boss.values.maximum_hp.current_role == "inadequate_lab_placeholder")
+	assert(boss.values.maximum_hp.current_role == "provisional_playtest_value")
 	assert(boss.values.missiles_per_salvo.value == 6)
 	assert(boss.values.missile_cooldown.value == 5.0)
 	var guard: Dictionary = catalog.resolve_stats("gunner_guard")

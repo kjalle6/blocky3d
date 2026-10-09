@@ -39,6 +39,8 @@ func _run() -> void:
 	await _validate_staged_chase()
 	await _validate_attack_leap_keeps_level()
 	await _validate_fit_camera()
+	await _validate_phase_two()
+	await _validate_aim_look_and_ammo()
 	print("Boss arena WIP validation passed.")
 	quit(0)
 
@@ -196,6 +198,95 @@ func _validate_fit_camera() -> void:
 	assert(camera.size > normal * room_zoom * 0.95, "It uses the whole arena view.")
 	assert(camera.is_position_in_frustum(_player.global_position), "The player is always in view.")
 	_assert_inside_room(camera)
+	_controls.set_boss_active(true)
+
+func _validate_phase_two() -> void:
+	_controls.set_boss_active(false)
+	await _frames(6)
+	var flyers: Array[Node] = _level.get_node("BossPhaseFlyers").flyers()
+	assert(flyers.size() == 3, "Three shootable machines wait for phase two.")
+	for flyer in flyers:
+		assert(not flyer.is_active() and not flyer.visible, "Machines stay dormant in phase one.")
+		assert(flyer.get_node("ProjectileHurtbox").collision_layer == 0, "Dormant machines never block bullets.")
+		assert(not flyer.is_in_group("melee_target"), "Machines cannot be stabbed or stomped.")
+	var maximum: int = _boss.combat.maximum_hp
+	var events: Array[int] = []
+	_boss.phase_changed.connect(func(new_phase: int): events.append(new_phase))
+	_boss.receive_projectile_hit(Vector3.ZERO, CombatHit.new(int(maximum * 0.5), &"test_phase"))
+	assert(_boss.phase == 2 and events == [2], "Half health starts phase two once.")
+	_boss.receive_projectile_hit(Vector3.ZERO, CombatHit.new(1, &"test_phase"))
+	assert(events == [2], "Phase two starts only once.")
+	# Arriving machines blink harmlessly before they arm.
+	var first: Node3D = flyers[0]
+	assert(first.is_active() and not first.is_lethal(), "The first machine arrives arming.")
+	_place_player(first.global_position - Vector3(0, PlayerCharacter.FEET_OFFSET_Y, 0))
+	await _frames(10)
+	assert(not _player.is_dead(), "An arming machine cannot kill.")
+	_place_player(Vector3(2.56, 0, 0))
+	await _until(func(): return flyers.all(func(f: Node) -> bool: return f.is_lethal()), 300,
+		"All machines must arm after their staggered arrival.")
+	# Real bullet queries find the machine's hurtbox; three hits destroy it.
+	var cast := preload("res://scripts/projectiles/handgun_projectile_3d.gd")
+	var hit: Dictionary = cast.cast_shot(first.get_world_3d().direct_space_state,
+		first.global_position + Vector3(-3, 0.1, 0), first.global_position + Vector3(3, 0.1, 0), 5, [])
+	assert(not hit.is_empty() and hit.collider == first.get_node("ProjectileHurtbox"),
+		"Player bullets register on an armed machine.")
+	for shot in 3:
+		first.get_node("ProjectileHurtbox").receive_projectile_hit(first.global_position, CombatHit.new(25, &"bullet"))
+	assert(first.is_destroyed() and not first.visible, "Three handgun hits destroy a machine.")
+	await _frames(2)
+	assert(first.get_node("ProjectileHurtbox").collision_layer == 0, "A destroyed machine stops catching bullets.")
+	# Touching an armed machine is lethal, and the retry starts phase one again.
+	var second: Node3D = flyers[1]
+	_place_player(second.global_position - Vector3(0, PlayerCharacter.FEET_OFFSET_Y, 0))
+	await _until(func(): return _player.is_dead(), 60, "Touching an armed machine must kill.")
+	await _until(func(): return not _player.is_dead() and _boss.phase == 1, 400, "Death must reset the fight.")
+	await _frames(4)
+	for flyer in flyers:
+		assert(not flyer.is_active() and flyer.get_node("ProjectileHurtbox").collision_layer == 0,
+			"A reset returns every machine to dormant.")
+	# Defeat destroys every machine still flying and cancels later arrivals.
+	_controls.set_boss_active(false)
+	await _frames(4)
+	_boss.receive_projectile_hit(Vector3.ZERO, CombatHit.new(int(maximum * 0.5), &"test_phase"))
+	await _frames(2)
+	_boss.receive_projectile_hit(Vector3.ZERO, CombatHit.new(maximum, &"test_defeat"))
+	await _frames(90)
+	assert(_boss.is_defeated())
+	for flyer in flyers:
+		assert(not flyer.is_active(), "No machine survives the boss.")
+	_controls.reset_fight()
+	await _frames(4)
+	_controls.set_boss_active(true)
+
+func _validate_aim_look_and_ammo() -> void:
+	_controls.set_boss_active(false)
+	_place_player(Vector3(24.0, 0, 0))
+	await _frames(6)
+	var camera: PixelSideCamera3D = _level.camera
+	var handgun: Node = _player.player_handgun
+	var maximum: float = camera.aim_look_maximum
+	# Checked synchronously: the next physics frame recomputes the real mouse aim.
+	handgun.mouse_aim_active = true
+	handgun.crosshair_world = _player.global_position + Vector3(4, 6, 0)
+	assert(is_equal_approx(camera.aim_look_offset(), 6.0 * camera.aim_look_fraction),
+		"Aiming up lifts the view by a fraction of the cursor's height.")
+	handgun.crosshair_world = _player.global_position + Vector3(4, 40, 0)
+	assert(is_equal_approx(camera.aim_look_offset(), maximum), "The lift is capped.")
+	handgun.crosshair_world = _player.global_position + Vector3(4, -3, 0)
+	assert(is_zero_approx(camera.aim_look_offset()), "Aiming level or down never moves the view.")
+	handgun.mouse_aim_active = false
+	handgun.crosshair_world = _player.global_position + Vector3(4, 6, 0)
+	assert(is_zero_approx(camera.aim_look_offset()), "Without mouse aim there is no lift.")
+	# Infinite ammo tops the reserve back up; reloads still happen.
+	assert(_controls.infinite_ammo, "The boss labs default to infinite ammo.")
+	_player.inventory.consume(&"handgun_ammo", 40)
+	await _frames(2)
+	assert(_player.inventory.count(&"handgun_ammo") >= 60, "The reserve refills.")
+	_controls.set_no_ammo(true)
+	await _frames(4)
+	assert(_player.inventory.count(&"handgun_ammo") == 0, "No-ammo mode still wins.")
+	_controls.set_no_ammo(false)
 	_controls.set_boss_active(true)
 
 func _frame_pair(player_feet: Vector3, boss_feet: Vector3) -> void:
