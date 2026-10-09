@@ -16,7 +16,16 @@ this milestone unless a concrete blocker needs attention.
 1. Build and connect the final arena around the existing attack kit and the
    player's full movement abilities. The enlarged lab is a test fixture, not
    the arena size target. Settle floor/wall access, overhead room, approach,
-   retry position, and camera coverage together.
+   retry position, and camera coverage together. The tall
+   [Boss Arena WIP](BOSS_TEST_LAB.md#boss-arena-wip-graybox) graybox now tests
+   the agreed shape: a construction-scaffold complex of one-way decks (a main
+   tower with alternating balconies, ceiling-hung platforms and stepped towers
+   down to a long wall slide) that the boss chases the player through, framed
+   by a fit-both camera limited only by the arena's size.
+   Agreed integration: Level 3's upper-route plateau ends at an overhanging lip
+   into the pit; entering triggers a camera beat to the boss noticing and aiming,
+   returning to the player mid-slide, followed by an ordinary (non-healing)
+   autosave. A blast door, opened with the boss's dropped warhead, is the exit.
 2. Tune missiles, jump/landing AoE, recovery openings, close-range charge/shove,
    and the head-landing smoke escape in that arena. Keep a no-ammo melee victory
    viable, normal mobility intact, and the agreed lack of advance landing warnings.

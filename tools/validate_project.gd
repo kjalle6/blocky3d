@@ -38,6 +38,7 @@ func _validate() -> void:
 	) as Button
 	var sandbox_button := world_list.get_node("LevelDesignerSandboxButton") as Button
 	var boss_lab_button := world_list.get_node("BossTestLabButton") as Button
+	var boss_arena_button := world_list.get_node("BossArenaWipButton") as Button
 
 	assert(game_root.campaign is CampaignCatalog, "GameRoot requires typed campaign data.")
 	assert(game_root.campaign.validation_errors().is_empty(), "Campaign data must validate.")
@@ -66,6 +67,7 @@ func _validate() -> void:
 	assert(gun_encounter_button.text == "LEVEL 3 - GUN ENCOUNTER")
 	assert(sandbox_button.text == "LEVEL DESIGNER SANDBOX")
 	assert(boss_lab_button.text == "BOSS TEST LAB")
+	assert(boss_arena_button.text == "BOSS ARENA WIP")
 	assert(game_root.campaign.find_by_id(&"dev_green_zone_finale_wip") == null)
 	assert(world_list.get_node_or_null("World01Level03Button") == null)
 	assert(world_list.get_node_or_null("EnclosedTerrainLabButton") == null)
@@ -85,7 +87,7 @@ func _validate() -> void:
 	menu_up.pressed = true
 	game_root._unhandled_input(menu_up)
 	assert(
-		boss_lab_button.has_focus(),
+		boss_arena_button.has_focus(),
 		"W should wrap Level 1 to the final developer entry."
 	)
 	var menu_down := InputEventKey.new()
@@ -127,6 +129,7 @@ func _validate() -> void:
 	assert(level_2_transition.completes_source_level)
 	assert(InputMap.has_action("move_left"))
 	assert(InputMap.has_action("jump"))
+	assert(InputMap.has_action("move_down"), "move_down drops through one-way scaffold decks.")
 	assert(InputMap.has_action("attack"))
 	assert(
 		FileAccess.file_exists("res://assets/art/green_zone/asset_manifest.json"),

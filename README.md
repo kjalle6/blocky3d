@@ -63,6 +63,7 @@ Abilities become available as they are learned during the campaign.
 | --- | --- | --- |
 | Move | A / D or left / right arrows | Left stick |
 | Jump / wall jump | Space, W, or up arrow | South button |
+| Drop through a scaffold deck | S or down arrow | Stick down or D-pad down |
 | Dash | Shift | East button |
 | Attack / shoot | Left mouse or J | West button |
 | Aim handgun | Mouse; W / up also aims diagonally upward | Stick up for diagonal aim |

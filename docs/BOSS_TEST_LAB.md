@@ -185,6 +185,66 @@ The landing is a ground-level box across the 2D play plane. Its effect is an
 expanded ring from the VFX catalog, flattened to the blast height. Boss-specific
 audio and later phases are not part of this first prototype.
 
+## Boss Arena WIP graybox
+
+**Development selector → Boss Arena WIP** (shortcut **9**) is a separate tall
+graybox for the final arena's shape. It uses the same F1 fight controls and lab
+loadout; the Boss Test Lab above stays the flat attack-testing fixture. The
+interior is 48.64 m wide and 46 m tall, narrowed from 64 m so the boss camera
+can keep both actors in view across most of it:
+
+The pit is a construction-scaffold complex; rock is limited to the walls,
+ceiling and grass floor.
+
+- **Main tower** (left): 10.24 m wide, eight decks 4.16 m apart up to 33.28 m,
+  posts running on to the ceiling. Alternate floors extend a 2.56 m balcony
+  past a post; the top balcony points right toward the crossing.
+- **Two ceiling-hung platforms** step down to the right (bottom decks at 30.72
+  and 24.96 m), each a braced box with a second deck on top. The higher one
+  holds a supply chest.
+- **Two stepped towers** stand under the hanging platforms (tops at 20.8 m and
+  12.48 m, each with a chest), so the player can drop through a hanging deck
+  onto them. The tall one lines up with the main tower's 20.8 m balcony; the
+  short one ends 5.12 m from the right wall, where a long wall slide returns to
+  the floor. Crossing gaps are 2.56-5.76 m.
+
+**Camera.** The arena's boss camera runs in fit-both mode: it frames the
+midpoint between the player and the boss and zooms out only as far as needed
+to keep both in view. There is no fixed cap; only the arena limits the zoom, so
+the view never shows beyond the walls, floor or ceiling (about 2.3× here, the
+whole width). If even that cannot hold both, the framing keeps the player in
+view. After comparing caps of 1.22-2.0×, an arena this size needs none. A fixed
+cap (`encounter_maximum_zoom`) remains available for a much larger arena, where
+the camera eases back to player framing past it. The flat lab keeps its
+original player-led camera.
+
+**One-way decks.** Decks are the only solid scaffold parts; posts and braces are
+a passable frame drawn behind them. The player rises through a deck from below,
+stands on it, and presses **move_down** (S, down arrow, stick down or D-pad down)
+to drop through. Decks sit on physics layer 7, which the player and boss stand
+on and which bullets and rockets do not query, so shots cross decks. The
+scaffold script is `scripts/props/scaffold_tower_3d.gd`; the wall-jump scaffold
+prop is unchanged.
+
+**Pursuit (arena boss only).** The arena's boss walks at 4.5 m/s and has
+`chase_enabled`: when the player stands at least 2 m above it, it leaps onto that
+surface on its own 3-second cooldown, with a height-solved arc that peaks 1.5 m
+above the target. Beyond its 19.2 m reach it lands on the highest surface in
+reach below the player and continues from there. While a leap rises, it passes
+through bodies in the `boss_pass_up` group. Descending, each surface turns solid
+again once the boss is above it, unless that surface is higher than the leap's
+target, so it never lands inside a deck. Ordinary attack leaps pass through
+those surfaces too and land at the boss's own level, or a lower player's. Chase leaps may start while
+the boss is below the camera, because it rises into view before landing; missiles
+and attack leaps still need it on screen. Chase landings use the normal landing
+blast. These settings default off, so the lab's tuning above is unchanged.
+
+Focused check: `tools/run_godot_tool.ps1 -Script res://tools/validate_boss_arena_wip.gd`.
+It covers the room limits, chest placement on decks, one-way decks, the chase
+onto a deck, the staged climb, the attack leap's return to its level, and the
+fit-both camera from close range to the arena's full view. Playtesting owns the feel, the camera
+in the tall space, and HP.
+
 ## Assets and tuning locations
 
 The unmodified character 2 sprites are promoted from

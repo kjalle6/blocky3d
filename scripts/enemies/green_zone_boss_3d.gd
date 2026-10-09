@@ -68,6 +68,18 @@ const SHEETS := {
 @export var charge_knockback_deceleration := 32.0
 @export var salvo_shove_distance := 2.2
 @export var salvo_shove_cooldown := 0.6
+@export_group("Pursuit")
+## Arena-only leap onto the surface the player stands on. It is off by default
+## so the flat Boss Test Lab keeps its accepted tuning.
+@export var chase_enabled := false
+@export var chase_cooldown := 3.0
+@export var chase_rise_threshold := 2.0
+@export var maximum_chase_rise := 12.0
+@export var chase_clearance := 1.5
+## A chase leap may start while the boss is below the camera: it rises into view
+## before it lands. Missiles and attack leaps still need it on screen to start.
+@export var chase_from_off_screen := true
+@export_group("")
 
 var health := HealthState.new()
 var state := State.IDLE
@@ -79,6 +91,8 @@ var jump_target_x := 0.0
 var missile_cooldown_remaining := 0.0
 var jump_cooldown_remaining := 0.0
 var charge_cooldown_remaining := 0.0
+var chase_cooldown_remaining := 0.0
+var chase_leaps := 0
 var charges_started := 0
 var salvo_shoves := 0
 var salvo_shove_cooldown_remaining := 0.0
@@ -106,6 +120,14 @@ var _smoke_vfx: Node3D
 var _animation := ""
 var _animation_time := 0.0
 var _missile_scene: PackedScene
+var _chase_jump := false
+var _jump_target_y := 0.0
+var _jump_total_time := 1.25
+# Bodies in the "boss_pass_up" group are ignored while a leap rises. Each one
+# collides again once the descending boss is above it, unless it is higher
+# than the surface the leap aims for.
+var _pass_up_bodies: Array[PhysicsBody3D] = []
+var _pass_up_tops: Dictionary = {}
 
 @onready var visual: Sprite3D = $PixelVisual
 @onready var body_collision: CollisionShape3D = $BodyCollision
@@ -139,6 +161,7 @@ func _physics_process(delta: float) -> void:
 		missile_cooldown_remaining = maxf(0.0, missile_cooldown_remaining - delta)
 		jump_cooldown_remaining = maxf(0.0, jump_cooldown_remaining - delta)
 		charge_cooldown_remaining = maxf(0.0, charge_cooldown_remaining - delta)
+		chase_cooldown_remaining = maxf(0.0, chase_cooldown_remaining - delta)
 		salvo_shove_cooldown_remaining = maxf(0.0, salvo_shove_cooldown_remaining - delta)
 	if state == State.SPACE_CHARGE:
 		_tick_space_charge(player, delta)
@@ -155,6 +178,8 @@ func _physics_process(delta: float) -> void:
 		velocity.x = 0.0
 	velocity.y -= gravity * delta
 	var was_jumping := state == State.JUMP
+	if was_jumping and not _pass_up_bodies.is_empty() and velocity.y <= 0.0:
+		_settle_pass_up()
 	move_and_slide()
 	if was_jumping and is_on_floor() and velocity.y <= 0.0:
 		_land(player)
@@ -163,7 +188,7 @@ func _physics_process(delta: float) -> void:
 		_tick_animation("jump", delta, false)
 		# Hold the airborne poses until physical contact, rather than walking in air.
 		if _hurt_remaining <= 0.0:
-			visual.frame = clampi(int(phase_time / jump_duration * 5.0), 1, 4)
+			visual.frame = clampi(int(phase_time / _jump_total_time * 5.0), 1, 4)
 		return
 	if not enabled:
 		_tick_animation("idle", delta)
@@ -247,9 +272,12 @@ func _walk_to_range(player: PlayerCharacter, delta: float) -> void:
 		_face(global_position.x + velocity.x)
 
 func _try_ready_attack(player: PlayerCharacter) -> void:
-	# Normal follow-camera play must see the attacker when a new attack starts.
 	var camera := get_viewport().get_camera_3d()
-	if camera != null and not camera.is_position_in_frustum(global_position + Vector3.UP * 1.5):
+	var on_screen := camera == null or camera.is_position_in_frustum(global_position + Vector3.UP * 1.5)
+	if (on_screen or chase_from_off_screen) and _try_chase(player):
+		return
+	# Normal follow-camera play must see the attacker when a new attack starts.
+	if not on_screen:
 		return
 	var distance := absf(player.global_position.x - global_position.x)
 	var can_missile := pattern != Pattern.JUMPS and missile_cooldown_remaining <= 0.0 and distance <= missile_attack_range
@@ -260,6 +288,87 @@ func _try_ready_attack(player: PlayerCharacter) -> void:
 		_start_jump(player)
 	elif can_missile:
 		_prepare_salvo(player)
+
+func _try_chase(player: PlayerCharacter) -> bool:
+	if not chase_enabled or pattern == Pattern.MISSILES or chase_cooldown_remaining > 0.0:
+		return false
+	var landing := _find_chase_landing(player)
+	if landing.is_empty():
+		return false
+	_start_jump(player, landing)
+	return true
+
+## The surface the player stands on, or the highest one in reach below them,
+## with the landing spot kept far enough from its ends for the whole body.
+func _find_chase_landing(player: PlayerCharacter) -> Dictionary:
+	if not player.is_on_floor() or player.is_control_locked():
+		return {}
+	var rise := player.feet_world_y() - global_position.y
+	if rise < chase_rise_threshold or absf(player.global_position.x - global_position.x) > maximum_jump_distance:
+		return {}
+	var excluded: Array[RID] = [get_rid(), player.get_rid()]
+	var ray := PhysicsRayQueryParameters3D.create(
+		Vector3(player.global_position.x, global_position.y + minf(rise, maximum_chase_rise) + 0.3, 0),
+		Vector3(player.global_position.x, global_position.y + chase_rise_threshold, 0),
+		collision_mask, excluded)
+	var hit := get_world_3d().direct_space_state.intersect_ray(ray)
+	if hit.is_empty():
+		return {}
+	var half_body := (body_collision.shape as BoxShape3D).size.x * 0.5 + 0.1
+	var span := _surface_span(hit, half_body)
+	if span.y - span.x < half_body * 2.0:
+		return {}
+	var target_x := clampf(clampf(player.global_position.x, span.x + half_body, span.y - half_body),
+		minimum_x, maximum_x)
+	if absf(target_x - global_position.x) > maximum_jump_distance:
+		return {}
+	return {"x": target_x, "top": hit.position.y}
+
+func _surface_span(hit: Dictionary, half_body: float) -> Vector2:
+	var fallback := Vector2(hit.position.x - half_body, hit.position.x + half_body)
+	var body := hit.collider as CollisionObject3D
+	if body == null:
+		return fallback
+	var shape_owner := body.shape_owner_get_owner(body.shape_find_owner(hit.shape)) as CollisionShape3D
+	if shape_owner == null or not shape_owner.shape is BoxShape3D:
+		return fallback
+	var half := (shape_owner.shape as BoxShape3D).size.x * absf(shape_owner.global_basis.get_scale().x) * 0.5
+	return Vector2(shape_owner.global_position.x - half, shape_owner.global_position.x + half)
+
+func _begin_pass_up() -> void:
+	_end_pass_up()
+	for node in get_tree().get_nodes_in_group("boss_pass_up"):
+		var body := node as PhysicsBody3D
+		if body == null or body == self:
+			continue
+		var top := -INF
+		for child in body.get_children():
+			var shape := child as CollisionShape3D
+			if shape != null and shape.shape is BoxShape3D:
+				top = maxf(top, shape.global_position.y
+					+ (shape.shape as BoxShape3D).size.y * absf(shape.global_basis.get_scale().y) * 0.5)
+		if top == -INF:
+			continue
+		add_collision_exception_with(body)
+		_pass_up_bodies.append(body)
+		_pass_up_tops[body] = top
+
+func _settle_pass_up() -> void:
+	var feet := global_position.y
+	for body in _pass_up_bodies.duplicate():
+		var top: float = _pass_up_tops[body]
+		if top <= feet + 0.02 and top <= _jump_target_y + 0.9:
+			if is_instance_valid(body):
+				remove_collision_exception_with(body)
+			_pass_up_bodies.erase(body)
+			_pass_up_tops.erase(body)
+
+func _end_pass_up() -> void:
+	for body in _pass_up_bodies:
+		if is_instance_valid(body):
+			remove_collision_exception_with(body)
+	_pass_up_bodies.clear()
+	_pass_up_tops.clear()
 
 func _prepare_salvo(player: PlayerCharacter) -> void:
 	var close := absf(player.global_position.x - global_position.x) < charge_trigger_distance
@@ -358,23 +467,40 @@ func _start_salvo(player: PlayerCharacter) -> void:
 	_next_jump = true
 	attack_started.emit(&"missiles")
 
-func _start_jump(player: PlayerCharacter) -> void:
+func _start_jump(player: PlayerCharacter, landing := {}) -> void:
 	var offset := player.global_position.x - global_position.x
 	if absf(offset) > 0.05: _landing_player_side = signf(offset)
 	state = State.JUMP
 	_sync_player_body_collision(player)
 	phase_time = 0.0
-	jump_target_x = clampf(player.global_position.x,
-		maxf(minimum_x, global_position.x - maximum_jump_distance),
-		minf(maximum_x, global_position.x + maximum_jump_distance))
+	_chase_jump = not landing.is_empty()
+	if _chase_jump:
+		# Height-solved arc: peak just above the target surface, then drop onto it.
+		jump_target_x = landing.x
+		_jump_target_y = landing.top
+		var rise := _jump_target_y - global_position.y
+		var apex := maxf(rise, 0.0) + chase_clearance
+		velocity.y = sqrt(2.0 * gravity * apex)
+		_jump_total_time = velocity.y / gravity + sqrt(2.0 * (apex - rise) / gravity)
+		chase_leaps += 1
+	else:
+		jump_target_x = clampf(player.global_position.x,
+			maxf(minimum_x, global_position.x - maximum_jump_distance),
+			minf(maximum_x, global_position.x + maximum_jump_distance))
+		# Its own level, or a lower player's: pass-up surfaces stay open until then.
+		_jump_target_y = minf(global_position.y, player.feet_world_y()) if player.is_on_floor() \
+			else global_position.y
+		_jump_total_time = jump_duration
+		velocity.y = gravity * jump_duration * 0.5
+		_next_jump = false
 	_face(jump_target_x)
-	velocity.x = (jump_target_x - global_position.x) / jump_duration
-	velocity.y = gravity * jump_duration * 0.5
+	velocity.x = (jump_target_x - global_position.x) / _jump_total_time
+	_begin_pass_up()
 	_landing_hit = CombatHit.new(combat.attack_damage, &"boss_landing", global_position)
-	_next_jump = false
-	attack_started.emit(&"jump")
+	attack_started.emit(&"chase_leap" if _chase_jump else &"jump")
 
 func _land(player: PlayerCharacter) -> void:
+	_end_pass_up()
 	velocity = Vector3.ZERO
 	landing_count += 1
 	_landing_remaining = landing_active_time
@@ -399,7 +525,9 @@ func _apply_landing_damage(player: PlayerCharacter) -> void:
 
 func _begin_recovery() -> void:
 	_recovery_from_jump = state == State.JUMP
-	if _recovery_from_jump:
+	if _recovery_from_jump and _chase_jump:
+		chase_cooldown_remaining = chase_cooldown
+	elif _recovery_from_jump:
 		jump_cooldown_remaining = jump_cooldown
 	else:
 		missile_cooldown_remaining = missile_cooldown
@@ -489,6 +617,7 @@ func receive_melee_hit(source: Vector3, hit: CombatHit = null) -> bool:
 		_charge_hit = null
 		_ranged_followup = false
 		state = State.DEFEATED
+		_end_pass_up()
 		velocity = Vector3.ZERO
 		_landing_remaining = 0.0
 		_landing_hit = null
@@ -525,6 +654,7 @@ func receive_stomp(player: PlayerCharacter) -> void:
 	_charge_hit = null
 	_ranged_followup = false
 	state = State.SMOKE_ESCAPE
+	_end_pass_up()
 	_sync_player_body_collision(player)
 	_landing_remaining = 0.0
 	_landing_hit = null
@@ -636,6 +766,11 @@ func reset_run() -> void:
 	missile_cooldown_remaining = 0.0
 	jump_cooldown_remaining = 0.0
 	charge_cooldown_remaining = 0.0
+	chase_cooldown_remaining = 0.0
+	chase_leaps = 0
+	_chase_jump = false
+	_jump_total_time = jump_duration
+	_end_pass_up()
 	charges_started = 0
 	salvo_shoves = 0
 	salvo_shove_cooldown_remaining = 0.0

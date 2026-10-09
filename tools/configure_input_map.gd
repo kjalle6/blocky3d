@@ -39,6 +39,12 @@ func _init() -> void:
 	_configure_action("aim_up", 0.2, [
 		_key(KEY_W), _key(KEY_UP), _joy_axis(JOY_AXIS_LEFT_Y, -1.0),
 	])
+	# Drops through one-way scaffold decks. A firmer stick threshold avoids
+	# accidental drops from a resting thumb.
+	_configure_action("move_down", 0.5, [
+		_key(KEY_S), _key(KEY_DOWN), _joy_axis(JOY_AXIS_LEFT_Y, 1.0),
+		_joy_button(JOY_BUTTON_DPAD_DOWN),
+	])
 	_configure_action("developer_fly_up", 0.2, [
 		_key(KEY_W), _key(KEY_UP), _key(KEY_SPACE),
 	])
