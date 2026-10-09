@@ -15,7 +15,7 @@ no-ammo test mode overrides it. It does not advance or save campaign progress. T
 has not been placed in Level 3 yet.
 
 **F1** opens the fight controls: reset/refill, mixed attacks, missiles only,
-jumps only, no ammo, and boss active. Changing a test option resets the fight;
+jumps only, firebombs only, no ammo, infinite ammo, and boss active. Changing a test option resets the fight;
 the selection survives player death and subsequent resets. Ordinary weapon and
 movement controls are unchanged. In no-ammo mode, select the knife with **1**.
 The head-landing test button resets the fight and drops the player above the
@@ -229,6 +229,27 @@ on and which bullets and rockets do not query, so shots cross decks. The
 scaffold script is `scripts/props/scaffold_tower_3d.gd`; the wall-jump scaffold
 prop is unchanged.
 
+**Firebombs (arena).** The boss lobs incendiary canisters with its otherwise
+unused `Attack2` pod-tilt animation: two canisters, committed like the missiles
+to where the player stands when the lob starts, the second 4.2 m to the side the
+player is moving (or toward the room's middle). They fly a fixed arc, pass up
+through decks, pass any deck above their target on the way down (so the space
+under the scaffolding is not a refuge), pass through characters, and burst into
+a 3.84 m fire patch fitted inside the surface they land on. A fire burns for 30
+seconds and there is no cap on how many burn at once. **Standing in fire costs
+25 every second and never puts it out; the only way to put a fire out is to
+land on it from the air (a jump up from inside it counts), which also costs 25**
+and smothers it in smoke. Avoiding fire is the intended answer. The lob has an
+8 s cooldown in the mixed rotation (after an attack leap), but a player who
+stands on ordinary ground for 3 s is lobbed at whenever the boss is free,
+ignoring the cooldown and the reposition pause; time on decks drains that
+timer. Fires go out on reset and with the boss. The art is the bombs pack's
+finned canister and the fire pack's ground-fire strip, promoted to
+`assets/art/vfx/boss`; the fire grows and dies by revealing rows of the strip at
+native pixel size. Scripts: `scripts/projectiles/boss_firebomb_3d.gd` and
+`scripts/hazards/boss_fire_patch_3d.gd`; `firebomb_enabled` is off in the flat lab,
+whose F1 "Firebombs only" pattern still lobs.
+
 **Phase two (arena).** When the boss first falls to half health (1000 of 2000
 HP), three dormant **shootable flying machines** arrive 0.5 s apart: one bobbing
 in the gap between the main tower's top balcony and the high hanging platform,
@@ -258,7 +279,9 @@ blast. These settings default off, so the lab's tuning above is unchanged.
 Focused check: `tools/run_godot_tool.ps1 -Script res://tools/validate_boss_arena_wip.gd`.
 It covers the room limits, chest placement on decks, one-way decks, the chase
 onto a deck, the staged climb, the attack leap's return to its level, and the
-fit-both camera from close range to the arena's full view, and phase two:
+fit-both camera from close range to the arena's full view, firebombs (floor and
+deck landings, contact damage that leaves the fire burning, landing to put it out,
+burn-out, ground punish despite the cooldown, defeat cleanup), and phase two:
 dormant machines, harmless arming, lethal contact, three-hit destruction by
 bullets, reset and defeat cleanup. Playtesting owns the feel, the camera
 in the tall space, and HP.

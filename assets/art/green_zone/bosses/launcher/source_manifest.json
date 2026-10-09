@@ -2,7 +2,8 @@
   "description": "Unmodified selected Green Zone boss 2 and VFX for the boss test lab.",
   "licenses": [
     "boss_license.txt",
-    "assets/art/vfx/boss/vfx_fire_license.txt"
+    "assets/art/vfx/boss/vfx_fire_license.txt",
+    "assets/art/vfx/boss/bombs_license.txt"
   ],
   "files": [
     {
@@ -82,6 +83,32 @@
       "file": "assets/art/vfx/boss/explosion.png",
       "source": "assets/library/vfx/fire/5 Explosions/2 Low/2.png",
       "sha256": "a09b1c4126c39837e42cc2a1153337b7710fe1015b9523ddd72ca631a9712c82"
+    },
+    {
+      "file": "assets/art/vfx/boss/firebomb.png",
+      "source": "assets/library/weapons/bombs/1 Bombs/18_1.png",
+      "sha256": "7aba11283c0f8adb3365996cdb8700ddeb1a1ed033028a9e2f27a69c664c32f4",
+      "license": "assets/art/vfx/boss/bombs_license.txt"
+    },
+    {
+      "file": "assets/art/vfx/boss/ground_fire_1.png",
+      "source": "assets/library/vfx/fire/2 Fire_tiles/1.png",
+      "sha256": "61bfd7adb013ab41a35d3bf28c6678a15ac4a944b018294b99247c75b80277aa"
+    },
+    {
+      "file": "assets/art/vfx/boss/ground_fire_2.png",
+      "source": "assets/library/vfx/fire/2 Fire_tiles/2.png",
+      "sha256": "cfefe87f272b2eca35b6246f99b449ab87d1e3d20e3a54eb97621982b6a6a8ae"
+    },
+    {
+      "file": "assets/art/vfx/boss/ground_fire_3.png",
+      "source": "assets/library/vfx/fire/2 Fire_tiles/3.png",
+      "sha256": "5a467548e929472cc9e3f4a14ae413da89f8244de26de79f6d7d65c5320db236"
+    },
+    {
+      "file": "assets/art/vfx/boss/ground_fire_4.png",
+      "source": "assets/library/vfx/fire/2 Fire_tiles/4.png",
+      "sha256": "098c5403869e991c36b345e15c3f749422fa0317b75cfcc82d8400621ca5b821"
     }
   ]
 }

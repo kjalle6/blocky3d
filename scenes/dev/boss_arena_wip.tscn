@@ -167,6 +167,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.72, 0, 0)
 minimum_x = 1.45
 maximum_x = 47.19
 walk_speed = 4.5
+firebomb_enabled = true
 chase_enabled = true
 maximum_chase_rise = 19.2
 

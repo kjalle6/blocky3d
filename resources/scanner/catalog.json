@@ -795,6 +795,16 @@
           }
         },
         {
+          "id": "firebomb",
+          "label": "Attack",
+          "value": "Burning ground",
+          "discovery_status": "experience",
+          "evidence": {
+            "event": "attack_received",
+            "attack": "boss_fire"
+          }
+        },
+        {
           "id": "charge",
           "label": "Attack",
           "value": "Charge and push",
@@ -1068,6 +1078,46 @@
           "node": ".",
           "property": "turn_rate",
           "unit": "rad/s"
+        },
+        "firebomb_damage": {
+          "source": "actor",
+          "property": "firebomb_damage",
+          "unit": "HP"
+        },
+        "firebomb_burn_time": {
+          "source": "actor",
+          "property": "firebomb_burn_time",
+          "unit": "s"
+        },
+        "firebomb_cooldown": {
+          "source": "actor",
+          "property": "firebomb_cooldown",
+          "unit": "s"
+        },
+        "firebombs_per_lob": {
+          "source": "actor",
+          "property": "firebombs_per_lob",
+          "unit": "count"
+        },
+        "firebomb_spread": {
+          "source": "actor",
+          "property": "firebomb_spread",
+          "unit": "m"
+        },
+        "firebomb_range": {
+          "source": "actor",
+          "property": "firebomb_range",
+          "unit": "m"
+        },
+        "firebomb_patch_width": {
+          "source": "actor",
+          "property": "firebomb_patch_width",
+          "unit": "m"
+        },
+        "ground_camp_time": {
+          "source": "actor",
+          "property": "ground_camp_time",
+          "unit": "s"
         }
       }
     },

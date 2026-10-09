@@ -160,6 +160,7 @@ func _build_interface() -> void:
 	patterns.add_item("Mixed: missiles + jump")
 	patterns.add_item("Missiles only")
 	patterns.add_item("Jump + landing only")
+	patterns.add_item("Firebombs only")
 	patterns.item_selected.connect(select_pattern)
 	patterns.focus_mode = Control.FOCUS_NONE
 	patterns.custom_minimum_size.y = 36

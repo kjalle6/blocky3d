@@ -132,6 +132,7 @@ lab; the final arena, HP and encounter difficulty remain unfinished.
 | Jump / landing AoE | 1.25 s arc, gravity 32 m/s²; maximum horizontal reach 14 m; committed destination clamped to room | 25 damage once per landing; ground-level box with 2.8 m horizontal half-width and 1.4 m height, active for 0.16 s; overlap includes player body width; 1.6 s recovery |
 | Opening body charge | Trigger within 4 m when preparing missiles; 0.22 s plant, up to 2.4 m travel at 10 m/s | 25 damage once per charge, 24 m/s shove decaying at 32 m/s²; 0.45 s recovery; separate 4 s cooldown |
 | Shove during missile firing | Within 2.2 m at body height, either side; repeat interval 0.6 s | Same 25 damage and shove impulse; works throughout swivel/firing without cancelling or redirecting the salvo; ends at recovery |
+| Firebomb lob (arena) | Two canisters at the player's committed spot and 4.2 m beside it; 8 s cooldown, but 3 s on ordinary ground draws a lob at any free moment | Each leaves a 3.84 m fire for 30 s, uncapped. Standing in fire: 25 per second, the fire stays. Landing on it from the air: 25 and it goes out. Normal 1.6 s recovery after the lob |
 | Head-landing smoke escape | No stomp damage or bounce; retreat at 6 m/s until 9 m clear; blocked timeout 2.5 s | No direct damage; grounded player hold through retreat and another 1.5 s during the counterattack; smoke fades with a final 0.6 s tail |
 
 Missiles recharge for **5 seconds after the salvo**, and jumps for **6.5 seconds

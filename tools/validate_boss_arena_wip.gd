@@ -41,6 +41,7 @@ func _run() -> void:
 	await _validate_fit_camera()
 	await _validate_phase_two()
 	await _validate_aim_look_and_ammo()
+	await _validate_firebombs()
 	print("Boss arena WIP validation passed.")
 	quit(0)
 
@@ -288,6 +289,99 @@ func _validate_aim_look_and_ammo() -> void:
 	assert(_player.inventory.count(&"handgun_ammo") == 0, "No-ammo mode still wins.")
 	_controls.set_no_ammo(false)
 	_controls.set_boss_active(true)
+
+func _fires() -> Array[Node]:
+	var burning: Array[Node] = []
+	for node in get_nodes_in_group("boss_fire"):
+		if is_instance_valid(node) and not node.is_queued_for_deletion(): burning.append(node)
+	return burning
+
+func _validate_firebombs() -> void:
+	assert(_boss.firebomb_enabled, "The arena boss lobs firebombs.")
+	# Keep ground punishes out of the earlier checks; they get their own test.
+	var camp_time: float = _boss.ground_camp_time
+	_boss.ground_camp_time = 999.0
+	# A lob commits to the player's spot; patches burn on the floor near it.
+	_controls.select_pattern(3)
+	await _frames(4)
+	_place_player(Vector3(22.0, 0, 0))
+	_place_boss(Vector3(32.0, 0, 0))
+	await _until(func(): return _boss.lobs_started >= 1, 300, "The boss must lob firebombs.")
+	_place_player(Vector3(6.0, 0, 0))
+	await _until(func(): return _fires().size() >= _boss.firebombs_per_lob, 180, "Every canister leaves a fire.")
+	for fire in _fires():
+		assert(absf(fire.global_position.y) < 0.05, "Floor fires sit on the floor surface.")
+		assert(absf(fire.global_position.x - 22.0) < _boss.firebomb_spread * 1.6, "Fires land near the committed spot.")
+	await _frames(60)
+	assert(_fires().size() >= _boss.firebombs_per_lob, "Fires keep burning without contact.")
+	# Standing in a fire hurts every second but never puts it out.
+	var fire: Node3D = _fires()[0]
+	var count := _fires().size()
+	_place_player(fire.global_position)
+	var health: int = _player.health.current
+	await _until(func(): return _player.health.current < health, 60, "A fire must hurt on contact.")
+	assert(health - _player.health.current == _boss.firebomb_damage, "A fire deals 25.")
+	await _until(func(): return _player.health.current <= health - _boss.firebomb_damage * 2, 120,
+		"Staying in a fire hurts again.")
+	assert(is_instance_valid(fire) and not fire.is_queued_for_deletion() and _fires().size() == count,
+		"Standing in a fire does not put it out.")
+	# Landing on it from the air smothers it, at the same single cost.
+	_place_player(fire.global_position + Vector3(0, 2.4, 0))
+	health = _player.health.current
+	var fire_id := fire.get_instance_id()
+	await _until(func(): return not is_instance_id_valid(fire_id) or instance_from_id(fire_id).is_queued_for_deletion(), 120,
+		"Landing on a fire must put it out.")
+	assert(health - _player.health.current == _boss.firebomb_damage, "Putting a fire out costs exactly one hit.")
+	assert(_fires().size() == count - 1, "Only the landed-on fire goes out.")
+	# Fires go out on their own after their burn time.
+	_boss.firebomb_burn_time = 1.0
+	_controls.reset_fight()
+	await _frames(4)
+	assert(_fires().is_empty(), "A reset clears fires.")
+	_place_player(Vector3(22.0, 0, 0))
+	_place_boss(Vector3(32.0, 0, 0))
+	await _until(func(): return _boss.lobs_started >= 1, 300, "Second lob")
+	_place_player(Vector3(6.0, 0, 0))
+	await _until(func(): return not _fires().is_empty(), 180, "Second lob fires")
+	await _until(func(): return _fires().is_empty(), 180, "Fires must burn out after their time.")
+	_boss.firebomb_burn_time = 30.0
+	# Decks catch canisters: a player on a deck gets a fire on that deck.
+	_controls.reset_fight()
+	await _frames(4)
+	var deck: Vector3 = _level.get_node("Props/MainTower").deck_spans()[0]
+	_place_player(Vector3((deck.x + deck.z) * 0.5, deck.y, 0))
+	_place_boss(Vector3(deck.z + 4.0, 0, 0))
+	await _until(func(): return _boss.lobs_started >= 1, 300, "Deck lob")
+	_place_player(Vector3(2.56, 0, 0))
+	await _until(func(): return not _fires().is_empty(), 180, "Deck lob fires")
+	var on_deck := false
+	for burning in _fires():
+		on_deck = on_deck or absf(burning.global_position.y - deck.y) < 0.05
+	var where := []
+	for burning in _fires(): where.append(Vector2(burning.global_position.x, burning.global_position.y))
+	assert(on_deck, "A descending canister lands on the deck, not the floor below: %s, deck %s, boss %s, chases %d" % [str(where), str(deck), str(_boss.global_position), _boss.chase_leaps])
+	# Standing on the ground too long draws a lob even during the cooldown;
+	# standing up on the decks never does.
+	_boss.ground_camp_time = camp_time
+	_controls.select_pattern(1)
+	await _frames(4)
+	_place_boss(Vector3(40.0, 0, 0))
+	_place_player(Vector3((deck.x + deck.z) * 0.5, deck.y, 0))
+	_boss.firebomb_cooldown_remaining = 99.0
+	await _frames(int((_boss.ground_camp_time + 1.0) * 60.0))
+	assert(_boss.ground_punishes == 0, "Time on a deck is not ground time.")
+	_place_player(Vector3(30.0, 0, 0))
+	_boss.firebomb_cooldown_remaining = 99.0
+	await _until(func(): return _boss.ground_punishes >= 1, int((_boss.ground_camp_time + 3.0) * 60.0),
+		"Camping on the ground must draw a lob despite the cooldown.")
+	# Defeat clears every fire.
+	await _until(func(): return not _fires().is_empty(), 180, "Punish lob fires")
+	_boss.receive_projectile_hit(Vector3.ZERO, CombatHit.new(_boss.combat.maximum_hp, &"test_defeat"))
+	await _frames(4)
+	assert(_fires().is_empty(), "The boss's fires go out with it.")
+	_controls.reset_fight()
+	_controls.select_pattern(0)
+	await _frames(4)
 
 func _frame_pair(player_feet: Vector3, boss_feet: Vector3) -> void:
 	_place_player(player_feet)

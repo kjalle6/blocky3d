@@ -8,13 +8,15 @@ signal attack_started(attack: StringName)
 ## Emitted once per fight when health first falls to phase_two_health_fraction.
 signal phase_changed(new_phase: int)
 
-enum State { IDLE, SALVO, JUMP, RECOVERY, SMOKE_ESCAPE, SPACE_CHARGE, DEFEATED }
-enum Pattern { MIXED, MISSILES, JUMPS }
+enum State { IDLE, SALVO, JUMP, RECOVERY, SMOKE_ESCAPE, SPACE_CHARGE, DEFEATED, LOB }
+enum Pattern { MIXED, MISSILES, JUMPS, FIREBOMBS }
 
 const EFFECT := preload("res://scripts/presentation/boss_pixel_effect_3d.gd")
 const LANDING_RING := preload("res://assets/art/vfx/boss/landing_ring.png")
 const EXPLOSION := preload("res://assets/art/vfx/boss/explosion.png")
 const SMOKE := preload("res://scripts/presentation/boss_smoke_burst_3d.gd")
+const FIREBOMB := preload("res://scripts/projectiles/boss_firebomb_3d.gd")
+const DECK_LAYER := 64
 const HURT_DURATION := 0.18
 # Tube centers measured in the unflipped 72px Attack1 frames 1..6:
 # top-left, bottom-left, top-middle, bottom-middle, top-right, bottom-right.
@@ -30,6 +32,7 @@ const SHEETS := {
 	"launch": preload("res://assets/art/green_zone/bosses/launcher/Attack1.png"),
 	"close": preload("res://assets/art/green_zone/bosses/launcher/Attack3.png"),
 	"jump": preload("res://assets/art/green_zone/bosses/launcher/Attack4.png"),
+	"lob": preload("res://assets/art/green_zone/bosses/launcher/Attack2.png"),
 	"death": preload("res://assets/art/green_zone/bosses/launcher/Death.png"),
 }
 @export var combat: CombatProfile = preload("res://resources/combat/green_zone_boss.tres")
@@ -83,6 +86,23 @@ const SHEETS := {
 ## A chase leap may start while the boss is below the camera: it rises into view
 ## before it lands. Missiles and attack leaps still need it on screen to start.
 @export var chase_from_off_screen := true
+@export_group("Firebombs")
+## Lob incendiary canisters that leave burning patches. Off by default so the
+## flat Boss Test Lab keeps its accepted attack mix; its F1 test pattern still lobs.
+@export var firebomb_enabled := false
+@export var firebomb_cooldown := 8.0
+@export_range(1, 6, 1) var firebombs_per_lob := 2
+## Horizontal gap between the canisters of one lob.
+@export var firebomb_spread := 4.2
+@export var firebomb_range := 22.0
+@export var firebomb_patch_width := 3.84
+@export var firebomb_burn_time := 30.0
+@export var firebomb_damage := 25
+## Seconds the player may stand on ordinary ground before the boss lobs at
+## them regardless of the cooldown. Decks and pass-up ledges do not count.
+@export var ground_camp_time := 3.0
+@export var lob_duration := 0.6
+@export var lob_release_time := 0.32
 @export_group("")
 
 var health := HealthState.new()
@@ -98,6 +118,13 @@ var charge_cooldown_remaining := 0.0
 var chase_cooldown_remaining := 0.0
 var chase_leaps := 0
 var phase := 1
+var firebomb_cooldown_remaining := 0.0
+var lobs_started := 0
+var ground_punishes := 0
+var ground_time := 0.0
+var _next_lob := false
+var _lob_released := false
+var _lob_targets: Array[Vector3] = []
 var charges_started := 0
 var salvo_shoves := 0
 var salvo_shove_cooldown_remaining := 0.0
@@ -167,6 +194,11 @@ func _physics_process(delta: float) -> void:
 		jump_cooldown_remaining = maxf(0.0, jump_cooldown_remaining - delta)
 		charge_cooldown_remaining = maxf(0.0, charge_cooldown_remaining - delta)
 		chase_cooldown_remaining = maxf(0.0, chase_cooldown_remaining - delta)
+		firebomb_cooldown_remaining = maxf(0.0, firebomb_cooldown_remaining - delta)
+		if _lobs_allowed():
+			# Standing on the ground builds up; time up in the structure drains it.
+			ground_time = ground_time + delta if _player_on_ground(player) \
+				else maxf(0.0, ground_time - delta * 2.0)
 		salvo_shove_cooldown_remaining = maxf(0.0, salvo_shove_cooldown_remaining - delta)
 	if state == State.SPACE_CHARGE:
 		_tick_space_charge(player, delta)
@@ -202,8 +234,14 @@ func _physics_process(delta: float) -> void:
 		State.IDLE:
 			_tick_animation("walk" if absf(velocity.x) > 0.1 and is_on_floor() else "idle", delta)
 			phase_remaining -= delta
-			if phase_remaining <= 0.0 and is_on_floor():
+			# A player camping on the ground is flamed whenever the boss is free,
+			# ignoring both the lob cooldown and the reposition pause.
+			if is_on_floor() and _ground_punish_ready(player) and _on_screen():
+				_start_lob(player, true)
+			elif phase_remaining <= 0.0 and is_on_floor():
 				_try_ready_attack(player)
+		State.LOB:
+			_tick_lob(player, delta)
 		State.SALVO:
 			_try_salvo_shove(player)
 			if not player.is_dead(): _tick_salvo(delta)
@@ -285,14 +323,85 @@ func _try_ready_attack(player: PlayerCharacter) -> void:
 	if not on_screen:
 		return
 	var distance := absf(player.global_position.x - global_position.x)
-	var can_missile := pattern != Pattern.JUMPS and missile_cooldown_remaining <= 0.0 and distance <= missile_attack_range
-	var can_jump := pattern != Pattern.MISSILES and jump_cooldown_remaining <= 0.0 and distance <= maximum_jump_distance
-	if _ranged_followup and can_missile:
+	var can_missile := pattern in [Pattern.MIXED, Pattern.MISSILES] \
+		and missile_cooldown_remaining <= 0.0 and distance <= missile_attack_range
+	var can_jump := pattern in [Pattern.MIXED, Pattern.JUMPS] \
+		and jump_cooldown_remaining <= 0.0 and distance <= maximum_jump_distance
+	var can_lob := _lobs_allowed() and pattern in [Pattern.MIXED, Pattern.FIREBOMBS] \
+		and firebomb_cooldown_remaining <= 0.0 and distance <= firebomb_range
+	if pattern == Pattern.FIREBOMBS:
+		if can_lob: _start_lob(player)
+	elif _ranged_followup and can_missile:
 		_prepare_salvo(player)
+	elif can_lob and (_next_lob or not (can_missile or can_jump)):
+		_start_lob(player)
 	elif can_jump and (_next_jump or not can_missile):
 		_start_jump(player)
 	elif can_missile:
 		_prepare_salvo(player)
+
+func _on_screen() -> bool:
+	var camera := get_viewport().get_camera_3d()
+	return camera == null or camera.is_position_in_frustum(global_position + Vector3.UP * 1.5)
+
+func _lobs_allowed() -> bool:
+	return firebomb_enabled or pattern == Pattern.FIREBOMBS
+
+func _ground_punish_ready(player: PlayerCharacter) -> bool:
+	return _lobs_allowed() and ground_time >= ground_camp_time and player.is_on_floor() \
+		and absf(player.global_position.x - global_position.x) <= firebomb_range
+
+## Standing on terrain that is not a deck or a pass-up ledge.
+func _player_on_ground(player: PlayerCharacter) -> bool:
+	if player == null or not player.is_on_floor() or player.is_dead():
+		return false
+	var hit := _surface_under(player)
+	return not hit.is_empty() and not (hit.collider as Node).is_in_group("boss_pass_up")
+
+func _surface_under(player: PlayerCharacter) -> Dictionary:
+	var feet := Vector3(player.global_position.x, player.feet_world_y(), 0)
+	var excluded: Array[RID] = [get_rid(), player.get_rid()]
+	var ray := PhysicsRayQueryParameters3D.create(feet + Vector3.UP * 0.1, feet + Vector3.DOWN * 0.4,
+		1 | DECK_LAYER, excluded)
+	return get_world_3d().direct_space_state.intersect_ray(ray)
+
+func _start_lob(player: PlayerCharacter, punish := false) -> void:
+	state = State.LOB
+	phase_time = 0.0
+	velocity.x = 0.0
+	_face(player.global_position.x)
+	_lob_released = false
+	_next_lob = false
+	lobs_started += 1
+	if punish:
+		ground_punishes += 1
+		ground_time = 0.0
+	# Like the missiles, the lob commits to where the player stands when it starts.
+	var under := _surface_under(player)
+	var base := Vector3(player.global_position.x, under.position.y if not under.is_empty() else player.feet_world_y(), 0)
+	var side := signf(player.velocity.x)
+	if absf(player.velocity.x) < 0.5:
+		side = signf((minimum_x + maximum_x) * 0.5 - player.global_position.x)
+	if is_zero_approx(side): side = 1.0
+	_lob_targets = [base]
+	for index in range(1, firebombs_per_lob):
+		var x := clampf(base.x + side * firebomb_spread * index, minimum_x, maximum_x)
+		_lob_targets.append(Vector3(x, base.y, 0))
+	attack_started.emit(&"firebomb")
+
+func _tick_lob(_player: PlayerCharacter, delta: float) -> void:
+	_tick_animation("lob", delta, false)
+	if not _lob_released and phase_time >= lob_release_time:
+		_lob_released = true
+		# The tilted pod's mouth, mirrored with facing.
+		var origin := global_position + Vector3(_facing * 0.6, 2.9, 0)
+		for index in _lob_targets.size():
+			var target := _lob_targets[index]
+			var flight := clampf(0.85 + absf(target.x - origin.x) * 0.035 + index * 0.12, 0.85, 1.6)
+			FIREBOMB.launch(get_parent(), origin, target, flight, gravity, firebomb_patch_width,
+				firebomb_burn_time, firebomb_damage, lobs_started * 3 + index)
+	if phase_time >= lob_duration:
+		_begin_recovery()
 
 func _try_chase(player: PlayerCharacter) -> bool:
 	if not chase_enabled or pattern == Pattern.MISSILES or chase_cooldown_remaining > 0.0:
@@ -498,6 +607,7 @@ func _start_jump(player: PlayerCharacter, landing := {}) -> void:
 		_jump_total_time = jump_duration
 		velocity.y = gravity * jump_duration * 0.5
 		_next_jump = false
+		_next_lob = true
 	_face(jump_target_x)
 	velocity.x = (jump_target_x - global_position.x) / _jump_total_time
 	_begin_pass_up()
@@ -534,6 +644,8 @@ func _begin_recovery() -> void:
 		chase_cooldown_remaining = chase_cooldown
 	elif _recovery_from_jump:
 		jump_cooldown_remaining = jump_cooldown
+	elif state == State.LOB:
+		firebomb_cooldown_remaining = firebomb_cooldown
 	else:
 		missile_cooldown_remaining = missile_cooldown
 	state = State.RECOVERY
@@ -660,6 +772,8 @@ func receive_stomp(player: PlayerCharacter) -> void:
 		jump_cooldown_remaining = maxf(jump_cooldown_remaining, jump_cooldown)
 	elif state == State.SPACE_CHARGE:
 		charge_cooldown_remaining = charge_cooldown
+	elif state == State.LOB:
+		firebomb_cooldown_remaining = maxf(firebomb_cooldown_remaining, firebomb_cooldown)
 	_charge_hit = null
 	_ranged_followup = false
 	state = State.SMOKE_ESCAPE
@@ -778,6 +892,13 @@ func reset_run() -> void:
 	chase_cooldown_remaining = 0.0
 	chase_leaps = 0
 	phase = 1
+	firebomb_cooldown_remaining = 0.0
+	lobs_started = 0
+	ground_punishes = 0
+	ground_time = 0.0
+	_next_lob = false
+	_lob_released = false
+	_lob_targets.clear()
 	_chase_jump = false
 	_jump_total_time = jump_duration
 	_end_pass_up()
