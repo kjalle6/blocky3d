@@ -43,7 +43,7 @@ the catalog and current actor values, never that report or the Excel file.
 | `gunner_route` | Moving route gunner | Enemy |
 | `gunner_guard` | Elevated guard | Enemy |
 | `green_zone_tank` | Green Zone tank | Enemy |
-| `green_zone_launcher` | Green Zone launcher | Boss |
+| `green_zone_launcher` | S.T.O.M.P. | Boss |
 | `flyer_vertical` | Flying machine | Hazard |
 | `flyer_patrol` | Patrolling flying machine | Hazard |
 | `flyer_shootable` | Shootable flying machine | Hazard |

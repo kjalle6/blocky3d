@@ -7,7 +7,7 @@ for arena construction, full-fight tuning, final HP, campaign integration and
 acceptance. HP is a provisional 2000 for playtesting; the final value is TBD. Scanner integration and
 further asset work are queued behind this encounter.
 
-Open **Development selector → Boss Test Lab** (shortcut **8**). This is a fresh,
+Open **Development selector → Boss Test Lab** (shortcut **9**). This is a fresh,
 isolated test session with all movement abilities, a handgun, 12 loaded rounds,
 and 60 reserve rounds. **Infinite ammo** is on by default in both boss labs: the
 reserve tops back up to 60, while reloads still happen; F1 toggles it, and the
@@ -190,11 +190,13 @@ arena's flying-machine phase is described above).
 
 ## Boss Arena WIP graybox
 
-**Development selector → Boss Arena WIP** (shortcut **9**) is a separate tall
-graybox for the final arena's shape. It uses the same F1 fight controls and lab
-loadout; the Boss Test Lab above stays the flat attack-testing fixture. The
-interior is 48.64 m wide and 46 m tall, narrowed from 64 m so the boss camera
-can keep both actors in view across most of it:
+**Development selector → Boss Arena WIP** is the real Level 3
+boss pit (below) with the lab's F1 fight controls and loadout added. It inherits
+`scenes/dev/green_zone_finale_boss_pit.tscn`, so the two share one geometry; it
+spawns on the floor, skips the entry beat, and uses the lab's own health bar.
+The Boss Test Lab above stays the flat attack-testing fixture. The interior is
+48.64 m wide and 46 m tall, narrowed from 64 m so the boss camera can keep both
+actors in view across most of it:
 
 The pit is a construction-scaffold complex; rock is limited to the walls,
 ceiling and grass floor.
@@ -285,6 +287,73 @@ burn-out, ground punish despite the cooldown, defeat cleanup), and phase two:
 dormant machines, harmless arming, lethal contact, three-hit destruction by
 bullets, reset and defeat cleanup. Playtesting owns the feel, the camera
 in the tall space, and HP.
+
+## Level 3 boss pit
+
+The pit is Level 3's last section (`green_zone_boss_pit`, registered for
+layouts and saves alongside the outdoors and gun encounter). It continues
+straight on from the gun encounter: walking off the end of the upper-route
+plateau takes a fade into the pit, where the player stands on the same plateau's
+grass lip, high on the pit's left wall. There is no entry door; the lip simply
+runs in from the left edge of the view.
+
+**Entry beat.** The cutscene takes over as the pit appears. It walks the
+player to the brink of the lip, and the camera looks down into the pit. The
+player drops onto the wall below and slides; partway down, the camera swings
+right and down to S.T.O.M.P., which turns from looking away and raises its
+pod at the player. With the pod raised, the game freezes for the boss reveal:
+the frozen frame drains to night blue, a stepped magenta band with a cyan edge
+slams across it, the boss pops on top in full colour at 8x with a white outline,
+and its name lands on the band. The reveal holds for 2.4 s; after its first
+moment a press ends it early. Its health bar fills as the reveal lets go. The
+camera comes back quickly, and control returns near the bottom of the wall,
+still sliding. The scripted
+slide speeds up while the camera is on the boss so it reaches the release
+height on time, starting and ending at the ordinary slide speed. A moment
+later the boss fires the salvo it was shown readying, aimed at the wall where
+the player was. Input does nothing during the cutscene. Timings and framing
+are exports on `BossEncounter` (`scripts/level/green_zone_boss_encounter_3d.gd`);
+the reveal is `scripts/ui/boss_reveal.gd`. The boss's display name is the
+`display_name` export on the boss, which the bar and the reveal both read.
+
+**Retries.** The pit never saves. Its retry point is `PlateauCheckpoint` in the
+gun encounter, just past the plateau's last chest, which in campaign runs is
+an ordinary non-healing autosave. A death in the pit fades back to that
+checkpoint, restoring the run as it stood when the player reached it: health,
+ammo and items, opened chests and defeated gunners. Pit chests refill.
+Developer runs return the same way, from the run's in-memory record of the
+checkpoint (`SessionSaveState.last_checkpoint`). The **Level 3 - Boss
+encounter** shortcut starts in the pit and has no checkpoint behind it, so a
+death there respawns on the lip.
+
+**Skipping.** The cutscene plays on every arrival. A fresh press of jump,
+attack or confirm skips it to its end: the player low on the wall, still
+sliding, with the camera on them, the bar filling and the opening salvo about
+to fire. A key held from walking off the plateau does not skip it. The name
+reveal keeps its own press-to-continue.
+
+**Saving.** While S.T.O.M.P. is alive, cutscene included, manual saves are
+refused with "You can't save during a boss fight." Its death autosaves at the
+first safe footing under the normal non-healing rules, and manual saves work
+again from then on. The kill, the warhead being taken and the door being
+opened are world flags kept with the run and its saves. A load, or a return
+after a death, finds the wreck in its death pose, the warhead on the floor or
+in hand, and the door open if it was blown, with no cutscene.
+
+**Exit.** The only door is a steel blast door in the foot of the right wall.
+Destroying the boss drops its warhead, which falls clear of the wreck on the
+player's side. Walking into it takes it; reaching the door with it plants it.
+The charge blinks through a 1.6 s fuse, blows, and the door panels open. Walking
+into the open doorway ends Level 3. Door art is
+`assets/library/environment/structures/doors_and_portals/1 Doors/5.png`; the
+warhead is bombs-pack sheet 17_1, promoted to `assets/art/vfx/boss/warhead.png`.
+
+Focused check: `tools/run_godot_tool.ps1 -Script res://tools/validate_boss_pit.gd`.
+It walks off the gun encounter's plateau for real, then covers the held walk to
+the brink, the look down, the drop onto the wall, the camera's swing to the
+boss mid-slide, control returning near the bottom while still sliding, the
+opening salvo, the autosave flag, a valid pit save, a retry without the beat,
+the sealed exit, the warhead drop and pickup, the blast and the level ending. The background is still the lab's night sky.
 
 ## Assets and tuning locations
 

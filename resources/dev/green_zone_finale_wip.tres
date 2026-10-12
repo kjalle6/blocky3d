@@ -4,12 +4,20 @@
 [ext_resource type="PackedScene" path="res://scenes/dev/green_zone_finale_wip.tscn" id="2_scene"]
 [ext_resource type="Script" uid="uid://rni2hcqupvxr" path="res://scripts/campaign/level_entry_point.gd" id="3_entry"]
 [ext_resource type="PackedScene" uid="uid://hqg8ovengrd" path="res://scenes/dev/green_zone_finale_shooter_area_wip.tscn" id="4_shooter_scene"]
+[ext_resource type="PackedScene" path="res://scenes/dev/green_zone_finale_boss_pit.tscn" id="5_boss_pit_scene"]
 
 [sub_resource type="Resource" id="Entry_gun_encounter"]
 script = ExtResource("3_entry")
 entry_id = &"gun_encounter"
 title = "Level 3 - Gun encounter"
 scene = ExtResource("4_shooter_scene")
+
+[sub_resource type="Resource" id="Entry_boss_encounter"]
+script = ExtResource("3_entry")
+entry_id = &"boss_encounter"
+title = "Level 3 - Boss encounter"
+scene = ExtResource("5_boss_pit_scene")
+starting_weapons = Array[StringName]([&"handgun"])
 
 [resource]
 script = ExtResource("1_definition")
@@ -18,6 +26,6 @@ display_number = 3
 title = "Level 3 WIP"
 lesson = "Begin on the construction lift that left Level 2, then step into a basic Green Zone night run-up."
 scene = ExtResource("2_scene")
-developer_entry_points = Array[ExtResource("3_entry")]([SubResource("Entry_gun_encounter")])
+developer_entry_points = Array[ExtResource("3_entry")]([SubResource("Entry_gun_encounter"), SubResource("Entry_boss_encounter")])
 available_abilities = Array[StringName]([&"double_jump", &"wall_jump", &"dash"])
 assumed_owned_abilities = Array[StringName]([&"double_jump", &"wall_jump", &"dash"])

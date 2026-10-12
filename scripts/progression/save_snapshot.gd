@@ -5,7 +5,7 @@ const VERSION := 1
 const LEVEL_SECTIONS := {
 	"arrival_shoreline": ["arrival_shoreline"],
 	"overgrown_coastal_ascent": ["overgrown_coastal_ascent", "overgrown_coastal_ascent_interior"],
-	"dev_green_zone_finale_wip": ["green_zone_finale_outdoors", "green_zone_shooter_area"],
+	"dev_green_zone_finale_wip": ["green_zone_finale_outdoors", "green_zone_shooter_area", "green_zone_boss_pit"],
 }
 const REGISTRY := preload("res://scripts/developer/level_layout_registry.gd")
 

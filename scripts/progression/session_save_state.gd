@@ -9,6 +9,9 @@ var session: LevelSession3D
 var rewards: Dictionary = {}
 var world_flags: Dictionary = {}
 var _loot_seed := 1
+## The run as it stood at the last checkpoint reached, kept in memory and
+## carried between sections so a later section can send a death back to it.
+var last_checkpoint: Dictionary = {}
 var _pending_point: LevelCheckpoint3D
 var _entry_pending := false
 var _quiet_time := 0.0
@@ -42,6 +45,8 @@ func tick(delta: float) -> void:
 
 func queue_point(point: LevelCheckpoint3D) -> void:
 	_pending_point = point
+	# The grounded position that activated the point, like an autosave's.
+	last_checkpoint = capture(session.player.global_position, source_id(point))
 
 
 func queue_entry() -> void:
@@ -103,13 +108,23 @@ func loot_seed() -> int:
 
 
 func transfer_state() -> Dictionary:
-	return {"player": session.player.capture_state(), "rewards": rewards.duplicate(true), "world_flags": world_flags.duplicate(true), "loot_seed": loot_seed()}
+	return {"player": session.player.capture_state(), "rewards": rewards.duplicate(true), "world_flags": world_flags.duplicate(true), "loot_seed": loot_seed(), "last_checkpoint": last_checkpoint.duplicate(true)}
+
+
+## The run to restart from after a death: the last checkpoint as it was
+## reached, keeping what has been settled since (a defeated boss stays dead).
+func checkpoint_return_state() -> Dictionary:
+	var state := last_checkpoint.duplicate(true)
+	state.world_flags.merge(world_flags, true)
+	state.last_checkpoint = last_checkpoint.duplicate(true)
+	return state
 
 
 func apply_state(data: Dictionary, restore_position := false) -> void:
 	_loot_seed = int(data.get("loot_seed", data.get("progress", {}).get("loot_seed", 1)))
 	rewards = data.get("rewards", {}).duplicate(true)
 	world_flags = data.get("world_flags", {}).duplicate(true)
+	last_checkpoint = data.get("last_checkpoint", {}).duplicate(true)
 	_entry_pending = false
 	_pending_point = null
 	_quiet_time = 0.0
@@ -165,6 +180,14 @@ func safety_error(manual := true) -> String:
 		return "Wait until you are back in control."
 	if session.is_developer_inspection_enabled():
 		return "Leave inspection mode before saving."
+	if manual:
+		# Rooms can forbid manual saves while they are in play, such as a boss
+		# fight; their own autosave marks when saving is safe again.
+		for blocker in session.get_tree().get_nodes_in_group("save_blocker"):
+			if session.is_ancestor_of(blocker):
+				var reason: String = blocker.save_block_reason()
+				if not reason.is_empty():
+					return reason
 	if not player.can_save_state(manual) or not player.is_on_floor():
 		return "Stand still on safe ground before saving."
 	var stable_floor := false

@@ -175,6 +175,26 @@ func _validate() -> void:
 	assert(game_root.current_level.scene_file_path == level_3.scene.resource_path)
 	assert(game_root.current_level.get_node_or_null("ShooterAreaTransition") != null)
 
+	# The boss encounter entry starts the pit's cutscene, carrying the handgun
+	# the player would have picked up in the gun encounter.
+	var boss_entry := level_3.find_developer_entry_point(&"boss_encounter")
+	assert(boss_entry != null and boss_entry.validation_errors().is_empty())
+	var boss_encounter_button := world_list.get_node(
+		"GreenZoneFinaleWipBossEncounterButton"
+	) as Button
+	assert(boss_encounter_button.text == "LEVEL 3 - BOSS ENCOUNTER")
+	game_root.show_level_select()
+	boss_encounter_button.pressed.emit()
+	await process_frame
+	var boss_session := game_root.current_level as LevelSession3D
+	assert(game_root.current_level_definition == level_3)
+	assert(boss_session.scene_file_path == boss_entry.scene.resource_path)
+	assert(boss_session.owns_weapon(PlayerWeapon.HANDGUN))
+	assert(boss_session.get_node("BossEncounter").in_cutscene(), "The entry starts with the cutscene.")
+	boss_session._reset_run()
+	await process_frame
+	assert(boss_session.owns_weapon(PlayerWeapon.HANDGUN), "A restart keeps the carried-in handgun.")
+
 	# The empty workspace has its own developer entry and never becomes a
 	# campaign level. Existing number shortcuts above must keep their meaning.
 	game_root.show_level_select()
@@ -182,10 +202,10 @@ func _validate() -> void:
 	await process_frame
 	assert(game_root.current_level_definition.level_id == &"dev_level_designer_sandbox")
 	game_root.show_level_select()
-	var menu_seven := InputEventKey.new()
-	menu_seven.physical_keycode = KEY_7
-	menu_seven.pressed = true
-	game_root._unhandled_input(menu_seven)
+	var menu_eight := InputEventKey.new()
+	menu_eight.physical_keycode = KEY_8
+	menu_eight.pressed = true
+	game_root._unhandled_input(menu_eight)
 	await process_frame
 	var sandbox := game_root.current_level as LevelSession3D
 	assert(game_root.current_level_definition.level_id == &"dev_level_designer_sandbox")

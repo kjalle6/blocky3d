@@ -28,7 +28,7 @@ characters are not implemented enemies.
 | Moving route gunner | 50 HP, 25 per firing beat | Mobile dual-gun variant; six reserve rounds on defeat |
 | Elevated stationary guard | 50 HP, 25 per firing beat | Route-gunner variant with walking disabled and increased vertical detection; six reserve rounds on defeat |
 | Green Zone tank | 200 HP, 25 attack damage | Eight handgun hits or sixteen knife hits; immune to stomps and nonlethal interruption |
-| Green Zone launcher boss | **2000 HP, provisional**; 25 per damaging attack | Raised from the 300 lab placeholder for playtesting; final HP TBD; stomp triggers smoke escape instead of damage |
+| S.T.O.M.P. (Green Zone boss) | **2000 HP, provisional**; 25 per damaging attack | Raised from the 300 lab placeholder for playtesting; final HP TBD; stomp triggers smoke escape instead of damage |
 | Individual wooden crate | 50 HP | Two ordinary hits or one tank shell; the breaking shot is absorbed |
 | Flying machine, vertical or horizontal patrol | No HP; indestructible | Body always kills on contact; electrical discharge below it is lethal only while active |
 | Shootable flying machine | 75 HP, provisional | Three handgun hits destroy it; body and discharge stay lethal, and knife and stomp cannot hit it. First met in the Green Zone boss's second phase; the earlier, indestructible machines appear before the handgun |
@@ -66,14 +66,14 @@ abilities; campaign access follows unlocks. Movement values come from
 
 ### Armor and boss defenses
 
-Machine armor halves incoming knife damage on the Green Zone tank and launcher
+Machine armor halves incoming knife damage on the Green Zone tank and S.T.O.M.P.
 boss: a 25-damage swing deals 12.5. Fractional damage carries between hits, so
 two swings deal exactly 25 rather than rounding each swing. The integer health
 display rounds remaining HP up. Reset and full healing clear that fraction.
 Bullets retain full damage. Ordinary enemies and wooden cover have no knife
 resistance; flyers remain indestructible.
 
-Landing on the launcher boss does no damage and gives no bounce. It releases
+Landing on S.T.O.M.P. does no damage and gives no bounce. It releases
 smoke, grounds and holds the player, and retreats until 9 m clear. It then
 counterattacks while the player remains held for another 1.5 seconds. The smoke
 follows the player and gradually thins, with a 0.6-second tail after release.
@@ -87,13 +87,13 @@ the player down under gravity. Dense smoke may obscure the player completely
 while held. An interrupted boss jump does not produce a false landing blast.
 See [Boss Test Lab](BOSS_TEST_LAB.md).
 
-The grounded launcher boss has a solid body: running and ground dashing cannot
+The grounded S.T.O.M.P. has a solid body: running and ground dashing cannot
 cross it, including on raised solid surfaces. Jumping over its body can cross.
 Side contact outside active attacks is harmless. Its leap, head-contact escape
 and defeated body allow passage so landings and the smoke hold cannot trap the
 player.
 
-When a ready missile attack is crowded, the launcher boss can first make a
+When a ready missile attack is crowded, S.T.O.M.P. can first make a
 short committed body charge. It deals one 25-damage hit, pushes the player away,
 and recovers before trying missiles again. The 24 m/s shove decays at 32 m/s²
 and travels roughly 9 m without movement input. Running toward the boss regains
@@ -119,7 +119,7 @@ tube-by-tube release and outward boost accompany the attack; no warning overlay
 is added. Rocket impact explosions are visual effects, not a second splash
 damage attack; the boss's ground landing is the damaging AoE.
 
-### Launcher boss attack tuning
+### S.T.O.M.P. attack tuning
 
 Selected actor: **Green Zone bosses, character 2**. This kit is playable in the
 lab; the final arena, HP and encounter difficulty remain unfinished.
@@ -260,7 +260,7 @@ The gunner's two simultaneous bullets share one hit identity per beat, preventin
 an accidental double application on one target.
 
 For the current player and ordinary enemies, nonlethal hits interrupt attacks
-on both sides. The tank and launcher boss are the exceptions described above. Pending attack
+on both sides. The tank and S.T.O.M.P. are the exceptions described above. Pending attack
 damage is cancelled, while already-fired ordinary-enemy projectiles remain live.
 The player hurt attack lock is 0.18 seconds. Bat/skater hits apply a 0.18-second
 hurt reaction and at least 0.65-second attack recovery; a gunner interruption
@@ -343,7 +343,7 @@ collision or range limit, with no implied splash damage from impact artwork.
   full fight and connect its defeat/Level 3 ending before scanner integration
   or further asset expansion. The [roadmap checklist](LEVEL_ROADMAP.md#next-priority-finish-the-green-zone-boss)
   defines the milestone; the lab remains the behavior test fixture.
-- Launcher boss HP is a provisional **2000**; the final value is TBD. Final arena size, encounter length, attack tuning, the second
+- S.T.O.M.P. HP is a provisional **2000**; the final value is TBD. Final arena size, encounter length, attack tuning, the second
   phase's tuning and boss-specific audio are not settled. The boss is not connected to Level 3.
 - Moving saws are reserved for a later level, not implemented in the current
   roster. Their damage, speed, route and timing are TBD.
@@ -401,7 +401,7 @@ Keep **unknown**, **confirmed effective**, **reduced damage**, and **confirmed
 ineffective** distinct. A missed swing, obstructed bullet, out-of-range attempt,
 or attack cancelled before impact cannot prove resistance. A visible Hurt
 animation alone cannot prove that the enemy's attack was interrupted: the
-launcher boss can display Hurt while continuing to fire.
+S.T.O.M.P. can display Hurt while continuing to fire.
 
 The following maps existing combat rules to proposed discovery evidence. Actor
 names are the current reference names, not final device-screen copy. Each row
@@ -413,7 +413,7 @@ Numerical baselines stay in the tables and actor descriptions above.
 | Bat patrol / skater | Knife, bullet and stomp effectiveness; attack damage; hit interruption | A confirmed connection with each tested attack; receiving its attack; interrupting an attack through a hit |
 | Stationary / moving / elevated dual-gun enemy | Weapon effectiveness; gunfire damage; paired bullets form one damaging beat; hit interruption; applicable movement and burst behavior | The corresponding weapon hit, received firing beat, interrupted attack or observed behavior; one bullet observation must not reveal every burst pattern or variant |
 | Green Zone tank | Reduced knife damage, full bullet damage, ineffective stomps; attacks continue through nonlethal hits; head contact causes psychic damage and a freeze while the tank retreats | Test the relevant weapon or head contact; experience the pulse/freeze; observe a pending attack continue through a confirmed hit |
-| Green Zone launcher boss | Reduced knife damage, full bullet damage, ineffective stomps; head contact causes smoke, grounded hold, retreat and counterattack; landing AoE; charge/firing shove; missile damage | Separate confirmed weapon tests, descending head contact, landing-blast contact, charge/shove contact and rocket hits; smoke itself is not the source of rocket damage |
+| S.T.O.M.P. (Green Zone boss) | Reduced knife damage, full bullet damage, ineffective stomps; head contact causes smoke, grounded hold, retreat and counterattack; landing AoE; charge/firing shove; missile damage | Separate confirmed weapon tests, descending head contact, landing-blast contact, charge/shove contact and rocket hits; smoke itself is not the source of rocket damage |
 | Flying machine body / discharge | Always-lethal body contact; timed lethal electrical spark below it; ineffective attacks; observed patrol behavior | Body contact and active-spark contact establish separate dangers; a missed or passing projectile proves no resistance. Reliable ineffective-attack evidence needs implementation because the flyer is outside ordinary combat-target contracts |
 | Ground/wall spikes, pit fill / void | Lethality irrespective of remaining HP | The relevant lethal encounter; initial scanning alone does not fill its danger entry. Target selection for empty pit space still needs design |
 | Shore / machine-pool water | Immediate water death at the actual contact surface | Entering the corresponding lethal water region; observing decorative water alone establishes no damage rule |
@@ -557,7 +557,7 @@ separate from tested behavior, and synchronize boss tuning with the lab guide.
 | Bat / skater | [Patrol scene](../scenes/enemies/pixel_patrol_enemy.tscn), [skater overrides](../scenes/enemies/pixel_skater_enemy.tscn), [shared melee AI](../scripts/enemies/stompable_enemy_3d.gd) |
 | Stationary / moving / elevated gunners | [Base gunner](../scenes/enemies/handgun_enemy.tscn), [route gunner](../scenes/enemies/route_gunner.tscn), [gunner AI](../scripts/enemies/handgun_enemy_3d.gd), [route behavior](../scripts/enemies/route_gunner_3d.gd), [upper-route placements](../scenes/dev/green_zone_finale_shooter_area_wip.tscn), [layout overrides](../resources/level_layouts/green_zone_shooter_area.json) |
 | Tank | [Scene](../scenes/enemies/green_zone_tank.tscn), [profile](../resources/combat/tank.tres), [AI / psychic response](../scripts/enemies/tank_enemy_3d.gd) |
-| Launcher boss | [Scene](../scenes/enemies/green_zone_boss.tscn), [profile](../resources/combat/green_zone_boss.tres), [attacks / defenses](../scripts/enemies/green_zone_boss_3d.gd), [rocket flight](../scripts/projectiles/boss_missile_3d.gd), [Boss Test Lab](BOSS_TEST_LAB.md) |
+| S.T.O.M.P. | [Scene](../scenes/enemies/green_zone_boss.tscn), [profile](../resources/combat/green_zone_boss.tres), [attacks / defenses](../scripts/enemies/green_zone_boss_3d.gd), [rocket flight](../scripts/projectiles/boss_missile_3d.gd), [Boss Test Lab](BOSS_TEST_LAB.md) |
 | Flyer / electrical spark | [Scene](../scenes/enemies/green_zone_flyer.tscn), [motion and discharge](../scripts/enemies/hovering_hazard_3d.gd) |
 | Spikes / water / kill areas | [Spike scene](../scenes/hazards/pixel_spike_row.tscn), [spike collision](../scripts/hazards/pixel_spike_row_3d.gd), [lethal contact](../scripts/hazards/hazard_3d.gd), [Arrival water](../scenes/levels/arrival_shoreline.tscn), [Level 2 pools](../scenes/levels/overgrown_coastal_ascent_interior.tscn) |
 | Projectiles / cover | [Shared projectile collision](../scripts/projectiles/handgun_projectile_3d.gd), [crate scene](../scenes/props/breakable_crate.tscn), [crate behavior](../scripts/props/breakable_crate_3d.gd) |

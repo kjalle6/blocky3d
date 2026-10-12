@@ -24,10 +24,21 @@ this milestone unless a concrete blocker needs attention.
    by a fit-both camera limited only by the arena's size. A second phase at half
    health adds shootable flying machines that kill on touch and teach that
    machines can be destroyed with the handgun.
-   Agreed integration: Level 3's upper-route plateau ends at an overhanging lip
-   into the pit; entering triggers a camera beat to the boss noticing and aiming,
-   returning to the player mid-slide, followed by an ordinary (non-healing)
-   autosave. A blast door, opened with the boss's dropped warhead, is the exit.
+   Integration is built (see [Level 3 boss pit](BOSS_TEST_LAB.md#level-3-boss-pit)):
+   the upper-route plateau runs on into the pit's top-left lip. A cutscene walks
+   the player to the brink and down the wall; mid-slide the camera swings to the
+   boss readying its missiles, then returns control near the bottom. A death in
+   the pit returns to a plateau checkpoint past the last chest (an ordinary
+   non-healing autosave in campaign runs). The cutscene replays on each arrival
+   and a press skips it. Manual saves are blocked until the boss dies, and its
+   death autosaves. A
+   blast door, opened with the boss's
+   dropped warhead, is the exit and ends the level. The pit's background is
+   still to be chosen. The cutscene includes a freeze-frame boss reveal on the
+   boss shot (a stepped magenta band with the boss's name); it awaits the
+   user's evaluation of the whole cutscene. The boss is S.T.O.M.P.
+   (Self-propelled Tactical Ordnance and Mortar Platform); the reveal shows the
+   name only, and any second line would be the full expansion.
 2. Tune missiles, jump/landing AoE, recovery openings, close-range charge/shove,
    and the head-landing smoke escape in that arena. Keep a no-ammo melee victory
    viable, normal mobility intact, and the agreed lack of advance landing warnings.

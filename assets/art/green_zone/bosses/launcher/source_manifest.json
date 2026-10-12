@@ -109,6 +109,12 @@
       "file": "assets/art/vfx/boss/ground_fire_4.png",
       "source": "assets/library/vfx/fire/2 Fire_tiles/4.png",
       "sha256": "098c5403869e991c36b345e15c3f749422fa0317b75cfcc82d8400621ca5b821"
+    },
+    {
+      "file": "assets/art/vfx/boss/warhead.png",
+      "source": "assets/library/weapons/bombs/1 Bombs/17_1.png",
+      "sha256": "89228649a2bedb806bd56ff67e8077a82218015de03e20dee57c1c3089d8e672",
+      "license": "assets/art/vfx/boss/bombs_license.txt"
     }
   ]
 }

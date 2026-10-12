@@ -18,12 +18,20 @@ signal transition_requested(
 )
 signal item_received(item_id: StringName, amount: int)
 signal run_reset
+## A death asks to restart the run from the last checkpoint in another section.
+signal checkpoint_return_requested(state: Dictionary)
 signal checkpoint_changed(route_index: int)
 signal ability_unlocked(ability_id: StringName)
 signal weapon_acquired(weapon_id: StringName)
 signal weapon_ownership_changed(owned_weapon_ids: Array[StringName])
 
 @export_range(0.0, 1.0, 0.01) var reset_delay := 0.18
+## A death restarts from the last checkpoint reached, even one in an earlier
+## section, instead of respawning here. The boss pit retries from the plateau.
+@export var death_returns_to_last_checkpoint := false
+## Arriving from another section autosaves at the first safe footing. A room
+## whose retries start before it opts out, so no save ever lands inside it.
+@export var autosave_on_entry := true
 ## Optional water-death sound to finish before respawning; other deaths use reset_delay.
 @export var water_death_audio_path: NodePath
 ## Positive values use a fixed water-only delay instead of waiting for the clip tail.
@@ -48,6 +56,8 @@ var _definition: LevelDefinition
 var _progression_store: ProgressionStore
 var _session_unlocked_abilities: Array[StringName] = []
 var _session_owned_weapon_ids: Array[StringName] = [PlayerWeapon.KNIFE]
+## A developer entry's carried-in weapons, granted again after each restart.
+var _entry_weapon_ids: Array[StringName] = []
 var _developer_inspection_enabled := false
 var _developer_measurement_grid: DeveloperMeasurementGrid3D
 var _developer_collision_overlay: DeveloperCollisionOverlay3D
@@ -191,6 +201,10 @@ func _on_player_died() -> void:
 	if _progression_store != null:
 		death_menu_requested.emit()
 		return
+	if death_returns_to_last_checkpoint and not save_state.last_checkpoint.is_empty() \
+			and save_state.last_checkpoint.section != preload("res://scripts/developer/level_layout_registry.gd").section_for(self):
+		checkpoint_return_requested.emit(save_state.checkpoint_return_state())
+		return
 	_reset_world()
 	camera.snap_to_target()
 	if background != null:
@@ -283,6 +297,8 @@ func _reset_run(clear_checkpoint := true) -> void:
 			if is_ancestor_of(node) and node.has_method("reset_checkpoint"):
 				node.call("reset_checkpoint")
 	_reset_world()
+	if clear_checkpoint:
+		_grant_entry_weapons()
 
 
 func _reset_world() -> void:
@@ -442,6 +458,17 @@ func acquire_weapon(weapon_id: StringName, initial_rounds := 30) -> bool:
 	weapon_ownership_changed.emit(owned_weapon_ids())
 	weapon_acquired.emit(weapon_id)
 	return true
+
+
+## Starts a developer entry with the weapons it would have been carrying.
+func set_entry_weapons(weapon_ids: Array[StringName]) -> void:
+	_entry_weapon_ids = weapon_ids.duplicate()
+	_grant_entry_weapons()
+
+
+func _grant_entry_weapons() -> void:
+	for weapon_id in _entry_weapon_ids:
+		acquire_weapon(weapon_id)
 
 
 func owns_weapon(weapon_id: StringName) -> bool:

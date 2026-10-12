@@ -251,6 +251,8 @@ func load_developer_level(definition: LevelDefinition, entry_id: StringName = &"
 		initial_abilities,
 		entry.scene if entry != null else null
 	)
+	if entry != null and current_level != null and not entry.starting_weapons.is_empty():
+		current_level.set_entry_weapons(entry.starting_weapons)
 
 
 func _start_session(
@@ -301,6 +303,7 @@ func _start_session(
 		preload("res://scripts/developer/level_layout_preview.gd").finish(current_level)
 	else:
 		current_level.death_menu_requested.connect(campaign_menu.show_death)
+		current_level.checkpoint_return_requested.connect(_return_to_checkpoint)
 		current_level.retry_requested.connect(campaign_menu.show_pause)
 		current_level.run_completed.connect(_on_run_completed)
 		current_level.transition_requested.connect(_on_transition_requested)
@@ -913,7 +916,7 @@ func _on_transition_requested(
 		)
 	if current_level != null:
 		current_level.save_state.apply_state(carried_state)
-		if current_level._progression_store != null:
+		if current_level._progression_store != null and current_level.autosave_on_entry:
 			current_level.save_state.queue_entry()
 	if current_level != null and run_duration > 0.0:
 		current_level.player.begin_transition_run(
@@ -921,6 +924,27 @@ func _on_transition_requested(
 			run_speed,
 			run_duration
 		)
+	await _fade_from_black(TRANSITION_FADE_DURATION)
+
+
+## Restarts a run from the checkpoint it last reached, in that checkpoint's
+## section of the same level, behind the same fade as a section transition.
+func _return_to_checkpoint(state: Dictionary) -> void:
+	var registry := preload("res://scripts/developer/level_layout_registry.gd")
+	var scene := load(registry.SECTIONS[state.section]) as PackedScene
+	var definition := current_level_definition
+	var world_definition := current_world_definition
+	_transition_serial += 1
+	var transition_serial := _transition_serial
+	await _fade_to_black(TRANSITION_FADE_DURATION)
+	if transition_serial != _transition_serial:
+		return
+	if not _start_session(definition, world_definition,
+			_transition_entry_abilities(definition, definition.assumed_owned_abilities), scene):
+		return
+	current_level.save_state.apply_state(state, true)
+	if current_level.has_node("EventAudio"):
+		current_level.get_node("EventAudio").play("combat/player_respawn", current_level.player)
 	await _fade_from_black(TRANSITION_FADE_DURATION)
 
 

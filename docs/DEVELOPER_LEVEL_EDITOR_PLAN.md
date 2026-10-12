@@ -106,7 +106,7 @@ Add **Level designer** to the existing F1 tools menu. Use a visible button
 rather than taking another function key. Preserve the existing F7/F10/F11
 controls in normal gameplay; F8 remains Godot's stop-game control.
 
-Use **Level Designer Sandbox** (menu shortcut **7**) for hands-on building and
+Use **Level Designer Sandbox** (menu shortcut **8**) for hands-on building and
 layout experiments. Its scene is `scenes/dev/level_designer_sandbox.tscn`, with
 definition `resources/dev/level_designer_sandbox.tres`: a 256-tile-wide grass
 floor, 128 tiles of vertical camera travel, and all movement abilities. The

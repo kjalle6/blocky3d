@@ -33,6 +33,7 @@ const LEVEL_3_SHOOTER_AREA_SCENE_PATH := (
 	"res://scenes/dev/green_zone_finale_shooter_area_wip.tscn"
 )
 const LEVEL_3_SHOOTER_AREA := preload("res://tools/level_3_shooter_area_fixture.gd")
+const LEVEL_3_BOSS_PIT_SCENE_PATH := "res://scenes/dev/green_zone_finale_boss_pit.tscn"
 const DESIGNER_FIXTURE_SCENE_PATH := "res://scenes/dev/level_designer_fixture.tscn"
 ## Props that merely share an edge are not overlapping.
 const EDGE_TOLERANCE := 0.01
@@ -75,6 +76,11 @@ func _run() -> void:
 	var level_3_shooter_area := LEVEL_3_SHOOTER_AREA.load_into(game_root)
 	await process_frame
 	_audit(level_3_shooter_area, &"dev_green_zone_finale_shooter_area_wip")
+	var level_3 := LEVEL_3_SHOOTER_AREA.developer_definition()
+	assert(game_root._start_session(level_3, null, level_3.assumed_owned_abilities.duplicate(),
+		load(LEVEL_3_BOSS_PIT_SCENE_PATH)))
+	await process_frame
+	_audit(game_root.current_level as LevelSession3D, &"dev_green_zone_finale_boss_pit")
 	var fixture_definition := LevelDefinition.new()
 	fixture_definition.level_id = &"dev_designer_fixture"
 	fixture_definition.scene = load(DESIGNER_FIXTURE_SCENE_PATH)
@@ -90,7 +96,7 @@ func _run() -> void:
 		return
 	print("Pixel-art invariants passed: %d authored sprites across %d levels." % [
 		_scenery_seen,
-		CHECKED_LEVELS.size() + CHECKED_DEVELOPER_LEVELS.size() + 3,
+		CHECKED_LEVELS.size() + CHECKED_DEVELOPER_LEVELS.size() + 4,
 	])
 	quit(0)
 
@@ -104,6 +110,7 @@ func _assert_every_scene_is_accounted_for(game_root: Node) -> void:
 			covered.append(definition.scene.resource_path)
 	covered.append(LEVEL_2_INTERIOR_SCENE_PATH)
 	covered.append(LEVEL_3_SHOOTER_AREA_SCENE_PATH)
+	covered.append(LEVEL_3_BOSS_PIT_SCENE_PATH)
 	covered.append(DESIGNER_FIXTURE_SCENE_PATH)
 	for directory in ["res://scenes/levels", "res://scenes/dev"]:
 		for file_name in DirAccess.get_files_at(directory):

@@ -26,6 +26,10 @@
 [ext_resource type="Script" uid="uid://bvrt0y52kksqt" path="res://scripts/pickups/item_reward_3d.gd" id="25_reward"]
 [ext_resource type="Texture2D" uid="uid://fyjshuhrty3g" path="res://assets/art/green_zone/catalog/props/fence/5.png" id="26_fence_panel"]
 [ext_resource type="Script" uid="uid://bncnxocgkbpm8" path="res://scripts/enemies/route_gunner_3d.gd" id="26_k2tf7"]
+[ext_resource type="Script" path="res://scripts/level/path_level_transition_3d.gd" id="27_boss_pit_transition"]
+
+[sub_resource type="BoxShape3D" id="Shape_boss_pit_transition"]
+size = Vector3(2.56, 25.6, 2)
 
 [sub_resource type="Environment" id="Environment_night"]
 background_mode = 1
@@ -98,13 +102,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 6.4, 0)
 [node name="Collision" type="CollisionShape3D" parent="Platforms/LeftBoundary" index="0" unique_id=629906453]
 shape = SubResource("Shape_boundary")
 
-[node name="WipRightBoundary" type="StaticBody3D" parent="Platforms" index="2" unique_id=296759184]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 123, 40.32, 0)
-
-[node name="Collision" type="CollisionShape3D" parent="Platforms/WipRightBoundary" index="0" unique_id=427220260]
-shape = SubResource("Shape_boundary")
-
-[node name="DashPitBed" type="StaticBody3D" parent="Platforms" index="3" unique_id=296145120]
+[node name="DashPitBed" type="StaticBody3D" parent="Platforms" index="2" unique_id=296145120]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.76, -8.8, 0)
 script = ExtResource("2_platform")
 size = Vector3(14.08, 10.24, 2)
@@ -115,14 +113,14 @@ cap_right_edge = false
 cap_bottom_edge = false
 metadata/layout_locked = "Enclosed dash pit. Keep the bed, full-width spikes and lethal fill aligned."
 
-[node name="TankClearingGround" type="StaticBody3D" parent="Platforms" index="4" unique_id=1748970794]
+[node name="TankClearingGround" type="StaticBody3D" parent="Platforms" index="3" unique_id=1748970794]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 58.88, -6.4, 0)
 script = ExtResource("2_platform")
 size = Vector3(28.16, 12.8, 2)
 cap_right_edge = false
 cap_bottom_edge = false
 
-[node name="TankClimbScaffold" parent="Platforms" index="5" unique_id=1565475913 instance=ExtResource("18_scaffold")]
+[node name="TankClimbScaffold" parent="Platforms" index="4" unique_id=1565475913 instance=ExtResource("18_scaffold")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 65.92, 0, 0)
 height = 35.84
 maintenance_ledge_y = 30.72
@@ -131,7 +129,7 @@ metadata/layout_kind = "scaffold"
 metadata/layout_template = "wall_jump_scaffold"
 metadata/layout_removable = true
 
-[node name="TankClimbUpperGround" type="StaticBody3D" parent="Platforms" index="6" unique_id=246282681]
+[node name="TankClimbUpperGround" type="StaticBody3D" parent="Platforms" index="5" unique_id=246282681]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 88.96, 6.4, 0)
 script = ExtResource("2_platform")
 size = Vector3(32, 38.4, 2)
@@ -185,6 +183,10 @@ metadata/layout_locked = "Second right-wall climb hazard; leave the final exit l
 [node name="EncounterCheckpoint" parent="Checkpoints" index="0" unique_id=2125692811 instance=ExtResource("6_checkpoint")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.8, 0, 0)
 route_index = 1
+
+[node name="PlateauCheckpoint" parent="Checkpoints" index="1" instance=ExtResource("6_checkpoint")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 120.32, 35.84, 0)
+route_index = 2
 
 [node name="SpawnPoint" parent="." index="8"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.64, 0.7, 0)
@@ -668,5 +670,13 @@ metadata/layout_removable = true
 
 [node name="BackgroundStart" type="Marker3D" parent="UpperRoute" index="2" unique_id=1035379939]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 92, 25.6, 0)
+
+[node name="BossPitTransition" type="Area3D" parent="."]
+position = Vector3(124.16, 35.84, 0)
+script = ExtResource("27_boss_pit_transition")
+target_scene_path = "res://scenes/dev/green_zone_finale_boss_pit.tscn"
+
+[node name="Collision" type="CollisionShape3D" parent="BossPitTransition"]
+shape = SubResource("Shape_boss_pit_transition")
 
 [editable path="Player"]

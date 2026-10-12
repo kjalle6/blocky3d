@@ -3,7 +3,7 @@
 Accepted first version and browser/block-building follow-ups: 2026-09-12.
 Scripted sequences, camera editing, and background selection remain deferred.
 
-Open **Level Designer Sandbox** from level select (shortcut **7**), then press
+Open **Level Designer Sandbox** from level select (shortcut **8**), then press
 **F1** and choose **Level designer…**. The sandbox starts empty apart from its
 protected grass foundation. Run the main project in a separate game window.
 The embedded game view previously offset cursor targeting; the separate window

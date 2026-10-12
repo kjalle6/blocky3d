@@ -36,6 +36,8 @@ const SHEETS := {
 	"death": preload("res://assets/art/green_zone/bosses/launcher/Death.png"),
 }
 @export var combat: CombatProfile = preload("res://resources/combat/green_zone_boss.tres")
+## Shown on the boss bar and the encounter's reveal.
+@export var display_name := "S.T.O.M.P."
 @export var enabled := true
 @export var pattern := Pattern.MIXED
 @export var minimum_x := 2.8
@@ -123,6 +125,7 @@ var lobs_started := 0
 var ground_punishes := 0
 var ground_time := 0.0
 var _next_lob := false
+var _noticing := false
 var _lob_released := false
 var _lob_targets: Array[Vector3] = []
 var charges_started := 0
@@ -228,7 +231,8 @@ func _physics_process(delta: float) -> void:
 			visual.frame = clampi(int(phase_time / _jump_total_time * 5.0), 1, 4)
 		return
 	if not enabled:
-		_tick_animation("idle", delta)
+		# An encounter's entry beat can hold the swivelled launcher on screen.
+		_tick_animation("aim" if _noticing else "idle", delta, not _noticing)
 		return
 	match state:
 		State.IDLE:
@@ -899,6 +903,7 @@ func reset_run() -> void:
 	_next_lob = false
 	_lob_released = false
 	_lob_targets.clear()
+	_noticing = false
 	_chase_jump = false
 	_jump_total_time = jump_duration
 	_end_pass_up()
@@ -927,6 +932,45 @@ func set_pattern(value: int) -> void:
 
 func set_enabled(value: bool) -> void:
 	enabled = value
+
+## Presentation only, while disabled: face a point and swivel the launcher to
+## aim at it, holding the last frame. No attack starts.
+func begin_notice(target_x: float) -> void:
+	_face(target_x)
+	_noticing = true
+	_animation = ""
+
+func end_notice() -> void:
+	_noticing = false
+	_animation = ""
+
+## Presentation only: an encounter can stage the boss looking away first.
+func face_toward(target_x: float) -> void:
+	_face(target_x)
+
+## A defeat restored from a save: the wreck stands where the boss started,
+## without the explosion or the projectile clean-up of the live kill.
+func restore_defeat() -> void:
+	_release_escape_player()
+	_end_pass_up()
+	state = State.DEFEATED
+	velocity = Vector3.ZERO
+	_landing_remaining = 0.0
+	_landing_hit = null
+	collision_layer = 0
+	health.reset(combat.maximum_hp, 0)
+	# Straight to the last frame of the death animation.
+	_animation = ""
+	_tick_animation("death", 0.0, false)
+	_animation_time = 99.0
+	_tick_animation("death", 0.0, false)
+
+## Fires the salvo an encounter showed the launcher readying, if it is free.
+func start_opening_salvo(player: PlayerCharacter) -> bool:
+	if not enabled or state != State.IDLE or is_defeated() or player.is_dead():
+		return false
+	_start_salvo(player)
+	return true
 
 func state_name() -> String:
 	return State.keys()[state]

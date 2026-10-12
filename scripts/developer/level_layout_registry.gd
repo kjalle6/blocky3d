@@ -9,10 +9,11 @@ const SECTIONS := {
 	"overgrown_coastal_ascent": "res://scenes/levels/overgrown_coastal_ascent.tscn",
 	"overgrown_coastal_ascent_interior": "res://scenes/levels/overgrown_coastal_ascent_interior.tscn",
 	"green_zone_shooter_area": "res://scenes/dev/green_zone_finale_shooter_area_wip.tscn",
+	"green_zone_boss_pit": "res://scenes/dev/green_zone_finale_boss_pit.tscn",
 	"level_design_lab": "res://scenes/dev/level_design_lab.tscn",
 	"animation_lab": "res://scenes/dev/animation_lab.tscn",
 }
-const TITLES := {"sandbox": "Sandbox", "green_zone_finale_outdoors": "Level 3 outdoors", "designer_fixture": "Test fixture", "arrival_shoreline": "Level 1", "overgrown_coastal_ascent": "Level 2 outdoors", "overgrown_coastal_ascent_interior": "Level 2 cave", "green_zone_shooter_area": "Level 3 gun encounter", "level_design_lab": "Level design lab", "animation_lab": "Animation lab"}
+const TITLES := {"sandbox": "Sandbox", "green_zone_finale_outdoors": "Level 3 outdoors", "designer_fixture": "Test fixture", "arrival_shoreline": "Level 1", "overgrown_coastal_ascent": "Level 2 outdoors", "overgrown_coastal_ascent_interior": "Level 2 cave", "green_zone_shooter_area": "Level 3 gun encounter", "green_zone_boss_pit": "Level 3 boss pit", "level_design_lab": "Level design lab", "animation_lab": "Animation lab"}
 const CATALOG := preload("res://scripts/developer/level_object_catalog.gd")
 const STYLES := {
 	"grass": preload("res://resources/presentation/platform_styles/green_zone.tres"),

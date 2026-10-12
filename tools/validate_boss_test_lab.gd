@@ -24,7 +24,7 @@ func _run() -> void:
 	var menu := _game.get_node("Interface/LevelSelect/Center/Panel/Margin/Options/WorldList")
 	assert(menu.get_node("BossTestLabButton").text == "BOSS TEST LAB")
 	var key := InputEventKey.new()
-	key.physical_keycode = KEY_8
+	key.physical_keycode = KEY_9
 	key.pressed = true
 	_game._unhandled_input(key)
 	await process_frame

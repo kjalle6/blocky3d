@@ -81,3 +81,17 @@ previous source. All 109 resolved outdoor objects and 388 shooter-area objects,
 including overrides and saved revisions, compared unchanged before updating
 only those two fingerprints. Original layouts and comparison evidence remain
 under ignored `build/checkpoint_layout_review`; local review copies were not changed.
+
+The 2026-10-09 boss pit hookup added a transition off the gun encounter's
+plateau and later removed the encounter's temporary right-hand boundary. Each
+edit changes the shooter scene, and the outdoors section links that scene, so
+both Level 3 fingerprints changed twice. Both reviews proved the saves matched
+their sources first, then resolved them against the previous and edited scenes:
+all 109 outdoor and 388 shooter-area records and both revisions compared
+unchanged before only the fingerprints were rewritten. Evidence is under ignored
+`build/boss_pit_layout_review` and `build/boss_pit_layout_review_2`. The
+transition names the pit by path, so tuning the pit never re-fingerprints them.
+The pit itself is a new registered section with no saved layout yet. On
+2026-10-12 a third identical review covered adding `PlateauCheckpoint` on the
+plateau before the pit (evidence in `build/boss_pit_layout_review_3`); records
+again compared unchanged and only the two fingerprints were rewritten.

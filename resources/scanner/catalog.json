@@ -762,7 +762,7 @@
     },
     {
       "id": "green_zone_launcher",
-      "game_name": "Green Zone launcher",
+      "game_name": "S.T.O.M.P.",
       "kind": "boss",
       "status": "implemented",
       "actor_script": "res://scripts/enemies/green_zone_boss_3d.gd",

@@ -4,8 +4,7 @@ const RESERVE_ROUNDS := 60
 var no_ammo := false
 ## Keeps the reserve topped up so a long fight never runs dry; reloads remain.
 var infinite_ammo := true
-var _bar: ProgressBar
-var _title: Label
+var _health_bar
 @onready var session := get_parent() as LevelSession3D
 @onready var boss := get_parent().get_node("GreenZoneBoss")
 
@@ -13,7 +12,6 @@ func _ready() -> void:
 	if preload("res://scripts/developer/level_layout_preview.gd").is_preview(self):
 		return
 	_build_interface()
-	boss.health_changed.connect(_update_health)
 	session.run_reset.connect(_on_run_reset)
 
 func _on_run_reset() -> void:
@@ -22,7 +20,7 @@ func _on_run_reset() -> void:
 	session.player.player_handgun.set_loaded_rounds(0 if no_ammo else 12)
 	if not no_ammo:
 		session.player.inventory.add(&"handgun_ammo", RESERVE_ROUNDS)
-	_update_health(boss.health.current, boss.health.maximum)
+	_health_bar.refresh()
 
 func _physics_process(_delta: float) -> void:
 	if not infinite_ammo or no_ammo or session == null or session.player == null:
@@ -84,44 +82,15 @@ func test_salvo_pressure(side := -1.0) -> void:
 	boss._start_salvo(session.player)
 	session.camera.snap_to_target()
 
-func _update_health(current: int, maximum: int) -> void:
-	_bar.max_value = maximum
-	_bar.value = current
-	_title.text = "LAUNCHER" if current > 0 else "LAUNCHER — DEFEATED"
-
 func _build_interface() -> void:
 	var layer := CanvasLayer.new()
 	layer.name = "BossLabInterface"
 	layer.layer = 5
 	add_child(layer)
-	var health_box := VBoxContainer.new()
-	health_box.name = "BossHealth"
-	layer.add_child(health_box)
-	health_box.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
-	health_box.offset_left = -180
-	health_box.offset_right = 180
-	health_box.offset_top = -64
-	health_box.offset_bottom = -24
-	health_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_title = Label.new()
-	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_title.add_theme_font_size_override("font_size", 16)
-	_title.add_theme_color_override("font_outline_color", Color.BLACK)
-	_title.add_theme_constant_override("outline_size", 4)
-	health_box.add_child(_title)
-	_bar = ProgressBar.new()
-	_bar.name = "Health"
-	_bar.custom_minimum_size = Vector2(360, 10)
-	_bar.show_percentage = false
-	var back := StyleBoxFlat.new()
-	back.bg_color = Color("#15252b")
-	back.set_border_width_all(2)
-	back.border_color = Color("#0a0f15")
-	var fill := StyleBoxFlat.new()
-	fill.bg_color = Color("#69bb6c")
-	_bar.add_theme_stylebox_override("background", back)
-	_bar.add_theme_stylebox_override("fill", fill)
-	health_box.add_child(_bar)
+	_health_bar = preload("res://scripts/ui/boss_health_bar.gd").new()
+	layer.add_child(_health_bar)
+	_health_bar.dock_bottom()
+	_health_bar.bind(boss)
 	var hint := Label.new()
 	hint.name = "LabHint"
 	hint.text = "BOSS TEST LAB · F1: CONTROLS"

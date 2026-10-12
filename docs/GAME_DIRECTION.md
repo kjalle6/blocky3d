@@ -46,8 +46,8 @@ The current starting balance is:
 - Ground-enemy body contact is solid and harmless. Damage comes from the
   attack's visible impact, and ordinary enemies and the player can have attacks
   interrupted by hits. The tank keeps moving and firing through damage.
-- Machines (the tank and launcher boss) take 50% less knife damage. Bullets
-  retain full damage. Landing on the launcher boss triggers smoke and a short
+- Machines (the tank and the boss, S.T.O.M.P.) take 50% less knife damage. Bullets
+  retain full damage. Landing on S.T.O.M.P. triggers smoke and a short
   grounded player hold through its retreat and counterattack; it takes no stomp
   damage. The lingering smoke fades as that punishment wears off.
 - Ordinary damage uses attack recovery and interruptions without a general

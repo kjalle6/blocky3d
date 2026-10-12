@@ -131,7 +131,10 @@ func _run() -> void:
 	var hit := shooter_area.get_world_3d().direct_space_state.intersect_ray(query)
 	assert(not hit.is_empty())
 	assert(hit.get("collider") == left_boundary)
-	assert(_owned_group_nodes(shooter_area, &"level_transition").is_empty())
+	# Its only threshold leads on, into the boss pit.
+	var onward := _owned_group_nodes(shooter_area, &"level_transition")
+	assert(onward.size() == 1 and onward[0] == shooter_area.get_node("BossPitTransition"))
+	assert(onward[0].target_scene.resource_path == "res://scenes/dev/green_zone_finale_boss_pit.tscn")
 
 	# Death resets inside Area 2 rather than reconstructing the traversal.
 	shooter_area.player.finish_transition_run()
