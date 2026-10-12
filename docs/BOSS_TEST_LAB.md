@@ -188,9 +188,10 @@ a no-ammo melee win viable. The shared roster and combat rules are in
 | Walking speed / acceleration | 2.6 m/s / 10 m/s² |
 
 The landing is a ground-level box across the 2D play plane. Its effect is an
-expanded ring from the VFX catalog, flattened to the blast height. Boss-specific
-audio is not part of this first prototype; the lab has no second phase (the
-arena's flying-machine phase is described above).
+expanded ring from the VFX catalog, flattened to the blast height. Boss sounds
+use the **Boss · S.T.O.M.P.** slots in the audio tool, which ship trial picks; see
+[Audio tuning](AUDIO_TUNING.md#boss-sounds-stomp). The lab has no second phase
+(the arena's flying-machine phase is described above).
 
 ## Boss Arena WIP graybox
 

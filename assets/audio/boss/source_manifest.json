@@ -1,0 +1,183 @@
+{
+  "source": "Generated with ElevenLabs Sound Effects V2 (fal-ai/elevenlabs/sound-effects/v2) via fal.ai, 2026-10-12",
+  "workspace_takes": "D:/GodotTools/mr-mak-workspace/workspace/2026-10-12_blocky3d/audio/takes",
+  "status": "Trial picks chosen by measurement and waveform/spectrogram review, not by listening; awaiting the user's in-game verdict.",
+  "files": [
+    {
+      "event": "boss/footstep",
+      "file": "footstep-t5.wav",
+      "take": "footstep-t5",
+      "request_id": "01a131b4-6b79-7891-8036-ec8ae3a9b046",
+      "prompt": "One heavy metal foot of a giant robot slamming down on dirt: a deep low thud with a dull metal clank, hitting instantly at the very start, dying away within a quarter second. A single hit, no ringing. Isolated game sound effect, dry, no music, no voices.",
+      "source_sha256": "38799d8c0643ccb6c05d96ceb79754c3c0438be3a9a187f1f82ca9b175ed1614",
+      "file_sha256": "38799d8c0643ccb6c05d96ceb79754c3c0438be3a9a187f1f82ca9b175ed1614",
+      "edit": null,
+      "volume_db": -6.8
+    },
+    {
+      "event": "boss/charge",
+      "file": "charge-t1-edit.wav",
+      "take": "charge-t1",
+      "request_id": "01a13195-e867-7282-b609-d2e8a0f99940",
+      "prompt": "Heavy machine motor surging as a large robot walker rushes forward a short distance: brief engine rev and rapid clanking metal steps. Isolated game sound effect, dry, no music, no voices.",
+      "source_sha256": "dbdaeffa1c60a1c8165f568fb4d176508ef7068a032bae65d7610de262ae8e47",
+      "file_sha256": "332ad141b962974d61fc077ef60cc085ec95627d130d8c580111f35f76527ee4",
+      "edit": "Trimmed to 0.75 s with a linear 0.2 s fade-out from 0.55 s; the source holds full level to a hard stop at 1.2 s.",
+      "volume_db": -17.7
+    },
+    {
+      "event": "boss/shove_contact",
+      "file": "shove_contact-t1.wav",
+      "take": "shove_contact-t1",
+      "request_id": "01a13195-f3e5-7502-bea7-981d62e20885",
+      "prompt": "A blunt heavy body impact, a steel machine ramming into a person: dull thud with a metallic clang. Isolated game sound effect, dry, no music, no voices.",
+      "source_sha256": "f1b44f3850c0c0cd1ba0b89e54d2a59e29ec258316e826e6f6967edcb8f2f072",
+      "file_sha256": "f1b44f3850c0c0cd1ba0b89e54d2a59e29ec258316e826e6f6967edcb8f2f072",
+      "edit": null,
+      "volume_db": -8.7
+    },
+    {
+      "event": "boss/landing",
+      "file": "landing-t4.wav",
+      "take": "landing-t4",
+      "request_id": "01a131b4-7e93-7642-9e35-e070b519923e",
+      "prompt": "A massive metal robot slamming into the ground after a jump: an enormous instant boom right at the very first moment, deep ground shake, heavy metal crunch, then dirt and debris settling and fading out. The impact hits immediately, no build-up. Isolated game sound effect, dry, no music, no voices.",
+      "source_sha256": "907b811dcbcc7a799882b7159f7ccd952743c1edbd9a48d4c49d52863b599442",
+      "file_sha256": "907b811dcbcc7a799882b7159f7ccd952743c1edbd9a48d4c49d52863b599442",
+      "edit": null,
+      "volume_db": -18.1
+    },
+    {
+      "event": "boss/launcher_swivel",
+      "file": "launcher_swivel-t1.wav",
+      "take": "launcher_swivel-t1",
+      "request_id": "01a13196-0a89-7452-8a54-95e1e6e74296",
+      "prompt": "A compact motorized servo turn as a heavy rocket launcher pod rotates and locks into firing position: mechanical whir ending in a solid metal clack. Isolated game sound effect, dry, no music, no voices.",
+      "source_sha256": "bae5eed45b95b50f9a991e80376f89632194083b05f2e4f781b4ce00924d968c",
+      "file_sha256": "bae5eed45b95b50f9a991e80376f89632194083b05f2e4f781b4ce00924d968c",
+      "edit": null,
+      "volume_db": -10.8
+    },
+    {
+      "event": "boss/rocket_launch",
+      "file": "rocket_launch-t3.wav",
+      "take": "rocket_launch-t3",
+      "request_id": "01a13196-1d65-7450-ae66-5c7ec8420156",
+      "prompt": "A single small missile launching from a tube: sharp punchy pneumatic thump and ignition whoosh, very short. Isolated game sound effect, dry, no music, no voices.",
+      "source_sha256": "6d2e4feaeab17d57ae6bb29398ab76b654e3227256fd6dd9843ecef0c8410c25",
+      "file_sha256": "6d2e4feaeab17d57ae6bb29398ab76b654e3227256fd6dd9843ecef0c8410c25",
+      "edit": null,
+      "volume_db": -21.2
+    },
+    {
+      "event": "boss/rocket_flight",
+      "file": "rocket_flight-t3.wav",
+      "take": "rocket_flight-t3",
+      "request_id": "01a13196-28d4-7aa1-81da-bcd3bfc87cf6",
+      "prompt": "Small rocket motor in steady flight: continuous hissing burn with a slight roar, constant and even. Isolated game sound effect, dry, no music, no voices.",
+      "source_sha256": "cc343facc50cb86af62ded44db2b26fdfc44d2daae4ae984ec2c3579952ae77c",
+      "file_sha256": "cc343facc50cb86af62ded44db2b26fdfc44d2daae4ae984ec2c3579952ae77c",
+      "edit": null,
+      "volume_db": -25.6
+    },
+    {
+      "event": "boss/rocket_explosion",
+      "file": "rocket_explosion-t1.wav",
+      "take": "rocket_explosion-t1",
+      "request_id": "01a13196-2c92-7b53-a77d-7548e17f21d4",
+      "prompt": "Small missile exploding on impact with the ground: punchy blast, debris crackle, short decay. Isolated game sound effect, dry, no music, no voices.",
+      "source_sha256": "ad6b9a9b90afb07aa21edb1480e9a1190b3822515db701c4d79e56ae3548713b",
+      "file_sha256": "ad6b9a9b90afb07aa21edb1480e9a1190b3822515db701c4d79e56ae3548713b",
+      "edit": null,
+      "volume_db": -22.6
+    },
+    {
+      "event": "boss/jump_thruster",
+      "file": "jump_thruster-t2.wav",
+      "take": "jump_thruster-t2",
+      "request_id": "01a13196-3b74-7d90-bddc-04c868cda4ae",
+      "prompt": "Heavy robot walker leaping into the air with jet thrusters: powerful propulsion burst with a hydraulic leg push and rising whoosh. Isolated game sound effect, dry, no music, no voices.",
+      "source_sha256": "3e799179aedaa45da017978dd0e3fd853ca69504f40184e41e422cc56815482e",
+      "file_sha256": "3e799179aedaa45da017978dd0e3fd853ca69504f40184e41e422cc56815482e",
+      "edit": null,
+      "volume_db": -15.7
+    },
+    {
+      "event": "boss/smoke_vent",
+      "file": "smoke_vent-t2.wav",
+      "take": "smoke_vent-t2",
+      "request_id": "01a13196-4692-7011-8ee7-52c13f0d586f",
+      "prompt": "Pressurized smoke venting from a machine: loud hissing release burst of gas, tapering off. Isolated game sound effect, dry, no music, no voices.",
+      "source_sha256": "e0ad6efdfc63f52ef7499e7a55b3eeda0a26cc0c915ca07e341450810a5011c6",
+      "file_sha256": "e0ad6efdfc63f52ef7499e7a55b3eeda0a26cc0c915ca07e341450810a5011c6",
+      "edit": null,
+      "volume_db": -17.5
+    },
+    {
+      "event": "boss/firebomb_launch",
+      "file": "firebomb_launch-t4.wav",
+      "take": "firebomb_launch-t4",
+      "request_id": "01a131dc-2e16-71a1-be21-3ef022c20ac7",
+      "prompt": "Two heavy incendiary canisters fired from a compact military mortar launcher in quick succession: tight, solid, punchy compressed-air blasts with a sharp metallic snap and a short mechanical clack. Dense and dry, not hollow, no tube resonance, no explosion. Isolated game sound effect, dry, no music, no voices.",
+      "source_sha256": "4037a56331595022c30912b2ed26f53f2e4580600c062bc682bce61933c6d865",
+      "file_sha256": "4037a56331595022c30912b2ed26f53f2e4580600c062bc682bce61933c6d865",
+      "edit": null,
+      "volume_db": -21.6
+    },
+    {
+      "event": "boss/firebomb_burst",
+      "file": "firebomb_burst-t3.wav",
+      "take": "firebomb_burst-t3",
+      "request_id": "01a13196-60c5-7e62-b31c-4238e616ea4a",
+      "prompt": "Incendiary canister bursting into flames on hitting the ground: metal crack and whooshing fire ignition, short crackling flame tail. Isolated game sound effect, dry, no music, no voices.",
+      "source_sha256": "11d88eb76a67af609de018550011caa0696cc9dfcd71646bae0d166e4aea6492",
+      "file_sha256": "11d88eb76a67af609de018550011caa0696cc9dfcd71646bae0d166e4aea6492",
+      "edit": null,
+      "volume_db": -17.2
+    },
+    {
+      "event": "boss/flyer_flight",
+      "file": "flyer_flight-t1.wav",
+      "take": "flyer_flight-t1",
+      "request_id": "01a13196-6473-7fa0-93f6-97d6e441ad2e",
+      "prompt": "Small hovering drone machine: steady electric propeller hum with a faint mechanical buzz, constant and even. Isolated game sound effect, dry, no music, no voices.",
+      "source_sha256": "e0be51825aeb3b243c52dc011922d6e2830c41e81a6524b6446a9b32357ff016",
+      "file_sha256": "e0be51825aeb3b243c52dc011922d6e2830c41e81a6524b6446a9b32357ff016",
+      "edit": null,
+      "volume_db": -18.4
+    },
+    {
+      "event": "boss/flyer_destroyed",
+      "file": "flyer_destroyed-t3.wav",
+      "take": "flyer_destroyed-t3",
+      "request_id": "01a13196-7742-77b3-bdc0-373b2836a714",
+      "prompt": "Small flying drone machine destroyed by gunfire: electric crackle, metal breaking apart, small pop explosion with falling scrap. Isolated game sound effect, dry, no music, no voices.",
+      "source_sha256": "1bb741a3f4ac0f65a08c9f2386d252a40311eeafdd66e58a42d3fb1a73f16ab9",
+      "file_sha256": "1bb741a3f4ac0f65a08c9f2386d252a40311eeafdd66e58a42d3fb1a73f16ab9",
+      "edit": null,
+      "volume_db": -21.7
+    },
+    {
+      "event": "boss/phase_two",
+      "file": "phase_two-t3.wav",
+      "take": "phase_two-t3",
+      "request_id": "01a13196-8296-7242-860c-f38849187d43",
+      "prompt": "A large war machine powering up into a second, angrier mode: rising electrical charge, heavy engine rev and a mechanical roar. Isolated game sound effect, dry, no music, no voices.",
+      "source_sha256": "01e9792b059ebd60afdb86b93337e477fded3eb5b6925a95c53d4968865e95d1",
+      "file_sha256": "01e9792b059ebd60afdb86b93337e477fded3eb5b6925a95c53d4968865e95d1",
+      "edit": null,
+      "volume_db": -17.9
+    },
+    {
+      "event": "boss/defeat",
+      "file": "defeat-t3.wav",
+      "take": "defeat-t3",
+      "request_id": "01a13196-8e28-7fc2-8f39-c2f1ec1ab027",
+      "prompt": "A giant robot powering down and breaking apart: descending engine whine dying out, sparks, groaning metal, collapsing parts and an explosion. Isolated game sound effect, dry, no music, no voices.",
+      "source_sha256": "2247553f50d9e00534914f9982273cebc8441a5a3e8b1eed59c8cbe113a312ed",
+      "file_sha256": "2247553f50d9e00534914f9982273cebc8441a5a3e8b1eed59c8cbe113a312ed",
+      "edit": null,
+      "volume_db": -13.6
+    }
+  ]
+}

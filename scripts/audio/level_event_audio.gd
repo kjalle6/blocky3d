@@ -4,6 +4,12 @@ const MIX := preload("res://scripts/audio/movement_audio_mix.gd")
 const LOOP := preload("res://scripts/audio/gameplay_event_loop.gd")
 const LIFT := preload("res://scripts/presentation/cave_construction_lift_3d.gd")
 const SKATER_PROFILE := preload("res://resources/combat/skater.tres")
+const BOSS := preload("res://scripts/enemies/green_zone_boss_3d.gd")
+const BOSS_MISSILE := preload("res://scripts/projectiles/boss_missile_3d.gd")
+const FIRE_PATCH := preload("res://scripts/hazards/boss_fire_patch_3d.gd")
+const PHASE_FLYER := preload("res://scripts/enemies/destructible_flyer_3d.gd")
+# Planted feet in the boss's six-frame walk, as for the patrol enemies.
+const BOSS_STEP_FRAMES := [0, 3]
 const MAX_LOOPS := 16
 var session: LevelSession3D
 var sound: Node3D
@@ -41,8 +47,12 @@ func _ready() -> void:
 	_dash_ready = player.dash_available()
 
 func play(id: String, source: Node3D) -> bool:
-	if not is_instance_valid(source) or session.is_developer_inspection_enabled(): return false
-	return sound.play_event(id, source.global_position)
+	if not is_instance_valid(source): return false
+	return play_at(id, source.global_position)
+
+func play_at(id: String, world_position: Vector3) -> bool:
+	if session.is_developer_inspection_enabled(): return false
+	return sound.play_event(id, world_position)
 
 func _on_reward_claimed(source: Node) -> void:
 	if source is ItemReward3D and source.presentation == ItemReward3D.Presentation.CHEST:
@@ -60,8 +70,45 @@ func _bind_actor(node: Node) -> void:
 	elif node is StompableEnemy3D or node is HandgunEnemy3D:
 		node.defeated.connect(func(_position: Vector3) -> void: play("combat/enemy_defeat", node))
 		_actors.append(node)
+	elif node.get_script() == BOSS:
+		node.attack_started.connect(func(attack: StringName) -> void: _on_boss_attack(node, attack))
+		node.missile_fired.connect(_on_boss_missile)
+		node.landed.connect(func(point: Vector3) -> void: play_at("boss/landing", point))
+		node.shoved.connect(func(point: Vector3) -> void: play_at("boss/shove_contact", point))
+		node.smoke_vented.connect(func(_point: Vector3) -> void: play("boss/smoke_vent", node))
+		node.firebombs_released.connect(func(origin: Vector3) -> void: play_at("boss/firebomb_launch", origin))
+		node.phase_changed.connect(func(_phase: int) -> void: play("boss/phase_two", node))
+		node.defeated.connect(func(point: Vector3) -> void: play_at("boss/defeat", point))
+		_actors.append(node)
+	elif node.get_script() == FIRE_PATCH:
+		play("boss/firebomb_burst", node)
+	elif node.get_script() == PHASE_FLYER:
+		# The boss's defeat clears the remaining machines under its own cue.
+		node.defeated.connect(func(point: Vector3) -> void:
+			if not _boss_defeated(): play_at("boss/flyer_destroyed", point))
+		_actors.append(node)
 	elif node is HoveringHazard3D or node.get_script() == LIFT:
 		_actors.append(node)
+
+func _on_boss_attack(boss: Node3D, attack: StringName) -> void:
+	match attack:
+		&"missiles": play("boss/launcher_swivel", boss)
+		&"jump", &"chase_leap": play("boss/jump_thruster", boss)
+		&"space_charge": play("boss/charge", boss)
+	# Firebombs sound on release, not when the lob starts.
+
+func _on_boss_missile(missile: Node3D) -> void:
+	play("boss/rocket_launch", missile)
+	missile.impacted.connect(func(point: Vector3, _normal: Vector3, _collider: Object) -> void:
+		play_at("boss/rocket_explosion", point))
+	# Rockets free themselves mid-level; never leave a freed one in the typed scan.
+	missile.tree_exiting.connect(func() -> void: _actors.erase(missile))
+	_actors.append(missile)
+
+func _boss_defeated() -> bool:
+	for actor in _actors:
+		if is_instance_valid(actor) and actor.get_script() == BOSS and actor.is_defeated(): return true
+	return false
 
 func _on_ability(id: StringName) -> void:
 	var player := session.player
@@ -121,8 +168,21 @@ func _physics_process(_delta: float) -> void:
 			var warning: bool = actor._state == HandgunEnemy3D.CombatState.TELEGRAPH or actor._holding_notice_pose
 			if nearby and warning and not previous.get("warning", false): play("combat/enemy_notice", actor)
 			_states[id] = {"warning": warning}
+		elif actor.get_script() == BOSS:
+			var walking: bool = actor._animation == "walk" and actor.visual.texture == BOSS.SHEETS.walk \
+				and actor.is_on_floor() and absf(actor.velocity.x) > 0.1
+			var frame: int = actor.visual.frame if walking else -1
+			if active and walking and actor._on_screen() and frame in BOSS_STEP_FRAMES and frame != previous.get("frame", -1):
+				play("boss/footstep", actor)
+			var noticing: bool = actor._noticing
+			if active and noticing and not previous.get("notice", false): play("boss/launcher_swivel", actor)
+			_states[id] = {"frame": frame, "notice": noticing}
+		elif actor.get_script() == BOSS_MISSILE:
+			_loop("boss/rocket_flight", actor, active and actor._launched and not actor._expired)
 		elif actor is HoveringHazard3D:
-			_loop("world/flyer_hover", actor, nearby)
+			var phase_flyer: bool = actor.get_script() == PHASE_FLYER
+			if phase_flyer: _loop("boss/flyer_flight", actor, nearby and actor.is_active())
+			else: _loop("world/flyer_hover", actor, nearby)
 			var spark: bool = actor.is_discharging()
 			if nearby and spark and not previous.get("spark", false): play("world/flyer_spark", actor)
 			_states[id] = {"spark": spark}

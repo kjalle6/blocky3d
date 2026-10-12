@@ -3,7 +3,7 @@ extends RefCounted
 ## A gameplay description marks events whose owners are already connected.
 const BANK := preload("res://scripts/audio/sound_event_bank.gd")
 const CATEGORIES := {
-	"movement": "Footsteps & jumps", "abilities": "Abilities", "combat": "Combat",
+	"movement": "Footsteps & jumps", "abilities": "Abilities", "combat": "Combat", "boss": "Boss · S.T.O.M.P.",
 	"pickups": "Pickups & progress", "world": "World objects", "ambience": "Ambience",
 	"interface": "Interface", "music": "Music",
 }
@@ -12,6 +12,22 @@ const EVENTS := [
 	{"id": "combat/tank_shot", "title": "Tank · shot", "gameplay": "Connected · on the tank's actual shell release."},
 	{"id": "world/tank_tracks", "title": "Tank · moving tracks", "loop": true, "gameplay": "Connected · while a nearby living tank moves; stops when paused or defeated."},
 	{"id": "world/crate_break", "title": "Crate cover · break", "gameplay": "Connected · once when an individual destructible box breaks; prototype crate recording."},
+	{"id": "boss/footstep", "title": "Mechanical footstep", "gameplay": "Connected · on the boss's planted walk frames while it is on screen."},
+	{"id": "boss/charge", "title": "Body charge", "gameplay": "Connected · once when the close-range charge commits, before its rush."},
+	{"id": "boss/shove_contact", "title": "Shove contact", "gameplay": "Connected · only when a charge or salvo shove actually knocks the player back."},
+	{"id": "boss/landing", "title": "Landing impact", "gameplay": "Connected · on the boss's physical floor contact after a jump or chase leap; no advance warning."},
+	{"id": "boss/launcher_swivel", "title": "Launcher swivel", "gameplay": "Connected · when the launcher turns to aim a salvo, including the entry beat's aim."},
+	{"id": "boss/rocket_launch", "title": "Rocket launch", "gameplay": "Connected · once per rocket as it leaves its tube; six in a salvo."},
+	{"id": "boss/rocket_flight", "title": "Rocket flight", "loop": true, "gameplay": "Connected · while each rocket is actually flying; stops on impact or expiry."},
+	{"id": "boss/rocket_explosion", "title": "Rocket explosion", "gameplay": "Connected · where a rocket hits the player or scenery."},
+	{"id": "boss/jump_thruster", "title": "Jump thruster", "gameplay": "Connected · at the boss's actual take-off for a jump or chase leap."},
+	{"id": "boss/smoke_vent", "title": "Smoke vent", "gameplay": "Connected · when a head landing triggers the smoke escape."},
+	{"id": "boss/firebomb_launch", "title": "Firebomb launch", "gameplay": "Connected · once per lob when the canisters leave the pod."},
+	{"id": "boss/firebomb_burst", "title": "Firebomb burst", "gameplay": "Connected · where each canister bursts into a burning patch."},
+	{"id": "boss/flyer_flight", "title": "Flying-machine flight", "loop": true, "gameplay": "Connected · while a nearby phase-two flying machine is active; replaces the generic hover."},
+	{"id": "boss/flyer_destroyed", "title": "Flying-machine destruction", "gameplay": "Connected · when the player shoots down a flying machine; silent when the boss's defeat clears them."},
+	{"id": "boss/phase_two", "title": "Phase-two activation", "gameplay": "Connected · once when the boss first falls to half health."},
+	{"id": "boss/defeat", "title": "Boss defeat", "gameplay": "Connected · once on the live kill; a restored defeat stays silent."},
 	{"id": "combat/heal", "title": "Healing item", "gameplay": "Connected · short cue on successful healing; prototype recording."},
 	{"id": "abilities/double_jump", "title": "Double jump", "gameplay": "Connected · On the second jump."},
 	{"id": "abilities/dash_ground", "title": "Dash · grounded", "gameplay": "Connected · When a grounded dash starts."},

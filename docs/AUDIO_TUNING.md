@@ -119,6 +119,59 @@ four tuning pages under `build/previews/combat_audio`. Initial captured peaks
 were approximately -14.1 dB for player shots/cover and -17.7 dB for the enemy
 volley/cover, leaving headroom. These checks do not establish listening approval.
 
+## Boss sounds (S.T.O.M.P.)
+
+**F1 -> Audio tuning -> Boss · S.T.O.M.P.** has 16 connected slots for the
+Green Zone boss. Each starts with one **trial pick** from `assets/audio/boss`,
+installed as a project-default bank in `resources/audio/boss` (like the tank's
+sounds). Claude chose the picks by measurement and waveform/spectrogram review,
+not by listening, and matched their levels to the player's Shot_2 at -12 dB.
+They await the user's in-game verdict. Saved choices in `movement_mix.tres`
+still override them. Test in **Boss Arena WIP** or the Level 3 boss pit.
+
+| Slot | Plays |
+| --- | --- |
+| Mechanical footstep | Walk frames 0 and 3 while the boss is on screen |
+| Body charge | Once when the close-range charge commits |
+| Shove contact | Only when a charge or salvo shove knocks the player back |
+| Landing impact | On physical floor contact after a jump or chase leap; no advance warning |
+| Launcher swivel | Salvo aim, and the entry beat's aim |
+| Rocket launch | Once per rocket, six per salvo |
+| Rocket flight (loop) | While each rocket flies; ends on impact or expiry |
+| Rocket explosion | Where a rocket hits the player or scenery |
+| Jump thruster | At take-off for a jump or chase leap |
+| Smoke vent | When a head landing starts the smoke escape |
+| Firebomb launch | Once per lob, when the canisters leave the pod |
+| Firebomb burst | Where each canister becomes a burning patch |
+| Flying-machine flight (loop) | While a nearby phase-two machine is active; replaces the generic flyer hover for these machines only |
+| Flying-machine destruction | When the player shoots one down; silent when the boss's defeat clears them |
+| Phase-two activation | Once at half health |
+| Boss defeat | Once on the live kill; a restored defeat is silent |
+
+The boss emits `shoved`, `smoke_vented`, and `firebombs_released` for the
+cues its older signals did not cover. `level_event_audio.gd` routes all of
+them through the level's voice pool and continuous-loop cap. The walk
+contact frames follow the patrol enemies' convention; confirm them by ear.
+
+Only the 16 picks are in the game; `assets/audio/boss/source_manifest.json`
+records each one's prompt, fal request ID, hashes and level. `charge-t1-edit.wav`
+is trimmed to 0.75 s with a 0.2 s fade, because the source holds full level to
+a hard stop. To swap a pick, copy another take in and point that bank at it.
+All three candidate takes per cue (ElevenLabs Sound Effects V2 via fal)
+live outside the game in the Mr. Mak Workspace, under
+`D:/GodotTools/mr-mak-workspace/workspace/2026-10-12_blocky3d/audio/takes`, with
+job receipts, prompts, hashes and measurements in `takes.json`. Audition them
+on the blocky3d hub's Audio page, which plays each take in context and shows
+why it was or wasn't picked.
+Several takes have clipped peaks in the generated file; the hub flags them.
+
+`tools/validate_boss_audio.gd` checks that every boss slot ships a playable
+trial pick in its catalog loop mode, then drives the real fight in Boss Arena
+WIP from empty slots: silent when empty, salvo/rocket loops/explosions, charge contact and a dodged charge,
+smoke, jump/landing order, firebomb release/bursts, footsteps, phase two,
+machine loops and destruction, defeat, restored defeat and reset cleanup. It
+never saves the mix. It does not judge how the fight sounds.
+
 ## Sound events
 
 Choose a **Category**, then a surface/action or named sound event. Categories

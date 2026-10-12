@@ -7,6 +7,12 @@ signal missile_fired(projectile: Node3D)
 signal attack_started(attack: StringName)
 ## Emitted once per fight when health first falls to phase_two_health_fraction.
 signal phase_changed(new_phase: int)
+## A charge or salvo shove that actually knocked the player back.
+signal shoved(impact_position: Vector3)
+## The head-landing defense released its smoke and grabbed the player.
+signal smoke_vented(world_position: Vector3)
+## The lob's canisters left the pod, once per lob.
+signal firebombs_released(origin: Vector3)
 
 enum State { IDLE, SALVO, JUMP, RECOVERY, SMOKE_ESCAPE, SPACE_CHARGE, DEFEATED, LOB }
 enum Pattern { MIXED, MISSILES, JUMPS, FIREBOMBS }
@@ -411,6 +417,7 @@ func _tick_lob(_player: PlayerCharacter, delta: float) -> void:
 			var flight := clampf(0.85 + absf(target.x - origin.x) * 0.035 + index * 0.12, 0.85, 1.6)
 			FIREBOMB.launch(get_parent(), origin, target, flight, gravity, firebomb_patch_width,
 				firebomb_burn_time, firebomb_damage, lobs_started * 3 + index)
+		firebombs_released.emit(origin)
 	if phase_time >= lob_duration:
 		_begin_recovery()
 
@@ -544,8 +551,11 @@ func _try_charge_hit(player: PlayerCharacter, previous_x: float) -> bool:
 			or feet > global_position.y + 2.35 or feet + 1.1 < global_position.y + 0.15:
 		return false
 	if not _body_hit_unobstructed(player): return false
-	return player.receive_knockback_hit(global_position, _charge_hit,
-		_charge_direction * charge_knockback, charge_knockback_deceleration)
+	if not player.receive_knockback_hit(global_position, _charge_hit,
+			_charge_direction * charge_knockback, charge_knockback_deceleration):
+		return false
+	shoved.emit(player.global_position)
+	return true
 
 func _body_hit_unobstructed(player: PlayerCharacter) -> bool:
 	var excluded: Array[RID] = [get_rid(), player.get_rid()]
@@ -570,6 +580,7 @@ func _try_salvo_shove(player: PlayerCharacter) -> void:
 			direction * charge_knockback, charge_knockback_deceleration):
 		salvo_shoves += 1
 		salvo_shove_cooldown_remaining = salvo_shove_cooldown
+		shoved.emit(player.global_position)
 
 func _finish_space_charge() -> void:
 	charge_cooldown_remaining = charge_cooldown
@@ -829,6 +840,7 @@ func receive_stomp(player: PlayerCharacter) -> void:
 	_smoke_vfx = SMOKE.spawn(get_parent(), Vector3(player.global_position.x, player.feet_world_y(), 0),
 		smoke_escape_timeout + smoke_punishment_duration + 0.2, player)
 	smoke_escapes += 1
+	smoke_vented.emit(player.global_position)
 
 
 func _tick_smoke_escape(delta: float) -> void:

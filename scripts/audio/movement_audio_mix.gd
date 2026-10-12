@@ -36,6 +36,23 @@ const SOURCE_EVENT_BANKS := {
 	"combat/knife_hit": preload("res://resources/audio/combat/knife_hit.tres"),
 	"combat/stomp": preload("res://resources/audio/combat/stomp.tres"),
 	"combat/heal": preload("res://resources/audio/combat/heal.tres"),
+	# Boss trial picks: see assets/audio/boss/source_manifest.json.
+	"boss/footstep": preload("res://resources/audio/boss/footstep.tres"),
+	"boss/charge": preload("res://resources/audio/boss/charge.tres"),
+	"boss/shove_contact": preload("res://resources/audio/boss/shove_contact.tres"),
+	"boss/landing": preload("res://resources/audio/boss/landing.tres"),
+	"boss/launcher_swivel": preload("res://resources/audio/boss/launcher_swivel.tres"),
+	"boss/rocket_launch": preload("res://resources/audio/boss/rocket_launch.tres"),
+	"boss/rocket_flight": preload("res://resources/audio/boss/rocket_flight.tres"),
+	"boss/rocket_explosion": preload("res://resources/audio/boss/rocket_explosion.tres"),
+	"boss/jump_thruster": preload("res://resources/audio/boss/jump_thruster.tres"),
+	"boss/smoke_vent": preload("res://resources/audio/boss/smoke_vent.tres"),
+	"boss/firebomb_launch": preload("res://resources/audio/boss/firebomb_launch.tres"),
+	"boss/firebomb_burst": preload("res://resources/audio/boss/firebomb_burst.tres"),
+	"boss/flyer_flight": preload("res://resources/audio/boss/flyer_flight.tres"),
+	"boss/flyer_destroyed": preload("res://resources/audio/boss/flyer_destroyed.tres"),
+	"boss/phase_two": preload("res://resources/audio/boss/phase_two.tres"),
+	"boss/defeat": preload("res://resources/audio/boss/defeat.tres"),
 }
 static var working: Dictionary = {}
 static var saved: Dictionary = {}
