@@ -71,6 +71,12 @@ health bars even after taking damage.
   After passing the target's horizontal position, they keep flying rather than
   circling back. The authored rocket's tilted nose is aligned to its actual
   trajectory. They hit solid terrain or the player and produce an explosion.
+  Each rocket carries a flickering exhaust flame on its tail and, once it has
+  boosted clear of the launcher, releases muted smoke puffs along its path.
+  The puffs stay where they were released and fade within half a second; the
+  flame leaves with the rocket. Neither affects flight or timing.
+  `tools/capture_boss_rockets.gd` (run with **-Visual**) saves a salvo at
+  normal zoom under `build/previews/boss_rockets`.
   This is a stylized rapid rocket barrage, not a historical weapon simulation.
 - **Jump:** a thruster-assisted arc toward the player's position at takeoff,
   limited to 14 m horizontally and clamped inside the walls. It does not retarget

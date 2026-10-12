@@ -126,6 +126,12 @@
       "source": "assets/library/weapons/bombs/1 Bombs/17_1.png",
       "sha256": "89228649a2bedb806bd56ff67e8077a82218015de03e20dee57c1c3089d8e672",
       "license": "assets/art/vfx/boss/bombs_license.txt"
+    },
+    {
+      "file": "assets/art/vfx/boss/rocket_exhaust.png",
+      "source": "assets/library/vfx/fire/3 Flame/4.png",
+      "sha256": "580a157004e22781afcf24ee4f59a87bce6e7639a64b05b8d2b6688efd90a789",
+      "license": "assets/art/vfx/boss/vfx_fire_license.txt"
     }
   ]
 }
