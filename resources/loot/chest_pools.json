@@ -25,6 +25,17 @@
       {"item": "handgun_ammo", "weight": 100, "minimum": 18, "maximum": 36, "weapon": "handgun"}
     ]
   },
+  "boss_arena": {
+    "name": "Boss arena supplies",
+    "guaranteed": [
+      {"item": "handgun_ammo", "minimum": 30, "maximum": 40, "weapon": "handgun"}
+    ],
+    "bonus_chance": 0.5,
+    "entries": [
+      {"item": "basic_heal", "weight": 70, "minimum": 1, "maximum": 2},
+      {"item": "large_heal_test", "weight": 30, "minimum": 1, "maximum": 1}
+    ]
+  },
   "rare_supplies": {
     "name": "Better supplies",
     "bonus_chance": 0.5,

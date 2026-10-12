@@ -132,7 +132,7 @@ metadata/footstep_surface = "silent"
 [node name="HangingChest" type="Area3D" parent="Props" index="5"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.68, 34.56, 0)
 script = ExtResource("9")
-loot_pool = &"green_zone"
+loot_pool = &"boss_arena"
 presentation = 1
 metadata/layout_id = "boss_arena_hanging_chest"
 metadata/layout_kind = "chest"
@@ -141,7 +141,7 @@ metadata/layout_removable = true
 [node name="TallTowerChest" type="Area3D" parent="Props" index="6"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.6, 20.8, 0)
 script = ExtResource("9")
-loot_pool = &"green_zone"
+loot_pool = &"boss_arena"
 presentation = 1
 metadata/layout_id = "boss_arena_tall_tower_chest"
 metadata/layout_kind = "chest"
@@ -150,7 +150,7 @@ metadata/layout_removable = true
 [node name="ShortTowerChest" type="Area3D" parent="Props" index="7"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39.68, 12.48, 0)
 script = ExtResource("9")
-loot_pool = &"green_zone"
+loot_pool = &"boss_arena"
 presentation = 1
 metadata/layout_id = "boss_arena_short_tower_chest"
 metadata/layout_kind = "chest"

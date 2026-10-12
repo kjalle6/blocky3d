@@ -191,13 +191,25 @@ func _check_pools() -> void:
 			for item_id in rolled:
 				seen[str(item_id)] = true
 				amounts[str(item_id) + ":" + str(rolled[item_id])] = true
-				for entry in LOOT.pools[pool_id].entries:
+				for entry in LOOT.pools[pool_id].entries + LOOT.pools[pool_id].get("guaranteed", []):
 					if entry.item == str(item_id):
 						assert(rolled[item_id] >= entry.minimum and rolled[item_id] <= entry.maximum)
 			var before_gun: Dictionary = LOOT.roll(pool_id, 812347, source, [&"knife"])
 			assert(not before_gun.is_empty() and not before_gun.has(&"handgun_ammo"))
-		assert(seen.size() == LOOT.pools[pool_id].entries.size())
+		assert(seen.size() == LOOT.pools[pool_id].entries.size() + LOOT.pools[pool_id].get("guaranteed", []).size())
 		assert(amounts.size() > seen.size() and singles > 0 and doubles > 0)
+	# The boss arena always supplies handgun rounds once the handgun is owned,
+	# and still never grants ammo before it.
+	for index in 200:
+		var source := "boss_arena/chest_" + str(index)
+		var armed: Dictionary = LOOT.roll("boss_arena", 812347, source, [&"knife", &"handgun"])
+		assert(int(armed.get(&"handgun_ammo", 0)) >= 30 and int(armed.get(&"handgun_ammo", 0)) <= 40, "Boss arena chests must always give 30-40 rounds.")
+		var unarmed: Dictionary = LOOT.roll("boss_arena", 812347, source, [&"knife"])
+		assert(not unarmed.is_empty() and not unarmed.has(&"handgun_ammo"))
+	# Pools without a guarantee keep the exact earlier rolls, so saved campaigns
+	# reopen unclaimed chests with the same contents.
+	# Recorded from the loot code before guaranteed rewards were added.
+	assert(LOOT.roll("firearms", 812347, "stable/fixture7", [&"knife", &"handgun"]) == {&"basic_heal": 1, &"handgun_ammo": 29})
 	var variants := {}
 	for campaign_seed in range(1, 100):
 		variants[JSON.stringify(LOOT.roll("firearms", campaign_seed, "same/chest", [&"knife", &"handgun"]))] = true

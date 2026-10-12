@@ -23,6 +23,13 @@ static func _load_pools() -> Dictionary:
 			unconditional = unconditional or not entry.has("weapon")
 			seen[entry.item] = true
 		assert(unconditional, "A pool needs a reward before any weapon is unlocked.")
+		# Guaranteed rewards are always granted when eligible, then one weighted
+		# bonus may follow; they never also appear among the weighted entries.
+		for entry in pool.get("guaranteed", []):
+			assert(ItemCatalog.definition(StringName(entry.item)) != null and not seen.has(entry.item))
+			assert(SaveSnapshot.whole(entry.minimum, 1, 999) and SaveSnapshot.whole(entry.maximum, entry.minimum, 999))
+			assert(not entry.has("weapon") or PlayerWeapon.is_known(StringName(entry.weapon)))
+			seen[entry.item] = true
 	return data
 
 static func pool_for_level(level_id: StringName) -> String:
@@ -39,7 +46,12 @@ static func roll(pool_id: String, campaign_seed: int, source_id: String, weapons
 	var rng := RandomNumberGenerator.new()
 	rng.seed = (str(campaign_seed) + "/" + source_id + "/" + pool_id).sha256_text().substr(0, 15).hex_to_int()
 	var contents := {}
-	_draw(eligible, rng, contents)
+	for entry in pool.get("guaranteed", []):
+		if not entry.has("weapon") or StringName(entry.weapon) in weapons:
+			contents[StringName(entry.item)] = rng.randi_range(int(entry.minimum), int(entry.maximum))
+	# Pools without guaranteed rewards keep their exact earlier draw sequence.
+	if contents.is_empty():
+		_draw(eligible, rng, contents)
 	if rng.randf() < float(pool.bonus_chance) and not eligible.is_empty():
 		_draw(eligible, rng, contents)
 	return contents

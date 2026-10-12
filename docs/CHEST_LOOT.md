@@ -28,11 +28,18 @@ type. Quantities use inclusive integer ranges. If only one type is eligible,
 there is only one reward. Handgun ammo is eligible only when the player owns
 the handgun; fixed authoring intentionally allows exact bundles.
 
+A pool may also list `guaranteed` rewards. Every eligible guaranteed reward is
+always granted and replaces the first weighted draw; the bonus chance then adds
+one weighted item. With no eligible guaranteed reward (for example, ammo before
+the handgun), the pool falls back to the ordinary draw. Pools without
+`guaranteed` keep their exact earlier rolls, so saved unopened chests are unchanged.
+
 | Pool / automatic level | Item weights and quantities | Second type chance |
 | --- | --- | --- |
 | Shoreline / Level 1 | Basic medicine: weight 100, 1–2; ammo: 60, 12–24 | 25% |
 | Green Zone / Level 2, outdoors and cave | Basic: 80, 1–2; 50-HP kit: 20, 1; ammo: 60, 12–30 | 25% |
 | Gun encounter / both Level 3 sections | Basic: 60, 1–2; 50-HP kit: 25, 1; ammo: 100, 18–36 | 35% |
+| Boss arena supplies / the three boss-pit chests | **Always 30–40 handgun rounds**; bonus: basic medicine 70, 1–2; 50-HP kit 30, 1 | 50% |
 | Better supplies / explicit override only | 50-HP kit: 65, 1–2; 75-HP bag: 35, 1; ammo: 80, 24–48 | 50% |
 
 Weights are relative among eligible items, not percentages. These are starting
@@ -66,6 +73,7 @@ Pool edits are balance changes and can change future unopened rewards.
 ## Verification
 
 `tools/validate_chest_loot.gd` covers weighted draws, quantities, weapon gating,
+the boss arena's guaranteed rounds, a recorded pre-guarantee roll,
 stable outcomes, designer preview/placement/settings/Undo/disk round trips,
 actual contact collection and full campaign snapshot reconstruction.
 `validate_save_snapshots.gd` covers seed persistence, legacy fallback and invalid

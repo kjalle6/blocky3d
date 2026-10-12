@@ -261,7 +261,12 @@ func _build_properties() -> void:
 				_numeric("Handgun rounds", "handgun_ammo", values.handgun_ammo)
 			else:
 				var pool_id: String = loot.pool_for_level(designer.app.current_level.level_definition().level_id) if values.loot_pool == "level" else values.loot_pool
-				_paragraph(_properties, "%s: one reward, %d%% chance of a second item type. Ammo requires the handgun." % [loot.pools[pool_id].name, roundi(loot.pools[pool_id].bonus_chance * 100)])
+				var pool: Dictionary = loot.pools[pool_id]
+				var always: Array = []
+				for entry in pool.get("guaranteed", []):
+					always.append("%d–%d %s" % [entry.minimum, entry.maximum, ItemCatalog.definition(StringName(entry.item)).display_name])
+				var first := "always %s" % ", ".join(always) if not always.is_empty() else "one reward"
+				_paragraph(_properties, "%s: %s, %d%% chance of another item type. Ammo requires the handgun." % [pool.name, first, roundi(pool.bonus_chance * 100)])
 			_paragraph(_properties, "Y is ground height. Opens on contact. Contents repeat after loading an earlier save; claimed chests stay open.")
 		"checkpoint":
 			_numeric("Trigger width (m)", "width", values.width)

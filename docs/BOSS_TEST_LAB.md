@@ -223,6 +223,10 @@ ceiling and grass floor.
   onto them. The tall one lines up with the main tower's 20.8 m balcony; the
   short one ends 5.12 m from the right wall, where a long wall slide returns to
   the floor. Crossing gaps are 2.56-5.76 m.
+- **The three chests** use the **Boss arena supplies** pool: each always gives
+  30-40 handgun rounds (90-120 across the arena, against the 80 hits the
+  provisional 2000 HP takes), plus a 50% chance of medicine. Pit chests refill
+  on every retry. See [supply chests](CHEST_LOOT.md).
 
 **Camera.** The arena's boss camera runs in fit-both mode: it frames the
 midpoint between the player and the boss and zooms out only as far as needed
