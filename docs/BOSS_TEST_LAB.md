@@ -80,7 +80,11 @@ health bars even after taking damage.
 - **Landing:** a low blast starts on physical floor contact. Its VFX and damage
   start together, with no advance markers, warnings, prompts, or added warning
   phase. Each landing can damage the player once. Moving away or getting above
-  the blast avoids it.
+  the blast avoids it. The impact shows a large shockwave ring flattened round
+  the feet (`landing_ring_large.png`), ground dust rolling out both ways
+  (`landing_dust.png`) and debris at each foot, tinted the smoke's grey-green.
+  The camera shakes in whole screen pixels (`landing_shake`, `landing_shake_time`
+  on the boss; `add_shake()` on the side camera).
 - **Walking:** the six-frame `Walk.png` cycle accompanies actual grounded
   movement. Between attacks the boss approaches distant players or steps away
   from very close players to regain roughly 6–8 m of space, within the room.
@@ -296,6 +300,11 @@ straight on from the gun encounter: walking off the end of the upper-route
 plateau takes a fade into the pit, where the player stands on the same plateau's
 grass lip, high on the pit's left wall. There is no entry door; the lip simply
 runs in from the left edge of the view.
+
+The enclosing walls extend 30.72 m outward, with the floor and ceiling widened
+to meet them, so camera movement cannot reveal their thin outer edges. The
+inner wall faces remain at x=0 and x=48.64; the entrance lip, cutscene path,
+scaffold positions and exit doorway keep their original locations.
 
 **Entry beat.** The cutscene takes over as the pit appears. It walks the
 player to the brink of the lip, and the camera looks down into the pit. The

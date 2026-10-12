@@ -133,6 +133,16 @@ func _validate_chase_onto_deck() -> void:
 	var landing: Vector3 = _landings[0]
 	assert(absf(landing.y - deck.y) < 0.12, "The chase leap lands on the deck top, not the floor: %.2f." % landing.y)
 	assert(landing.x > deck.x + 1.3 and landing.x < deck.z - 1.3, "The whole body lands on the deck span.")
+	# The landing jolts the camera in whole screen pixels, then settles.
+	var camera = _level.camera
+	var shook := false
+	for frame in int((_boss.landing_shake_time + 0.2) * 60.0):
+		var offset: Vector2 = camera.shake_offset_pixels()
+		assert(offset == offset.round(), "Shake offsets stay on whole pixels: %s." % offset)
+		shook = shook or offset != Vector2.ZERO
+		await _frames(1)
+	assert(shook, "A landing shakes the camera.")
+	assert(camera.shake_offset_pixels() == Vector2.ZERO, "The shake dies away.")
 
 func _validate_staged_chase() -> void:
 	_controls.select_pattern(2)

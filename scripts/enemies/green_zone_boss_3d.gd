@@ -12,7 +12,11 @@ enum State { IDLE, SALVO, JUMP, RECOVERY, SMOKE_ESCAPE, SPACE_CHARGE, DEFEATED, 
 enum Pattern { MIXED, MISSILES, JUMPS, FIREBOMBS }
 
 const EFFECT := preload("res://scripts/presentation/boss_pixel_effect_3d.gd")
-const LANDING_RING := preload("res://assets/art/vfx/boss/landing_ring.png")
+const LANDING_RING := preload("res://assets/art/vfx/boss/landing_ring_large.png")
+const LANDING_DUST := preload("res://assets/art/vfx/boss/landing_dust.png")
+const LANDING_DEBRIS := preload("res://assets/art/vfx/boss/smoke_puff_c.png")
+## The boss smoke's palest shade: thrown-up dust, not snow, against the night.
+const LANDING_DUST_SHADE := Color("#a0afaa")
 const EXPLOSION := preload("res://assets/art/vfx/boss/explosion.png")
 const SMOKE := preload("res://scripts/presentation/boss_smoke_burst_3d.gd")
 const FIREBOMB := preload("res://scripts/projectiles/boss_firebomb_3d.gd")
@@ -55,6 +59,9 @@ const SHEETS := {
 @export var missile_attack_range := 18.0
 @export var landing_radius := 2.8
 @export var landing_height := 1.4
+## Camera jolt when the boss lands: strength 1 reaches the camera's shake_pixels.
+@export_range(0.0, 2.0, 0.05) var landing_shake := 0.7
+@export_range(0.0, 1.0, 0.05) var landing_shake_time := 0.35
 @export var landing_active_time := 0.16
 @export var missile_speed := 11.0
 @export_range(0.08, 0.3, 0.01) var missile_interval := 0.12
@@ -624,13 +631,34 @@ func _land(player: PlayerCharacter) -> void:
 	landing_count += 1
 	_landing_remaining = landing_active_time
 	_landing_hit.source_position = global_position
-	# Start at the expanded ring frames so the footprint is visible at impact.
-	EFFECT.spawn(get_parent(), global_position + Vector3.UP * landing_height * 0.5,
-		LANDING_RING, 72, landing_radius * 2.0 / 72.0,
-		landing_height / (landing_radius * 2.0), 3)
+	_spawn_landing_effects()
+	var camera = get_viewport().get_camera_3d()
+	if camera != null and camera.has_method("add_shake"):
+		camera.add_shake(landing_shake, landing_shake_time)
 	_apply_landing_damage(player)
 	landed.emit(global_position)
 	_begin_recovery()
+
+## The landing's weight on screen, all at whole multiples of the art's pixels:
+## a shockwave ring flattened onto the ground, dust rolling out both ways, and
+## debris kicked up at each foot.
+func _spawn_landing_effects() -> void:
+	var ground := global_position
+	# The large ring's widest frame matches the blast. Low on the ground and
+	# from its first open frame, it rings the feet instead of hiding the legs.
+	EFFECT.spawn(get_parent(), ground + Vector3.UP * 0.35, LANDING_RING, 96, 0.06, 0.3, 3)
+	# The dust sits on its cell's bottom rows: lift the cell so they meet the ground.
+	for side in [-1.0, 1.0]:
+		var dust = EFFECT.spawn(get_parent(), ground + Vector3(side * 0.9, 24 * 0.12, 0), LANDING_DUST, 48, 0.12)
+		dust.frame_rate = 12.0
+		dust.flip_h = side < 0.0
+		dust.modulate = LANDING_DUST_SHADE
+	for side in [-1.0, 1.0]:
+		var debris = EFFECT.spawn(get_parent(), ground + Vector3(side * 1.5, 1.1, 0), LANDING_DEBRIS, 48, 0.08)
+		debris.frame_rate = 14.0
+		debris.flip_h = side < 0.0
+		debris.modulate = LANDING_DUST_SHADE
+
 
 func _apply_landing_damage(player: PlayerCharacter) -> void:
 	if _landing_hit == null or player.is_dead():

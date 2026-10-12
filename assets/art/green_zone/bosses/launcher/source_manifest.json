@@ -62,6 +62,17 @@
       "sha256": "d74d10b30e9ef531ccee919b214a7358c8485bb295e4c71199488b94183153f6"
     },
     {
+      "file": "assets/art/vfx/boss/landing_ring_large.png",
+      "source": "assets/library/vfx/fire/5 Explosions/4 High/1.png",
+      "sha256": "86d2b2234fb309813c5e6cb6b43b82c30b90660905bd12b4f6cf717f47e0cccd"
+    },
+    {
+      "file": "assets/art/vfx/boss/landing_dust.png",
+      "source": "assets/library/vfx/effects/1 Smoke/5.png",
+      "sha256": "cb72fe6e39c52527e494deade7856527c05839cafdd9d5b08c84dddfc0d0b734",
+      "license": "assets/art/vfx/boss/vfx_effects_license.txt"
+    },
+    {
       "file": "assets/art/vfx/boss/smoke_puff_a.png",
       "source": "assets/library/vfx/effects/1 Smoke/7.png",
       "sha256": "55eda5f5b6aa32234c6263fc77b3c6b9a566d6b5b7a7d71df48de75ef1e36b97",

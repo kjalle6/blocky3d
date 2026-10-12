@@ -26,6 +26,12 @@ extends Camera3D
 ## chasing a still cursor; aiming level or down never moves it.
 @export_range(0.0, 0.9, 0.05) var aim_look_fraction := 0.25
 @export_range(0.0, 6.0, 0.1) var aim_look_maximum := 2.5
+@export_category("Shake")
+## Screen pixels a shake of strength 1 can reach. Offsets are whole pixels on
+## top of the snapped view, so the pixel art never goes soft.
+@export_range(0.0, 32.0, 1.0) var shake_pixels := 8.0
+## New shake offsets per second; fewer reads chunkier.
+@export_range(10.0, 60.0, 1.0) var shake_rate := 30.0
 
 var _initialized := false
 var _smoothed_x := 0.0
@@ -37,6 +43,12 @@ var _developer_inspection_enabled := false
 ## Cutscenes own target, look-ahead and zoom until they release this flag.
 var cinematic_override_enabled := false
 var _framing_goal := Vector2.ZERO
+var _shake_strength := 0.0
+var _shake_duration := 0.0
+var _shake_remaining := 0.0
+var _shake_step := 0.0
+var _shake_offset := Vector2.ZERO
+var _shake_random := RandomNumberGenerator.new()
 var _region_blend_from := Vector2.ZERO
 var _region_blend_elapsed := Vector2.ZERO
 
@@ -130,19 +142,63 @@ func _process(delta: float) -> void:
 			vertical_weight
 		)
 	var rendered_vertical_offset := snap_world_y(_smoothed_vertical_offset)
+	# Shake rides on top of the snapped view and never feeds the smoothing.
+	var shake := _advance_shake(delta)
 	global_position = Vector3(
-		snap_world_x(_smoothed_x),
-		camera_height + rendered_vertical_offset,
+		snap_world_x(_smoothed_x) + shake.x,
+		camera_height + rendered_vertical_offset + shake.y,
 		side_distance
 	)
 	look_at(
 		Vector3(
 			global_position.x,
-			target_height + rendered_vertical_offset,
+			target_height + rendered_vertical_offset + shake.y,
 			0.0
 		),
 		Vector3.UP
 	)
+
+
+## A brief jolt that dies away over duration, such as a heavy landing. A new
+## shake never weakens one that is still stronger.
+func add_shake(strength: float, duration: float) -> void:
+	if strength <= 0.0 or duration <= 0.0 or strength < _current_shake_strength():
+		return
+	_shake_strength = strength
+	_shake_duration = duration
+	_shake_remaining = duration
+	_shake_step = 0.0
+
+
+## The current shake, in whole screen pixels.
+func shake_offset_pixels() -> Vector2:
+	return _shake_offset
+
+
+func _current_shake_strength() -> float:
+	if _shake_remaining <= 0.0:
+		return 0.0
+	var fade := _shake_remaining / _shake_duration
+	return _shake_strength * fade * fade
+
+
+func _advance_shake(delta: float) -> Vector2:
+	if _shake_remaining <= 0.0 or _developer_inspection_enabled:
+		_shake_remaining = 0.0
+		_shake_offset = Vector2.ZERO
+		return Vector2.ZERO
+	_shake_remaining = maxf(0.0, _shake_remaining - delta)
+	_shake_step -= delta
+	if _shake_remaining <= 0.0:
+		_shake_offset = Vector2.ZERO
+	elif _shake_step <= 0.0:
+		_shake_step = 1.0 / shake_rate
+		var reach := roundf(shake_pixels * _current_shake_strength())
+		_shake_offset = Vector2(
+			roundf(_shake_random.randf_range(-reach, reach)),
+			roundf(_shake_random.randf_range(-reach, reach))
+		)
+	return _shake_offset * world_units_per_screen_pixel()
 
 
 func bind_vertical_regions(regions: Array[VerticalCameraRegion3D]) -> void:
