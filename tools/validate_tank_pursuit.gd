@@ -27,6 +27,11 @@ func _run() -> void:
 	_place_player(Vector3(46.5, 0.7, 0))
 	await _frames(6)
 	tank.reset_run()
+	# The saved layout starts the tank above the clearing floor; let it land.
+	await physics_frame
+	for frame in 120:
+		if tank.is_on_floor(): break
+		await physics_frame
 	await _frames(10)
 	assert(not tank.is_pursuing() and tank.shots_fired_total() == 0, "Keep the initial safe landing and approach reveal.")
 	_place_player(Vector3(50, 0.7, 0))

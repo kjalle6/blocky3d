@@ -35,6 +35,11 @@ const LEVEL_3_SHOOTER_AREA_SCENE_PATH := (
 const LEVEL_3_SHOOTER_AREA := preload("res://tools/level_3_shooter_area_fixture.gd")
 const LEVEL_3_BOSS_PIT_SCENE_PATH := "res://scenes/dev/green_zone_finale_boss_pit.tscn"
 const DESIGNER_FIXTURE_SCENE_PATH := "res://scenes/dev/level_designer_fixture.tscn"
+const MENU_PREVIEW_SCENE_PATHS: Array[String] = [
+	"res://scenes/dev/main_menu_clean_preview.tscn",
+	"res://scenes/dev/main_menu_release_preview.tscn",
+	"res://scenes/dev/neon_junction_background_preview.tscn",
+]
 ## Props that merely share an edge are not overlapping.
 const EDGE_TOLERANCE := 0.01
 const ACTOR_GROUPS: PackedStringArray = [
@@ -112,6 +117,9 @@ func _assert_every_scene_is_accounted_for(game_root: Node) -> void:
 	covered.append(LEVEL_3_SHOOTER_AREA_SCENE_PATH)
 	covered.append(LEVEL_3_BOSS_PIT_SCENE_PATH)
 	covered.append(DESIGNER_FIXTURE_SCENE_PATH)
+	# Title and menu previews are full-resolution interface art, not pixel-art levels.
+	for path in MENU_PREVIEW_SCENE_PATHS:
+		covered.append(path)
 	for directory in ["res://scenes/levels", "res://scenes/dev"]:
 		for file_name in DirAccess.get_files_at(directory):
 			if not file_name.ends_with(".tscn"):
