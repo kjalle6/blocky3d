@@ -14,6 +14,8 @@ extends Node
 ## and the doorway ends the level.
 
 signal intro_started
+## The freeze-frame name reveal begins (not when the cutscene is skipped).
+signal reveal_started
 signal intro_finished
 signal warhead_dropped(pickup: Node3D)
 signal warhead_collected
@@ -317,6 +319,7 @@ func _tick_boss_beat(player: PlayerCharacter) -> void:
 		add_child(_reveal)
 		_reveal.finished.connect(_show_health_bar)
 		_reveal.play(boss.visual, boss.display_name)
+		reveal_started.emit()
 
 
 func _back_start() -> float:

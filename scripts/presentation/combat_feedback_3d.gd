@@ -13,6 +13,15 @@ signal projectile_impact_presented(world_position: Vector3, surface_normal: Vect
 	"res://scenes/projectiles/pixel_projectile_impact.tscn"
 )
 
+const MIX := preload("res://scripts/audio/movement_audio_mix.gd")
+const SURFACES := preload("res://scripts/audio/footstep_surface_resolver.gd")
+const SCAFFOLD := preload("res://scripts/props/scaffold_tower_3d.gd")
+const WALL_SCAFFOLD := preload("res://scripts/props/wall_jump_scaffold_3d.gd")
+const LIFT := preload("res://scripts/presentation/cave_construction_lift_3d.gd")
+const BLAST_DOOR := preload("res://scripts/props/blast_door_3d.gd")
+## Each healing item has its own cue; Medicine keeps the original slot.
+const HEAL_EVENTS := {&"large_heal_test": "combat/heal_kit", &"medical_bag": "combat/heal_bag"}
+
 var _pause_serial := 0
 var _active_projectile_impacts: Array[PixelProjectileImpact3D] = []
 var combat_audio: Node3D
@@ -42,8 +51,6 @@ func bind_player(player: PlayerCharacter) -> void:
 		player.melee_swung.connect(_on_melee_swung)
 	if not player.attack_connected.is_connected(_on_melee_connected):
 		player.attack_connected.connect(_on_melee_connected)
-	if not player.stomp_bounced.is_connected(_on_stomp_bounced):
-		player.stomp_bounced.connect(_on_stomp_bounced)
 
 
 func bind_enemy(enemy: StompableEnemy3D) -> void:
@@ -112,8 +119,15 @@ func _on_enemy_defeated(impact_position: Vector3, enemy: StompableEnemy3D) -> vo
 	_begin_impact_pause(enemy_defeat_pause)
 
 
-func _on_healing_used(_item_id: StringName, _amount: int, player: PlayerCharacter) -> void:
-	combat_audio.play_event("combat/heal", player.global_position)
+func _on_healing_used(item_id: StringName, _amount: int, player: PlayerCharacter) -> void:
+	combat_audio.play_event(_with_fallback(HEAL_EVENTS.get(item_id, "combat/heal"), "combat/heal"), player.global_position)
+
+
+## A specific slot without recordings falls back to its general one; a muted
+## slot stays silent.
+func _with_fallback(event_id: String, fallback: String) -> String:
+	var bank: Resource = MIX.event_bank_for(event_id)
+	return event_id if bank != null and not bank.clips.is_empty() else fallback
 
 
 func _on_melee_swung(world_position: Vector3) -> void:
@@ -126,11 +140,8 @@ func _on_melee_connected(target: Node3D) -> void:
 	if _knife_hit_sound_played:
 		return
 	_knife_hit_sound_played = true
-	combat_audio.play_event("combat/knife_hit", target.global_position)
-
-
-func _on_stomp_bounced(world_position: Vector3) -> void:
-	combat_audio.play_event("combat/stomp", world_position)
+	var metal := _is_mechanical(target)
+	combat_audio.play_event("combat/knife_metal_hit" if metal else "combat/knife_hit", target.global_position)
 
 
 func _on_handgun_projectile_fired(projectile: HandgunProjectile3D) -> void:
@@ -163,7 +174,39 @@ func _on_handgun_projectile_impacted(
 	projectile_impact_presented.emit(world_position, surface_normal)
 	audio_cue_requested.emit(&"projectile_impact", world_position)
 	var character_hit: bool = collider is PlayerCharacter or collider is ProjectileHurtbox3D or (collider is Node and collider.is_in_group("melee_target"))
-	combat_audio.play_event("combat/bullet_character" if character_hit else "combat/bullet_scenery", world_position)
+	var event := _with_fallback(_scenery_event(collider, world_position), "combat/bullet_scenery")
+	if character_hit:
+		var struck: Object = collider.target() if collider is ProjectileHurtbox3D else collider
+		# Armour, not flesh: the boss, its flying machines and the tank.
+		event = "combat/bullet_machine" if _is_mechanical(struck) else "combat/bullet_character"
+	combat_audio.play_event(event, world_position)
+
+
+## Bullet impacts follow the material struck: crates are wood, scaffolds, the
+## lift and steel doors are metal, grass and sand ground is dirt, and rock and
+## everything else use the general scenery slot.
+func _scenery_event(collider: Object, world_position: Vector3) -> String:
+	if not is_instance_valid(collider):
+		return "combat/bullet_scenery"
+	if collider is BreakableCrate3D:
+		return "combat/bullet_wood"
+	var node := collider as Node
+	while node != null:
+		var script: Script = node.get_script()
+		if script in [SCAFFOLD, WALL_SCAFFOLD, LIFT, BLAST_DOOR] or node.is_in_group("metal_surface"):
+			return "combat/bullet_metal"
+		if node is PixelPlatform3D or node is PixelInteriorTerrain3D or node is BreakableCrate3D:
+			break
+		node = node.get_parent()
+	match SURFACES.surface_at(collider, world_position):
+		"grass", "sand": return "combat/bullet_dirt"
+	return "combat/bullet_scenery"
+
+
+func _is_mechanical(target: Object) -> bool:
+	# The tank is recognised by class: its script is a structural layout
+	# dependency, and editing it would invalidate every saved layout.
+	return is_instance_valid(target) and (target is TankEnemy3D or (target is Node and (target as Node).is_in_group("mechanical")))
 
 
 func _on_projectile_impact_finished(impact: PixelProjectileImpact3D) -> void:

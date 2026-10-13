@@ -4,6 +4,8 @@ extends Area3D
 ## through a short fuse, blows, and the panels retract.
 
 signal opened
+## The planted charge went off; the panels start to retract.
+signal blown
 
 enum State { SEALED, ARMED, OPENING, OPEN }
 
@@ -128,6 +130,7 @@ func _blow() -> void:
 	_charge.visible = false
 	state = State.OPENING
 	_time = 0.0
+	blown.emit()
 	# The explosion art grows up from the bottom of its cell, so each origin
 	# sits half a cell above the base it should rise from.
 	var origin := global_position + Vector3(-NOTCH.x * 0.5, 0, 0)

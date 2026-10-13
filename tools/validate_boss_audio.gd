@@ -46,19 +46,21 @@ func _run() -> void:
 	_player = _level.player
 	_owner = _level.get_node("EventAudio")
 	_level.combat_feedback.combat_audio.event_played.connect(func(event: Dictionary) -> void:
-		if str(event.id).begins_with("boss/"): _events.append(event.id))
+		if str(event.id).begins_with("boss/") or event.id in ["combat/bullet_machine", "combat/knife_metal_hit", "combat/bullet_character", "combat/knife_hit"]: _events.append(event.id))
 	var ids: Array[String] = []
 	for entry in CATALOG.entries_for("boss"):
 		ids.append(entry.id)
 		assert(entry.has("gameplay"), "Every boss slot names its gameplay owner.")
-	assert(ids.size() == 16, "The cue sheet has 16 boss slots.")
+	assert(ids.size() == 22, "16 boss slots plus six encounter and fire slots.")
 
 	# Empty slots: a full salvo makes no boss sound and owns no loop.
 	_controls.test_missile_ripple()
 	await _until(func(): return _boss.missiles_fired == 6, 120, "Silent salvo")
 	await _frames(2)
 	assert(_events.is_empty() and _boss_loops().is_empty(), "Empty boss slots must stay silent.")
-	_fill_banks(ids)
+	var filled: Array[String] = ids.duplicate()
+	filled.append_array(["combat/bullet_machine", "combat/knife_metal_hit", "combat/bullet_character", "combat/knife_hit"])
+	_fill_banks(filled)
 
 	# Salvo: one swivel, six launches, a flight loop per live rocket, impact blasts.
 	_controls.test_missile_ripple()
@@ -118,6 +120,21 @@ func _run() -> void:
 	_place_player(Vector3(6.0, 0, 0))
 	await _until(func(): return _count("boss/firebomb_burst") == _boss.firebombs_per_lob, 180, "Bursts")
 	assert(_count("boss/firebomb_launch") == 1)
+	# Burning fires carry a loop; a landing that smothers one sounds once.
+	await _frames(2)
+	assert(_boss_loops().any(func(key: String) -> bool: return key.ends_with("boss/fire_burning")), "Burning fires carry their loop.")
+	var fire: Node = get_nodes_in_group("boss_fire")[0]
+	fire._stomp_out(_player)
+	assert(_count("boss/fire_smothered") == 1)
+
+	# Hits on armour use the metal sounds, not flesh.
+	_events.clear()
+	var hurtbox: Node3D = _boss.get_node("ProjectileHurtbox")
+	_level.combat_feedback._on_handgun_projectile_impacted(_boss.global_position, Vector3.LEFT, hurtbox)
+	_level.combat_feedback._knife_hit_sound_played = false
+	_level.combat_feedback._on_melee_connected(_boss)
+	assert(_count("combat/bullet_machine") == 1 and _count("combat/bullet_character") == 0, "Bullets ring off the boss.")
+	assert(_count("combat/knife_metal_hit") == 1 and _count("combat/knife_hit") == 0, "The knife clangs off the boss.")
 
 	# Walking: steps on planted frames only.
 	_events.clear()
@@ -160,7 +177,7 @@ func _run() -> void:
 
 	assert(FileAccess.get_sha256(MIX.SAVE_PATH) == original_hash, "The saved mix is untouched.")
 	_finished = true
-	print("Boss audio validation passed: 16 slots, silent when empty, salvo/rockets, charge contact, smoke, jump/landing, firebombs, footsteps, phase two, machines and defeat.")
+	print("Boss audio validation passed: 22 slots, silent when empty, salvo/rockets, charge contact, smoke, jump/landing, firebombs, burning and smothered fires, armour hits, footsteps, phase two, machines and defeat.")
 	quit(0)
 
 func _fill_banks(ids: Array[String]) -> void:

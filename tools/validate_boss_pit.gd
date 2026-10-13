@@ -16,6 +16,7 @@ var _pit: LevelSession3D
 var _player: PlayerCharacter
 var _boss: CharacterBody3D
 var _encounter: Node
+var _sounds: Array[String] = []
 
 
 func _init() -> void:
@@ -94,6 +95,9 @@ func _walk_off_plateau(shooter: LevelSession3D) -> void:
 	_player = _pit.player
 	_boss = _pit.get_node("GreenZoneBoss")
 	_encounter = _pit.get_node("BossEncounter")
+	# The saved mix's encounter cues fire on the real beats.
+	_pit.combat_feedback.combat_audio.event_played.connect(func(event: Dictionary) -> void:
+		if str(event.id).begins_with("boss/"): _sounds.append(event.id))
 	for frame in 120:
 		await process_frame
 		if not _game.completion_fade.visible:
@@ -170,6 +174,7 @@ func _validate_entry_beat() -> void:
 			await _validate_reveal()
 		await _frames(1)
 	assert(revealed, "The slide freezes for the boss reveal.")
+	assert(_sounds.count("boss/reveal") == 1, "The reveal plays its stinger once.")
 	assert(furthest_right > _boss.global_position.x - 6.0, "Mid-slide the camera swings right to the boss.")
 	assert(lowest_camera < 8.0, "...and down to it.")
 	assert(boss_turned and _encounter.health_bar_visible(), "The boss turns to aim; its bar fills.")
@@ -312,6 +317,7 @@ func _validate_warhead_exit() -> void:
 			break
 		await _frames(2)
 	assert(_boss.is_defeated() and dropped.size() == 1, "Destroying the boss drops its warhead.")
+	assert(_sounds.count("boss/warhead_drop") == 1, "The dropped warhead sounds once.")
 	assert(_encounter.boss_defeated(), "The kill is kept with the run.")
 	assert(_pit.save_state._entry_pending, "The kill autosaves at the first safe footing.")
 	assert(_pit.save_state.safety_error(true) != ENCOUNTER.SAVE_BLOCKED, "Manual saves return after the kill.")
@@ -320,6 +326,7 @@ func _validate_warhead_exit() -> void:
 	assert(absf(warhead.global_position.y) < 0.05)
 	_place_player(warhead.global_position)
 	await _until(func(): return _encounter.carrying_warhead, 30, "Touching the warhead takes it.")
+	assert(_sounds.count("boss/warhead_pickup") == 1, "Taking the warhead sounds once.")
 	# A reload after the kill (a save, or a return after a death) keeps the
 	# wreck dead, the warhead in hand, and skips the cutscene.
 	_pit._reset_world()
@@ -327,11 +334,13 @@ func _validate_warhead_exit() -> void:
 	assert(_boss.is_defeated(), "The boss stays dead after a reload.")
 	assert(_encounter.phase == ENCOUNTER.Phase.FIGHT and not _encounter.health_bar_visible())
 	assert(_encounter.carrying_warhead, "The warhead stays in hand.")
+	assert(_sounds.count("boss/warhead_pickup") == 1 and _sounds.count("boss/warhead_drop") == 1, "A reload restores the warhead silently.")
 	assert(_pit.find_children("*", "Area3D", true, false).filter(
 		func(area: Node) -> bool: return area.get_script() == ENCOUNTER.WARHEAD).is_empty(), "No second warhead appears.")
 	_place_player(Vector3(48.2, 0, 0))
 	await _until(func(): return not exit_door.is_sealed(), 30, "Reaching the door with the warhead plants it.")
 	await _until(func(): return exit_door.is_open(), 240, "The planted warhead blows the door open.")
+	assert(_sounds.count("boss/blast_door") == 1, "The blast sounds once.")
 	assert(_pit.save_state.world_flags.get(ENCOUNTER.EXIT_OPEN_FLAG, false), "The open door is kept with the run.")
 	Input.action_press(&"move_right")
 	await _until(func(): return _pit._completed, 120, "The open doorway ends the level.")

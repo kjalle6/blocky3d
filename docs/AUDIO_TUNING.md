@@ -8,9 +8,9 @@ resumes play with the selected mix. Changes survive deaths and level changes.
 Opening the Level designer closes this panel while retaining its unsaved mix;
 designer previews are silent and Test uses the selected settings.
 
-## Knife and stomp audio
+## Knife audio
 
-Knife swings, knife hits, and stomps have live Combat entries. Use
+Knife swings and knife hits have live Combat entries. Use
 **F1 -> Audio tuning -> Combat**, choose the event, and change **Fixed recording**
 to compare its candidates.
 The user accepted and saved the following mix after in-game listening.
@@ -20,7 +20,6 @@ The user accepted and saved the following mix after in-game listening.
 | --- | --- | --- | --- |
 | Knife · swing | Throw / Knife_throwing, random without immediate repeats | Slicing through flesh - NeoSpica, disabled | -23 dB |
 | Knife · hit | Knife Stab - Mixedupmoviestuff, fixed | One recording | -10 dB |
-| Enemy stomp | Punch_2, fixed | Kick, Bump | -18 dB |
 
 Pitch starts at 1.0 with no variation. Two Freesound recordings are included
 unchanged in `assets/audio/combat`:
@@ -45,18 +44,18 @@ several enemies damages them all but
 plays only one hit cue. Cancelling an attack before contact produces no hit cue.
 The swing's natural audio tail can finish; it is not restarted by rejected input.
 
-Stomp audio follows a confirmed enemy stomp and the player's bounce, for both
-patrol/skater enemies and gunners. Ordinary jumps and landings keep their
-surface-specific sounds. Enemy defeat does not add another cue on top. These
-events reuse the level's bounded combat voice pool, positional room routing,
-mix controls, and reset/level-exit cleanup. Designer previews remain silent.
+There are no stomp kills (decided 13 October 2026), so the **Enemy stomp**
+slot and its Punch_2 / Kick / Bump bank were removed. Landing on an ordinary
+enemy hurts the player and plays **Player hit**. Knife cues reuse the level's
+bounded combat voice pool, positional room routing, mix controls, and
+reset/level-exit cleanup. Designer previews remain silent.
 
 `tools/validate_melee_audio.gd` checks actual knife input, contact timing,
-multi-target hits, defeated targets, interrupted attacks, real falling stomps
-on both enemy types, normal jumps/landings, gun isolation, selection/mute/A-B,
-cleanup, connected tuning pages, and silent previews. It never saves the mix.
-`tools/capture_melee_audio.gd`, run with **-Visual**, captures the real game
-mixer and the three tuning pages under `build/previews/melee_audio`.
+multi-target hits, defeated targets, interrupted attacks, gun isolation,
+selection/mute/A-B, cleanup, connected tuning pages, and silent previews. It
+never saves the mix. `tools/capture_melee_audio.gd`, run with **-Visual**,
+captures the real game mixer and the two tuning pages under
+`build/previews/melee_audio`.
 
 ## Gunfire and bullet impacts
 
@@ -121,13 +120,16 @@ volley/cover, leaving headroom. These checks do not establish listening approval
 
 ## Boss sounds (S.T.O.M.P.)
 
-**F1 -> Audio tuning -> Boss · S.T.O.M.P.** has 16 connected slots for the
-Green Zone boss. Each starts with one **trial pick** from `assets/audio/boss`,
-installed as a project-default bank in `resources/audio/boss` (like the tank's
-sounds). Claude chose the picks by measurement and waveform/spectrogram review,
-not by listening, and matched their levels to the player's Shot_2 at -12 dB.
-They await the user's in-game verdict. Saved choices in `movement_mix.tres`
-still override them. Test in **Boss Arena WIP** or the Level 3 boss pit.
+**F1 -> Audio tuning -> Boss · S.T.O.M.P.** has an initial set of 16 connected
+cues with recordings for the Green Zone boss. Each starts with one **trial pick**
+from `assets/audio/boss`, installed as a project-default bank in
+`resources/audio/boss` (like the tank's sounds). Claude chose the picks by
+measurement and waveform/spectrogram review, not by listening, and matched
+their levels to the player's Shot_2 at -12 dB.
+The user's initial verdict was that they liked most of the sounds; the hollow
+firebomb launch was rejected and replaced with take 4. This is not final
+acceptance of every cue or the full mix. Saved choices in `movement_mix.tres`
+still override project defaults. Test in **Boss Arena WIP** or the Level 3 boss pit.
 
 | Slot | Plays |
 | --- | --- |
@@ -157,8 +159,9 @@ Only the 16 picks are in the game; `assets/audio/boss/source_manifest.json`
 records each one's prompt, fal request ID, hashes and level. `charge-t1-edit.wav`
 is trimmed to 0.75 s with a 0.2 s fade, because the source holds full level to
 a hard stop. To swap a pick, copy another take in and point that bank at it.
-All three candidate takes per cue (ElevenLabs Sound Effects V2 via fal)
-live outside the game in the Mr. Mak Workspace, under
+The 63 generated takes across the 16 cues (initial batch plus targeted revisions,
+ElevenLabs Sound Effects V2 via fal) live outside the game in the Mr. Mak Workspace,
+under
 `D:/GodotTools/mr-mak-workspace/workspace/2026-10-12_blocky3d/audio/takes`, with
 job receipts, prompts, hashes and measurements in `takes.json`. Audition them
 on the blocky3d hub's Audio page, which plays each take in context and shows
@@ -171,6 +174,53 @@ WIP from empty slots: silent when empty, salvo/rocket loops/explosions, charge c
 smoke, jump/landing order, firebomb release/bursts, footsteps, phase two,
 machine loops and destruction, defeat, restored defeat and reset cleanup. It
 never saves the mix. It does not judge how the fight sounds.
+
+## Sound Wave 1: the boss fight
+
+All sounds heard on a boss attempt now have recordings: 22 trial picks from
+69 ElevenLabs takes (2026-10-13), chosen by measurement and waveform review,
+not by listening. The user played with them and accepted them on 13 October
+2026, together with the boss sounds (including its footsteps); only the respawn
+cue was dropped in favour of the surface landing. Files and their
+prompts, fal request IDs, hashes, edits and levels are in
+`assets/audio/sfx/source_manifest.json`.
+
+| Slots | Where they live |
+| --- | --- |
+| New: `combat/bullet_machine`, `combat/knife_metal_hit`, `combat/reload_start`, `combat/reload_finish`, `combat/active_reload`, `pickups/ammo`, `boss/reveal`, `boss/warhead_drop`, `boss/warhead_pickup`, `boss/blast_door`, `boss/fire_burning` (loop), `boss/fire_smothered` | Project-default banks in `resources/audio/sfx` and `resources/audio/boss` |
+| Filled: player hit, death | The saved mix |
+| Replaced: handgun shot, out of ammo, bullet on scenery, knife swing, knife hit, healing, chest open | The saved mix; the old recording stays in the slot for A/B with **Fixed recording** |
+
+Replacements were level-matched to the recording they replace; new slots to the
+player's Shot_2. Replaced slots reset pitch to 1.0 for the new pick, so the old
+healing (2.0) and scenery-impact (1.65) clips play at normal pitch when A/B'd.
+Six picks are edited (trims, fades, one +19 dB gain); each edit is in the manifest.
+
+After the user's listening notes the same day, Shot_2 and the old knife-swing
+pool are selected again (the new takes stay as alternates), and flesh hits, the
+knife hit, player hit, chest and both armour hits were regenerated for a
+grounded, real sound. Direction: pixel art, but real-sounding action; this
+handgun and the knife are ordinary weapons.
+
+**Bullet surfaces.** `combat/bullet_dirt` (grass and sand ground),
+`combat/bullet_metal` (scaffold towers, wall-jump scaffolds, the lift, the blast door, anything in
+the `metal_surface` group) and `combat/bullet_wood` (breakable crates) pick by the
+struck collider; rock and everything else keep `combat/bullet_scenery`. An empty
+surface slot falls back to the scenery impact.
+
+**Healing items.** Medicine keeps `combat/heal`; the Medical kit uses
+`combat/heal_kit` and the Medical bag `combat/heal_bag`, falling back to Medicine
+while empty.
+
+Routing: bullets and knife hits on armour (the boss, its flying machines, the
+tank, recognised by class so its structural script is untouched) use the metal
+cues. An active reload plays only its own cue, not the finish too. Chest
+contents leave ammo to the chest's opening cue; gunner and tank rounds play
+**Ammo received**. A skipped reveal, a restored warhead and a restored open door
+stay silent. Burning out on its own is silent; a landing that smothers a fire
+plays its cue. `validate_boss_pit` hears the reveal, warhead and blast once each
+on the real beats; `validate_boss_audio` and `validate_gameplay_event_audio`
+cover fires, armour hits, reloads and ammo.
 
 ## Sound events
 
@@ -189,9 +239,12 @@ shows whether the current selection is ready to play or silent.
 - Abilities play on the actual jump/dash, with a wall-slide loop and dash-ready
   cue. Unlock sounds play on collection, separate from performing the ability.
 - Combat covers firing, impacts, melee, healing, enemy attacks/noticing/defeat,
-  weapon changes and separate **Player hit**, **Player death** and respawn
-  slots. Surviving damage plays the hit cue. Fatal damage and lethal hazards
-  play the death cue once, without layering the hit cue.
+  weapon changes and separate **Player hit** and **Player death** slots.
+  Surviving damage plays the hit cue. Fatal damage and lethal hazards play the
+  death cue once, without layering the hit cue. A respawn has no sound of its
+  own (since 13 October 2026): it plays the jump landing for the surface the
+  player reappears on, so it follows the grass, sand, cave or underground banks.
+  The earlier respawn slot and its recordings were removed.
 - Handgun collection plays only on collecting the physical dropped weapon.
   Its settling sound is separate. Lab grants and save restoration do not play
   the collect sound. Autosave points sound on activation; completion sounds

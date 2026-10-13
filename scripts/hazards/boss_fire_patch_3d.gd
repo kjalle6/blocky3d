@@ -7,6 +7,9 @@ extends Area3D
 ## fewer rows of the source strip, never by scaling. Shorter flames at both ends
 ## let the patch taper instead of ending in a cut.
 
+## A landing put the fire out (burning out on its own stays silent).
+signal smothered(world_position: Vector3)
+
 const FRAMES: Array[Texture2D] = [
 	preload("res://assets/art/vfx/boss/ground_fire_1.png"),
 	preload("res://assets/art/vfx/boss/ground_fire_2.png"),
@@ -145,6 +148,7 @@ func _stomp_out(player: PlayerCharacter) -> void:
 		var puff = EFFECT.spawn(get_parent(), global_position + Vector3(x, 0.7 + 0.2 * (index % 2), 0),
 			SMOKE[index], 48, 0.06)
 		puff.frame_rate = 8.0 + index
+	smothered.emit(global_position)
 	queue_free()
 
 

@@ -33,6 +33,10 @@ func reset_run() -> void:
 	collision_layer = _authored_collision_layer
 
 
+func target() -> Node:
+	return _target
+
+
 func is_enemy_target() -> bool:
 	return is_instance_valid(_target) and _target.is_in_group("melee_target")
 

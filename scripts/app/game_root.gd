@@ -771,7 +771,7 @@ func load_snapshot(snapshot: Dictionary, ordinary_retry := false) -> String:
 		return "The saved section could not be loaded."
 	current_level.save_state.apply_state(snapshot, true)
 	if returning_from_death:
-		current_level.get_node("EventAudio").play("combat/player_respawn", current_level.player)
+		current_level.get_node("EventAudio").play_respawn_landing()
 	return ""
 
 
@@ -967,7 +967,7 @@ func _return_to_checkpoint(state: Dictionary) -> void:
 		return
 	current_level.save_state.apply_state(state, true)
 	if current_level.has_node("EventAudio"):
-		current_level.get_node("EventAudio").play("combat/player_respawn", current_level.player)
+		current_level.get_node("EventAudio").play_respawn_landing()
 	await _fade_from_black(TRANSITION_FADE_DURATION)
 
 

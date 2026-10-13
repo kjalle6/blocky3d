@@ -128,6 +128,33 @@ func _run() -> void:
 	assert(sound.active_voice_count() == 0)
 	MIX.revert()
 
+	# Bullet impacts follow the material struck.
+	var nodes := level.find_children("*", "", true, false)
+	var crate: Node3D = nodes.filter(func(node: Node) -> bool: return node is BreakableCrate3D)[0]
+	assert(feedback._scenery_event(crate, crate.global_position) == "combat/bullet_wood", "Crates are wood.")
+	var scaffold_script := preload("res://scripts/props/wall_jump_scaffold_3d.gd")
+	var scaffolds := nodes.filter(func(node: Node) -> bool: return node.get_script() == scaffold_script)
+	assert(not scaffolds.is_empty() and feedback._scenery_event(scaffolds[0], scaffolds[0].global_position) == "combat/bullet_metal", "Scaffolds are metal.")
+	var ground: Node3D = nodes.filter(func(node: Node) -> bool: return node is PixelPlatform3D and node.style != null and node.style.footstep_surface == "grass")[0]
+	assert(feedback._scenery_event(ground, ground.global_position) == "combat/bullet_dirt", "Grass ground is dirt.")
+	assert(feedback._scenery_event(null, Vector3.ZERO) == "combat/bullet_scenery", "No collider uses the general slot.")
+	# Each healing item has its own cue; an empty slot falls back to Medicine.
+	var medicine: Resource = MIX.event_bank_for("combat/heal")
+	var kit: Resource = MIX.event_bank_for("combat/heal_kit")
+	var kit_clips: Array[AudioStream] = kit.clips.duplicate()
+	kit.clips.clear()
+	_events.clear()
+	feedback._on_healing_used(&"large_heal_test", 50, player)
+	assert(_events.size() == 1 and _events[0].id == "combat/heal", "An empty kit slot falls back to Medicine.")
+	kit.clips = kit_clips if not kit_clips.is_empty() else medicine.clips.duplicate()
+	var bag: Resource = MIX.event_bank_for("combat/heal_bag")
+	if bag.clips.is_empty(): bag.clips = medicine.clips.duplicate()
+	_events.clear()
+	feedback._on_healing_used(&"basic_heal", 25, player)
+	feedback._on_healing_used(&"large_heal_test", 50, player)
+	feedback._on_healing_used(&"medical_bag", 75, player)
+	assert(_events.map(func(event: Dictionary) -> String: return event.id) == ["combat/heal", "combat/heal_kit", "combat/heal_bag"], "Each healing item plays its own cue.")
+
 	# Both established combat and newly connected ability entries advertise use.
 	game.audio_tuning_panel.open_panel()
 	game.audio_tuning_panel.select_event("combat/player_gunshot")
@@ -139,7 +166,7 @@ func _run() -> void:
 	assert(not is_instance_valid(sound), "Changing levels must free every combat voice.")
 	assert(FileAccess.get_sha256(MIX.SAVE_PATH) == original_hash)
 	_finished = true
-	print("Combat audio passed: live shots/impacts, empty-trigger audio-tool imports/settings/gates, double jump, paired beats, overlapping tails, mix controls, room routing, and cleanup.")
+	print("Combat audio passed: live shots/impacts, surface materials, per-item healing, empty-trigger audio-tool imports/settings/gates, double jump, paired beats, overlapping tails, mix controls, room routing, and cleanup.")
 	quit(0)
 
 

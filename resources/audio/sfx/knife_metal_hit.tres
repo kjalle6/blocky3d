@@ -1,0 +1,8 @@
+[gd_resource type="Resource" load_steps=3 format=3]
+[ext_resource type="Script" path="res://scripts/audio/sound_event_bank.gd" id="1"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/knife_metal_hit-t6-edit.wav" id="2"]
+[resource]
+script = ExtResource("1")
+clips = Array[AudioStream]([ExtResource("2")])
+labels = PackedStringArray("knife_metal_hit-t6 · trial pick (edited)")
+volume_db = -19.4

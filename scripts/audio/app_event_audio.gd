@@ -32,7 +32,7 @@ func _ready() -> void:
 	_slide = _new_loop()
 	for node in _game.find_children("*", "BaseButton", true, false): _bind_button(node)
 	get_tree().node_added.connect(func(node: Node) -> void:
-		if node is BaseButton and _game.is_ancestor_of(node): _bind_button.call_deferred(node))
+		if node is BaseButton and _game.is_ancestor_of(node): _bind_button_later.call_deferred(node.get_instance_id()))
 
 func _new_loop() -> Node:
 	var loop := LOOP.new()
@@ -65,6 +65,12 @@ func play_event(id: String, source: Node3D = null) -> bool:
 	last_event = {"id": id, "clip_index": index, "volume_db": voice.volume_db, "pitch": voice.pitch_scale}
 	event_played.emit(last_event.duplicate())
 	return true
+
+## Deferred by instance ID: a rebuilt panel (the audio tool's rows) can free a
+## button before the next frame, and a freed object cannot be passed as a button.
+func _bind_button_later(id: int) -> void:
+	var button := instance_from_id(id) as BaseButton if is_instance_id_valid(id) else null
+	if button != null and button.is_inside_tree(): _bind_button(button)
 
 func _bind_button(button: BaseButton) -> void:
 	if not is_instance_valid(button) or button.has_meta("event_audio_bound"): return

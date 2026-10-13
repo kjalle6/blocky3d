@@ -82,6 +82,21 @@ func _run() -> void:
 	player._facing_sign = 1.0
 	assert(session.acquire_weapon(PlayerWeapon.HANDGUN))
 	assert(events.count("combat/weapon_switch") == 1)
+	# Reload cues follow the handgun's signals; an active reload replaces the finish.
+	var handgun := player.player_handgun
+	handgun.reload_started.emit()
+	handgun.reload_finished.emit()
+	await _ticks(1)
+	assert(events.count("combat/reload_start") == 1 and events.count("combat/reload_finish") == 1)
+	handgun.reload_finished.emit()
+	handgun.active_reload_succeeded.emit()
+	await _ticks(1)
+	assert(events.count("combat/active_reload") == 1 and events.count("combat/reload_finish") == 1, "An active reload plays only its own cue.")
+	# Rounds from a gunner sound; rounds inside a chest leave it to the chest.
+	session.item_received.emit(&"handgun_ammo", 6)
+	assert(events.count("pickups/ammo") == 1)
+	session.item_received.emit(&"basic_heal", 1)
+	assert(events.count("pickups/ammo") == 1, "Only ammo plays the ammo cue.")
 	assert(events.count("pickups/handgun") == 0, "A grant is not a physical pickup.")
 	assert(player.receive_enemy_hit(Vector3.ZERO, CombatHit.new(25, &"audio_test")))
 	assert(events.count("combat/player_hit") == 1 and events.count("combat/player_death") == 0)
@@ -90,12 +105,18 @@ func _run() -> void:
 	assert(events.count("combat/player_death") == 1 and events.count("combat/player_hit") == 1, "Fatal damage plays death only, without layering a hit cue.")
 	player.kill()
 	assert(events.count("combat/player_death") == 1, "An already dead player must not repeat the death cue.")
+	# A respawn has no cue of its own: it plays the landing for the surface below.
+	var jump_audio: Node = player.get_node("JumpAudio")
+	var landings: int = jump_audio.played_count
 	session._reset_run(false)
 	player.set_physics_process(false)
-	assert(events.count("combat/player_respawn") == 1)
+	await _ticks(1)
+	assert(jump_audio.played_count == landings + 1 and jump_audio.last_event.kind == "jump_land",
+		"A respawn plays one landing on the surface below.")
 	session._reset_run(false)
 	player.set_physics_process(false)
-	assert(events.count("combat/player_respawn") == 1, "Ordinary reset must not sound like a respawn.")
+	await _ticks(1)
+	assert(jump_audio.played_count == landings + 1, "Ordinary reset must not sound like a respawn.")
 
 	# Deferred actor discovery, real attack/defeat and lift state transitions.
 	var enemy := load("res://scenes/enemies/pixel_patrol_enemy.tscn").instantiate() as StompableEnemy3D

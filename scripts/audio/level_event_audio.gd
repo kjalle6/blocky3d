@@ -8,6 +8,8 @@ const BOSS := preload("res://scripts/enemies/green_zone_boss_3d.gd")
 const BOSS_MISSILE := preload("res://scripts/projectiles/boss_missile_3d.gd")
 const FIRE_PATCH := preload("res://scripts/hazards/boss_fire_patch_3d.gd")
 const PHASE_FLYER := preload("res://scripts/enemies/destructible_flyer_3d.gd")
+const ENCOUNTER := preload("res://scripts/level/green_zone_boss_encounter_3d.gd")
+const BLAST_DOOR := preload("res://scripts/props/blast_door_3d.gd")
 # Planted feet in the boss's six-frame walk, as for the patrol enemies.
 const BOSS_STEP_FRAMES := [0, 3]
 const MAX_LOOPS := 16
@@ -19,6 +21,10 @@ var _loops: Dictionary = {}
 var _requested: Dictionary = {}
 var _dash_ready := false
 var _awaiting_respawn := false
+# Frame of the last chest opening (its items arrive through item_received too)
+# and of the last active reload (which also finishes the reload).
+var _chest_frame := -1
+var _active_reload_frame := -1
 
 func _ready() -> void:
 	session = get_parent() as LevelSession3D
@@ -41,6 +47,13 @@ func _ready() -> void:
 	session.run_completed.connect(func() -> void: play("pickups/level_complete", player))
 	session.run_reset.connect(_reset_tracking)
 	session.save_state.reward_claimed.connect(_on_reward_claimed)
+	session.item_received.connect(_on_item_received)
+	var handgun := player.player_handgun
+	handgun.reload_started.connect(func() -> void: play("combat/reload_start", player))
+	handgun.reload_finished.connect(func() -> void: _on_reload_finished.call_deferred())
+	handgun.active_reload_succeeded.connect(func() -> void:
+		_active_reload_frame = Engine.get_process_frames()
+		play("combat/active_reload", player))
 	for node in session.find_children("*", "Node", true, false):
 		_bind_actor(node)
 	get_tree().node_added.connect(_on_node_added)
@@ -56,13 +69,35 @@ func play_at(id: String, world_position: Vector3) -> bool:
 
 func _on_reward_claimed(source: Node) -> void:
 	if source is ItemReward3D and source.presentation == ItemReward3D.Presentation.CHEST:
+		_chest_frame = Engine.get_process_frames()
 		play("world/chest_open", source)
+
+func _on_boss_reveal() -> void:
+	play("boss/reveal", session.player)
+
+func _on_item_received(item_id: StringName, _amount: int) -> void:
+	# A chest's own opening cue covers the rounds inside it.
+	if item_id == &"handgun_ammo" and Engine.get_process_frames() != _chest_frame:
+		play("pickups/ammo", session.player)
+
+func _on_reload_finished() -> void:
+	# Deferred: an active reload emits both, and plays only its own cue.
+	if Engine.get_process_frames() != _active_reload_frame:
+		play("combat/reload_finish", session.player)
 
 func _on_node_added(node: Node) -> void:
 	if session.is_ancestor_of(node): _bind_actor.call_deferred(node)
 
 func _bind_actor(node: Node) -> void:
-	if not is_instance_valid(node) or not node is Node3D or not session.is_ancestor_of(node) or node in _actors: return
+	if not is_instance_valid(node) or not session.is_ancestor_of(node): return
+	# The boss encounter is a plain Node; everything else here is placed in 3D.
+	if node.get_script() == ENCOUNTER:
+		if node.reveal_started.is_connected(_on_boss_reveal): return
+		node.reveal_started.connect(_on_boss_reveal)
+		node.warhead_dropped.connect(func(pickup: Node3D) -> void: play("boss/warhead_drop", pickup))
+		node.warhead_collected.connect(func() -> void: play("boss/warhead_pickup", session.player))
+		return
+	if not node is Node3D or node in _actors: return
 	if node is HandgunPickup3D:
 		node.collected.connect(func(_position: Vector3) -> void: play("pickups/handgun", session.player))
 		node.settled.connect(func() -> void: play("world/gun_drop", node))
@@ -82,6 +117,11 @@ func _bind_actor(node: Node) -> void:
 		_actors.append(node)
 	elif node.get_script() == FIRE_PATCH:
 		play("boss/firebomb_burst", node)
+		node.smothered.connect(func(point: Vector3) -> void: play_at("boss/fire_smothered", point))
+		_actors.append(node)
+		node.tree_exiting.connect(func() -> void: _actors.erase(node))
+	elif node.get_script() == BLAST_DOOR:
+		node.blown.connect(func() -> void: play("boss/blast_door", node))
 	elif node.get_script() == PHASE_FLYER:
 		# The boss's defeat clears the remaining machines under its own cue.
 		node.defeated.connect(func(point: Vector3) -> void:
@@ -129,7 +169,14 @@ func _on_player_reset() -> void:
 	_dash_ready = session.player.dash_available()
 	if _awaiting_respawn:
 		_awaiting_respawn = false
-		play("combat/player_respawn", session.player)
+		play_respawn_landing()
+
+## A respawn sounds like landing on the surface below. Deferred so the reset's
+## own cleanup, which stops the player's contact voices, cannot cut it off.
+func play_respawn_landing() -> void:
+	var jump_audio := session.player.get_node_or_null("JumpAudio")
+	if jump_audio != null and not session.is_developer_inspection_enabled():
+		jump_audio.play_respawn_landing.call_deferred()
 
 func _reset_tracking() -> void:
 	_states.clear()
@@ -177,6 +224,8 @@ func _physics_process(_delta: float) -> void:
 			var noticing: bool = actor._noticing
 			if active and noticing and not previous.get("notice", false): play("boss/launcher_swivel", actor)
 			_states[id] = {"frame": frame, "notice": noticing}
+		elif actor.get_script() == FIRE_PATCH:
+			_loop("boss/fire_burning", actor, nearby and actor.is_burning())
 		elif actor.get_script() == BOSS_MISSILE:
 			_loop("boss/rocket_flight", actor, active and actor._launched and not actor._expired)
 		elif actor is HoveringHazard3D:

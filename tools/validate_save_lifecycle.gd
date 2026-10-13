@@ -9,15 +9,6 @@ func _run() -> void:
 	var mix := preload("res://scripts/audio/movement_audio_mix.gd")
 	var mix_hash := FileAccess.get_sha256(mix.SAVE_PATH)
 	mix.initialize()
-	var respawn_bank: Resource = mix.event_bank_for("combat/player_respawn")
-	var cue := AudioStreamWAV.new()
-	cue.data = PackedByteArray([0, 0, 0, 0])
-	respawn_bank.clips.clear()
-	respawn_bank.clips.append(cue)
-	respawn_bank.enabled = true
-	respawn_bank.disabled_indices.clear()
-	respawn_bank.selection_mode = 0
-	respawn_bank.volume_db = -70.0
 	var store := root.get_node("GameProgression") as ProgressionStore
 	store.save_path = "user://lifecycle_validation_" + str(Time.get_ticks_usec()) + "/progress.json"
 	store.load_progress()
@@ -61,7 +52,10 @@ func _run() -> void:
 	assert(app.load_snapshot(manual).is_empty())
 	app.campaign_menu.close()
 	session = app.current_level
-	assert(session.combat_feedback.combat_audio.last_event.get("id") == "combat/player_respawn", "Loading after death must play the selected respawn bank in the new scene.")
+	await process_frame
+	var jump_audio: Node = session.player.get_node("JumpAudio")
+	assert(jump_audio.played_count == 1 and jump_audio.last_event.kind == "jump_land",
+		"Loading after death must play the landing for the surface below in the new scene.")
 	assert(session.player.health.current == 75 and session.player.inventory.count(&"basic_heal") == 9)
 	assert(session.player.player_handgun.loaded_rounds == 7 and session.player.player_handgun.reserve_rounds() == 18)
 	assert(not session.player.has_ability(PlayerAbility.DOUBLE_JUMP))

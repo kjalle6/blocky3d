@@ -81,6 +81,13 @@ func _on_landed(impact_speed: float) -> void:
 		var ground := SURFACES.sample(player)
 		_play_contact(MIX.bank_for(str(ground.get("surface", "silent")) + "/jump_land"), ground)
 
+## Respawning has no sound of its own: the player lands on the surface below.
+func play_respawn_landing() -> void:
+	if not _can_play():
+		return
+	var ground := SURFACES.sample(player)
+	_play_contact(MIX.bank_for(str(ground.get("surface", "silent")) + "/jump_land"), ground)
+
 func _play_contact(bank: Resource, ground: Dictionary) -> void:
 	if bank == null or ground.get("surface", "silent") != str(bank.surface):
 		return

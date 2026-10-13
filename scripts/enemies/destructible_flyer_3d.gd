@@ -33,6 +33,7 @@ var _flash_remaining := 0.0
 
 func _ready() -> void:
 	super()
+	add_to_group("mechanical")
 	health.changed.connect(func(current: int, maximum: int) -> void:
 		health_changed.emit(current, maximum))
 	health.reset(combat.maximum_hp)

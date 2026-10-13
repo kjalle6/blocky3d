@@ -184,6 +184,7 @@ func _ready() -> void:
 	_initial_transform = global_transform
 	_missile_scene = load("res://scenes/projectiles/boss_missile.tscn") as PackedScene
 	add_to_group("run_resettable")
+	add_to_group("mechanical")
 	add_to_group("melee_target")
 	health.changed.connect(func(current: int, maximum: int) -> void:
 		health_changed.emit(current, maximum))
