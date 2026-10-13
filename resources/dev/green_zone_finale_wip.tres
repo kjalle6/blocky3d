@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" path="res://scenes/dev/green_zone_finale_wip.tscn" id="2_scene"]
 [ext_resource type="Script" uid="uid://rni2hcqupvxr" path="res://scripts/campaign/level_entry_point.gd" id="3_entry"]
 [ext_resource type="PackedScene" uid="uid://hqg8ovengrd" path="res://scenes/dev/green_zone_finale_shooter_area_wip.tscn" id="4_shooter_scene"]
-[ext_resource type="PackedScene" path="res://scenes/dev/green_zone_finale_boss_pit.tscn" id="5_boss_pit_scene"]
+[ext_resource type="PackedScene" uid="uid://byt6ayrcsjbi1" path="res://scenes/dev/green_zone_finale_boss_pit.tscn" id="5_boss_pit_scene"]
 
 [sub_resource type="Resource" id="Entry_gun_encounter"]
 script = ExtResource("3_entry")

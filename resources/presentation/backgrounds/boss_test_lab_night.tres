@@ -15,7 +15,6 @@ script = ExtResource("2_layer")
 texture = ExtResource("3_sky")
 pixel_scale = 2
 horizontal_parallax = 0.02
-vertical_policy = 0
 depth = -5.8
 tint = Color(0.14, 0.24, 0.46, 1)
 
