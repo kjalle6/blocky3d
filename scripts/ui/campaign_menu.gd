@@ -381,7 +381,7 @@ func _confirm_main_menu() -> void:
 
 func _main_menu() -> void:
 	close()
-	app.show_level_select()
+	app.show_main_menu()
 
 
 func _confirm_quit() -> void:
@@ -390,6 +390,15 @@ func _confirm_quit() -> void:
 	_label("Changes since your last save will be lost.")
 	_button("Quit", _quit_game)
 	_button("Cancel", show_pause)
+	_focus_first()
+
+
+func confirm_title_quit() -> void:
+	_return_page = "title"
+	_begin("QUIT GAME?", "confirm")
+	_label("Leave Neon Pixel Riot Protocol: Retro Rebel?")
+	_button("Quit", _quit_game)
+	_button("Cancel", close)
 	_focus_first()
 
 

@@ -1,0 +1,340 @@
+{
+  "title": "Neon Junction - background build 01",
+  "date": "2026-10-13",
+  "archive": "D:/GodotTools/mr-mak-workspace/workspace/2026-10-12_blocky3d/main-menu/build-01",
+  "source_record": "build-record.json",
+  "status": "Direction endorsed; new artwork and native motion await user review.",
+  "assets": [
+    {
+      "file": "city_plate.png",
+      "source_archive_file": "neon-junction-plate-02.png",
+      "sha256": "3fcbb1cbf2b49326bb33fd4ec5953b22ee5c534ddbd13e4bec2d15118d87a483",
+      "width": 2752,
+      "height": 1536
+    },
+    {
+      "file": "metro.png",
+      "source_archive_file": "metro-cutout-01.png",
+      "sha256": "c73d69fa387d5eaf35c7114cdcc195ff60e63efd7131b885f8cdada7cf4cb22e",
+      "width": 1956,
+      "height": 215
+    }
+  ],
+  "jobs": [
+    {
+      "title": "City cleanup",
+      "endpoint_id": "google/nano-banana-2.1/edit",
+      "request_id": "01a132d1-0c4f-71c3-8cef-5647e91dde78",
+      "status": "completed",
+      "reference": {
+        "file": "../round-05/01-neon-junction-hybrid.png",
+        "sha256": "0cbc41d26d1125758828073f8fcf4331eb27272821e1727f4fab5b964a5f1035"
+      },
+      "prompt": "Faithful production-background edit of the supplied pixel-art cyberpunk city. Return ONE clean 16:9 city image, same exact fixed camera and framing. Remove ALL game interface overlays: the NEON PIXEL / RIOT PROTOCOL / RETRO REBEL logo, every floating accent dot and divider belonging to the logo, all five center buttons including their frames and text, all bottom keyboard hints, and the DEVELOPMENT corner link. Also remove the cyan-windowed metro vehicle sitting on the elevated railway at right. Reconstruct the missing city, distant buildings, bridge and lower street coherently behind these removed objects. The elevated railway must continue empty and level across the image at its present height; preserve its railings, support pillars and deep-blue concrete face so a separate sprite vehicle can later pass across. Preserve the existing detailed pixel-cluster art, crisp stair-step silhouettes, dark navy architecture, cyan and magenta neon, amber storefronts, individual roof shapes, near-side framing pipes and foreground ledge, wet reflective lower street, distant towers and textured night sky. Keep the current signage including pictograms and short invented shop words intact; these physical shop signs are NOT the interface and should remain visible. Preserve NYVO, VEKZA, NEXO, KORU, PIXL and the bowl, ring and geometric signs in their original positions. Do not move existing buildings or introduce a large focal tower in the cleared center. Reconstructed upper-center buildings should be darker and lower-contrast, with restrained sparse windows, leaving readable negative space for a future separate logo. Reconstruct the lower street through the cleared menu area, without people or cars. Keep exactly this rich city and asymmetrical depth; no redesign, no empty black rectangle, no substituted blank gradient, no blur, no smooth photorealistic painting, no new text overlays, no logo, no UI, no vehicle, no rain streaks. Output only the clean finished city plate.",
+      "settings": {
+        "resolution": "2K",
+        "aspect_ratio": "16:9",
+        "output_format": "png",
+        "num_images": 1,
+        "thinking_level": "high",
+        "enable_web_search": false,
+        "sync_mode": false
+      },
+      "output": "neon-junction-plate-01.png"
+    },
+    {
+      "title": "Three-car metro reconstruction",
+      "endpoint_id": "google/nano-banana-2.1/edit",
+      "request_id": "01a132d2-2e57-77b1-9522-7bad6077825a",
+      "status": "completed",
+      "reference": {
+        "file": "../round-05/01-neon-junction-hybrid.png",
+        "sha256": "0cbc41d26d1125758828073f8fcf4331eb27272821e1727f4fab5b964a5f1035"
+      },
+      "prompt": "Prepare ONE production prop asset for the same pixel-art city in the reference. Extract the DESIGN of the small dark-blue metro vehicle on the elevated railway at the right, and draw its COMPLETE unobscured vehicle as a standalone HORIZONTAL SIDE-VIEW sprite. Show a short three-car metro consist with a slanted right-facing cab at the right end, deep navy steel body, thin dark outlines, a low roof, cyan luminous rectangular windows, small violet-magenta vertical door lights, dark undercarriage and tiny mostly recessed wheels. Preserve the reference's angular blocky pixel-art style and modest industrial design. The entire vehicle is exactly level with the image horizontal axis; no three-quarter angle, no perspective taper, no tilt, no track or platform. Keep its silhouette long and low, total length about seven times its body height. Place the entire vehicle near the center of a flat uniform light gray background with empty margin on all four sides. Hard clean pixel-stepped silhouette; cyan light contained inside windows; no glow halo, no smoke or particles, no cast shadow on the background. This will be cut out as an RGBA game sprite, so no building, no bridge, no scenic background, no logo or game UI, no labels, no text. Fill about 90 percent of the canvas width with the vehicle and leave enough top/bottom margin. Output only this one complete side-profile metro sprite on the plain light gray background.",
+      "settings": {
+        "resolution": "1K",
+        "aspect_ratio": "4:1",
+        "output_format": "png",
+        "num_images": 1,
+        "thinking_level": "medium",
+        "enable_web_search": false,
+        "sync_mode": false
+      },
+      "output": "metro-source-01.png"
+    },
+    {
+      "title": "Transparent metro",
+      "endpoint_id": "bria/guided-remove-background",
+      "request_id": "01a132d3-fd9c-7fc2-b422-b2c5cfd6c017",
+      "status": "completed",
+      "reference": {
+        "file": "metro-source-01.png",
+        "sha256": "c315036326b3f41a1b643f6c30429d54dc9f8bad5bd9bb8ba291dc690333195a"
+      },
+      "prompt": "Only the complete connected blue metro vehicle, including all three cars, couplings, dark outlines, undercarriage and wheels. Remove the light gray background.",
+      "settings": {
+        "autocrop": true,
+        "sync_mode": false
+      },
+      "output": "metro-cutout-01.png"
+    },
+    {
+      "title": "Left sign revision",
+      "endpoint_id": "google/nano-banana-2.1/edit",
+      "request_id": "01a132df-b467-79c3-8b91-36c534241c8e",
+      "status": "completed",
+      "reference": {
+        "file": "neon-junction-plate-01.png",
+        "sha256": "298ed40b9207d8eb461b3bebc8dcaf0ddaafdfb398f26e2f8fc7379ef5a384ca"
+      },
+      "prompt": "Make exactly one localized signage change to the supplied finished pixel-art cyberpunk city. At FAR LEFT, the large tall magenta rectangular neon sign currently contains a bowl/cup with three rising steam strokes. Replace only that bowl/cup-and-steam pictogram with a classic neon gentlemen's-club / strip-club pictogram: a recognizable stylized ADULT woman pole dancer shown as a simple tasteful hot-pink neon outline, wearing a leotard and high heels, one raised arm holding a straight vertical pole and one elegantly bent knee. Iconic side silhouette like a vintage nightlife neon sign, no explicit anatomy, no nudity. Fit the complete pictogram comfortably INSIDE the exact existing tall rectangular neon frame, leaving clear margins. Use the same magenta, pink-white neon tubes, dark red inset and restrained glow as the original coffee sign. Keep the sign's outline, mounting, size, location and rectangular perspective unchanged. No words need to be added. Preserve EVERY other part of this image exactly: all buildings and their silhouettes, far city, sky, left VEKZA sign, all other sign colors and wording, empty level railway with its fine posts and lights, wet street, pipes and foreground platform. Keep the original crisp chunky pixel-cluster texture and fixed camera. Do not reinterpret, redesign, crop, reframe, sharpen or blur the city. No train, people standing in the city, logo or game UI. Output the same full city plate with only the far-left sign's central icon changed.",
+      "settings": {
+        "resolution": "2K",
+        "aspect_ratio": "16:9",
+        "output_format": "png",
+        "num_images": 1,
+        "thinking_level": "high",
+        "enable_web_search": false,
+        "sync_mode": false
+      },
+      "output": "neon-junction-sign-edit-01.png"
+    }
+  ],
+  "sign_composition": {
+    "base": "neon-junction-plate-01.png",
+    "sign_edit": "neon-junction-sign-edit-01.png",
+    "current": "neon-junction-plate-02.png",
+    "region_pixels": {
+      "x": 90,
+      "y": 295,
+      "width": 210,
+      "height": 415
+    },
+    "method": "Copy only this rectangular sign region from the same-size fal revision onto the original plate. Retain every original pixel outside the region; source frames and rail coordinates stay registered."
+  },
+  "review": {
+    "status": "Scoped native visual recheck passed; user acceptance pending",
+    "date": "2026-10-13",
+    "reviewer": "One independent visual_inspector, report-only",
+    "resolution": "1920x1080",
+    "coverage": "Train entry, center, right crossing and exit; sampled elapsed 0,2,4,4.4; all three sign dips; still/motion control; frame edges; revised club sign seam and readability.",
+    "fixed_findings": [
+      {
+        "id": "VQA-01",
+        "finding": "Incorrect foreground rectangles revealed pieces of the distant city through the train.",
+        "fix": "Mapped the actual foreground post cores and stepped lamp pedestals in source pixels; excluded background gaps between brackets.",
+        "verification": "No rectangular building cutout or misplaced coloured slits in the specified crossing frames. Posts read in front of the train.",
+        "confidence": "high"
+      },
+      {
+        "id": "VQA-02",
+        "finding": "The face-sign flicker mask dimmed part of an adjacent cyan building strip.",
+        "fix": "Tightened the mask's right UV bound from 0.867 to 0.858.",
+        "verification": "Face dims while the previously affected building-strip pixel remains RGB(125,249,250).",
+        "confidence": "high"
+      }
+    ],
+    "sign_revision": "New club sign inspected at normal scale, with no evidenced compositing seam. Its dip is visible. A separate pixel comparison found 87149 changed pixels inside the 210x415 edit region and 0 changes outside.",
+    "runtime": "Fresh inspected runtime log: 14 informational lines, no warnings or errors.",
+    "editor": "MCP refresh emitted progress-dialog/task messages before runtime startup; no subsequent editor errors appeared. These were editor messages, not shader or runtime failures.",
+    "limits": "Selected temporal samples at one resolution, not continuous playback, alternate aspect ratios, menu/title readability or user acceptance. Dedicated video capture samples the same native scene at 1280x720 and 24 fps.",
+    "remaining": "User review of the artwork and motion; later logo entrance and native menu integration. Sign lighting currently dims painted colours rather than separate glow/light layers."
+  },
+  "night_traffic_revision": {
+    "date": "2026-10-13",
+    "build": 2,
+    "night_traffic": {
+      "aircraft": 12,
+      "rendering": "Native Godot shader lights; no video texture or new generated image.",
+      "lanes": "Different heights, opposing directions and signed source-pixel speeds from 4 to 17 pixels/second.",
+      "strobes": "Independent periods from 1.9 to 4.2 seconds, with dim running lights between flashes.",
+      "occlusion": "Source-pixel skyline lookup masks lights behind city silhouettes.",
+      "sky": "Darker navy upper sky, retained purple horizon haze, softened static cyan specks, retained magenta rooftop warning lights."
+    },
+    "new_paid_jobs": 0,
+    "review": {
+      "status": "Scoped visibility recheck passed; user acceptance pending",
+      "reviewer": "One independent visual_inspector, report-only",
+      "resolution": "1920x1080",
+      "coverage": "Selected times 1.45, 2.35, 3.0 and 6.65 seconds; darker sky and retained purple haze; normal-scale aircraft readability, independent position and flash changes, and one tower-occlusion sample. Earlier pass checked B and Space with explicit releases.",
+      "fixed_finding": {
+        "id": "VQA-03",
+        "finding": "The first twelve-aircraft version still read as one or two faint pinpoints at normal scale.",
+        "fix": "Raised the running-light floor from 0.13 to 0.38 and source-pixel core size from 1.5 to 2.5, retaining varied strength, speed and blink periods.",
+        "verification": "Roughly nine separate lights are readable in the sampled t2.35 frame. The t3.0 frame shows opposing movement and different lights flashing; the sampled aircraft is occluded behind its tower at t6.65.",
+        "confidence": "high for sampled readability and occlusion"
+      },
+      "runtime": "Final independent recheck: 15 informational lines, no warnings or errors.",
+      "editor": "Only the six known pre-runtime progress-dialog/task messages at IDs 141-146; no later errors or shader compile failures in the inspected log.",
+      "limits": "Four selected times at one resolution, not continuous-motion acceptance, complete wrap cycles, other aspect ratios, performance measurement, or title/menu readability.",
+      "workspace_summary": "The independent recheck found roughly nine readable aircraft lights at once in the sampled 1920 × 1080 frame, with separate movement and flashes across paired frames. The sampled flight disappears behind its tower. The earlier faint-light issue is resolved; no additional obvious regression was observed. Runtime logs were clean. These are scoped samples; sky density, artwork and timing still await your verdict."
+    },
+    "workspace_record": "workspace/2026-10-12_blocky3d/main-menu/build-02/build-record.json"
+  },
+  "traffic_and_smoke_revision": {
+    "date": "2026-10-13",
+    "build": 3,
+    "night_traffic": {
+      "aircraft": 24,
+      "nearer": "Twelve brighter aircraft retained from build02, 4-17 source pixels/second.",
+      "farther": "Twelve smaller, slower points, 2.2-5.6 source pixels/second; mostly cool whites with a few warmer/red beacons.",
+      "light_scale": "Brighter core size2.5 and distant core size1.5 in source pixels; restrained halos and independent strobes.",
+      "occlusion": "The existing source-pixel skyline masks lights behind towers.",
+      "sky": "Retains the darker navy grade and purple haze; no new static stars."
+    },
+    "smoke": {
+      "method": "Local shader flow within the existing pale blue-violet paint of two bounded right-side plumes. Pixel-aligned displacement and a small upward-travelling density wave.",
+      "protection": "Both destination and sampled paint must pass a smoke-colour mask; windows, neon, pipes and railings are excluded. Existing foreground covers remain in front.",
+      "limits": "A subtle flow study within painted smoke, not detached particle billows or newly generated layers."
+    },
+    "new_paid_jobs": 0,
+    "review": {
+      "status": "No evidenced defect in scoped native review; user acceptance pending",
+      "reviewer": "One independent visual_inspector, report-only",
+      "resolution": "1920x1080",
+      "coverage": "Matched smoke on/off at elapsed2.35, motion at5.35, normal-scale sky and right-hand smoke review, diagnostic plume crops and nearby structures.",
+      "aircraft": "The additional aircraft produce a denser field of varied lights, consistent with the artificial-starfield direction.",
+      "smoke": "Subtle internal wisp/texture movement is visible across the selected times. Windows, pipes, rails and plume boundaries remain visually stable. No edge tear or obvious structural warping was evidenced.",
+      "confidence": "High for visible changes and lack of obvious local warping; moderate for motion strength because the independent review used selected frames rather than continuous video.",
+      "controls": "Inspector tested S with explicit releases and restored smokeON. Primary tested Space on build03: motion, train visibility and animation uniform went false, the clock stayed at2.399998 across samples, and all motion resumed after a second press/release.",
+      "runtime": "Independent review:18 informational lines, no warnings/errors. Primary control-check tail contained only informational entries.",
+      "editor": "Known pre-start progress-dialog/task messages151-156; no later shader errors evidenced.",
+      "limits": "Selected times at one resolution, not continuous-motion acceptance, all wrap cycles, other aspect ratios, performance measurement, or title/menu readability.",
+      "workspace_summary": "The independent Godot review found a denser field of varied aircraft lights and subtle movement within the two smoke plumes. Nearby windows, pipes and railings stayed visually stable in the sampled frames, with no evidenced edge tear. S and the still/motion control were checked, and runtime logs were clean. Motion strength and the overall look still await your verdict."
+    },
+    "workspace_record": "workspace/2026-10-12_blocky3d/main-menu/build-03/build-record.json"
+  },
+  "rolling_steam_revision": {
+    "date": "2026-10-13",
+    "build": 4,
+    "smoke": {
+      "method": "Two native shader plumes, each with eight overlapping billows. The entire silhouette rises, widens, curls and dissolves against a cleaned background; shared wind carries both plumes to the right.",
+      "density_revision": "Widened billow radius from19-92 to29-143 source pixels, increased density from0.49 to0.68, extended the dissolve and spread the lower plume farther right. Timing and rolling motion retained.",
+      "wind_revision": "Upper lateral travel138 source pixels, lower240 over each10.5-second billow life, a shared14-percent gust and rightward inner texture drift.",
+      "edge_fix": "Smoke opacity is independent of the clean-plate rectangle. The upper cloud can drift above that patch and dissolve by lifetime without a flat clipped top.",
+      "protection": "The generated clean plate is sampled only in two feathered smoke regions. Foreground pipes, signs, bridge covers and railings remain in front; all other city pixels use the original plate.",
+      "lifecycle": "One shared animation clock; bounded shader work, pixel-quantized billows, warm start, pause when hidden. S and still mode restore original painted smoke."
+    },
+    "generation": {
+      "new_paid_jobs": 1,
+      "endpoint": "google/nano-banana-2.1/edit",
+      "request_id": "01a1332e-a16f-78d1-933c-3d39cb01f89d",
+      "prompt": "Localized smoke removal from the supplied finished pixel-art cyberpunk city. Return the SAME full city plate, identical camera and exact composition. Remove BOTH pale blue-violet steam/smoke clouds on the RIGHT side: (1) the cloud just ABOVE the railway at about 82-88 percent of image width and 52-62 percent of image height, behind the foreground hanging dark box and pipes; (2) ALL of the larger connected steam cloud BELOW the railway at about 71-86 percent of image width and 74-91 percent of image height, rising beside the PIXL neon sign and behind the lower foreground pipe/ledge. Erase the clouds completely, including their wispy fringes. Reconstruct only the background architecture hidden by these two clouds: subdued navy walls, existing small windows, alley depths and dark recesses. Keep those reconstructed areas dark and low-detail so separate moving steam can later cover them. Preserve every visible building edge, window, ledge, foreground pipe, hanging box, neon tube, railing, bridge post, wet reflection and shop sign at EXACTLY the same source-pixel position. Especially preserve the PIXL sign and the right cyan arrow sign with their existing colours and wording. Retain the complete left magenta pole-dancer sign. Keep the sky and far horizon haze exactly as supplied; those are NOT the two steam plumes to remove. No global relighting or colour correction. No layout changes, new signage, typography, new clouds, train, new objects or people. Preserve crisp original pixel clusters, dithering, texture and the full uncropped 16:9 framing. Only the two specified right-side steam clouds should disappear. Output one clean still image.",
+      "settings": {
+        "resolution": "2K",
+        "aspect_ratio": "16:9",
+        "output_format": "png",
+        "num_images": 1,
+        "thinking_level": "high"
+      },
+      "source": "../build-01/neon-junction-plate-02.png",
+      "source_sha256": "3fcbb1cbf2b49326bb33fd4ec5953b22ee5c534ddbd13e4bec2d15118d87a483",
+      "output": "city-no-steam-fal-04.png",
+      "use": "Reconstruct architecture hidden by the old smoke; only masked regions are used at runtime.",
+      "cost": "Actual charge not confirmed. fal pricing returned $1 per unit but its token-based quantity could not be estimated; no dollar total asserted."
+    },
+    "production_clean_plate_sha256": "ea2e9f1dafbba8b5a259842dac9450c16b76c64240e5e58be70b03577db73a7a",
+    "review": {
+      "status": "No remaining evidenced defect in scoped post-fix captures; user density and wind verdict pending",
+      "reviewer": "One independent visual_inspector, report-only; primary made fixes between inspection and verification",
+      "resolution": "1920x1080",
+      "coverage": "Original painted smoke comparison and pre-fix frames at2.35,5.35,8.35; post-fix frames at2.35 and5.35. Both right-hand plumes and nearby structures.",
+      "smoke": "Fullness broadly comparable to the original painted plumes. Whole silhouettes differ between frames; upper plume leans right and lower plume has stronger rightward sweep.",
+      "cutoff": "The previously visible flat upper cutoff is absent in both post-fix captures. The new top is soft and uneven. No obvious new seam or pipe/sign/bridge warping was observed.",
+      "controls": "S OFF/ON verified in preceding build04 inspection; Space pressed/released OFF/ON verified after the wind and cutoff fix. Inputs released, process/motion/smoke/night restored true and help false.",
+      "runtime": "10 informational lines, no runtime errors. Editor progress-dialog/task messages180-185 were timestamped before runtime startup; no shader errors observed.",
+      "confidence": "High for sampled cutoff and fullness, moderate for wind movement from paired frames.",
+      "limits": "Post-fix8.35, continuous motion, other game aspect ratios, long-duration cycles, performance and future title/menu readability were not independently reviewed.",
+      "workspace_summary": "Independent native review found fuller moving plumes, a rightward lean and no remaining flat upper cutoff in the sampled frames. Nearby pipes, signs and bridge structures stayed stable. S and Space comparisons worked; runtime logs were clean. The fuller density and wind feel await your verdict."
+    },
+    "workspace_record": "workspace/2026-10-12_blocky3d/main-menu/build-04/build-record.json",
+    "source_width_tuning": {
+      "date": "2026-10-13",
+      "direction": "The user liked the steam motion and requested a wider source extending right, closer to the fullness of the original painted clouds.",
+      "implementation": "Initial billow radius52 rather than29 source pixels. Horizontal source span95 upper/135 lower, tapering gently with age. Existing wind, curl, timing, colour, foreground masks and24 aircraft unchanged.",
+      "review": "Primary checked native1920x1080 captures at2.35 and5.35. Both bases visibly fuller to the right; original upper cutoff remains absent in those frames. Fresh runtime log:7 info lines, no errors. This small tuning pass did not repeat the independent audit.",
+      "media": "Live preview and screenshots only; existing build04 video records the earlier iteration.",
+      "shader": "shaders/neon_junction_steam.gdshaderinc",
+      "sha256": "3f1e4689413f69f65af78348f7509344304cfc55ca1d97afdf512b614fb0154a",
+      "acceptance": "Accepted by user before the sign pass."
+    }
+  },
+  "live_sign_tuning": {
+    "date": "2026-10-13",
+    "lady_sign": {
+      "period_seconds": 17.8,
+      "first_fault_seconds": 3.5,
+      "sequence": "Dark for0.96 seconds, four uneven50-100ms restart flashes, then recover to full power by2.08 seconds into the fault. Rest of cycle stays lit."
+    },
+    "additional_background_signs": [
+      {
+        "name": "NYVO",
+        "period": 8.9,
+        "hold": 0.22
+      },
+      {
+        "name": "ZUIX",
+        "period": 12.4,
+        "hold": 0.14
+      },
+      {
+        "name": "KORU magenta frame and title",
+        "period": 15.7,
+        "hold": 0.3
+      },
+      {
+        "name": "Distant cross",
+        "period": 10.6,
+        "hold": 0.16
+      }
+    ],
+    "implementation": "Bounded colour-selective shader masks on the shared animation clock, staggered offsets, seven animated signs total including existing face and PIXL. Still mode restores full light; clock pauses when hidden.",
+    "review": "Primary inspected seven native1920x1080 captures: lit, each of four new signs dimmed, lady dark and restart flash, and recovered lady in the ZUIX capture. No obvious spill into adjacent windows or structural deformation observed.13 info log lines, no runtime errors. Editor progress-task messages199-204 predate startup; no shader error observed. Sampled states are not continuous-motion acceptance.",
+    "shader": "shaders/neon_junction_signs.gdshader",
+    "sha256": "7a088938551d35d5fb9b8164623cc1553c7ed1390bfdda9f883553c429e29e62",
+    "media": "Live Godot preview only; existing video predates these sign and broad-source adjustments. No new video, art or paid generation.",
+    "acceptance": "Approved by user as part of the finished background."
+  },
+  "background_approval": {
+    "date": "2026-10-13",
+    "status": "Approved by user",
+    "quote": "yeah this is perfect, this is the background",
+    "scope": "Main-menu background artwork and motion: fixed neon city,24 aircraft, broad rightward alley steam, passing metro and seven animated signs. Preserve this appearance when integrating the logo and menu.",
+    "workspace_record": "workspace/2026-10-12_blocky3d/main-menu/approved-background/approved-record.json",
+    "game_sources": [
+      {
+        "file": "scripts/ui/neon_junction_background.gd",
+        "sha256": "bbfeed9837ac890d3eb44b1c29f3622085aba5ca3b0e9fbf268af900fc0a62da"
+      },
+      {
+        "file": "scripts/ui/neon_junction_background_preview.gd",
+        "sha256": "08a58c846046087616549b6056d038563d4a843e65687741eccc67ea4547e057"
+      },
+      {
+        "file": "scenes/dev/neon_junction_background_preview.tscn",
+        "sha256": "c3854d0f8717ac576516d46cf4e024f0c51741029ad82be5916fcfc84f6be78f"
+      },
+      {
+        "file": "shaders/neon_junction_signs.gdshader",
+        "sha256": "7a088938551d35d5fb9b8164623cc1553c7ed1390bfdda9f883553c429e29e62"
+      },
+      {
+        "file": "shaders/neon_junction_steam.gdshaderinc",
+        "sha256": "3f1e4689413f69f65af78348f7509344304cfc55ca1d97afdf512b614fb0154a"
+      },
+      {
+        "file": "assets/art/ui/main_menu/neon_junction/city_plate.png",
+        "sha256": "3fcbb1cbf2b49326bb33fd4ec5953b22ee5c534ddbd13e4bec2d15118d87a483"
+      },
+      {
+        "file": "assets/art/ui/main_menu/neon_junction/city_no_steam.png",
+        "sha256": "ea2e9f1dafbba8b5a259842dac9450c16b76c64240e5e58be70b03577db73a7a"
+      },
+      {
+        "file": "assets/art/ui/main_menu/neon_junction/metro.png",
+        "sha256": "c73d69fa387d5eaf35c7114cdcc195ff60e63efd7131b885f8cdada7cf4cb22e"
+      }
+    ]
+  }
+}

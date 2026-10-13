@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://b5a52ef5mpav7"]
+
+[ext_resource type="PackedScene" uid="uid://cchrw71lh2bip" path="res://scenes/dev/main_menu_release_preview.tscn" id="1"]
+
+[node name="GameRoot" unique_id=1227409979 instance=ExtResource("1")]
+title_entrance_effects = false

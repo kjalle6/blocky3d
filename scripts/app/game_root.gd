@@ -9,8 +9,10 @@ extends Node
 @export var persist_progression := true
 @export var developer_fresh_level_runs := true
 @export var developer_tools_enabled := true
+@export var title_entrance_effects := true
 
 var campaign_menu: CanvasLayer
+var title_screen: CanvasLayer
 var _campaign_mode := false
 var health_inventory_hud: Control
 var loot_receipt: Control
@@ -108,7 +110,10 @@ func _ready() -> void:
 	cave_ambience = preload("res://scripts/audio/cave_ambience_player.gd").new()
 	cave_ambience.name = "CaveAmbience"
 	add_child(cave_ambience)
-	show_level_select()
+	title_screen = preload("res://scripts/ui/protocol_title_screen.gd").new()
+	title_screen.name = "TitleScreen"
+	add_child(title_screen)
+	show_main_menu(true)
 
 
 func _restart_developer_level() -> void:
@@ -137,6 +142,7 @@ func _build_audio_tools() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if title_screen != null and title_screen.visible: return
 	if level_designer != null and level_designer.is_editing(): return
 	if not event is InputEventKey or not event.pressed or event.echo:
 		return
@@ -192,6 +198,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if level_select.visible:
 		match event.physical_keycode:
+			KEY_ESCAPE:
+				show_main_menu()
 			KEY_W:
 				_move_level_focus(-1)
 			KEY_S:
@@ -222,14 +230,16 @@ func load_level(level_id: StringName) -> void:
 
 
 func load_developer_room() -> void:
-	assert(developer_tools_enabled, "Developer tools are disabled.")
+	if not developer_tools_enabled:
+		return
 	assert(developer_room_definition != null, "GameRoot requires a developer room definition.")
 	load_developer_level(developer_room_definition)
 
 
 func load_developer_level(definition: LevelDefinition, entry_id: StringName = &"") -> void:
+	if not developer_tools_enabled:
+		return
 	_campaign_mode = false
-	assert(developer_tools_enabled, "Developer tools are disabled.")
 	assert(definition != null, "A developer level definition is required.")
 	assert(
 		definition in _known_developer_definitions(),
@@ -329,6 +339,7 @@ func _start_session(
 		+ "    Attack: LEFT CLICK / J / gamepad X    Reload: R / gamepad Y"
 	)
 	level_select.visible = false
+	if title_screen != null: title_screen.dismiss()
 	menu_hint.visible = true
 	completion_label.visible = false
 	_reset_completion_fade()
@@ -342,9 +353,16 @@ func _start_session(
 
 
 func show_level_select() -> void:
+	if not developer_tools_enabled:
+		return
+	_prepare_frontend(true)
+
+
+func _prepare_frontend(developer_selector: bool) -> void:
 	if level_designer != null and level_designer.is_active():
 		level_designer.request_close(true)
 		return
+	if title_screen != null: title_screen.dismiss()
 	_campaign_mode = false
 	_transition_serial += 1
 	_free_current_level()
@@ -355,7 +373,7 @@ func show_level_select() -> void:
 	_developer_inspection_enabled = false
 	_developer_measurement_grid_enabled = false
 	_developer_collision_overlay_enabled = false
-	level_select.visible = true
+	level_select.visible = developer_selector
 	instructions.visible = false
 	menu_hint.visible = false
 	completion_label.visible = false
@@ -366,11 +384,16 @@ func show_level_select() -> void:
 	developer_collision_legend.visible = false
 	_hide_ability_tutorial()
 	_configure_developer_ability_panel(false)
-	if _audio_tools_button != null: _audio_tools_button.visible = developer_tools_enabled
+	if _audio_tools_button != null: _audio_tools_button.visible = developer_selector and developer_tools_enabled
 	if _designer_tools_button != null: _designer_tools_button.visible = false
 	if _restart_tools_button != null: _restart_tools_button.visible = false
-	if not _level_buttons.is_empty():
+	if developer_selector and not _level_buttons.is_empty():
 		_level_buttons.front().grab_focus()
+
+
+func show_main_menu(play_entrance := false) -> void:
+	_prepare_frontend(false)
+	if title_screen != null: title_screen.present(play_entrance)
 
 
 func _build_world_list() -> void:
