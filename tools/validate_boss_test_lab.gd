@@ -21,6 +21,9 @@ func _run() -> void:
 	_game.persist_progression = false
 	root.add_child(_game)
 	await process_frame
+	# The game opens on the title screen; its Development button opens the selector.
+	_game.show_level_select()
+	await process_frame
 	var menu := _game.get_node("Interface/LevelSelect/Center/Panel/Margin/Options/WorldList")
 	assert(menu.get_node("BossTestLabButton").text == "BOSS TEST LAB")
 	var key := InputEventKey.new()

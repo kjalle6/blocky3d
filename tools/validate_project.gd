@@ -19,6 +19,9 @@ func _validate() -> void:
 		"GameRoot requires level selection."
 	)
 	await process_frame
+	# The game opens on the title screen; its Development button opens the selector.
+	game_root.show_level_select()
+	await process_frame
 	var world_list := game_root.get_node(
 		"Interface/LevelSelect/Center/Panel/Margin/Options/WorldList"
 	)
