@@ -15,6 +15,16 @@ func _init() -> void:
 func _frames(count: int) -> void:
 	for frame in count: await physics_frame
 
+func _land(tank: TankEnemy3D) -> void:
+	# Wait for touchdown, then let it settle before testing ground movement.
+	# One step first: right after a reset, is_on_floor() still reports the old pose.
+	await physics_frame
+	for frame in 120:
+		if tank.is_on_floor(): break
+		await physics_frame
+	assert(tank.is_on_floor(), "The tank must reach its floor before the head contact.")
+	await _frames(15)
+
 func _run() -> void:
 	var level := FIXTURE.instantiate_session()
 	root.add_child(level)
@@ -25,6 +35,9 @@ func _run() -> void:
 	level.get_node("ShooterEncounterStaging/ShooterIntro").process_mode = Node.PROCESS_MODE_DISABLED
 	var tank := level.get_node("TankEncounter/Tank") as TankEnemy3D
 	tank._landed_in_arena = true
+	# The tank starts above its arena floor and drops onto it; a head contact
+	# while it is still falling leaves it no ground to retreat along.
+	await _land(tank)
 	player.reset_at(Transform3D(Basis.IDENTITY, tank.global_position + Vector3(-0.1, tank.stomp_head_height + PlayerCharacter.FEET_OFFSET_Y + 0.12, 0)))
 	player.velocity.y = -4.0
 	level.camera.snap_to_target()
@@ -65,25 +78,43 @@ func _run() -> void:
 	assert(not player.is_psychically_frozen(), "Player must regain control when the freeze expires.")
 	assert(absf(tank.global_position.x - player.global_position.x) > 1.25, "Tank must clear the head contact area before the player can drop onto it again.")
 	assert(absf(tank.velocity.x) <= tank.patrol_speed + 0.001)
-	# A deliberate repeat hit during the text fade refreshes one effect.
+	# A deliberate repeat hit during the text fade refreshes one effect. Keep
+	# the tank on its floor: a reset returns it to its raised spawn point.
+	var grounded := tank.global_transform
 	tank.reset_run()
+	tank.global_transform = grounded
 	player.reset_at(Transform3D(Basis.IDENTITY, tank.global_position + Vector3(-0.1, tank.stomp_head_height + PlayerCharacter.FEET_OFFSET_Y, 0)))
 	tank.receive_stomp(player)
 	assert(player.health.current == 75 and player.is_psychically_frozen())
 	assert(get_nodes_in_group("psychic_pulse_effect").size() == 1)
 	var repeated_effect: Node = get_nodes_in_group("psychic_pulse_effect")[0]
 	assert(repeated_effect.get_instance_id() == effect_id and repeated_effect._elapsed == 0.0, "Repeat pulse must restart its rings and text, not stack them.")
-	await _frames(ceili((tank.psychic_freeze_duration + 0.4) * 60.0))
-	assert(get_nodes_in_group("psychic_pulse_effect").is_empty())
+	# The effect ages on render frames and frees itself 0.35 s after the freeze;
+	# allow a few frames of drift instead of checking on the exact deletion frame.
+	for frame in ceili((tank.psychic_freeze_duration + 0.6) * 60.0):
+		if get_nodes_in_group("psychic_pulse_effect").is_empty(): break
+		await physics_frame
+	assert(get_nodes_in_group("psychic_pulse_effect").is_empty(), "The refreshed pulse must finish its fade.")
 	# Near a patrol boundary, choose space to retreat instead of turning back under the player.
+	# Step the player aside first, or the reset tank drops onto them.
+	player.reset_at(Transform3D(Basis.IDENTITY, Vector3(50, 0.7, 0)))
 	tank.reset_run()
-	tank.global_position.x += tank.patrol_right_distance - 0.1
+	await _land(tank)
+	# Waiting for the landing lets it notice the player; this case is a patrol.
+	tank._pursuing = false
+	tank._returning = false
+	# The authored right limit now meets the spiked wall, where no step is
+	# hazard-free; exercise the same rule with a limit in open ground.
+	var authored_right := tank.patrol_right_distance
+	tank.patrol_right_distance = 1.0
+	tank.global_position.x = tank._initial_transform.origin.x + tank.patrol_right_distance - 0.1
 	player.reset_at(Transform3D(Basis.IDENTITY, tank.global_position + Vector3(-0.1, tank.stomp_head_height + PlayerCharacter.FEET_OFFSET_Y, 0)))
 	level.camera.snap_to_target()
 	tank.receive_stomp(player)
 	assert(tank._patrol_sign < 0.0)
 	await _frames(ceili(tank.psychic_freeze_duration * 60.0) + 2)
 	assert(absf(tank.global_position.x - player.global_position.x) > 1.25, "Retreat must also clear the player at the end of the patrol.")
+	tank.patrol_right_distance = authored_right
 	# Respawn and death always clear the freeze.
 	player.reset_at(Transform3D(Basis.IDENTITY, Vector3(50, 0.7, 0)))
 	assert(not player.is_psychically_frozen() and player.pixel_visual.body.modulate == Color.WHITE)
