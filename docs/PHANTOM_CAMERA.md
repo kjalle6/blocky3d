@@ -54,7 +54,7 @@ and climb background layers retain their original placement.
 | --- | --- |
 | `scenes/levels/arrival_shoreline.tscn` | Flat beach and garden framing, a curved rise across the aerial platforms, then a gradual return to the landing. The peak still conceals its low landing spikes. |
 | `scenes/levels/overgrown_coastal_ascent.tscn` | A level rail along the short dusk approach; ordinary jumps leave the horizon steady. |
-| `scenes/levels/overgrown_coastal_ascent_interior.tscn` | A rising approach rail straightens at X 58.88 for the wall-jump shaft. The upper branch stays at Y 30.7 through jumps, water pits and the exit lift. |
+| `scenes/levels/overgrown_coastal_ascent_interior.tscn` | Bounded player follow covers the pickup platforms, safe lower floor and wall-jump climb. Horizontal framing caps at X 58.88 to keep the shaft steady. The upper branch stays at Y 30.7 through jumps, water pits and the exit lift. |
 | `scenes/dev/green_zone_finale_wip.tscn` | Surface look-ahead continues across the deceptive jump. Below the lip, bounded Simple follow covers the broad drop and lower floor; a vertical branch rail centres the return shaft. |
 
 The cave and Level 3 outdoors also have `CameraDirection/BranchRail`.
@@ -65,7 +65,20 @@ state; a branch change does not start a priority tween. Spawn/load selects the
 branch from the current position without relying on previous traversal.
 
 The cave's second branch rectangle covers the machine pits so a lethal fall
-cannot redirect the view toward the lower entrance. Level 3's wide drop uses
+cannot redirect the view toward the lower entrance. Its third rectangle starts
+bounded Simple follow at X 28, before the old approach rail rises. The
+`LowerFollowTarget` frame centre follows player height plus 2 m, clamped between
+Y 2.7 and 30.7; X is bounded between 11.52 and 58.88. Its free region extends
+left to X 26, covering the branch exit margin on backtracking. This avoids a
+different frame after reloading near that boundary. At player Y 28.7, the
+bounded centre meets the upper rail at Y 30.7. Walking across P3 cannot raise
+the view, and a missed jump follows the player back to the safe floor.
+
+The cave uses 0.12-second vertical damping, matching Level 3's underworks.
+The tank climb uses 0.16 seconds: it keeps terminal-speed falls visible while
+retaining a softer transition between its lower rail and upper follow.
+
+Level 3's wide drop uses
 Phantom Simple follow with a bounded target marker;
 a U-shaped rail can incorrectly select a distant segment across that open space.
 `Branch Free Region` selects the open drop/floor, and `Branch Free Bounds` limits
@@ -117,8 +130,8 @@ Run through `tools/run_godot_tool.ps1`:
 | Check | Coverage |
 | --- | --- |
 | `-Visual -Script res://tools/probe_phantom_camera_modes.gd` | Real orthographic viewport; Simple, Group, Path, Framed, damping at 30/60/144 FPS, priority blend interruption and teleport behavior |
-| `-Script res://tools/validate_campaign_phantom_camera.gd` | All four earlier sections forward/backward at 30/60/144 FPS, pixel alignment, player visibility, spawn/inspection, shaft stability, upper-cave holds and fast falls |
-| `-Script res://tools/validate_phantom_camera.gd` | Forward/backward and optional upper-climb trajectories at 30/60/144 FPS, no boundary jump, output pixel alignment, player/tank visibility, roof/ground save snaps, inspection, cinematic ownership, intro return without overshoot and session reload |
+| `-Script res://tools/validate_campaign_phantom_camera.gd` | All four earlier sections forward/backward at 30/60/144 FPS, pixel alignment, player visibility, spawn/inspection, shaft stability, grounded P3 reversal, lower-floor/boundary recovery, upper-cave holds and missed-jump/terminal-speed falls |
+| `-Script res://tools/validate_phantom_camera.gd` | Forward/backward and optional upper-climb trajectories at 30/60/144 FPS, no boundary jump, output pixel alignment, player/tank visibility, roof/ground save snaps, inspection, cinematic ownership, intro return without overshoot, terminal-speed falls across the upper/lower handover and session reload |
 | `-Script res://tools/validate_green_zone_shooter_intro.gd` | Reaction close-up, enemy pan, shot-driven return, checkpoint resume and restart |
 | `-Script res://tools/validate_tank_climb.gd` | Scaffold and solid ground contacts, both lethal wall spikes, service bracket/roof reach, chest saves, pursuit, long upward hits from below the camera, no off-screen acquisition, shelter, disengagement and rewards |
 | `-Script res://tools/inspect_level_layout.gd` | All registered layouts resolve without losing authored records |
@@ -127,6 +140,12 @@ The mode probe writes `build/phantom_camera_modes.json`. The route validator
 writes `build/phantom_camera_validation.json`. These are local test artifacts.
 Live MCP review also covers fullscreen compositions and the designer's
 edit/test/return lifecycle. Automated checks do not establish camera feel.
+
+The 13 October wall-jump review fixed the cave's premature upward pull and
+offscreen lower-floor recovery, plus downward lag during a tank-climb fall.
+Independent in-game rechecks passed; the scoped coverage and remaining boss
+headroom question are recorded in the
+[maintenance review](MAINTENANCE_PLAN.md#wall-jump-camera-review---13-october-2026).
 
 Observed addon behavior worth retaining:
 

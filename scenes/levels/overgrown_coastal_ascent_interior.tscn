@@ -161,11 +161,14 @@ position = Vector3(4.48, 0.7, 0)
 [node name="Player" parent="." index="9"]
 position = Vector3(4.48, 0.7, 0)
 
-[node name="GameplayCamera" parent="." index="10" node_paths=PackedStringArray("phantom_camera", "branch_rail")]
+[node name="GameplayCamera" parent="." index="10" node_paths=PackedStringArray("phantom_camera", "branch_rail", "branch_free_target")]
 script = ExtResource("pc_adapter")
 phantom_camera = NodePath("../CameraDirection/RouteCamera")
 branch_rail = NodePath("../CameraDirection/BranchRail")
-branch_regions = Array[Rect2]([Rect2(42, 27.2, 140, 40), Rect2(82, -8, 100, 75)])
+branch_regions = Array[Rect2]([Rect2(42, 27.2, 140, 40), Rect2(82, -8, 100, 75), Rect2(28, -8, 54, 35.2)])
+branch_free_target = NodePath("../CameraDirection/LowerFollowTarget")
+branch_free_region = Rect2(26, -10, 56, 38.7)
+branch_free_bounds = Rect2(11.52, 2.7, 47.36, 28)
 look_ahead = 2.6
 minimum_center_x = 11.52
 maximum_center_x = 162.56
@@ -305,6 +308,8 @@ horizontal_panel_count = 7
 
 [node name="CameraDirection" type="Node3D" parent="."]
 
+[node name="LowerFollowTarget" type="Marker3D" parent="CameraDirection"]
+
 [node name="CameraRail" type="Path3D" parent="CameraDirection"]
 curve = SubResource("Curve3D_route")
 
@@ -320,7 +325,7 @@ follow_target = NodePath("../../Player")
 follow_path = NodePath("../CameraRail")
 follow_offset = Vector3(2.6, 2, 24)
 follow_damping = true
-follow_damping_value = Vector3(0.25, 0.28, 0.1)
+follow_damping_value = Vector3(0.25, 0.12, 0.1)
 tween_on_load = false
 host_layers = 2
 camera_3d_resource = SubResource("Camera3DResource_pixel")

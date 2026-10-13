@@ -633,7 +633,7 @@ host_layers = 2
 camera_3d_resource = SubResource("Camera3DResource_pixel")
 follow_offset = Vector3(4, 1.7, 24)
 follow_damping = true
-follow_damping_value = Vector3(0.25, 0.35, 0.1)
+follow_damping_value = Vector3(0.25, 0.16, 0.1)
 align_transform_with_view = Callable()
 align_position_with_view = Callable()
 

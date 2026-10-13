@@ -100,11 +100,14 @@ They contribute only lake, rocks, and deep-water fill through their openings;
 foreground terrain masks their edges. A uniform source row extends water below
 the kill plane and the lake crop sits 2.0 m below its source alignment.
 
-The Wall Jump shaft focuses horizontal camera framing at its 58.88 m centre
-while continuing to follow the climb vertically. This holds one composition
-during rapid left-right kicks. Normal look-ahead resumes smoothly after the
-upper-left exit. The upper floor clamps at a 28.0 m vertical offset, so ordinary
-jumps do not move the whole cave shell.
+The Wall Jump approach follows actual player height through P1-P3 and missed
+jumps back to the lower floor; walking across the pickup platform must not
+anticipate a climb. Horizontal camera framing caps at the shaft's 58.88 m centre
+while continuing to follow vertically. This holds one composition during rapid
+left-right kicks. Normal look-ahead resumes smoothly after the upper-left exit.
+The upper floor holds the camera centre at Y 30.7, so ordinary jumps do not move
+the whole cave shell. See [camera composition](PHANTOM_CAMERA.md#earlier-routes)
+for the bounded follow region and response settings.
 
 The upper Phantom rail ends at the lift framing. The camera remains motionless while
 the deck rises, letting the machinery, not the background, sell departure.

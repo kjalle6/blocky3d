@@ -7,6 +7,52 @@ pass is complete. **Finishing the Green Zone boss is now the first priority**;
 maintenance should support that work or resolve a concrete blocker. Follow the
 [boss completion checklist](LEVEL_ROADMAP.md#next-priority-finish-the-green-zone-boss).
 
+## Wall-jump camera review - 13 October 2026
+
+This is a bounded review of the Level 2 pickup approach and the later wall-jump
+areas, not a complete campaign bug sweep. Findings and checks:
+
+- **VQA-01, Level 2 approach/floor:** walking across P3 raised the camera despite
+  constant player height. After a missed jump, its rising rail also left the
+  grounded player below the screen. Replaced this part with bounded player
+  follow, retaining shaft centring and the upper-cave hold. The regression
+  failed before the fix and now passes, including floor recovery, boundary
+  backtracking/reload agreement and fast falls at 30/60/144 FPS.
+- **VQA-02, tank climb:** an ordinary fall from the upper ledge hid the player
+  below the screen before landing. Reduced vertical damping from 0.35 to 0.16
+  seconds; the previously failing terminal-fall check now passes along with
+  the existing climb, transition and introduction-camera checks.
+- **Comparison:** the Level 3 underworks approach, wall kick and fallback kept
+  the player visible. No corresponding camera bug was reproduced there.
+- **Open review, boss high deck:** the player was close to the top edge while
+  grounded around `(10.08, 33.83)`. Grounded framing and a short deck fall were
+  visible, but jumps above that deck and the full descent were not covered.
+  Check those during boss encounter review before deciding whether the arena
+  camera needs more headroom. This is an unverified concern, not a confirmed
+  bug; the encounter framing remains unchanged.
+
+The camera settings and repeatable checks are in
+[Phantom Camera](PHANTOM_CAMERA.md#earlier-routes). All resolved authored layout
+objects and revisions were compared unchanged before updating their structural
+fingerprints. Independent MCP verification passed for P3 walking/reversal,
+missed-jump landing and retreat, the lower boundary, real initial wall kicks,
+an upper-alcove jump, and the matched tank ledge fall. The upper alcove was
+reached with diagnostic flight before returning to ordinary controls; a full
+continuous cave ascent and complete boss encounter were not tested. Fresh
+runtime/editor errors were empty. The user subsequently accepted the improved
+camera feel and approved committing these changes.
+
+Validation: the focused campaign-camera, tank-camera and layout checks all
+passed. The rendered wall-jump probe drove seven jumps, with 53 visible samples,
+zero horizontal camera movement and zero measured ceiling drift. Evidence
+captures under the normal Godot `user://screenshots/` directory use the prefixes
+`wj_inspect_`, `wj_compare_` and `wj_verify_`; the safe-floor recovery and matched
+tank fall are the key before/after comparisons.
+
+Fifteen reviewed textures had automatic 3D detection
+disabled after the editor changed their import settings; their original
+lossless, non-mipmapped pixel-art settings are retained.
+
 ## Open tank verification follow-up
 
 The 2026-09-30 checkpoint still has two failing focused checks:

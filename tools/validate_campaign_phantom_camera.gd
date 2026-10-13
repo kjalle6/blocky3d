@@ -100,10 +100,47 @@ func _check_cave(level) -> void:
 		level.player.position = Vector3(x, 18, 0)
 		level.camera.snap_to_target()
 		assert(absf(level.camera.position.x - 58.88) < 0.02, "Shaft must not sway between walls")
+	_check_cave_approach_and_falls(level)
 	for point in [Vector3(48.64, 28.7, 0), Vector3(94.08, 23, 0), Vector3(120.96, 23, 0), Vector3(132, 34, 0), Vector3(172, 39, 0)]:
 		level.player.position = point
 		level.camera.snap_to_target()
 		assert(absf(level.camera.position.y - 30.7) < 0.02, "Upper jumps, lethal water and lift must hold the cave framing")
+
+func _check_cave_approach_and_falls(level) -> void:
+	var camera = level.camera
+	var pixel: float = camera.world_units_per_screen_pixel()
+	# Walking across the pickup platform must not anticipate an ascent.
+	level.player.position = Vector3(55.113, 6.951, 0)
+	camera.snap_to_target()
+	var platform_y: float = camera.position.y
+	for x in [57.419, 55.113]:
+		level.player.position.x = x
+		camera.snap_to_target()
+		assert(absf(camera.position.y - platform_y) <= pixel * 2,
+			"Cave pickup approach rises despite a grounded player's constant height")
+	# Real safe landing positions from the visual review; also check return
+	# across the lower-follow boundary, including its hysteresis margin.
+	for x in [53.237, 48.798, 32.1, 31.5, 28.1, 27.5, 27.2, 26.0]:
+		level.player.position = Vector3(x, 0.551, 0)
+		for frame in 120: camera._process(1.0 / 60)
+		_check_frame(level, pixel)
+		var settled: Vector3 = camera.position
+		camera.snap_to_target()
+		assert(camera.position.distance_to(settled) <= pixel * 2,
+			"Cave approach load disagrees with walking across its boundary")
+	# Missed jumps and aborted climbs at actual gravity/terminal speed.
+	for fps in [30, 60, 144]:
+		for start in [Vector3(57.6, 9, 0), Vector3(58.88, 26, 0)]:
+			level.player.position = start
+			camera.snap_to_target()
+			var speed := 0.0
+			for frame in fps * 4:
+				speed = minf(speed + level.player.movement.gravity / fps,
+					level.player.movement.maximum_fall_speed)
+				level.player.position.y = maxf(0.551, level.player.position.y - speed / fps)
+				camera._process(1.0 / fps)
+				_check_frame(level, pixel)
+				if level.player.position.y <= 0.551: break
 
 func _check_drop(level) -> void:
 	for fps in [30, 60, 144]:

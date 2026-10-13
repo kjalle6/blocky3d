@@ -153,6 +153,7 @@ func _run() -> void:
 	assert(camera.position == before)
 	camera.look_ahead = authored_look_ahead
 	_check_intro_camera_return(camera, player)
+	_check_fast_climb_fall(camera, player)
 	level.queue_free()
 	await process_frame
 	# New sessions must bind their own camera after the previous one is freed.
@@ -168,6 +169,23 @@ func _run() -> void:
 	print("Phantom camera passed: 30/60/144 FPS rail and optional upper climb, pixel grid, visibility, boundary crossing, settling, roof/ground respawn, inspection, cinematic ownership, intro return without overshoot, disabled processing, and reload.")
 	quit(0)
 
+
+func _check_fast_climb_fall(camera: PixelSideCamera3D, player: PlayerCharacter) -> void:
+	# The real upper-ledge fall found by visual QA crosses the Simple -> Path
+	# handover at terminal speed; a slow sinusoidal descent missed this case.
+	for fps in [30, 60, 144]:
+		player.position = Vector3(70.82, 30.0, 0)
+		camera.snap_to_target()
+		var speed := 0.0
+		for frame in fps * 4:
+			speed = minf(speed + player.movement.gravity / fps, player.movement.maximum_fall_speed)
+			player.position.y = maxf(0.55, player.position.y - speed / fps)
+			camera._process(1.0 / fps)
+			for offset in [Vector3.DOWN * 0.4, Vector3.UP * 0.8]:
+				var screen := camera.unproject_position(player.position + offset)
+				assert(camera.get_viewport().get_visible_rect().has_point(screen),
+					"Tank climb fall lost player at %d FPS: player=%s camera=%s" % [fps, player.position, camera.position])
+			if player.position.y <= 0.55: break
 
 func _check_intro_camera_return(camera: PixelSideCamera3D, player: PlayerCharacter) -> void:
 	var intro := level.get_node("ShooterEncounterStaging/ShooterIntro") as GreenZoneShooterIntro3D
