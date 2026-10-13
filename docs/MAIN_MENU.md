@@ -208,3 +208,20 @@ Workspace -> blocky3d -> Main menu -> Protocol Override. The record separates
 the user's visual approval from automated checks and independent inspection. Use live
 Godot and targeted screenshots for intermediate tuning; do not render a new video
 for each revision.
+
+## Approved-menu video
+
+Workspace -> blocky3d -> Main menu now includes the requested full entrance and
+menu video: **21 seconds, 1920x1080, 30 fps, silent**. It plays all three phrase
+arrivals, holds the ready prompt, injects Enter at 6.6 seconds and releases at
+6.7 seconds, then shows the menu and a complete outline-colour cycle. Development
+is hidden. The isolated profile has no Continue save, so New Campaign is selected.
+
+`tools/capture_protocol_title.gd` reproduces the native frames through the guarded
+runner with `-Visual`. It uses the real player-facing scene and input gate, checks
+that no campaign or modal opens, and writes lossless `rgb24` frames plus a timeline
+record under `build/protocol_title_capture`. Encode the raw 1920x1080 stream at
+30 fps, then remove the temporary frame stream after verifying the MP4. The final
+video, poster, hashes and capture notes live under the workspace's existing
+`main-menu/logo-01/video/` folder. This is a fixed-timestep presentation capture,
+not a real-time frame-rate benchmark or an audio review.
