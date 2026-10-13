@@ -29,9 +29,9 @@ Run both through the suite's `-Name` option when this follow-up is addressed.
 The September 30 asset organization pass added the [asset guide](../assets/ASSET_GUIDE.md)
 and character/weapon/VFX indexes, refreshed missing source files, and retained
 older catalog paths. Existing art and audio were not moved or overwritten.
-The visual sync now keeps library-only files indexed. Scanner data and the
-numbers-only combat spreadsheet are also prepared; their gameplay integration
-does not take precedence over the boss.
+The visual sync now keeps library-only files indexed. The numbers-only combat
+spreadsheet is also prepared. Scanner data was prepared too; the scanner itself
+was shelved on 13 October 2026.
 
 ### September 21 cleanup
 

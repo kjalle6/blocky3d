@@ -6,18 +6,20 @@ overgrown Green Zone, and gradually introduces the machinery and armed enemies
 beyond it. `blocky3d` is the working codename; the final title is undecided.
 
 Running, double jumping, wall jumping, and dashing form the core of the game.
-Knife attacks and stomps keep combat close to the platforming, while a handgun
-adds ranged combat later in the opening world. The aim is demanding, readable
+Knife attacks keep combat close to the platforming, while a handgun adds
+ranged combat later in the opening world. Landing on an enemy hurts. The aim is demanding, readable
 challenges with room to learn and improve.
 
 ## Current priority
 
 **Finish the Green Zone boss encounter.** The [Boss Test Lab](docs/BOSS_TEST_LAB.md)
-has the playable prototype; next come the final arena, attack/recovery and HP
-tuning, camera coverage, and the Level 3 ending. Boss HP is a provisional
-2000 for playtesting. The [roadmap](docs/LEVEL_ROADMAP.md#next-priority-finish-the-green-zone-boss)
-defines the completion checks. Scanner gameplay/UI and further asset expansion
-remain queued behind this milestone; their data and asset preparation are in place.
+remains the isolated attack fixture. The scaffold arena is connected to Level 3,
+including the entry cutscene, checkpoint retries, defeat, warhead and blast-door
+ending. Remaining work is full-fight tuning, arena presentation and camera review,
+audio selection, and connected playtesting of retries and the ending. Boss HP
+remains a provisional 2000. The [roadmap](docs/LEVEL_ROADMAP.md#next-priority-finish-the-green-zone-boss)
+defines the completion checks. Further asset expansion remains queued behind
+this milestone; its asset preparation is in place. The enemy scanner is shelved.
 
 ## What's playable
 
@@ -28,7 +30,7 @@ third in progress:
 | --- | --- | --- |
 | Arrival / Shoreline | Beach and forest paths, early combat, and the Double Jump introduction | Complete |
 | Overgrown Coastal Ascent | A dusk approach and connected cave route that teaches Wall Jump and Dash | Complete |
-| Green Zone Finale | Nighttime traversal, the handgun introduction, destructible cover, a tank fight and wall-jump escape, an optional scaffold-roof reward, and an upper gunner route | In progress; encounter tuning and boss remain |
+| Green Zone Finale | Nighttime traversal, handgun introduction, destructible cover, tank fight and wall-jump escape, optional scaffold-roof reward, upper gunners, and S.T.O.M.P.'s scaffold pit with its warhead exit | Connected through the boss and ending; encounter tuning, presentation and whole-level review remain |
 
 Current systems include player and enemy health, carried healing items, a paused
 inventory with two quick-use slots, ammunition and active reloads, supply chests,
@@ -92,10 +94,10 @@ and restart controls. **F7** shows hitboxes, **F10** shows the world grid, and
 | --- | --- |
 | [Game direction](docs/GAME_DIRECTION.md) | Movement, combat, setting, and intended player experience |
 | [Level roadmap](docs/LEVEL_ROADMAP.md) | Campaign progress and remaining work |
-| [Combat balance](docs/COMBAT_BALANCE.md) | Health, damage, effects, tuning targets, and planned enemy scanning |
+| [Combat balance](docs/COMBAT_BALANCE.md) | Health, damage, effects, and tuning targets |
 | [Combat stats spreadsheet](outputs/01a0ee28-cea0-7d82-b0a7-f548e4c665b0/Combat_Stats.xlsx) | Enemy, attack and hazard values in filterable Excel tables |
-| [Scanner data](docs/SCANNER_DATA.md) | Game-readable identities, stat bindings and discovery evidence |
-| [Boss Test Lab](docs/BOSS_TEST_LAB.md) | First boss prototype, fight controls, and provisional attack tuning |
+| [Scanner data](docs/SCANNER_DATA.md) | Shelved enemy scanner: last design and unconnected data catalog |
+| [Boss Test Lab](docs/BOSS_TEST_LAB.md) | Boss labs, connected Level 3 pit, fight controls, and provisional tuning |
 | [Inventory and saves](docs/SAVE_SYSTEM.md) | Current controls, save behavior, and recovery |
 | [Supply chests](docs/CHEST_LOOT.md) | Loot pools, fixed rewards, and chest authoring |
 | [Level designer](docs/LEVEL_DESIGNER.md) | Building, placement, testing, and saving layouts |

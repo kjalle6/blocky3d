@@ -33,23 +33,33 @@ Repeated resource farming should not become the price of another attempt.
 
 ## Combat
 
-Combat supports traversal. Knife attacks reward approaching an enemy, stomps
-reward getting above it, and gunfire gives the player reach while moving.
-Encounters should resolve briskly enough to preserve the pace of a level.
+Combat supports traversal. Knife attacks reward approaching an enemy, and
+gunfire gives the player reach while moving. Getting over an enemy means
+clearing it: landing on one hurts. A few enemies answer a head landing with
+their own response as a deliberate surprise, such as the tank's psychic pulse
+and S.T.O.M.P.'s smoke. Encounters should resolve briskly enough to preserve
+the pace of a level.
 
 The current starting balance is:
 
 - The player has 100 HP and can survive three ordinary 25-damage hits; the
   fourth kills without healing.
-- Bat patrols and skaters have 50 HP: two knife hits or one stomp defeat them.
+- Bat patrols and skaters have 50 HP: two knife hits defeat them.
   Their behavior and timing distinguish them, with equal damage for now.
-- Ground-enemy body contact is solid and harmless. Damage comes from the
-  attack's visible impact, and ordinary enemies and the player can have attacks
-  interrupted by hits. The tank keeps moving and firing through damage.
+- Side contact with a ground enemy's body is solid and harmless. Damage comes
+  from the attack's visible impact, and ordinary enemies and the player can have
+  attacks interrupted by hits. The tank keeps moving and firing through damage.
+- There are no stomp kills (decided 13 October 2026). Landing on an ordinary
+  enemy's head costs the player an ordinary 25-damage hit, with the usual
+  damage flash, and throws them up and clear. Steering is briefly off during
+  the throw, so holding toward the enemy cannot drag the player back onto it
+  for repeated hits. The enemy is unharmed and has no reaction animation, so
+  the rule costs no new art for any future enemy or NPC. A harmless slide-off
+  was tried first and dropped: it made head landings a free, random thing to do.
 - Machines (the tank and the boss, S.T.O.M.P.) take 50% less knife damage. Bullets
   retain full damage. Landing on S.T.O.M.P. triggers smoke and a short
-  grounded player hold through its retreat and counterattack; it takes no stomp
-  damage. The lingering smoke fades as that punishment wears off.
+  grounded player hold through its retreat and counterattack; the landing does
+  it no damage. The lingering smoke fades as that punishment wears off.
 - Ordinary damage uses attack recovery and interruptions without a general
   invulnerability period. Overlapping threats and repeated hits need playtesting.
 - Spikes, pits, and flying enemies are lethal hazards. Flyers are indestructible.
@@ -61,24 +71,12 @@ Bosses are intended to have a larger named bar and clearly readable openings.
 [Combat balance](COMBAT_BALANCE.md) records the tuning targets, provisional
 weapon values, and encounter questions still to test.
 
-## Enemy and hazard knowledge (planned)
+## Enemy and hazard knowledge (shelved)
 
-A cyberpunk scanner, presented as an eye implant, glasses or similar equipment,
-lets the player identify a target and build knowledge through encounters. Toggle
-its overlay quickly and hold left-click on an enemy or hazard for an initial
-scan. The world stays live and movement remains available; attacks are disabled
-in scan mode. The scan supplies a game name and activates subsequent learning.
-Strengths, weaknesses, damage and status effects become known through the
-player's experience, rather than arriving as a complete first-scan readout.
-
-Right-click inspection shows learned information and an optional personal name.
-Naming follows familiarity with the target; the initial scan does not force a
-nickname. This supports learning the game's dangers without adding advance
-warnings. Its [data catalog and reader](SCANNER_DATA.md) are implemented;
-gameplay, overlay, event recording and saves are not connected. That integration
-is queued behind finishing the Green Zone boss. [Combat balance](COMBAT_BALANCE.md#enemy-and-hazard-scanner-planned)
-owns the agreed interaction, discovery examples, source-of-truth rules and open
-questions, including naming scope, exact-stat discovery and persistence.
+A scanner for identifying enemies and learning their traits was planned and
+shelved on 13 October 2026; it is unlikely to return in that form. Players
+learn enemies by fighting them. The last design and the unconnected data
+catalog are kept in [Scanner data](SCANNER_DATA.md).
 
 ## Firearms
 

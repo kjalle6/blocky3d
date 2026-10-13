@@ -1,18 +1,21 @@
 # Boss Test Lab
 
-**Active priority: finish this boss and its final Level 3 arena.** The lab is the
-working prototype, and its improved presentation does not mark the encounter
-complete. Follow the [boss completion checklist](LEVEL_ROADMAP.md#next-priority-finish-the-green-zone-boss)
-for arena construction, full-fight tuning, final HP, campaign integration and
-acceptance. HP is a provisional 2000 for playtesting; the final value is TBD. Scanner integration and
-further asset work are queued behind this encounter.
+**Active priority: finish the connected Level 3 boss encounter.** The scaffold
+pit, entry cutscene, checkpoint retries, defeat, warhead and blast-door ending
+are implemented. The flat lab remains the isolated attack fixture; Boss Arena
+WIP uses the pit's geometry with lab controls. Follow the
+[boss completion checklist](LEVEL_ROADMAP.md#next-priority-finish-the-green-zone-boss)
+for full-fight tuning, arena presentation, camera coverage, audio and connected
+playtesting. Implementation does not establish final acceptance. HP is a
+provisional 2000; the final value is TBD. Further asset expansion remains
+queued behind this encounter.
 
 Open **Development selector → Boss Test Lab** (shortcut **9**). This is a fresh,
 isolated test session with all movement abilities, a handgun, 12 loaded rounds,
 and 60 reserve rounds. **Infinite ammo** is on by default in both boss labs: the
 reserve tops back up to 60, while reloads still happen; F1 toggles it, and the
-no-ammo test mode overrides it. It does not advance or save campaign progress. The boss
-has not been placed in Level 3 yet.
+no-ammo test mode overrides it. This lab does not advance or save campaign
+progress. The campaign encounter is the [Level 3 boss pit](#level-3-boss-pit).
 
 **F1** opens the fight controls: reset/refill, mixed attacks, missiles only,
 jumps only, firebombs only, no ammo, infinite ammo, and boss active. Changing a test option resets the fight;
@@ -37,8 +40,9 @@ Full framing lasts through 18 m horizontal separation, easing back to ordinary
 player follow between 18 and 24 m. Large vertical separations similarly release
 the boss between 9 and 15 m; ordinary jumps retain it. Zoom and movement ease
 smoothly, room-edge limits account for the wider view, and inspection or defeat
-returns to normal framing. This reusable camera is currently assigned only to
-the lab. It is a movement/combat fixture, not the finished arena.
+returns to normal framing. These player-led settings belong to the flat lab.
+The scaffold arena uses the same camera script in fit-both mode, described
+below. The flat room remains a movement/combat fixture.
 
 The lab's separate night backdrop uses the supported integer 2× distant-art
 scale to cover the wider combat view. Its flat sky follows camera height for
@@ -196,8 +200,8 @@ a no-ammo melee win viable. The shared roster and combat rules are in
 The landing is a ground-level box across the 2D play plane. Its effect is an
 expanded ring from the VFX catalog, flattened to the blast height. Boss sounds
 use the **Boss · S.T.O.M.P.** slots in the audio tool, which ship trial picks; see
-[Audio tuning](AUDIO_TUNING.md#boss-sounds-stomp). The lab has no second phase
-(the arena's flying-machine phase is described above).
+[Audio tuning](AUDIO_TUNING.md#boss-sounds-stomp). The flat lab has no second
+phase; the scaffold arena's flying-machine phase is described below.
 
 ## Boss Arena WIP graybox
 
@@ -224,8 +228,8 @@ ceiling and grass floor.
   short one ends 5.12 m from the right wall, where a long wall slide returns to
   the floor. Crossing gaps are 2.56-5.76 m.
 - **The three chests** use the **Boss arena supplies** pool: each always gives
-  30-40 handgun rounds (90-120 across the arena, against the 80 hits the
-  provisional 2000 HP takes), plus a 50% chance of medicine. Pit chests refill
+  34-40 handgun rounds (at least 100, up to 120 across the arena, against the
+  80 hits the provisional 2000 HP takes), plus a 50% chance of medicine. Pit chests refill
   on every retry. See [supply chests](CHEST_LOOT.md).
 
 **Camera.** The arena's boss camera runs in fit-both mode: it frames the
@@ -273,7 +277,7 @@ in the gap between the main tower's top balcony and the high hanging platform,
 one patrolling under the hanging platforms, and one riding the right-wall slide.
 Each blinks harmlessly for 1 s before arming, so none can appear on top of the
 player. Body contact and the discharge are lethal as usual, but three handgun
-hits destroy one (75 HP); knife and stomp cannot. This is where the player first
+hits destroy one (75 HP); the knife cannot. This is where the player first
 meets machines with a gun in hand. Any still flying are destroyed with the boss;
 a death or reset returns them to dormant and the boss to phase one. The variant
 is `scenes/enemies/green_zone_flyer_shootable.tscn`; the indestructible machine

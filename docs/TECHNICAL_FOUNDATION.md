@@ -338,7 +338,7 @@ Visible artwork is not gameplay collision.
 - The player's movement body handles navigation.
 - A smaller foot region handles spike contact.
 - Weapon reach is measured independently from the visible body.
-- Enemy body, stomp, attack, and hurt behavior have distinct jobs.
+- Enemy body, head-landing, attack, and hurt behavior have distinct jobs.
 - Clear near-misses should survive.
 - Obvious contact should resolve.
 - Lethal contact never begins outside the visible threat.
@@ -349,7 +349,7 @@ not unquestionable truth.
 The established interaction priority is:
 
 1. a successful player melee impact;
-2. a stomp from above;
+2. a landing on the head from above;
 3. an active enemy attack impact;
 4. passive body contact.
 
@@ -358,22 +358,40 @@ declared behavior rather than introducing collision-order exceptions.
 
 Ground enemies use the authored damage box (`ProjectileHurtbox/Collision`)
 for knife overlap, recentered on the sprite's torso including its facing and
-the skater's registration offset. Stomps use that horizontal extent and a stable
+the skater's registration offset. Head landings use that horizontal extent and a stable
 `stomp_head_height` aligned with the artwork, excluding the projectile box's
 transparent head padding. Their shorter movement bodies still handle navigation. A knife
 checks overlap throughout its 0.13–0.27 second thrust window, once per target
 per swing; windup and recovery do no damage. Starting or stopping movement
-preserves that thrust's animation clock. Stomps resolve from the descending
+preserves that thrust's animation clock. Head landings resolve from the descending
 feet crossing the head plane, with horizontal overlap measured at that
 crossing, before enemy attack processing. This avoids relying on a one-time
 area-entry signal or letting a fast fall sink through the visible head.
 If an edge landing or short hop misses that plane but lands on the enemy's
-solid body, the upward collision normal also confirms a stomp. Side and
-underside collisions do not count, and the bounce keeps its existing strength.
-`tools/validate_ground_combat_contacts.gd` covers these edge and timing cases,
+solid body, the upward collision normal also confirms a head landing. Side and
+underside collisions do not count.
+
+`PlayerCharacter._land_on_enemy` decides the outcome. There are no stomp kills:
+an ordinary enemy (patrol, skater or gunner) is unharmed. The player takes one
+ordinary hit through `receive_enemy_hit`, which supplies the flash, hurt pose,
+sound and impact pause, and is thrown toward the nearer side of the visible
+head: 7 m/s with steering off for 0.25 s, so input cannot drag them back onto
+the head. A `test_move` check flips the throw when a wall would block it. A
+second head-landing hit needs 0.2 s standing on ground first, so bouncing
+between heads in one airtime costs one hit. The tank and boss dispatch to their
+own `receive_stomp` responses.
+
+The ordinary enemies' stomp responses, the player's `bounce`, `stomp_attack` and
+`stomp_bounced`, and `resources/combat/stomp.tres` remain only because those
+enemy scripts are structural layout dependencies: removing their stomp code
+would change every saved layout's fingerprint. Nothing reaches them in play.
+
+`tools/validate_ground_combat_contacts.gd` covers the edge and timing cases,
 including solid-body landings, rising, passive side contact, and clear misses.
+`tools/validate_enemy_head_landing.gd` covers the outcome on all four ordinary
+enemy types and a walking patrol, holding toward the enemy, and a wall behind it.
 Repeated hands-on testing accepted the solid-body landing fix, with no further
-instances of standing on an enemy instead of stomping it.
+instances of standing on an enemy.
 
 Ordinary patrols still use wall and ledge sensing as their default movement
 contract. A scene may additionally author independent `patrol_left_distance`
@@ -520,9 +538,9 @@ with the existing movement and melee kit.
   scenery hits to separate live banks, including enemy-on-enemy impacts. One
   gunshot cue plays per simultaneous enemy pair; held beats create no cue.
   Finer material-specific impact routing remains deferred.
-- Knife and stomp audio use the same level-owned voice pool. `PlayerCharacter`
-  emits `melee_swung` on an accepted knife attack and `stomp_bounced` on the
-  bounce requested by a confirmed enemy stomp. `CombatFeedback3D` also listens
+- Knife audio uses the level-owned voice pool. `PlayerCharacter` emits
+  `melee_swung` on an accepted knife attack. There is no stomp sound: an
+  ordinary head landing plays the player-hit cue through `damage_received`. `CombatFeedback3D` also listens
   to `attack_connected`, presenting one knife hit sound per swing even when
   multiple targets take damage. Defeated melee targets are skipped before
   damage/contact reporting. These hooks preserve the existing animation and

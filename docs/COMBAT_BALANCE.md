@@ -7,7 +7,7 @@ Ordinary combat allows a few recoverable mistakes, while spikes, pits, water
 contact hazards and flying machines remain instantly lethal. Health, healing, ammunition, and save recovery
 are implemented; the remaining work is tuning them together in actual levels.
 
-This is the shared combat reference for development and the planned scanner.
+This is the shared combat reference for development.
 The roster and values below were checked against current resources, scripts,
 enemy scenes and authored level overrides on **2026-09-30**. Values describe
 implemented behavior unless explicitly marked planned or TBD. Reusable defaults
@@ -19,26 +19,28 @@ characters are not implemented enemies.
 | Actor or action | Current baseline | What it means |
 | --- | --- | --- |
 | Player | 100 maximum HP | Survives three ordinary hits; the fourth kills without healing |
-| Bat patrol | 50 HP, 25 attack damage | Two knife or handgun hits, or one stomp |
+| Bat patrol | 50 HP, 25 attack damage | Two knife or handgun hits |
 | Skater | 50 HP, 25 attack damage | Same toughness as the bat; rolling attack has different timing and reach |
 | Knife | 25 damage | Close-range commitment |
-| Stomp | 50 damage | Rewards positioning above an enemy and preserves the bounce |
+| Head landing on an ordinary enemy | 25 damage to the player | Punishes landing on enemies, which take no damage |
 | Handgun | 25 damage, 0.20 seconds between shots or empty trigger clicks | Provisional; compare its reach and firing opportunities with melee |
 | Stationary / introduction dual-gun enemy | 50 HP, 25 per firing beat | Provisional; two simultaneous bullets share one damaging hit per target |
 | Moving route gunner | 50 HP, 25 per firing beat | Mobile dual-gun variant; six reserve rounds on defeat |
 | Elevated stationary guard | 50 HP, 25 per firing beat | Route-gunner variant with walking disabled and increased vertical detection; six reserve rounds on defeat |
-| Green Zone tank | 200 HP, 25 attack damage | Eight handgun hits or sixteen knife hits; immune to stomps and nonlethal interruption |
-| S.T.O.M.P. (Green Zone boss) | **2000 HP, provisional**; 25 per damaging attack | Raised from the 300 lab placeholder for playtesting; final HP TBD; stomp triggers smoke escape instead of damage |
+| Green Zone tank | 200 HP, 25 attack damage | Eight handgun hits or sixteen knife hits; immune to nonlethal interruption; a head landing triggers its psychic pulse |
+| S.T.O.M.P. (Green Zone boss) | **2000 HP, provisional**; 25 per damaging attack | Raised from the 300 lab placeholder for playtesting; final HP TBD; a head landing triggers the smoke escape and deals no damage |
 | Individual wooden crate | 50 HP | Two ordinary hits or one tank shell; the breaking shot is absorbed |
 | Flying machine, vertical or horizontal patrol | No HP; indestructible | Body always kills on contact; electrical discharge below it is lethal only while active |
-| Shootable flying machine | 75 HP, provisional | Three handgun hits destroy it; body and discharge stay lethal, and knife and stomp cannot hit it. First met in the Green Zone boss's second phase; the earlier, indestructible machines appear before the handgun |
+| Shootable flying machine | 75 HP, provisional | Three handgun hits destroy it; body and discharge stay lethal, and the knife cannot hit it. First met in the Green Zone boss's second phase; the earlier, indestructible machines appear before the handgun |
 | Ground / wall spikes and spike-pit fill | No HP; instantly lethal | Contact kills irrespective of remaining HP |
 | Shore and machine-pool water contacts | No HP; instantly lethal | Entering an authored water hazard causes water death |
 | Pit / out-of-bounds kill regions | No HP; instantly lethal | Authored kill areas and the player's fall limit cause death |
 
-The player, bat, skater, knife, and stomp values are the agreed starting balance.
-Handgun and gunner values are test values. One stomp is the current choice for
-ordinary enemies; revisit it only if playtesting shows a need.
+The player, bat, skater and knife values are the agreed starting balance.
+Handgun and gunner values are test values. Stomp kills were removed on
+13 October 2026, after repeated playtesting found they were unwanted; the user
+locked the decision in the same day. Landing on an ordinary enemy now hurts the
+player instead.
 
 **Boss maximum HP is provisional.** It is 2000 for playtesting, raised from the
 300 lab placeholder that was judged too low; it is not an accepted encounter
@@ -51,7 +53,7 @@ of openings. Melee must remain viable without arriving with ammunition.
 | Action | Current tuning | Combat meaning |
 | --- | --- | --- |
 | Knife | 25 damage; 0.34 s action; contact begins at 0.13 s and lasts 0.14 s; 1.25 m forward reach, 0.9 m vertical tolerance | One hit per target per swing; an interrupted or missed swing proves no resistance |
-| Ordinary stomp | 50 damage; 10 m/s upward bounce on eligible enemies | One stomp defeats a bat, skater or gunner; tank and boss have separate defensive responses |
+| Head landing on an ordinary enemy | Player takes 25 damage; thrown away at 7 m/s with 4.5 m/s lift and steering off for 0.25 s (about 1.75 m); never thrown into a wall; no second head-landing hit until 0.2 s standing on ground | No stomp damage or bounce; bat, skater and gunners take no damage and play no reaction. Holding toward the enemy cannot steer the player back onto it. The tank and boss keep their own head responses |
 | Handgun | 25 damage; 0.20 s fire interval; 28 m/s projectile, 26 m maximum travel | Camera clipping usually limits useful range before maximum travel; 12-round magazine and reload rules below |
 | Running | 8 m/s maximum; 65 m/s² ground acceleration, 80 m/s² deceleration, 42 m/s² air acceleration | Baseline for closing distance and escaping attacks |
 | Jump / Double Jump | 14 m/s jump velocity; gravity 38 m/s²; maximum fall speed 28 m/s | Variable jump height and an unlocked second jump support aerial avoidance |
@@ -122,7 +124,8 @@ damage attack; the boss's ground landing is the damaging AoE.
 ### S.T.O.M.P. attack tuning
 
 Selected actor: **Green Zone bosses, character 2**. This kit is playable in the
-lab; the final arena, HP and encounter difficulty remain unfinished.
+flat lab, Boss Arena WIP and the connected Level 3 scaffold pit. Final HP,
+encounter difficulty and arena presentation remain unfinished.
 
 | Attack / behavior | Current tuning | Damage, commitment and recovery |
 | --- | --- | --- |
@@ -150,9 +153,10 @@ under `assets/art/vfx/boss`. The lab guide owns art selection and camera details
 Bosses use only the large encounter health bar, never a small overhead enemy
 strip. Defeat stops attacks, removes this boss's remaining missiles and allows
 passage through its body. An airborne corpse falls without a landing blast.
-Reset restores health and collision. Boss-specific audio remains
-unimplemented. In the Boss Arena WIP, half health starts a second phase with
-shootable flying machines; see the [Boss Test Lab guide](BOSS_TEST_LAB.md).
+Reset restores health and collision. Sixteen boss sound events ship trial picks;
+see [Audio tuning](AUDIO_TUNING.md#boss-sounds-stomp) for selection and review
+status. In Boss Arena WIP and the Level 3 pit, half health starts a second phase
+with shootable flying machines; see the [Boss Test Lab guide](BOSS_TEST_LAB.md).
 
 ### Level 3 tank and later gunner variants
 
@@ -233,7 +237,7 @@ remain provisional until the later encounters exist. The
 ### Ordinary enemy attacks
 
 All three gunner roles share the gunner health profile: two knife or handgun
-hits, or one stomp, defeat them. Bat and skater use their own profiles with the
+hits defeat them. Bat and skater use their own profiles with the
 same current HP and damage. These shared numbers do not make their movement or
 attack patterns identical.
 
@@ -289,14 +293,14 @@ the current movement sprite without selecting that animation. Movement stays
 available; afterward the current movement and equipped-weapon pose return.
 Death and the special psychic/smoke holds retain their own presentation.
 Ordinary enemy health strips appear after the first damage and hide on reset.
-Ground contact, stomp detection, attack reach, and projectile hurt regions remain
+Ground contact, head-landing detection, attack reach, and projectile hurt regions remain
 separate from the artwork and from each other.
 
 ## Lethal hazards
 
 These use instant death, not a large ordinary damage number. They have no HP,
-knife resistance percentage, ammo reward or ordinary enemy health bar. Knife,
-handgun and stomp do not destroy them, and Dash gives no hazard invulnerability.
+knife resistance percentage, ammo reward or ordinary enemy health bar. The knife
+and handgun do not destroy them, and Dash gives no hazard invulnerability.
 
 | Hazard | When it is lethal | Current timing / placement rules |
 | --- | --- | --- |
@@ -309,8 +313,7 @@ handgun and stomp do not destroy them, and Dash gives no hazard invulnerability.
 | Pit / void kill region | Entering an authored kill area or dropping below the player's `fall_limit_y` | Immediate death; threshold and bounds belong to the level, not an enemy attack |
 
 Water artwork by itself does not establish a lethal area: the contact regions
-above implement it. Background-only water is scenery. Likewise, empty pit space
-will need an explicit scan target before the scanner can identify it reliably.
+above implement it. Background-only water is scenery.
 
 Flyer motion is placement-specific. Its reusable default bobs ±1.2 m on a
 3-second cycle with no horizontal patrol. Current Level 2 machine shafts and
@@ -329,7 +332,7 @@ Each wooden crate has its own 50 HP, no knife armor and no current loot reward.
 Two 25-damage knife or handgun hits break one; a tank shell explicitly breaks
 an intact crate in one hit without changing its 25 damage against the player.
 The breaking projectile is absorbed rather than penetrating the crate behind
-it. Stomping is not a crate-breaking attack.
+it. Landing on a crate does not break it.
 
 Unsupported stacked crates fall under gravity; they currently have no falling
 damage or crush attack. Broken state participates in world saves. Solid terrain
@@ -340,123 +343,23 @@ collision or range limit, with no implied splash damage from impact artwork.
 ## Unfinished balance and future content
 
 - **First priority: finish the Green Zone boss in its final arena.** Tune the
-  full fight and connect its defeat/Level 3 ending before scanner integration
-  or further asset expansion. The [roadmap checklist](LEVEL_ROADMAP.md#next-priority-finish-the-green-zone-boss)
+  full fight and review its connected defeat/Level 3 ending before further
+  asset expansion. The [roadmap checklist](LEVEL_ROADMAP.md#next-priority-finish-the-green-zone-boss)
   defines the milestone; the lab remains the behavior test fixture.
-- S.T.O.M.P. HP is a provisional **2000**; the final value is TBD. Final arena size, encounter length, attack tuning, the second
-  phase's tuning and boss-specific audio are not settled. The boss is not connected to Level 3.
+- S.T.O.M.P. HP is a provisional **2000**; the final value is TBD. The scaffold
+  arena and Level 3 connection are built. Encounter length, attack openings,
+  second-phase tuning and arena supply amounts still need player review; the
+  user accepted the fight's audio on 13 October 2026. Each arena chest
+  guarantees 34–40 handgun rounds, so the three provide at least 100 (up to
+  120), against 80 accurate boss hits at this HP. Misses and
+  flying machines also consume rounds; a no-ammo melee win remains a requirement.
 - Moving saws are reserved for a later level, not implemented in the current
   roster. Their damage, speed, route and timing are TBD.
 - General enemy drops, additional status effects and unused enemy/hazard assets
   have no agreed combat values. Document them here when actually designed;
   do not infer a mechanic from a sprite sheet or a folder name.
-- Scanner rules below are a planned feature. Existing combat facts are the
-  reference it will learn from, not knowledge awarded at first scan.
-
-## Enemy and hazard scanner (planned)
-
-**Status: data catalog and reader implemented; gameplay/UI not connected.**
-[Scanner data](SCANNER_DATA.md) holds the reusable entries, current-stat bindings
-and fact-by-fact evidence contract. A cyberpunk eye implant, glasses,
-or similar device lets the player identify enemies and hazards, learn about
-them through experience, and later give them personal names. The device's final
-form and overlay artwork are still to be chosen. The combat values and effects
-above remain the underlying rules; scanning changes what the player knows.
-
-### Agreed interaction
-
-1. Toggle a cyberpunk scanning overlay on or off quickly. Scanning happens in
-   the live world, with normal running, jumping, Double Jump, Dash and Wall Jump
-   available according to the player's unlocked abilities. Entering scan mode
-   grants no protection from existing damage, stuns or other movement restrictions.
-2. Hold **left-click on a particular enemy or hazard** to perform its initial
-   scan. Player attacks are disabled throughout scan mode. Switching back to
-   combat should be immediate, without firing a leftover scan click.
-3. A completed initial scan registers the target under its game-provided name
-   and activates learning about it. It does not reveal all HP, attacks,
-   resistances, weaknesses, status effects or danger information at once.
-4. After scanning, actual encounters gradually reveal individual facts. This
-   learning continues during ordinary play with the scanner switched off;
-   otherwise the player could never test their own attacks. Switching modes
-   should not interrupt movement or require a menu confirmation.
-5. **Right-click an identified enemy or hazard** to inspect its entry: the
-   player-given name when present, otherwise its game name, plus discovered
-   stats, effects and dangers. Naming is optional and comes after experience,
-   with a rename action in the entry rather than a forced first-scan prompt.
-   The exact point at which renaming becomes available remains open.
-
-The scanner records lessons learned in play. It does not add advance warnings
-for undiscovered attacks or replace the existing boss landing VFX with warning
-markers. Detailed entries and a brief targeting/progress display serve different
-purposes; the overlay's final presentation is still to be designed.
-
-### Discovery and evidence
-
-Each fact needs its own qualifying experience after the initial scan. Taking
-one rocket hit must not also reveal the same enemy's head retaliation, landing
-blast or knife armor. A successful knife hit establishes knife effectiveness;
-it does not establish bullet or stomp effectiveness.
-
-Keep **unknown**, **confirmed effective**, **reduced damage**, and **confirmed
-ineffective** distinct. A missed swing, obstructed bullet, out-of-range attempt,
-or attack cancelled before impact cannot prove resistance. A visible Hurt
-animation alone cannot prove that the enemy's attack was interrupted: the
-S.T.O.M.P. can display Hurt while continuing to fire.
-
-The following maps existing combat rules to proposed discovery evidence. Actor
-names are the current reference names, not final device-screen copy. Each row
-contains separate facts to unlock, not a bundle awarded by any one interaction.
-Numerical baselines stay in the tables and actor descriptions above.
-
-| Enemy or hazard | Existing rules the entry could record | Experience needed for the corresponding fact |
-| --- | --- | --- |
-| Bat patrol / skater | Knife, bullet and stomp effectiveness; attack damage; hit interruption | A confirmed connection with each tested attack; receiving its attack; interrupting an attack through a hit |
-| Stationary / moving / elevated dual-gun enemy | Weapon effectiveness; gunfire damage; paired bullets form one damaging beat; hit interruption; applicable movement and burst behavior | The corresponding weapon hit, received firing beat, interrupted attack or observed behavior; one bullet observation must not reveal every burst pattern or variant |
-| Green Zone tank | Reduced knife damage, full bullet damage, ineffective stomps; attacks continue through nonlethal hits; head contact causes psychic damage and a freeze while the tank retreats | Test the relevant weapon or head contact; experience the pulse/freeze; observe a pending attack continue through a confirmed hit |
-| S.T.O.M.P. (Green Zone boss) | Reduced knife damage, full bullet damage, ineffective stomps; head contact causes smoke, grounded hold, retreat and counterattack; landing AoE; charge/firing shove; missile damage | Separate confirmed weapon tests, descending head contact, landing-blast contact, charge/shove contact and rocket hits; smoke itself is not the source of rocket damage |
-| Flying machine body / discharge | Always-lethal body contact; timed lethal electrical spark below it; ineffective attacks; observed patrol behavior | Body contact and active-spark contact establish separate dangers; a missed or passing projectile proves no resistance. Reliable ineffective-attack evidence needs implementation because the flyer is outside ordinary combat-target contracts |
-| Ground/wall spikes, pit fill / void | Lethality irrespective of remaining HP | The relevant lethal encounter; initial scanning alone does not fill its danger entry. Target selection for empty pit space still needs design |
-| Shore / machine-pool water | Immediate water death at the actual contact surface | Entering the corresponding lethal water region; observing decorative water alone establishes no damage rule |
-
-Learning an effect and knowing its exact numbers are separate decisions. Do not
-automatically reveal maximum HP, exact cooldowns, stun duration or attack range
-from a first scan or an unrelated hit. The conditions for unlocking those values
-still need definition. A killing blow's overkill or rounded health display is
-not an accurate measurement of maximum HP or fractional damage.
-
-### Keeping records consistent
-
-- Combat profiles, attack/weapon resources and actor/status logic remain the
-  source of truth. Scanner entries should reference those definitions and
-  record which facts are known, rather than maintain another set of HP/damage
-  constants. Damage descriptions must distinguish authored attack damage from
-  damage actually received after a resistance or other modifier.
-- Keep a stable target identity and canonical game name separate from the
-  player's optional alias. Renaming must not change combat identity, values,
-  discovery ownership or save references.
-- Record the responsible source, attack and interaction condition. For example,
-  the tank's psychic pulse and its shell are separate hits; the boss's smoke
-  hold and a rocket arriving during it are separate effects. Do not award
-  knowledge of unexperienced abilities just because they share an actor profile.
-- The catalog reader checks supplied evidence, but gameplay event adapters and
-  player knowledge storage are still a future integration requirement.
-  Existing attacks may need explicit hit/resistance results before they can
-  support reliable learning. Development lab runs must remain separate from
-  campaign knowledge and names.
-
-Still to decide before implementation:
-
-- Scan toggle binding/controller controls, scan duration and range, targeting,
-  line of sight, and whether interrupted scans retain progress.
-- Whether personal names and knowledge apply to a type or an individual;
-  type-wide entries with distinct variants were suggested but are not settled.
-- Which facts require taking an effect versus observing it, how exact HP and
-  timing values are learned, and when the rename action becomes available.
-- Whether right-click details pause play; the scanning overlay itself stays live.
-- Persistence through death, Continue, older saves and new campaigns. Keeping
-  discoveries through death was suggested, but is not yet an agreed save policy.
-  Lethal hazards require a deliberate decision about retaining their final event.
-- Device appearance, overlay assets, acquisition point and campaign introduction.
+- The enemy and hazard scanner is shelved (13 October 2026). Its last agreed
+  design is kept in [Scanner data](SCANNER_DATA.md#shelved-design).
 
 ## Healing and inventory
 
@@ -546,8 +449,8 @@ See [SAVE_SYSTEM.md](SAVE_SYSTEM.md) for the complete policy and safety checks.
 
 ## Editing values and reviewing balance
 
-Keep this document and the combat stats spreadsheet current when a combat value or mechanic changes, including
-the scanner's future evidence mapping. Record instance overrides instead of
+Keep this document and the combat stats spreadsheet current when a combat value or mechanic changes.
+Record instance overrides instead of
 quietly treating a reusable default as universal. Keep unimplemented decisions
 separate from tested behavior, and synchronize boss tuning with the lab guide.
 

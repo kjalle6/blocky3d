@@ -30,7 +30,7 @@ development sessions have separate persistence behavior.
 
 ## Remaining review
 
-- Compare handgun, knife, and stomp effectiveness in complete encounters.
+- Compare handgun and knife effectiveness in complete encounters.
 - Tune gunner durability, attack recovery, hit interruptions, and overlapping
   threats without changing the lethal platforming hazards.
 - Review healing feedback, reload timing, and supply accumulation over a level.

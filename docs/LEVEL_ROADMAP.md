@@ -2,24 +2,25 @@
 
 World 1, the Green Zone, teaches the movement kit across three substantial
 levels. Arrival / Shoreline and Overgrown Coastal Ascent are complete. Green
-Zone Finale is playable in development through the handgun introduction, tank
-fight, wall-jump escape and rebuilt upper gunner route. Upper-route encounter
-tuning remains in progress; the boss is playable in its separate test lab.
+Zone Finale is playable through the handgun introduction, tank fight, wall-jump
+escape, upper gunner route and connected S.T.O.M.P. pit, including its entry,
+retries and warhead exit. Encounter tuning, presentation and whole-level review
+remain in progress. Separate boss labs provide isolated testing.
 
 ## Next priority: finish the Green Zone boss
 
-**This is the first implementation priority.** Continue from the working
-[Boss Test Lab](BOSS_TEST_LAB.md), then finish the encounter in its actual Level 3
-arena. Scanner gameplay/UI, further asset expansion, and general polish follow
+**This is the first implementation priority.** Finish tuning and reviewing the
+connected Level 3 encounter, using the [boss labs](BOSS_TEST_LAB.md) for focused
+attack and arena tests. Further asset expansion and general polish follow
 this milestone unless a concrete blocker needs attention.
 
-1. Build and connect the final arena around the existing attack kit and the
-   player's full movement abilities. The enlarged lab is a test fixture, not
-   the arena size target. Settle floor/wall access, overhead room, approach,
-   retry position, and camera coverage together. The tall
-   [Boss Arena WIP](BOSS_TEST_LAB.md#boss-arena-wip-graybox) graybox now tests
-   the agreed shape: a construction-scaffold complex of one-way decks (a main
-   tower with alternating balconies, ceiling-hung platforms and stepped towers
+1. Review the built arena and its campaign connection with the player's full
+   movement abilities. The enlarged flat lab is a test fixture, not the arena
+   size target. Check floor/wall access, overhead room, approach, retries and
+   camera coverage together. The tall
+   [Boss Arena WIP](BOSS_TEST_LAB.md#boss-arena-wip-graybox) shares the pit's
+   construction-scaffold geometry: one-way decks (a main tower with alternating
+   balconies, ceiling-hung platforms and stepped towers
    down to a long wall slide) that the boss chases the player through, framed
    by a fit-both camera limited only by the arena's size. A second phase at half
    health adds shootable flying machines that kill on touch and teach that
@@ -43,12 +44,18 @@ this milestone unless a concrete blocker needs attention.
    and the head-landing smoke escape in that arena. Keep a no-ammo melee victory
    viable, normal mobility intact, and the agreed lack of advance landing warnings.
 3. Choose and test boss durability with those openings. **HP is a provisional
-   2000 for playtesting; the final value is TBD.** Keep the combat guide,
-   numbers-only spreadsheet, and scanner stat bindings aligned with final tuning.
-4. Finish defeat and Level 3 completion flow, including clearing missiles and
-   player holds, repeatable retries, and the existing campaign/save behavior.
-   Settle presentation/audio needed for this fight. The agreed second phase
-   (shootable flying machines from half health) is built in the arena graybox;
+   2000 for playtesting; the final value is TBD.** Keep the combat guide
+   and numbers-only spreadsheet aligned with final tuning.
+4. Review the implemented defeat and Level 3 completion flow in connected play,
+   including clearing missiles and player holds, repeatable retries, save
+   restoration, the warhead and the blast-door exit. Settle presentation/audio
+   needed for this fight. Every sound in a boss attempt has a trial recording
+   (16 boss cues plus Wave 1); the user found them "pretty good" on 13 October
+   2026, and a respawn now plays the surface landing. Rocket
+   exhaust/smoke and launcher departure visuals have the user's approval.
+   The three arena chests guarantee 34–40 handgun rounds each, at least 100
+   in total, as the user asked on 13 October 2026. The agreed second phase (shootable
+   flying machines from half health) is built in the pit and Boss Arena WIP;
    further phases are not assumed requirements.
 5. Playtest full fights with and without ammo, both room edges, aerial/wall
    evasion, close pressure and head contact. Verify camera/ground coverage and
@@ -56,8 +63,8 @@ this milestone unless a concrete blocker needs attention.
    this review; player acceptance of difficulty and presentation is still needed.
 
 After the boss, finish the remaining route/supply review and whole-level checks
-before marking the finale complete. The scanner data foundation and the asset
-organization detour are complete enough to leave parked while the boss is finished.
+before marking the finale complete. The asset organization detour is complete
+enough to leave parked while the boss is finished. The enemy scanner is shelved.
 
 ## Current campaign
 
@@ -65,7 +72,7 @@ organization detour are complete enough to leave parked while the boss is finish
 | --- | --- | --- |
 | Arrival / Shoreline | Beach arrival, early combat and hazards, Double Jump, forest clearing | Complete |
 | Overgrown Coastal Ascent | Dusk approach, cave entry, Wall Jump and Dash, machine chambers, lift departure | Complete |
-| Green Zone Finale | Night ravine, underworks descent and return, first handgun, tank fight and escape, later gunners, boss | Traversal, handgun, tank, scaffold climb and upper gunner route implemented; tuning, final boss arena and integration remain |
+| Green Zone Finale | Night ravine, underworks descent and return, first handgun, tank fight and escape, later gunners, boss | Route, scaffold boss pit, entry, retries and warhead ending connected; tuning, presentation and whole-level review remain |
 
 Campaign play can continue into the unfinished finale. The production level
 selector lists the first two levels; developer entries provide direct access to
@@ -140,7 +147,8 @@ A nearby supply chest uses the gun-encounter loot pool.
 
 Remaining work in this section:
 
-1. Finish the boss, its arena, and the level's ending using the priority above.
+1. Finish boss tuning and presentation, then review its connected arena and
+   ending using the priority above.
 2. Tune the existing gun-enemy sequence's firing/reload lesson and encounters
    that combine shooting and movement, keeping melee viable.
 3. Playtest the full sequence and add the finished finale to the production
@@ -366,9 +374,11 @@ The boss should have clear attack patterns and meaningful vulnerability windows.
 **Boss HP is a provisional 2000** for playtesting, not an accepted fight-length
 target. Choose its replacement with the actual arena and
 attack openings; see [Combat balance](COMBAT_BALANCE.md).
-Melee remains a viable way to win with no ammunition. Attack tuning, recovery,
-the finished arena, and any phase changes still need playtesting. The boss has
-not been connected to the Level 3 route. Moving saws are reserved for a later level.
+A no-ammo melee victory remains a required tuning target. Attack openings,
+recovery, arena supplies and the implemented flying-machine phase need full-fight
+playtesting. The [Level 3 boss pit](BOSS_TEST_LAB.md#level-3-boss-pit) is connected
+after the upper gunner route and includes the entry, checkpoint retries, defeat
+and warhead exit. Moving saws are reserved for a later level.
 
 Design and test the boss and arena around the player's full available movement
 kit: running, variable-height jumps, Double Jump, horizontal Dash, wall slides,
@@ -400,7 +410,7 @@ contents. These systems now need integrated balance testing.
 The next tuning questions are:
 
 - Boss durability, attack spacing and melee openings in the final arena.
-- How handgun damage and reload timing compare with knife attacks and stomps.
+- How handgun damage and reload timing compare with knife attacks.
 - Gunner durability, overlapping attacks, recovery periods, and interruption loops.
 - How much healing and ammo accumulate across a level and between saves.
 - General enemy drop rates and where stronger healing items should appear.
@@ -409,20 +419,11 @@ The next tuning questions are:
 [Supply chests](CHEST_LOOT.md) owns loot-pool tuning and authoring, and
 [inventory and saves](SAVE_SYSTEM.md) explains recovery behavior.
 
-## Enemy and hazard scanner (queued after the boss)
+## Enemy and hazard scanner (shelved)
 
-The scanner concept is documented in [Combat balance](COMBAT_BALANCE.md#enemy-and-hazard-scanner-planned):
-quick live overlay, hold-left-click initial scan with full movement and no
-attacks, game-provided names, experience-based discovery, later optional
-renaming and right-click inspection. The [data catalog and reader](SCANNER_DATA.md)
-are implemented with current-stat bindings and separate evidence conditions.
-Gameplay/UI, event adapters and knowledge storage are not connected, and the
-acquisition point has not been assigned to a level. Resolve the open discovery,
-naming and save rules before those integrations; select overlay assets afterward.
-
-The data-preparation detour is complete. Leave scanner gameplay integration
-queued while finishing the boss; final arena construction, encounter tuning
-and Level 3 integration are the active priority.
+Shelved on 13 October 2026 and unlikely to return in this form. Nothing in the
+campaign waits on it. The last design and the unconnected data catalog are kept
+in [Scanner data](SCANNER_DATA.md).
 
 ## Interface and presentation
 
