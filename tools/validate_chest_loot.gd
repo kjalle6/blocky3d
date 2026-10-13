@@ -203,7 +203,7 @@ func _check_pools() -> void:
 	for index in 200:
 		var source := "boss_arena/chest_" + str(index)
 		var armed: Dictionary = LOOT.roll("boss_arena", 812347, source, [&"knife", &"handgun"])
-		assert(int(armed.get(&"handgun_ammo", 0)) >= 30 and int(armed.get(&"handgun_ammo", 0)) <= 40, "Boss arena chests must always give 30-40 rounds.")
+		assert(int(armed.get(&"handgun_ammo", 0)) >= 34 and int(armed.get(&"handgun_ammo", 0)) <= 40, "Boss arena chests must always give 34-40 rounds, at least 100 across the three.")
 		var unarmed: Dictionary = LOOT.roll("boss_arena", 812347, source, [&"knife"])
 		assert(not unarmed.is_empty() and not unarmed.has(&"handgun_ammo"))
 	# Pools without a guarantee keep the exact earlier rolls, so saved campaigns

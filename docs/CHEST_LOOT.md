@@ -39,7 +39,7 @@ the handgun), the pool falls back to the ordinary draw. Pools without
 | Shoreline / Level 1 | Basic medicine: weight 100, 1–2; ammo: 60, 12–24 | 25% |
 | Green Zone / Level 2, outdoors and cave | Basic: 80, 1–2; 50-HP kit: 20, 1; ammo: 60, 12–30 | 25% |
 | Gun encounter / both Level 3 sections | Basic: 60, 1–2; 50-HP kit: 25, 1; ammo: 100, 18–36 | 35% |
-| Boss arena supplies / the three boss-pit chests | **Always 30–40 handgun rounds**; bonus: basic medicine 70, 1–2; 50-HP kit 30, 1 | 50% |
+| Boss arena supplies / the three boss-pit chests | **Always 34–40 handgun rounds** (at least 100 across the three); bonus: basic medicine 70, 1–2; 50-HP kit 30, 1 | 50% |
 | Better supplies / explicit override only | 50-HP kit: 65, 1–2; 75-HP bag: 35, 1; ammo: 80, 24–48 | 50% |
 
 Weights are relative among eligible items, not percentages. These are starting

@@ -28,7 +28,7 @@
   "boss_arena": {
     "name": "Boss arena supplies",
     "guaranteed": [
-      {"item": "handgun_ammo", "minimum": 30, "maximum": 40, "weapon": "handgun"}
+      {"item": "handgun_ammo", "minimum": 34, "maximum": 40, "weapon": "handgun"}
     ],
     "bonus_chance": 0.5,
     "entries": [
