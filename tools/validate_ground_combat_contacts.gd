@@ -104,9 +104,10 @@ func _run() -> void:
 			await physics_frame
 			await physics_frame
 			await physics_frame
-			_check(enemy.is_defeated() == (absf(horizontal_offset) < 0.7), "%s: descending head contact at X %.2f" % [enemy.name, horizontal_offset])
-			if enemy.is_defeated():
-				_check(_player.velocity.y > 0.0, "A stomp must bounce immediately")
+			var landed := _player.health.current < 100
+			_check(landed == (absf(horizontal_offset) < 0.7), "%s: descending head contact at X %.2f" % [enemy.name, horizontal_offset])
+			if landed:
+				_check(not enemy.is_defeated() and _player.velocity.y > 0.0, "A head landing must knock the player up without hurting the enemy")
 			_player.set_physics_process(false)
 			enemy.free()
 			await process_frame
@@ -122,13 +123,13 @@ func _run() -> void:
 			await physics_frame
 			await physics_frame
 			await physics_frame
-			_check(not enemy.is_defeated(), "Rising and side contact must not become stomps")
+			_check(not enemy.is_defeated() and _player.health.current == 100, "Rising and side contact must not count as head landings")
 			_player.set_physics_process(false)
 			enemy.free()
 			await process_frame
 
 		# An edge can miss the offset visual head yet land on the solid body.
-		# Actual top contact must stomp instead of carrying the player as a floor.
+		# Actual top contact must count as a head landing, not carry the player.
 		for facing in [-1.0, 1.0]:
 			for horizontal_offset in [-0.69, 0.0, 0.69]:
 				var enemy := _enemy(scene)
@@ -143,16 +144,16 @@ func _run() -> void:
 				for frame in 30:
 					await physics_frame
 					await process_frame
-					if enemy.is_defeated() or _player.is_on_floor():
+					if _player.health.current < 100 or _player.is_on_floor():
 						break
-				_check(enemy.is_defeated(), "%s: solid top landing must stomp at body offset %.2f, facing %s" % [enemy.name, horizontal_offset, facing])
-				if enemy.is_defeated():
-					_check(_player.velocity.y > 0.0, "Solid top contact must bounce immediately")
+				_check(_player.health.current < 100, "%s: solid top landing must count as a head landing at body offset %.2f, facing %s" % [enemy.name, horizontal_offset, facing])
+				if _player.health.current < 100:
+					_check(not enemy.is_defeated() and _player.velocity.y > 0.0, "Solid top contact must knock the player up immediately")
 				_player.set_physics_process(false)
 				enemy.free()
 				await process_frame
 
-	# A real horizontal collision still blocks without becoming a stomp.
+	# A real horizontal collision still blocks without becoming a head landing.
 	var floor_body := StaticBody3D.new()
 	var floor_collision := CollisionShape3D.new()
 	var floor_shape := BoxShape3D.new()

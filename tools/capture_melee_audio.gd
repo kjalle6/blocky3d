@@ -1,5 +1,5 @@
 extends SceneTree
-## Actual mixer output from knife misses, knife contacts and a falling stomp.
+## Actual mixer output from knife misses and knife contacts.
 const AREA := preload("res://tools/level_3_shooter_area_fixture.gd")
 const OUTPUT := "res://build/previews/melee_audio"
 var _capture := AudioEffectCapture.new()
@@ -47,25 +47,9 @@ func _run() -> void:
 	_save_audio("knife_hit")
 	target.free()
 
-	target = load("res://scenes/enemies/pixel_skater_enemy.tscn").instantiate()
-	target.position = player.position
-	level.add_child(target)
-	target.set_physics_process(false)
-	level.combat_feedback.bind_enemy(target)
-	player.reset_at(Transform3D(Basis.IDENTITY, target.position + Vector3(0, 3.5, 0)))
-	_capture.clear_buffer()
-	for tick in 90:
-		await physics_frame
-		if target.is_defeated(): break
-	assert(target.is_defeated())
-	# Stop the follow-on landing so this sample contains only the stomp cue.
-	player.set_physics_process(false)
-	await create_timer(0.8).timeout
-	_save_audio("stomp")
-	target.free()
 	AudioServer.remove_bus_effect(0, AudioServer.get_bus_effect_count(0) - 1)
 	game.audio_tuning_panel.open_panel()
-	for event_id in ["combat/knife_swing", "combat/knife_hit", "combat/stomp"]:
+	for event_id in ["combat/knife_swing", "combat/knife_hit"]:
 		game.audio_tuning_panel.select_event(event_id)
 		for frame in 3:
 			await process_frame
@@ -74,7 +58,7 @@ func _run() -> void:
 	game.audio_tuning_panel.close_panel()
 	var report := FileAccess.open(OUTPUT + "/mixer_levels.json", FileAccess.WRITE)
 	report.store_string(JSON.stringify(_report, "\t"))
-	print("Captured real melee/stomp output and three connected tuning pages: ", _report)
+	print("Captured real melee output and two connected tuning pages: ", _report)
 	game.free()
 	quit(0)
 

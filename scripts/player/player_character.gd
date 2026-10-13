@@ -9,6 +9,16 @@ const DOUBLE_JUMP_VISUAL_DURATION := 0.43
 const DEATH_KIND_GENERIC: StringName = &"generic"
 const DEATH_KIND_WATER: StringName = &"water"
 const ENEMY_CONTACT := preload("res://scripts/combat/enemy_combat_contact.gd")
+## Landing on an ordinary enemy's head costs an ordinary hit and throws the
+## player up and away. Steering is off for the throw, which covers 1.75 m, so
+## holding toward the enemy cannot pull the player back onto its head.
+const HEAD_LANDING_DAMAGE := 25
+const HEAD_BOUNCE_SPEED := 7.0
+const HEAD_BOUNCE_LIFT := 4.5
+const HEAD_BOUNCE_STEER_LOCK := 0.25
+## Another head landing can hurt only after this much time standing on ground,
+## so bouncing between heads in one airtime costs a single hit.
+const HEAD_HIT_GRACE := 0.2
 
 signal died
 signal death_started(kind: StringName, world_position: Vector3)
@@ -28,6 +38,9 @@ signal movement_reset
 
 @export var combat: CombatProfile = preload("res://resources/combat/player.tres")
 @export var knife_attack: AttackDefinition = preload("res://resources/combat/knife.tres")
+## No stomp kills: ordinary enemies never reach their stomp response. The
+## attack, bounce and signal remain because those enemy scripts still call them,
+## and they are structural layout dependencies.
 @export var stomp_attack: AttackDefinition = preload("res://resources/combat/stomp.tres")
 @export var movement: PlayerMovementConfig
 @export_range(0.2, 1.0, 0.05) var handgun_backpedal_speed_ratio := 0.65
@@ -55,6 +68,8 @@ var _melee_hit: CombatHit
 var horizontal_speed := 0.0
 var _knockback_speed := 0.0
 var _knockback_deceleration := 24.0
+var _head_hit_grace_remaining := 0.0
+var _head_bounce_lock_remaining := 0.0
 var _coyote_remaining := 0.0
 var _jump_buffer_remaining := 0.0
 var _dead := false
@@ -125,6 +140,8 @@ func _physics_process(delta: float) -> void:
 	healing_remaining = maxf(0.0, healing_remaining - delta)
 	_attack_lock_remaining = maxf(0.0, _attack_lock_remaining - delta)
 	_hurt_visual_remaining = maxf(0.0, _hurt_visual_remaining - delta)
+	if is_on_floor():
+		_head_hit_grace_remaining = maxf(0.0, _head_hit_grace_remaining - delta)
 	if _ground_hold_remaining > 0.0:
 		_update_ground_hold(delta)
 		return
@@ -145,6 +162,7 @@ func _physics_process(delta: float) -> void:
 		0.0,
 		_wall_jump_control_lock_remaining - delta
 	)
+	_head_bounce_lock_remaining = maxf(0.0, _head_bounce_lock_remaining - delta)
 	_update_dash_timer(delta)
 	var input_axis := Input.get_axis("move_left", "move_right")
 	var grounded := is_on_floor()
@@ -155,6 +173,7 @@ func _physics_process(delta: float) -> void:
 	if (
 		not is_dashing()
 		and _wall_jump_control_lock_remaining <= 0.0
+		and _head_bounce_lock_remaining <= 0.0
 		and not is_zero_approx(input_axis)
 	):
 		_facing_sign = signf(input_axis)
@@ -173,7 +192,7 @@ func _physics_process(delta: float) -> void:
 
 	if is_dashing():
 		horizontal_speed = _dash_direction * movement.dash_speed
-	elif _wall_jump_control_lock_remaining <= 0.0:
+	elif _wall_jump_control_lock_remaining <= 0.0 and _head_bounce_lock_remaining <= 0.0:
 		var acceleration := movement.air_acceleration
 		if grounded:
 			acceleration = (
@@ -336,6 +355,7 @@ func reset_at(spawn_transform: Transform3D) -> void:
 	release_ground_hold()
 	health.reset(combat.maximum_hp)
 	_attack_lock_remaining = 0.0
+	_head_hit_grace_remaining = 0.0
 	healing_remaining = 0.0
 	_melee_hit = null
 	global_transform = spawn_transform
@@ -353,6 +373,7 @@ func reset_at(spawn_transform: Transform3D) -> void:
 	_last_wall_contact_direction = 0.0
 	_wall_coyote_remaining = 0.0
 	_wall_jump_control_lock_remaining = 0.0
+	_head_bounce_lock_remaining = 0.0
 	_wall_sliding = false
 	_blocked_wall_jump_direction = 0.0
 	_dash_remaining = 0.0
@@ -558,6 +579,7 @@ func begin_ground_hold(source: Node3D, maximum_duration: float) -> bool:
 	_double_jump_visual_remaining = 0.0
 	_wall_sliding = false
 	_wall_jump_control_lock_remaining = 0.0
+	_head_bounce_lock_remaining = 0.0
 	_wall_contact_direction = 0.0
 	_wall_coyote_remaining = 0.0
 	_jump_buffer_remaining = 0.0
@@ -616,6 +638,7 @@ func receive_psychic_hit(source_position: Vector3, hit: CombatHit, duration: flo
 	_double_jump_visual_remaining = 0.0
 	_wall_sliding = false
 	_wall_jump_control_lock_remaining = 0.0
+	_head_bounce_lock_remaining = 0.0
 	_jump_buffer_remaining = 0.0
 	_coyote_remaining = 0.0
 	_descending_before_slide = false
@@ -778,6 +801,7 @@ func begin_transition_run(direction: float, speed: float, duration: float) -> vo
 	_pending_weapon_id = &""
 	_wall_sliding = false
 	_wall_jump_control_lock_remaining = 0.0
+	_head_bounce_lock_remaining = 0.0
 	horizontal_speed = _transition_run_direction * _transition_run_speed
 	velocity.x = horizontal_speed
 	set_physics_process(true)
@@ -959,7 +983,7 @@ func _resolve_stomp(previous_position: Vector3) -> void:
 			head_y = bounds.end.y
 	if target != null:
 		global_position.y = head_y + FEET_OFFSET_Y
-		target.receive_stomp(self)
+		_land_on_enemy(target)
 		return
 	# The solid body is lower than the drawn head and has a different centre.
 	# An edge landing or short hop can miss the head plane but still land on
@@ -970,8 +994,41 @@ func _resolve_stomp(previous_position: Vector3) -> void:
 			continue
 		var body := collision.get_collider() as Node3D
 		if body != null and body.has_method("receive_stomp") and not body.is_defeated():
-			body.receive_stomp(self)
+			_land_on_enemy(body)
 			return
+
+
+func _land_on_enemy(enemy: Node3D) -> void:
+	var ordinary := (enemy is StompableEnemy3D or enemy is HandgunEnemy3D) and not enemy is TankEnemy3D
+	if not ordinary:
+		enemy.receive_stomp(self)
+		return
+	# Knock toward the nearer side of the visible head; a gunner's sprite sits
+	# off its body origin. A dead-centre drop goes back the way it came.
+	var head := ENEMY_CONTACT.stomp_bounds(enemy)
+	var offset := global_position.x - head.get_center().x
+	var direction := signf(offset) if absf(offset) > 0.05 else -signf(velocity.x)
+	if direction == 0.0:
+		direction = -_facing_sign
+	# Never throw the player into a wall: they would drop straight back on.
+	var throw := Vector3(direction * HEAD_BOUNCE_SPEED * HEAD_BOUNCE_STEER_LOCK, 0.3, 0.0)
+	if test_move(global_transform, throw) and not test_move(global_transform, Vector3(-throw.x, throw.y, 0.0)):
+		direction = -direction
+	if _head_hit_grace_remaining <= 0.0:
+		var source := Vector3(head.get_center().x, head.end.y, global_position.z)
+		# The ordinary hit path owns the flash, hurt pose, sound and impact pause.
+		if receive_enemy_hit(source, CombatHit.new(HEAD_LANDING_DAMAGE, &"head_landing", source)):
+			_head_hit_grace_remaining = HEAD_HIT_GRACE
+	if _dead or is_control_locked():
+		return
+	if is_dashing():
+		_finish_dash()
+	_knockback_speed = 0.0
+	horizontal_speed = direction * HEAD_BOUNCE_SPEED
+	velocity.x = horizontal_speed
+	_head_bounce_lock_remaining = HEAD_BOUNCE_STEER_LOCK
+	velocity.y = maxf(velocity.y, HEAD_BOUNCE_LIFT)
+	floor_snap_length = 0.0
 
 
 func _perform_ground_jump() -> void:
@@ -1060,6 +1117,7 @@ func _try_start_dash(input_axis: float) -> bool:
 	_dash_available = false
 	_cancel_active_attack(true)
 	_wall_jump_control_lock_remaining = 0.0
+	_head_bounce_lock_remaining = 0.0
 	_wall_contact_direction = 0.0
 	_wall_sliding = false
 	velocity.y = 0.0
